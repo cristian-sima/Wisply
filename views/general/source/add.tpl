@@ -12,21 +12,21 @@
                 <fieldset>
                     <legend>Add a source</legend>
                     <div class="form-group">
-                        <label for="sourceName" class="col-lg-2 control-label">Name</label>
+                        <label for="source-name" class="col-lg-2 control-label">Name</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" id="sourceName" placeholder="Name">
+                            <input type="text" class="form-control" name="source-name" id="source-name" placeholder="Name">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="sourceURL" class="col-lg-2 control-label">URL</label>
+                        <label for="source-URL" class="col-lg-2 control-label">URL</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" id="sourceURL" placeholder="URL">
+                            <input type="text" class="form-control" name="source-URL" id="source-URL" placeholder="URL">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="sourceDescription" class="col-lg-2 control-label">Description</label>
+                        <label for="source-description" class="col-lg-2 control-label">Description</label>
                         <div class="col-lg-10">
-                            <textarea class="form-control" rows="3" id="sourceDescription"></textarea>
+                            <textarea class="form-control" rows="3" name="source-description" id="source-description"></textarea>
                             <span class="help-block">This field may contain notes or the description of the intitution.</span>
                         </div>
                     </div>
@@ -46,6 +46,6 @@
 
 <script>
 $(document).ready(function() {
-    $("#sourceName").focus();
+    $("#source-name").focus();
 });
 </script>

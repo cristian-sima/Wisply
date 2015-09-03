@@ -19,8 +19,10 @@ func init() {
 
     beego.Router("/admin", &admin.Dashboard{})
 
-    beego.Router("/admin/source", &admin.Source{}, "*:List")
-    beego.Router("/admin/source/add", &admin.Source{}, "Get:Get")
-    beego.Router("/admin/source/add", &admin.Source{}, "Post:Post")
+    beego.Router("/admin/source", &admin.SourceController{}, "*:List")
+    beego.Router("/admin/source/add", &admin.SourceController{}, "Get:Get")
+    beego.Router("/admin/source/add", &admin.SourceController{}, "Post:Post")
 
  }
+
+

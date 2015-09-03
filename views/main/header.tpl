@@ -12,5 +12,7 @@
       <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
       <script src="../bower_components/respond/dest/respond.min.js"></script>
     <![endif]-->
+        
+    <link rel="stylesheet" href="static/css/main/style.css">
 </head>
 {{ end }}

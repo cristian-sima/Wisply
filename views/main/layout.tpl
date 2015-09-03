@@ -3,10 +3,10 @@
     {{ template "header" }}
     <body>
         {{ template "menu" }}
-        <div class="container">
+        <div class="container" >
             {{.LayoutContent}}            
             {{ template "footer"}}
         </div>
-        {{ template "javascript-bottom" }}
+        {{ template "javascript" }}
     </body>
 </html>

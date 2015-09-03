@@ -9,7 +9,7 @@
                 <li><a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li class="pull-right"><a href="#top">Back to top</a></li>                        </ul>
-            <p>We have done the best to express our <a href="/licence" rel="nofollow">Licence</a>.</p>
+            <!--<p>We have done the best to express our <a href="/licence" rel="nofollow">Licence</a>.</p> -->
         </div>
     </div>
 </footer>

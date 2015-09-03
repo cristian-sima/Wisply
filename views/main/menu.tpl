@@ -12,7 +12,7 @@
         <div class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
-                    <a href="http://bootswatch.com/paper/#" id="themes">About</a>
+                    <a href="/about" id="themes">About</a>
                 </li>
                 <li>
                     <a href="/webscience">Web science</a>
@@ -24,14 +24,15 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><form class="navbar-form navbar-left" role="search">
+               <!-- <li><form class="navbar-form navbar-left" role="search">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Search">
                         </div>      
-                        <a href="http://bootswatch.com/paper/#" class="btn btn-default">Log in</a>
-                        <a href="http://bootswatch.com/paper/#" class="btn btn-default">Sign up</a>
                     </form>
                 </li>
+                <li><a href="http://bootswatch.com/paper/#" >Log in</a></li>
+                <li><a href="http://bootswatch.com/paper/#" >Sign up</a></li>
+               -->
             </ul>
         </div>
     </div>

@@ -14,7 +14,7 @@ type Sample struct {
 
 func (c *MainController) Get() {
     c.Layout = "main/layout.tpl"
-	c.TplNames = "main/index.tpl"
+	c.TplNames = "main/page/index.tpl"
 }
 
 
@@ -22,3 +22,4 @@ func (c *MainController) Get() {
 func (c *Sample) Get() {
 	c.TplNames = "sample.tpl"
 }
+

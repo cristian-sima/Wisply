@@ -14,13 +14,13 @@
                     <div class="form-group">
                         <label for="source-name" class="col-lg-2 control-label">Name</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" name="source-name" id="source-name" placeholder="Name">
+                            <input type="text" class="form-control" name="source-name" id="source-name" placeholder="Name" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="source-URL" class="col-lg-2 control-label">URL</label>
                         <div class="col-lg-10">
-                            <input type="text" class="form-control" name="source-URL" id="source-URL" placeholder="URL">
+                            <input type="url" class="form-control" name="source-URL" id="source-URL" placeholder="URL" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -33,7 +33,7 @@
                     
                     <div class="form-group">
                         <div class="col-lg-10 col-lg-offset-2">
-                            <button type="reset" class="btn btn-default">Cancel</button>
+                            <a href="/admin/source"> <button type="reset" class="btn btn-default">Reset</button></a>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </div>

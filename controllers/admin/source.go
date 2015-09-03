@@ -14,6 +14,8 @@ type SourceController struct {
 func (c *SourceController) List() {
 
     data := make(orm.Params)
+
+    anything := false
     
 
     o := orm.NewOrm()
@@ -27,6 +29,11 @@ func (c *SourceController) List() {
         c.Data["messageLink"] = "/admin/source";
     }
 
+    if len(data) != 0 {
+        anything = true
+    }
+
+    c.Data["anything"] = anything
     c.Data["sources"] = data
     c.Layout = "general/admin.tpl"
 	c.TplNames = "general/source/list.tpl"

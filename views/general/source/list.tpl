@@ -6,7 +6,8 @@
                 <li class="active">Sources</li>
             </ul></div>
         <div class="panel-body">
-            <p>This is the list of the sources</p>
+            {{ if .anything }}
+            <p>This is the list with the sources</p>
             <table class="table table-striped table-hover ">              
                 <thead>
                     <tr>
@@ -23,6 +24,9 @@
                     {{end}}                    
                 </tbody>
             </table> 
+            {{ else }}
+             There are no sources... :(
+            {{ end }}
         </div>
     </div>
 </div>

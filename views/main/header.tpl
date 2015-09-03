@@ -14,5 +14,7 @@
     <![endif]-->
         
     <link rel="stylesheet" href="static/css/main/style.css">
+    
+    <link rel="icon" href="/static/img/favicon.ico"> 
 </head>
 {{ end }}

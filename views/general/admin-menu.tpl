@@ -3,7 +3,7 @@
     <ul class="nav nav-pills nav-stacked">
         <li class="active"><a href="/admin">Home</a></li>
         <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/source" aria-expanded="false">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/source" aria-expanded="true">
                 Source <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">

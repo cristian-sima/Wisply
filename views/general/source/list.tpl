@@ -11,17 +11,20 @@
             <table class="table table-striped table-hover ">              
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Source</th>
                         <th>URL</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{range .sources}}
+                    {{range $index, $element := .sources}}
+                    
                     <tr>
-                        <td>{{.}}</td>
-                        <td><a href="{{.}}">{{.}}<a/></td>
-                    </tr>
-                    {{end}}                    
+                        <td>{{ $element.Name }}</td>
+                        <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url }}</a></td>
+                        <td>{{ $element.Description }}</td>
+                    </tr>               
+                    {{end }}                    
                 </tbody>
             </table> 
             {{ else }}

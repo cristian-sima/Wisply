@@ -4,8 +4,8 @@ import (
 	"github.com/astaxie/beego"
     "github.com/astaxie/beego/orm"
     "regexp"
+    "fmt"
 )
-
 
 type SourceController struct {
 	beego.Controller
@@ -13,30 +13,42 @@ type SourceController struct {
 
 func (c *SourceController) List() {
 
-    data := make(orm.Params)
+    type Source2 struct {
+        Id int
+        Name string
+        Url string
+        Description string
+    }
 
-    anything := false
-    
 
+    var (
+        sources []Source2
+        exists bool = false
+        )
     o := orm.NewOrm()
     o.Using("default") // Using default, you can use other database
  
-    _, err := o.Raw("SELECT name, URL FROM source").RowsToMap(&data, "name", "URL")
+    num, err := o.Raw("SELECT id, name, url, description FROM source").QueryRows(&sources)
 
     if err != nil { 
         c.Data["messageContent"] = "It's a shame... There was a problem. Maybe you want to try again?"  
         c.TplNames = "general/message/error.tpl"
         c.Data["messageLink"] = "/admin/source";
-    }
+    } else {
 
-    if len(data) != 0 {
-        anything = true
-    }
+        if num != 0 {
+            exists = true
+        }
 
-    c.Data["anything"] = anything
-    c.Data["sources"] = data
+
+        fmt.Println(sources);
+
+        c.Data["anything"] = exists
+        c.Data["sources"] = sources
+        c.TplNames = "general/source/list.tpl"
+    }
+    
     c.Layout = "general/admin.tpl"
-	c.TplNames = "general/source/list.tpl"
 }
 
 func (c *SourceController) Get() {
@@ -72,19 +84,18 @@ func (c *SourceController) Post() {
        !isURL(URL) {
         c.Data["messageContent"] = "There was a problem with fields. Try again"  
         c.TplNames = "general/message/error.tpl"
-        c.Data["messageLink"] = "/admin/source";
-        c.Data["messageLink"] = "/admin/source/add";
+        c.Data["messageLink"] = "/admin/source/add"
     } else {
         // STORE
 
         elememts := []string{name, description, URL}
 
-        _, err := o.Raw("INSERT INTO `source` (`name`, `description`, `URL`) VALUES (?, ?, ?)", elememts).Exec()
+        _, err := o.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", elememts).Exec()
 
         if err == nil {
             c.Data["messageContent"] = "The source has been added!" 
             c.TplNames = "general/message/success.tpl"
-
+            c.Data["messageLink"] = "/admin/source"
         } else {       
             c.Data["messageContent"] = "It's a shame... There was a problem. Maybe you want to try again?"  
             c.TplNames = "general/message/error.tpl"

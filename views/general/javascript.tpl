@@ -1,5 +1,6 @@
 {{ define "javascript" }}
 <script src="/static/paper/jquery-1.10.2.min.js"></script>
+<script src="/static/js/bootbox.min.js"></script>
 <script src="/static/paper/bootstrap.min.js"></script>
 <script src="/static/paper/bootswatch.js"></script>
 <script type="text/javascript">

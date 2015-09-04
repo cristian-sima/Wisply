@@ -3,15 +3,10 @@ package admin
 import (
 	"github.com/astaxie/beego"
     "github.com/astaxie/beego/orm"
-    "regexp"
+    "github.com/connor4312/validity"
     "strconv"
-    _ "fmt"
 )
 
-func isURL(url string) bool{
-	Re := regexp.MustCompile(`^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$`)
-	return Re.MatchString(url)
-}
 
 type SourceController struct {
 	beego.Controller
@@ -67,22 +62,35 @@ func (c *SourceController) AddNewSource() {
 
 func (c *SourceController) Insert() {
 
-    var (
-        name string = c.GetString("source-name")
-        description string = c.GetString("source-description")
-        URL string = c.GetString("source-URL")
-    )
-
     o := orm.NewOrm()
     o.Using("default") // Using default, you can use other database
-        
-    // VALIDATE
+      
+    var (
+        name string         = c.GetString("source-name")
+        description string  = c.GetString("source-description")
+        URL string          = c.GetString("source-URL")
+    )
     
-    if ;len(name) > 255 || name == ""  || 
-       len(URL) > 255 || URL == "" ||
-       len(description) > 255 ||
-       !isURL(URL) {
-        c.Data["messageContent"] = "There was a problem with fields. Try again"  
+    rawData := make(map[string]interface{});
+
+    rawData["name"] = c.GetString("source-name")
+    rawData["description"] = c.GetString("source-description")
+    rawData["url"] =  c.GetString("source-URL")
+
+    rules := validity.ValidationRules{
+        "name": []string{"String", "between:1,255"},
+        "url": []string{"String", "url", "between:1,2083"},
+        "description": []string{"String", "max:255"},
+    }
+
+    validationResult := validity.ValidateMap(rawData, rules)
+
+    if !validationResult.IsValid {
+        
+        c.Data["validationFailed"] = true
+        c.Data["validationErrors"] = validationResult.Errors 
+
+        c.Data["messageContent"] = "The request was not successful. Wisply has detected some problems with the fields" 
         c.TplNames = "general/message/error.tpl"
         c.Data["messageLink"] = "/admin/sources/add"
     } else {
@@ -158,8 +166,7 @@ func (c *SourceController) Update() {
 
     if len(name) > 255 || name == ""  || 
        len(URL) > 255 || URL == "" ||
-       len(description) > 255 ||
-       !isURL(URL) {
+       len(description) > 255 {
         c.Data["messageContent"] = "There was a problem with fields. Try again"  
         c.TplNames = "general/message/error.tpl"
         c.Data["messageLink"] = "/admin/sources/modify/" + id

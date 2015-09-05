@@ -1,31 +1,27 @@
 package routers
 
 import (
-	"Wisply/controllers/general"
-	"Wisply/controllers/admin"
+	"Wisply/controllers"
 	"github.com/astaxie/beego"
 )
 
-func init() {
-    beego.Router("/", &general.MainController{})
+func init() {   
 
-    beego.Router("/about", &general.About{})
+    beego.Router("/",               &controllers.DefaultController{}, "*:ShowIndexPage")
+    beego.Router("/about",          &controllers.DefaultController{}, "*:ShowAboutPage")
+    beego.Router("/contact",        &controllers.DefaultController{}, "*:ShowContactPage")
+    beego.Router("/webscience",     &controllers.DefaultController{}, "*:ShowWebsciencePage")
+    beego.Router("/sample",         &controllers.DefaultController{}, "*:ShowSamplePage")
 
-    beego.Router("/contact", &general.Contact{})
-    beego.Router("/webscience", &general.Webscience{})
-
-    beego.Router("/sample", &general.Sample{})
-
-
-    beego.Router("/admin", &admin.Dashboard{})
+    beego.Router("/admin", &controllers.AdminController{}, "*:ShowDashboard")
 
     // source
-    beego.Router("/admin/sources", &admin.SourceController{}, "*:List")
-    beego.Router("/admin/sources/add", &admin.SourceController{}, "Get:AddNewSource")
-    beego.Router("/admin/sources/add", &admin.SourceController{}, "Post:Insert")
-    beego.Router("/admin/sources/modify/:id", &admin.SourceController{}, "Get:Edit")
-    beego.Router("/admin/sources/modify/:id", &admin.SourceController{}, "Post:Update")
+    beego.Router("/admin/sources", &controllers.SourceController{}, "*:ListSources")
+    beego.Router("/admin/sources/add", &controllers.SourceController{}, "Get:AddNewSource")
+    beego.Router("/admin/sources/add", &controllers.SourceController{}, "Post:InsertSource")
+    beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Get:Modify")
+    beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Post:Update")
 
-    beego.Router("/admin/sources/delete/:id", &admin.SourceController{}, "POST:Delete")
+    beego.Router("/admin/sources/delete/:id", &controllers.SourceController{}, "POST:Delete")
 
  }

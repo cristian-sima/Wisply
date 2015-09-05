@@ -5,12 +5,15 @@ import (
 	"github.com/astaxie/beego"
     "github.com/astaxie/beego/orm"
     _ "github.com/go-sql-driver/mysql"
+    "net/http"
+    "html/template"
+    "fmt"
+    "time"
 )
 
 func init() {
 
     // [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
-    // begoo.AppConfig.String("mysqluser") + ":" + begoo.AppConfig.String("mysqlpassword") + "@" + begoo.AppConfig.String("mysqlhost") + begoo.AppConfig.String("mysqldb") + "?charset=utf8"
 var (
         mysqlUsername string = "wisply"
         mysqlPassword string = "DNeaMKvz4t4DtL6b"
@@ -19,15 +22,46 @@ var (
         mysqlAddress string = mysqlHost + ":" +  mysqlPort
         mysqlDatabase string = "wisply"
         databaseString string = mysqlUsername + ":" + mysqlPassword +  "@" + "(" + mysqlAddress +")/" + mysqlDatabase+ "?charset=utf8";
-    )
-   
+    )   
+
 
     orm.RegisterDriver("mysql", orm.DR_MySQL)
-    orm.RegisterDataBase("default", "mysql", databaseString)
+    
+    go connectToDatabase(databaseString);
+}
 
+func connectToDatabase (databaseString string) {    
+    var connected bool = false    
+	for !connected {
+        error := orm.RegisterDataBase("default", "mysql", databaseString)
+        if error == nil {
+            fmt.Println("Connected to database");
+            connected = true;
+        } else {
+            fmt.Println("Problem trying to connect to database. Try again in 3 seconds");
+            time.Sleep(3000 * time.Millisecond)
+        }
+	}
 }
 
 
+
+
+
+func loadPageNotFound(rw http.ResponseWriter, r *http.Request){
+    t,_:= template.ParseFiles(beego.ViewsPath+"/errors/404.html")
+    data :=make(map[string]interface{})
+    t.Execute(rw, data)
+}
+
+func loadDatabaseError(rw http.ResponseWriter, r *http.Request){
+    t,_:= template.ParseFiles(beego.ViewsPath+"/errors/database.html")
+    data :=make(map[string]interface{})
+    t.Execute(rw, data)
+}
+
 func main() {
+    beego.Errorhandler("404", loadPageNotFound)
+    beego.Errorhandler("databaseError", loadDatabaseError)
 	beego.Run()
 }

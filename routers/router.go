@@ -7,6 +7,7 @@ import (
 
 func init() {   
 
+
     beego.Router("/",               &controllers.DefaultController{}, "*:ShowIndexPage")
     beego.Router("/about",          &controllers.DefaultController{}, "*:ShowAboutPage")
     beego.Router("/contact",        &controllers.DefaultController{}, "*:ShowContactPage")

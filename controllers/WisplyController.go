@@ -15,13 +15,15 @@ func (c *WisplyController) DisplayErrorMessage (errors map[string][]string) {
     c.DisplayMessage("error", content)
 }
 
-func (c *WisplyController) DisplaySuccessMessage (content string) {
+func (c *WisplyController) DisplaySuccessMessage (content string, backLink string) {
+	c.Data["backLink"] = backLink
     c.DisplayMessage("success", content)
 }
 
 func (c *WisplyController) DisplayMessage (typeOfMessage string, content string) {
+
     c.Data["messageContent"] = content
-    c.TplNames = "general/message/" + typeOfMessage + ".tpl"
-    c.Data["messageLink"] = "/admin/sources"
-    c.Layout = "general/status.tpl"
+	c.Data["displayMessage"] = true
+	c.TplNames = "general/message/" + typeOfMessage + ".tpl"
+    c.Layout = "general/message.tpl"
 }

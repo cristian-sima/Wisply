@@ -44,7 +44,7 @@ func (c *SourceController) InsertSource() {
         if databaseError != nil {
             c.Abort("databaseError");
         } else {
-            c.DisplaySuccessMessage("The source has been added!")
+            c.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
         }
     }
 }
@@ -87,7 +87,7 @@ func (c *SourceController) Update() {
 			if databaseError != nil {
 				c.Abort("databaseError");
 			} else {
-				c.DisplaySuccessMessage("The source has been added!")
+				c.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
 			}
 		}
 	}
@@ -104,7 +104,7 @@ func (c *SourceController) Delete () {
 		if databaseError != nil {
 			c.Abort("databaseError");
 		} else {
-			c.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!")
+			c.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!", "/admin/sources/")
 		}		
 	}
 }

@@ -23,8 +23,16 @@ Wisply can be downloaded using the `git` command throught Go
 
 1. Open a terminal window
 2. Type `go get github.com/cristian-sima/Wisply`
-  * In case you have problems with this step, it means you do not have Git. DigitalOcean has a very good tutorial about how to install Git on Ubuntu [here](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-14-04).
-4. You now have Wisply. Check next steps to see how to install it.
+  * In case you have problems with this step, it means you do not have Git. 
+  * DigitalOcean has a very good tutorial about how to install Git on Ubuntu [here](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-14-04).
+3. You now have Wisply. Check next steps to see how to install it.
+
+#### Install begoo tool
+
+Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaing Wisply. In order to install it:
+
+1. Go to [beego tool website](http://beego.me/docs/install/bee.md)
+2. Follow instructions
 
 
 #### Set up the SQL database

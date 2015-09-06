@@ -6,7 +6,7 @@ Using open data to enhance education
 
 ### Golang
 
-Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provide a virtual tour of the language [here](https://tour.golang.org/welcome/1)
+Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provides a virtual tour for the language [here](https://tour.golang.org/welcome/1)
 
 #### How to install Go?
 

@@ -8,6 +8,17 @@ Wisply needs a SQL database where to store its data. We will show which are the 
 
 ## Ubuntu
 
+### Install Golang
+
+Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provide a virtual tour of the language [here](https://tour.golang.org/welcome/1)
+
+How to install golang?
+
+1. Open a terminal window
+2. Type `sudo apt-get install golang`
+3. Type `Y` and press enter
+
+### Install 
 
 ### Install MySQL server
 
@@ -21,13 +32,13 @@ Wisply needs a SQL database where to store its data. We will show which are the 
   `sudo netstat -tap | grep mysql`
   You will see a list of details regarding the service such as port, process id
   
-## Install the application
+### Install the application
 
 Wisply comes with a special installer which helps you to quickly set up and run the application. In order to use the installer, make sure you have installed the MySQL server (see above)
 
 These steps will help you to use the installer
 
-1. Open a termiknal
+1. Open a terminal window
 2. Type `cd /the/path/to/Wisply/directory/` where *path/to/Wisply/directory* is the path on your server to the Wisply directory
 3. We need to allow the installer to execute. Type `chmod u+x install/installer.sh`
 4. Type `chmod u+x install` 

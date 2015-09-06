@@ -21,6 +21,17 @@ Wisply needs a SQL database where to store its data. We will show which are the 
   `sudo netstat -tap | grep mysql`
   You will see a list of details regarding the service such as port, process id
   
-### Set up database
+## Install the application
 
-1. Now you have to create the databse.
+Wisply comes with a special installer which helps you to quickly set up and run the application. In order to use the installer, make sure you have installed the MySQL server (see above)
+
+These steps will help you to use the installer
+
+1. Open a termiknal
+2. Type `cd /the/path/to/Wisply/directory/` where *path/to/Wisply/directory* is the path on your server to the wisply directory
+3. We need to allow the installer to execute. Type `chmod u+x install/installer.sh`
+4. Type `chmod u+x install` 
+4. Type `cd install` to go in the installer directory
+5. Type `bash ./installer.sh` in order to run the installer
+6. Follow the steps of the installer
+7. The installer you delete the `install` directory so do not worry

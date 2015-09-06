@@ -2,7 +2,6 @@ package controllers
 
 import (
     "strings"
-    _ "fmt"
     SourcesModel "Wisply/models/sources"
 )
 
@@ -59,8 +58,13 @@ func (c *SourceController) Modify() {
 
     if err != nil {
 		c.Abort("databaseError");
-    } else {
-		c.showModifyForm(source);
+    } else {		
+		sourceDetails := map[string]string{
+		"Name" : source.Name,
+		"Description" : source.Description,
+		"Url": source.Url,
+		}
+		c.showModifyForm(sourceDetails);
 	}
 }
 
@@ -87,7 +91,7 @@ func (c *SourceController) Update() {
 			if databaseError != nil {
 				c.Abort("databaseError");
 			} else {
-				c.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
+				c.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
 			}
 		}
 	}
@@ -109,10 +113,10 @@ func (c *SourceController) Delete () {
 	}
 }
 
-func (c *SourceController) showModifyForm(source *SourcesModel.Source) {
-	c.Data["sourceName"] = source.Name
-	c.Data["sourceUrl"] = source.Url
-	c.Data["sourceDescription"] = source.Description
+func (c *SourceController) showModifyForm(source map[string]string) {
+	c.Data["sourceName"] = source["Name"]
+	c.Data["sourceUrl"] = source["Url"]
+	c.Data["sourceDescription"] = source["Description"]
 	c.showForm("Modify", "Modify this source");
 }
 

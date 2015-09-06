@@ -3,7 +3,7 @@
 ![Wisply](http://wisply.me/static/img/logo.jpg) 
 
 
-Using open data to enhance education
+Building the hive of education
 
 
 ## Use Wisply on Ubuntu

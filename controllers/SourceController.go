@@ -35,7 +35,7 @@ func (c *SourceController) InsertSource() {
     rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
     rawData["url"] =  strings.TrimSpace(c.GetString("source-URL"))
 
-    problems, err := c.model.CheckSource(rawData)
+    problems, err := c.model.ValidateSource(rawData)
     if err != nil {
         c.DisplayErrorMessage(problems)
     } else {
@@ -73,6 +73,7 @@ func (c *SourceController) Update() {
 	var sourceId string;
 	rawData := make(map[string]interface{})
 
+
     sourceId = c.Ctx.Input.Param(":id")
 
     rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
@@ -83,7 +84,7 @@ func (c *SourceController) Update() {
 	if err != nil {
 		c.Abort("databaseError");
 	} else {
-		problems, err := c.model.CheckSource(rawData)
+		problems, err := c.model.ValidateSource(rawData)
 		if err != nil {
 			c.DisplayErrorMessage(problems)
 		} else {

@@ -13,33 +13,33 @@ type Model struct {
 func (model *Model) GetAll() []Source {
 
     orm := orm.NewOrm()
- 
+
     var list []Source
-       
+
     orm.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
 
     return list
 }
 
 func (model *Model) GetSourceById(rawIndex string) (*Source, error) {
-    
+
     var isValid bool;
 
-    orm := orm.NewOrm() 
+    orm := orm.NewOrm()
 	source := new(Source)
 
-    isValid = CheckIndex(rawIndex)
+    isValid = ValidateIndex(rawIndex)
 
     if !isValid {
         return source, errors.New("Validation invalid")
-    } 
+    }
 	error := orm.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
-	return source, error;    
+	return source, error;
 }
 
-func (model *Model) CheckSource(rawData map[string]interface{}) (map[string][]string, error ){
+func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error ){
 
-    validationResult := CheckSourceDetails(rawData)
+    validationResult := ValidateSourceDetails(rawData)
     fmt.Println(reflect.TypeOf(validationResult))
 
     if !validationResult.IsValid {
@@ -49,23 +49,23 @@ func (model *Model) CheckSource(rawData map[string]interface{}) (map[string][]st
 }
 
 func (model *Model) UpdateSourceById(sourceId string, rawData map[string]interface{}) error {
-    
+
     orm := orm.NewOrm()
-    
+
     stringElements := []string{rawData["name"].(string),
                             rawData["description"].(string),
                             rawData["url"].(string),
 							sourceId}
-	
+
    _, err := orm.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
 
     return err
 }
 
 func (model *Model) DeleteSourceById(id string) error {
-    
+
     orm := orm.NewOrm()
-    
+
     elememts := []string{id}
 
     _, err := orm.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
@@ -76,7 +76,7 @@ func (model *Model) DeleteSourceById(id string) error {
 
 
 func (model *Model) InsertNewSource(rawData map[string]interface{}) error {
-    
+
     orm := orm.NewOrm()
 
     stringElements := []string{rawData["name"].(string),

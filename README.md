@@ -29,7 +29,7 @@ Wisply can be downloaded using the `git` command throught Go
 
 #### Install begoo tool
 
-Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaing Wisply. In order to install it:
+Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaining Wisply. In order to install it:
 
 1. Open a terminal window
 2. Type `go get github.com/beego/bee`. If the script ends and there is nothing displayed, it means it is working

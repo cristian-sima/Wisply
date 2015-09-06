@@ -23,7 +23,8 @@ Wisply can be downloaded using the `git` command throught Go
 
 1. Open a terminal window
 2. Type `go get github.com/cristian-sima/Wisply`
-3. You now have Wisply. Check next steps to see how to install it.
+  * In case you have problems with this step, it means you do not have Git. DigitalOcean has a very good tutorial about how to install Git on Ubuntu [here](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-14-04).
+4. You now have Wisply. Check next steps to see how to install it.
 
 
 #### Set up the SQL database

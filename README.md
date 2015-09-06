@@ -2,34 +2,33 @@
 Using open data to enhance education
 
 
-
-# Set up database
-Wisply needs a SQL database where to store its data. We will show which are the steps to set up a database and make Wisply working
-
 ## Ubuntu
 
-### Install Golang
+### Golang
 
 Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provide a virtual tour of the language [here](https://tour.golang.org/welcome/1)
 
-How to install Go?
+#### How to install Go?
 
 1. Open a terminal window
 2. Type `sudo apt-get install golang`
 3. Type `Y` and press enter
 
-### Get Wisply
+### Install and set up
+
+#### Get Wisply
 
 Wisply can be downloaded using the `git` command throught Go
 
 1. Open a terminal window
 2. Type ``
 
-## Install and set up
 
-### Set up the SQL database
+#### Set up the SQL database
 
-#### Install MySQL server
+Wisply needs a SQL database where to store its data. We will show which are the steps to set up a database and make Wisply working
+
+##### Install MySQL server
 
 If you already have MySQL, skip this step.
 

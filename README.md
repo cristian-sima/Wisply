@@ -14,6 +14,7 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 2. Type `sudo apt-get install golang`
 3. Type `Y` and press enter
 
+
 ### Install and set up
 
 #### Get Wisply
@@ -21,7 +22,8 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 Wisply can be downloaded using the `git` command throught Go
 
 1. Open a terminal window
-2. Type ``
+2. Type `go get github.com/cristian-sima/Wisply`
+3. You now have Wisply. Check next steps to see how to install it.
 
 
 #### Set up the SQL database

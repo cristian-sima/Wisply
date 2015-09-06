@@ -31,8 +31,10 @@ Wisply can be downloaded using the `git` command throught Go
 
 Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaing Wisply. In order to install it:
 
-1. Go to [beego tool website](http://beego.me/docs/install/bee.md)
-2. Follow instructions
+1. Open a terminal window
+2. Type `go get github.com/beego/bee`. If the script ends and there is nothing displayed, it means it is working
+2. For more information go [beego tool website](http://beego.me/docs/install/bee.md)
+
 
 
 #### Set up the SQL database

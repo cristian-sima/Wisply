@@ -7,5 +7,5 @@ type AdminController struct {
 
 func (c *AdminController) ShowDashboard() {
     c.Layout = "general/admin.tpl"
-	c.TplNames = "general/admin/dashboard.tpl"
+		c.TplNames = "general/admin/dashboard.tpl"
 }

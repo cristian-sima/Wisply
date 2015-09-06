@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"html/template"
 )
 
 type WisplyController struct {
@@ -21,9 +22,12 @@ func (c *WisplyController) DisplaySuccessMessage (content string, backLink strin
 }
 
 func (c *WisplyController) DisplayMessage (typeOfMessage string, content string) {
-
     c.Data["messageContent"] = content
-	c.Data["displayMessage"] = true
-	c.TplNames = "general/message/" + typeOfMessage + ".tpl"
+		c.Data["displayMessage"] = true
+		c.TplNames = "general/message/" + typeOfMessage + ".tpl"
     c.Layout = "general/message.tpl"
+}
+
+func (this *WisplyController) GenerateXsrf(){
+    this.Data["xsrf_input"]= template.HTML(this.XsrfFormHtml())
 }

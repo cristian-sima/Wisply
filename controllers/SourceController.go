@@ -11,7 +11,7 @@ type SourceController struct {
 }
 
 func (c *SourceController) ListSources() {
-    
+
     var  exists bool = false
 
     list := c.model.GetAll()
@@ -20,7 +20,7 @@ func (c *SourceController) ListSources() {
 
     c.Data["anything"] = exists
     c.Data["sources"] = list
-    c.TplNames = "general/source/list.tpl"   
+    c.TplNames = "general/source/list.tpl"
     c.Layout = "general/admin.tpl"
 }
 
@@ -29,7 +29,7 @@ func (c *SourceController) AddNewSource() {
 }
 
 func (c *SourceController) InsertSource() {
-    
+
     rawData := make(map[string]interface{})
     rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
     rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
@@ -48,17 +48,17 @@ func (c *SourceController) InsertSource() {
     }
 }
 
-func (c *SourceController) Modify() { 
+func (c *SourceController) Modify() {
 
 	var id string
-	
+
 	id = c.Ctx.Input.Param(":id")
 
     source, err := c.model.GetSourceById(id)
 
     if err != nil {
 		c.Abort("databaseError");
-    } else {		
+    } else {
 		sourceDetails := map[string]string{
 		"Name" : source.Name,
 		"Description" : source.Description,
@@ -97,9 +97,9 @@ func (c *SourceController) Update() {
 	}
 }
 
-func (c *SourceController) Delete () {    
-    var id string 
-	id = c.Ctx.Input.Param(":id")    
+func (c *SourceController) Delete () {
+    var id string
+	id = c.Ctx.Input.Param(":id")
 	source, err := c.model.GetSourceById(id)
 	if err != nil {
 		c.Abort("databaseError");
@@ -109,7 +109,7 @@ func (c *SourceController) Delete () {
 			c.Abort("databaseError");
 		} else {
 			c.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!", "/admin/sources/")
-		}		
+		}
 	}
 }
 
@@ -124,7 +124,8 @@ func (c *SourceController) showAddForm() {
 	c.showForm("Add", "Add a new source");
 }
 
-func (c *SourceController) showForm(action string, legend string) {	
+func (c *SourceController) showForm(action string, legend string) {
+  c.GenerateXsrf();
 	c.Data["action"] = action
 	c.Data["legend"] = legend
 	c.Data["actionURL"] = ""

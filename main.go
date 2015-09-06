@@ -60,6 +60,7 @@ func init() {
 		}
 
 		func main() {
+			
 			beego.Errorhandler("404", loadPageNotFound)
 			beego.Errorhandler("databaseError", loadDatabaseError)
 			beego.Run()

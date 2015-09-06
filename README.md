@@ -8,6 +8,8 @@ Using open data to enhance education
 
 ## Use Wisply on Ubuntu
 
+Wisply comes with a special installer which helps you to quickly set up and run the application. Until we can run the installer there must be installed the language, framework and the server for database. Please follow the next steps.
+
 ### Golang
 
 Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provides a virtual tour for the language [here](https://tour.golang.org/welcome/1)

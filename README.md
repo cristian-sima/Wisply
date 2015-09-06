@@ -15,7 +15,7 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 3. Type `Y` and press enter
 
 
-### Install and set up
+### Install Wisply
 
 #### Get Wisply
 
@@ -35,8 +35,6 @@ Wisply is using [beego](http://beego.me/) framework. This framework provides a t
 2. Type `go get github.com/beego/bee`. If the script ends and there is nothing displayed, it means it is working
 2. For more information go [beego tool website](http://beego.me/docs/install/bee.md)
 
-
-
 #### Set up the SQL database
 
 Wisply needs a SQL database where to store its data. We will show which are the steps to set up a database and make Wisply working
@@ -55,7 +53,7 @@ If you already have MySQL, skip this step.
   `sudo netstat -tap | grep mysql`
   You will see a list of details regarding the service such as port, process id
   
-#### Install Wisply
+#### Set up Wisply
 
 It's very quick to do it.
 

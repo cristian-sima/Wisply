@@ -1,5 +1,6 @@
-![Wisply](http://wisply.me/static/img/logo.jpg) # Wisply
+# Wisply
 
+![Wisply](http://wisply.me/static/img/logo.jpg) 
 
 
 Using open data to enhance education

@@ -44,10 +44,10 @@ INSERT INTO `source` (`id`, `name`, `description`, `url`) VALUES
 (35, 'assadasd', '', 'http://vsh.ro'),
 (36, 'ada', '', 'http://vsh.ro');
 
+
 --
 -- Indexes for dumped tables
 --
-
 --
 -- Indexes for table `source`
 --

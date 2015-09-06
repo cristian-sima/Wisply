@@ -11,7 +11,6 @@ func ValidateSourceDetails(rawData map[string]interface{}) *validity.ValidationR
     return validity.ValidateMap(rawData, rules)
 }
 
-
 func ValidateIndex(rawIndex string) bool {
 
     rawData := make(map[string]interface{})

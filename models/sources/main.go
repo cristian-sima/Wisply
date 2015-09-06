@@ -2,8 +2,6 @@ package sources
 
 import (
     "github.com/astaxie/beego/orm"
-    "reflect"
-    "fmt"
     "errors"
 )
 
@@ -40,7 +38,6 @@ func (model *Model) GetSourceById(rawIndex string) (*Source, error) {
 func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error ){
 
     validationResult := ValidateSourceDetails(rawData)
-    fmt.Println(reflect.TypeOf(validationResult))
 
     if !validationResult.IsValid {
         return validationResult.Errors, errors.New("Validation invalid")

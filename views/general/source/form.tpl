@@ -28,7 +28,7 @@
                         <label for="source-description" class="col-lg-2 control-label">Description</label>
                         <div class="col-lg-10">
                             <textarea value="{{.sourceDescription}}" class="form-control" rows="3" name="source-description" id="source-description" maxlength="255" ></textarea>
-                            <span class="help-block">This field may contain notes or the description of the intitution.</span>
+                            <span class="help-block">This field may contain notes about the intitution.</span>
                         </div>
                     </div>
                     <div class="form-group">

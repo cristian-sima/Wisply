@@ -2,7 +2,7 @@
 Using open data to enhance education
 
 
-## Ubuntu
+## Use Wisply on Ubuntu
 
 ### Golang
 

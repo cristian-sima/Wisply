@@ -73,7 +73,6 @@ func (c *SourceController) Update() {
 	var sourceId string;
 	rawData := make(map[string]interface{})
 
-
     sourceId = c.Ctx.Input.Param(":id")
 
     rawData["name"] = strings.TrimSpace(c.GetString("source-name"))

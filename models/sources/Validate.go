@@ -2,7 +2,7 @@ package sources
 
 import (
   validity "github.com/cristian-sima/validity"
-  )
+)
 
 func ValidateSourceDetails(rawData map[string]interface{}) *validity.ValidationResults {
     rules := validity.ValidationRules {

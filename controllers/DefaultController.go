@@ -1,10 +1,8 @@
 package controllers
 
-
 type DefaultController struct {
 	WisplyController
 }
-
 
 func (c *DefaultController) ShowAboutPage() {
     c.Layout = "general/layout.tpl"

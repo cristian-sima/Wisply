@@ -1,10 +1,10 @@
 package main
 
 import (
-	_ "Wisply/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/cristian-sima/Wisply/routers"
 	"net/http"
 	"html/template"
 	"fmt"

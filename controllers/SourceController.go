@@ -2,7 +2,7 @@ package controllers
 
 import (
     "strings"
-    SourcesModel "Wisply/models/sources"
+    SourcesModel "github.com/cristian-sima/Wisply/models/sources"
 )
 
 type SourceController struct {

@@ -6,8 +6,7 @@ import (
 	"testing"
 	"runtime"
 	"path/filepath"
-	_ "Wisply/routers"
-
+	_"github.com/Wisply/routers"
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -36,4 +35,3 @@ func TestMain(t *testing.T) {
 	        })
 	})
 }
-

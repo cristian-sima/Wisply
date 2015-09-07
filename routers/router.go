@@ -1,11 +1,11 @@
 package routers
 
 import (
-	"Wisply/controllers"
 	"github.com/astaxie/beego"
+	"github.com/cristian-sima/Wisply/controllers"
 )
 
-func init() {   
+func init() {
 
 
     beego.Router("/",               &controllers.DefaultController{}, "*:ShowIndexPage")

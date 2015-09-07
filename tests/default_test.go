@@ -1,8 +1,8 @@
 package test
 
 import (
-	_ "github.com/Wisply/routers"
 	"github.com/astaxie/beego"
+	_ "github.com/cristian-sima/Wisply/routers"
 	. "github.com/smartystreets/goconvey/convey"
 	"net/http"
 	"net/http/httptest"

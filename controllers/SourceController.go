@@ -1,27 +1,27 @@
 package controllers
 
 import (
-    "strings"
-    SourcesModel "github.com/cristian-sima/Wisply/models/sources"
+	SourcesModel "github.com/cristian-sima/Wisply/models/sources"
+	"strings"
 )
 
 type SourceController struct {
 	DefaultController
-    model SourcesModel.Model
+	model SourcesModel.Model
 }
 
 func (c *SourceController) ListSources() {
 
-    var  exists bool = false
+	var exists bool = false
 
-    list := c.model.GetAll()
+	list := c.model.GetAll()
 
-    exists = (len(list) != 0);
+	exists = (len(list) != 0)
 
-    c.Data["anything"] = exists
-    c.Data["sources"] = list
-    c.TplNames = "general/source/list.tpl"
-    c.Layout = "general/admin.tpl"
+	c.Data["anything"] = exists
+	c.Data["sources"] = list
+	c.TplNames = "general/source/list.tpl"
+	c.Layout = "general/admin.tpl"
 }
 
 func (c *SourceController) AddNewSource() {
@@ -30,22 +30,22 @@ func (c *SourceController) AddNewSource() {
 
 func (c *SourceController) InsertSource() {
 
-    rawData := make(map[string]interface{})
-    rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
-    rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
-    rawData["url"] =  strings.TrimSpace(c.GetString("source-URL"))
+	rawData := make(map[string]interface{})
+	rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
+	rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
+	rawData["url"] = strings.TrimSpace(c.GetString("source-URL"))
 
-    problems, err := c.model.ValidateSource(rawData)
-    if err != nil {
-        c.DisplayErrorMessage(problems)
-    } else {
-        databaseError := c.model.InsertNewSource(rawData)
-        if databaseError != nil {
-            c.Abort("databaseError");
-        } else {
-            c.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
-        }
-    }
+	problems, err := c.model.ValidateSource(rawData)
+	if err != nil {
+		c.DisplayErrorMessage(problems)
+	} else {
+		databaseError := c.model.InsertNewSource(rawData)
+		if databaseError != nil {
+			c.Abort("databaseError")
+		} else {
+			c.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
+		}
+	}
 }
 
 func (c *SourceController) Modify() {
@@ -54,34 +54,34 @@ func (c *SourceController) Modify() {
 
 	id = c.Ctx.Input.Param(":id")
 
-    source, err := c.model.GetSourceById(id)
+	source, err := c.model.GetSourceById(id)
 
-    if err != nil {
-		c.Abort("databaseError");
-    } else {
+	if err != nil {
+		c.Abort("databaseError")
+	} else {
 		sourceDetails := map[string]string{
-		"Name" : source.Name,
-		"Description" : source.Description,
-		"Url": source.Url,
+			"Name":        source.Name,
+			"Description": source.Description,
+			"Url":         source.Url,
 		}
-		c.showModifyForm(sourceDetails);
+		c.showModifyForm(sourceDetails)
 	}
 }
 
 func (c *SourceController) Update() {
 
-	var sourceId string;
+	var sourceId string
 	rawData := make(map[string]interface{})
 
-    sourceId = c.Ctx.Input.Param(":id")
+	sourceId = c.Ctx.Input.Param(":id")
 
-    rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
-    rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
-    rawData["url"] =  strings.TrimSpace(c.GetString("source-URL"))
+	rawData["name"] = strings.TrimSpace(c.GetString("source-name"))
+	rawData["description"] = strings.TrimSpace(c.GetString("source-description"))
+	rawData["url"] = strings.TrimSpace(c.GetString("source-URL"))
 
-    _, err := c.model.GetSourceById(sourceId)
+	_, err := c.model.GetSourceById(sourceId)
 	if err != nil {
-		c.Abort("databaseError");
+		c.Abort("databaseError")
 	} else {
 		problems, err := c.model.ValidateSource(rawData)
 		if err != nil {
@@ -89,7 +89,7 @@ func (c *SourceController) Update() {
 		} else {
 			databaseError := c.model.UpdateSourceById(sourceId, rawData)
 			if databaseError != nil {
-				c.Abort("databaseError");
+				c.Abort("databaseError")
 			} else {
 				c.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
 			}
@@ -97,18 +97,18 @@ func (c *SourceController) Update() {
 	}
 }
 
-func (c *SourceController) Delete () {
-    var id string
+func (c *SourceController) Delete() {
+	var id string
 	id = c.Ctx.Input.Param(":id")
 	source, err := c.model.GetSourceById(id)
 	if err != nil {
-		c.Abort("databaseError");
+		c.Abort("databaseError")
 	} else {
 		databaseError := c.model.DeleteSourceById(id)
 		if databaseError != nil {
-			c.Abort("databaseError");
+			c.Abort("databaseError")
 		} else {
-			c.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!", "/admin/sources/")
+			c.DisplaySuccessMessage("The source ["+source.Name+"] has been deleted. Well done!", "/admin/sources/")
 		}
 	}
 }
@@ -117,15 +117,15 @@ func (c *SourceController) showModifyForm(source map[string]string) {
 	c.Data["sourceName"] = source["Name"]
 	c.Data["sourceUrl"] = source["Url"]
 	c.Data["sourceDescription"] = source["Description"]
-	c.showForm("Modify", "Modify this source");
+	c.showForm("Modify", "Modify this source")
 }
 
 func (c *SourceController) showAddForm() {
-	c.showForm("Add", "Add a new source");
+	c.showForm("Add", "Add a new source")
 }
 
 func (c *SourceController) showForm(action string, legend string) {
-  c.GenerateXsrf();
+	c.GenerateXsrf()
 	c.Data["action"] = action
 	c.Data["legend"] = legend
 	c.Data["actionURL"] = ""

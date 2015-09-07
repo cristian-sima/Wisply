@@ -1,8 +1,8 @@
 package sources
 
 import (
-    "github.com/astaxie/beego/orm"
-    "errors"
+	"errors"
+	"github.com/astaxie/beego/orm"
 )
 
 type Model struct {
@@ -10,77 +10,75 @@ type Model struct {
 
 func (model *Model) GetAll() []Source {
 
-    orm := orm.NewOrm()
+	orm := orm.NewOrm()
 
-    var list []Source
+	var list []Source
 
-    orm.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
+	orm.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
 
-    return list
+	return list
 }
 
 func (model *Model) GetSourceById(rawIndex string) (*Source, error) {
 
-    var isValid bool;
+	var isValid bool
 
-    orm := orm.NewOrm()
+	orm := orm.NewOrm()
 	source := new(Source)
 
-    isValid = ValidateIndex(rawIndex)
+	isValid = ValidateIndex(rawIndex)
 
-    if !isValid {
-        return source, errors.New("Validation invalid")
-    }
+	if !isValid {
+		return source, errors.New("Validation invalid")
+	}
 	error := orm.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
-	return source, error;
+	return source, error
 }
 
-func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error ){
+func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error) {
 
-    validationResult := ValidateSourceDetails(rawData)
+	validationResult := ValidateSourceDetails(rawData)
 
-    if !validationResult.IsValid {
-        return validationResult.Errors, errors.New("Validation invalid")
-    }
-    return nil, nil
+	if !validationResult.IsValid {
+		return validationResult.Errors, errors.New("Validation invalid")
+	}
+	return nil, nil
 }
 
 func (model *Model) UpdateSourceById(sourceId string, rawData map[string]interface{}) error {
 
-    orm := orm.NewOrm()
+	orm := orm.NewOrm()
 
-    stringElements := []string{rawData["name"].(string),
-                            rawData["description"].(string),
-                            rawData["url"].(string),
-							sourceId}
+	stringElements := []string{rawData["name"].(string),
+		rawData["description"].(string),
+		rawData["url"].(string),
+		sourceId}
 
-   _, err := orm.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
+	_, err := orm.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
 
-    return err
+	return err
 }
 
 func (model *Model) DeleteSourceById(id string) error {
 
-    orm := orm.NewOrm()
+	orm := orm.NewOrm()
 
-    elememts := []string{id}
+	elememts := []string{id}
 
-    _, err := orm.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
+	_, err := orm.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
 
-    return err
+	return err
 }
-
-
 
 func (model *Model) InsertNewSource(rawData map[string]interface{}) error {
 
-    orm := orm.NewOrm()
+	orm := orm.NewOrm()
 
-    stringElements := []string{rawData["name"].(string),
-                            rawData["description"].(string),
-                            rawData["url"].(string)}
+	stringElements := []string{rawData["name"].(string),
+		rawData["description"].(string),
+		rawData["url"].(string)}
 
-    _, err := orm.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
+	_, err := orm.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
 
-    return err
+	return err
 }

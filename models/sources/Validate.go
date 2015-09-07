@@ -1,11 +1,11 @@
 package sources
 
-import validity "github.com/connor4312/validity"
+import validity "github.com/cristian-sima/validity"
 
 func ValidateSourceDetails(rawData map[string]interface{}) *validity.ValidationResults {
     rules := validity.ValidationRules {
-        "name": []string{"String", "between:3,255"},
-        "url": []string{"String", "url", "between:3,2083"},
+        "name": []string{"String", "between_inclusive:3,255"},
+        "url": []string{"String", "url", "between_inclusive:3,2083"},
         "description": []string{"String", "max:255"},
     }
     return validity.ValidateMap(rawData, rules)

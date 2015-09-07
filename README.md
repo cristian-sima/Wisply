@@ -20,6 +20,11 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 2. Type `sudo apt-get install golang`
 3. Type `Y` and press enter
 
+#### Configure Golang
+
+1. `GOROOT` is the path where Go is installed. You do not have to change it, but in case you want type `export GOROOT=/usr/local/go`
+2. `GOPATH` is the path to the Go workspace. Here Go will download Wisply. So, type `export GOPATH=$HOME/path` where `path` is the path where you want to store Wisply
+3. You now have to save the changes. Type `export PATH=$PATH:$GOROOT/bin:$GOPATH/bin`
 
 ### Install Wisply
 

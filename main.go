@@ -43,9 +43,6 @@ func getConfigurationFromFile() SQLConfiguration {
 	return configuration
 }
 
-/*
- * [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
- */
 func getSQLString() string {
 	configuration := getConfigurationFromFile()
 	var (

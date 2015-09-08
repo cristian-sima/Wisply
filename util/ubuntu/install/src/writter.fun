@@ -7,6 +7,6 @@ saveDatabaseConfiguration () {
   	\"Port\"       : \"3306\",
   	\"Database\"   : \"${database}\"
   }"
-  file="../../conf/database/custom.json"
+  file="conf/database/custom.json"
   echo $content > $file
 }

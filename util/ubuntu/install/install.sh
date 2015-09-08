@@ -1,12 +1,12 @@
 #!/bin/bash
 
-source src/settings.fun
-source src/message.fun
-source src/server.fun
-source src/database.fun
-source src/SQL.fun
-source src/finish.fun
-source src/writter.fun
+source util/ubuntu/install/src/settings.fun
+source util/ubuntu/install/src/message.fun
+source util/ubuntu/install/src/server.fun
+source util/ubuntu/install/src/database.fun
+source util/ubuntu/install/src/SQL.fun
+source util/ubuntu/install/src/finish.fun
+source util/ubuntu/install/src/writter.fun
 
 start () {
   showIntro

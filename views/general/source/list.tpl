@@ -8,7 +8,7 @@
         <div class="panel-body">
             {{ if .anything }}
                 <p>This is the list with the sources</p>
-                <table class="table table-striped table-hover ">              
+                <table class="table table-striped table-hover ">
                     <thead>
                         <tr>
                             <th>Source</th>
@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{range $index, $element := .sources}}                    
+                        {{range $index, $element := .sources}}
                         <tr>
                             <td>{{ $element.Name }}</td>
                             <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url }}</a></td>
@@ -32,16 +32,18 @@
                                     </ul>
                                 </div>
                             </td>
-                        </tr>               
-                        {{end }}                    
+                        </tr>
+                        {{end }}
                     </tbody>
-                </table> 
+                </table>
             {{ else }}
                 There are no sources... :(
                 {{ end }}
             </div>
         </div>
     </div>
+    <script src="/static/js/base64_decode.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
     <script>
         /* global bootbox */
         $(document).ready(function () {
@@ -81,10 +83,28 @@
               });
         }
         function deleteSource(id) {
-            var newForm = jQuery('<form>', {
-                'action': '/admin/sources/delete/' + id,
-                'method': "POST"
+            var xsrf,
+              xsrflist,
+              args = {};
+              xsrf = $.cookie("_xsrf");
+              xsrflist = xsrf.split("|");
+              args._xsrf = base64_decode(xsrflist[0]);
+              $.ajax({
+                "url" : '/admin/sources/delete/' + id,
+                 "data": $.param(args),
+                 dataType: "text",
+                'method': "POST",
+                "type" : "POST",
+                "success": onSuccess
             });
-            newForm.submit();
+        }
+        function onSuccess(name) {
+          bootbox.dialog({
+              title: "Success",
+              message: "The source has been deleted! Refreshing page..."
+          });
+          setTimeout(function() {
+            location.reload();
+          }, 1100)
         }
     </script>

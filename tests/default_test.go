@@ -55,7 +55,7 @@ func checkPage(t *testing.T, url string, pageName string) {
 	beego.Trace("Test static page: ", pageName)
 
 	Convey("Subject: Test Station Endpoint\n", t, func() {
-		Convey("The page " + pageName + " can be accessed", func() {
+		Convey("The page "+pageName+" can be accessed", func() {
 			So(w.Code, ShouldEqual, 200)
 		})
 		Convey("The page should not be empty", func() {

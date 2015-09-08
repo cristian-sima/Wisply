@@ -15,8 +15,8 @@ checkWisplyIsRunning () {
 }
 runNow () {
   showMessage "Tring to run Wisply..."
-  nohup bee run &
-  if [ $? -eq 0 ];
+
+  if nohup bee run &;
   then
     showSuccess "Wisply is now running!"
     showMessage "If you want to stop it, type: bash util/ubuntu/stop.sh"

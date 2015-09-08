@@ -10,5 +10,5 @@ func (c *AdminController) ShowDashboard() {
 }
 
 func (c *AdminController) Prepare() {
-	
+
 }

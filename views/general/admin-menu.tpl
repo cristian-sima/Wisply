@@ -10,9 +10,20 @@
                 <li><a href="/admin/sources/add">Add</a></li>
                 <li><a href="/admin/sources/">Manage</a></li>
             </ul>
-            <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/harvest" aria-expanded="true">
-                Harvest <span class="caret"></span>
+        </li>
+        <li>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/harvest" aria-expanded="true">
+              Harvest <span class="caret"></span>
+          </a>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/sources" aria-expanded="true">
+                Users <span class="caret"></span>
             </a>
+            <ul class="dropdown-menu">
+                <li><a href="/admin/users/add">Add</a></li>
+                <li><a href="/admin/users/">Manage</a></li>
+            </ul>
         </li>
     </ul>
 </div>

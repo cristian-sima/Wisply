@@ -6,20 +6,20 @@ import (
 )
 
 type User struct {
- 	Username string
+	Username string
 	Password string
-	isAdmin bool
+	isAdmin  bool
 }
 
 func (user *User) isAdministrator() bool {
-		return user.isAdmin
+	return user.isAdmin
 }
 
 func NewUser() *User {
-    var user User
-		orm := orm.NewOrm()
+	var user User
+	orm := orm.NewOrm()
 
-		orm.Raw("SELECT username, password, isAdmin FROM user").QueryRow(&user)
+	orm.Raw("SELECT username, password, isAdmin FROM user").QueryRow(&user)
 
-    return user
+	return user
 }

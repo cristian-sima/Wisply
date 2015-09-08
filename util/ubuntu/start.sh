@@ -27,7 +27,7 @@ processScript () {
   checkWisplyIsRunning
   wisplyIs=$?
   running=1
-  if wisplyIs == running
+  if $wisplyIs == $running
   then
     showError "Wisply is already running!"
   else

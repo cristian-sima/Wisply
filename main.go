@@ -14,10 +14,10 @@ import (
 )
 
 type SQLConfiguration struct {
-	Username  string
+	Username string
 	Password string
-	Host string
-	Port string
+	Host     string
+	Port     string
 	Database string
 }
 
@@ -26,9 +26,9 @@ func getConfigurationFile() string {
 	defaultFile := path + "default.json"
 	customFile := path + "custom.json"
 	if _, err := os.Stat(customFile); err == nil {
-	    return customFile;
+		return customFile
 	}
-	return defaultFile;
+	return defaultFile
 }
 
 func getConfigurationFromFile() SQLConfiguration {
@@ -40,15 +40,14 @@ func getConfigurationFromFile() SQLConfiguration {
 	if err != nil {
 		fmt.Println("There was an error with the configuration file (conf/database.conf):", err)
 	}
-	return configuration;
+	return configuration
 }
-
 
 /*
  * [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
  */
 func getSQLString() string {
-	configuration := 	getConfigurationFromFile();
+	configuration := getConfigurationFromFile()
 	var (
 		mysqlAddress   string = configuration.Host + ":" + configuration.Port
 		databaseString string = configuration.Username + ":" + configuration.Password + "@" + "(" + mysqlAddress + ")/" + configuration.Database + "?charset=utf8"

@@ -10,7 +10,7 @@ getJSONcontent () {
   return $content
 }
 saveDatabaseConfiguration () {
-  file="conf/database/custom.json"
+  file="../conf/database/custom.json"
   getJSONcontent
   content=$?
   echo $content > $file

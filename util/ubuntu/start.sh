@@ -15,18 +15,18 @@ checkWisplyIsRunning () {
 }
 runNow () {
   showMessage "Tring to run Wisply..."
-  if nohup bee run &
+  if [nohup bee run &]
   then
     showSuccess "Wisply is now running!"
     showMessage "If you want to stop it, type: bash util/ubuntu/stop.sh"
   else
     showError "Problem while starting Wisply"
+    exitProgram
   fi
 }
 processScript () {
   checkWisplyIsRunning
   wisplyIs=$?
-  echo "state $wisplyIs"
   if [[ "$wisplyIs" == 1 ]];
     then
     showError "Wisply is already running!"

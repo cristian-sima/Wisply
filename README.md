@@ -6,7 +6,9 @@
 Building the hive of education
 
 
-## Use Wisply on Ubuntu
+## Gettings started
+
+## Ubuntu
 
 Wisply comes with a special installer which helps you to quickly set up and run the application. Until we can run the installer there must be installed the language, framework and the server for database. Please follow the next steps.
 
@@ -79,3 +81,8 @@ These steps will help you to use the installer
 4. Type `cd install` to go in the installer directory
 5. Type `bash ./installer.sh` in order to run the installer
 6. Follow the steps of the installer
+
+
+### Windows
+
+In the `util/` folder there are a few scrips which may help yout.

@@ -21,8 +21,18 @@ type SQLConfiguration struct {
 	Database string
 }
 
+func getConfigurationFile() string {
+	path := "conf/database/"
+	defaultFile := path + "default.json"
+	customFile := path + "custom.json"
+	if _, err := os.Stat(customFile); err == nil {
+	    return customFile;
+	}
+	return defaultFile;
+}
+
 func getConfigurationFromFile() SQLConfiguration {
-	fileName := "conf/database.json"
+	fileName := getConfigurationFile()
 	file, _ := os.Open(fileName)
 	decoder := json.NewDecoder(file)
 	configuration := SQLConfiguration{}

@@ -16,9 +16,9 @@ checkWisplyIsRunning () {
 runNow () {
   showMessage "Tring to run Wisply..."
   nohup bee run &
-  echo $?
   if [ $? -eq 0 ];
   then
+    sleep 2
     showSuccess "Wisply is now running!"
     showMessage "If you want to stop it, type: bash util/ubuntu/stop.sh"
   else
@@ -36,16 +36,8 @@ processScript () {
     runNow
   fi
 }
-exitProgram () {
-  PID=$!
-  # Wait
-  sleep 1
-  # Kill it
-  #kill $PID
-}
 finishScript () {
   showHappyEnd
-  exitProgram
 }
 runWisply () {
   startScript

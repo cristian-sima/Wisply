@@ -41,7 +41,7 @@ exitProgram () {
   # Wait
   sleep 1
   # Kill it
-  kill $PID
+  #kill $PID
 }
 finishScript () {
   showHappyEnd

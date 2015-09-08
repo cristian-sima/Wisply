@@ -42,5 +42,3 @@ showHappyEnd () {
     showBlankLine
     showBlankLine
 }
-export -f showInstaller
-export -f showHeading

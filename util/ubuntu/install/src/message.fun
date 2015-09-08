@@ -14,7 +14,7 @@ showSuccess () {
 showError () {
     showMessage "\x1B[01;91m[Error]\x1B[0m $1"
     showBlankLine
-    showMessage "The installer has stopped. Please check the errors!"
+    showMessage "The script has been stopped. Please check the errors!"
     showBlankLine
     showMargin
     echo
@@ -31,13 +31,13 @@ showHeading () {
 showIntro () {
     clear
     showMargin
-    showMessage "\x1B[01;93mHi! Welcome to Wisply installer wizard\x1B[0m"
+    showMessage "\x1B[01;93mHi! Welcome to Wisply $1 wizard\x1B[0m"
     showBlankLine
 }
 showHappyEnd () {
     showBlankLine
     showBlankLine
-    showMessage "\x1B[01;92mThe installer has been sucessfully executed!\x1B[0m"
+    showMessage "\x1B[01;92mThe script has been sucessfully executed!\x1B[0m"
     showMessage "Have a nice day!"
     showBlankLine
     showBlankLine

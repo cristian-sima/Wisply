@@ -1,14 +1,31 @@
 #!/bin/bash
 
-stopWisply () {
-  clear
-  pkill Wisply
-  echo "--------------------------- Wisply has been stopped ! -----------------------------"
-  echo
-  echo
-  echo "In order to start again it type: bash util/ubuntu/start.sh"
-  echo
-  echo
-}
+#!/bin/bash
 
+source util/ubuntu/install/src/messages.fun
+
+startScript () {
+  showIntro "Stopping"
+}
+stopNow () {
+  showMessage "Tring to stop Wisply..."
+  pkill Wisply
+  showSuccess "Wisply has been stopped !"
+  showMessage "If you want to start it again, type: bash util/ubuntu/start.sh"
+}
+processScript () {
+  stopNow
+}
+exitProgram () {
+  kill -INT 888
+}
+finishScript () {
+  showHappyEnd
+  exitProgram
+}
+stopWisply () {
+  startScript
+  processScript
+  finishScript
+}
 stopWisply

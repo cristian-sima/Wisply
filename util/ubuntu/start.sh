@@ -1,14 +1,50 @@
 #!/bin/bash
 
+source util/ubuntu/install/src/messages.fun
+
+startScript () {
+  showIntro "Running"
+}
+checkWisplyIsRunning () {
+  if pgrep "Wisply" > /dev/null;
+  then
+      return 1
+  else
+      return 0
+  fi
+}
+runNow () {
+  showMessage "Tring to run Wisply..."
+  if nohup bee run &;
+  then
+    showSuccess "Wisply is now running!"
+    showMessage "If you want to stop it, type: bash util/ubuntu/stop.sh"
+  else
+    showError "Problem while starting Wisply"
+  fi
+}
+processScript () {
+  checkWisplyIsRunning
+  wisplyIs=$?
+  running=1
+  if wisplyIs = running
+  then
+    showError "Wisply is already running!"
+  else
+    runNow
+  fi
+}
+exitProgram () {
+  kill -INT 888
+}
+finishScript () {
+  showHappyEnd
+  exitProgram
+}
 runWisply () {
-  nohup bee run &
-  clear
-  echo "--------------------------- Wisply is now running! -----------------------------"
-  echo
-  echo
-  echo "In order to stop it type: bash util/ubuntu/stop.sh"
-  echo
-  echo
+  startScript
+  processScript
+  finishScript
 }
 
 runWisply

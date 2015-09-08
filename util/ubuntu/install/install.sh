@@ -9,7 +9,7 @@ source util/ubuntu/install/src/finish.fun
 source util/ubuntu/install/src/writter.fun
 
 start () {
-  showIntro
+  showIntro "Installer"
 }
 process () {
   checkServer

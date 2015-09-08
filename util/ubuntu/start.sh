@@ -6,7 +6,7 @@ startScript () {
   showIntro "Run"
 }
 checkWisplyIsRunning () {
-  if pgrep "Wisply" > /dev/null;
+  if pgrep Wisply > /dev/null;
   then
       return 1
   else
@@ -15,8 +15,7 @@ checkWisplyIsRunning () {
 }
 runNow () {
   showMessage "Tring to run Wisply..."
-  nohup bee run &
-  if [ $? -ne 0 ];
+  if nohup bee run &
   then
     showSuccess "Wisply is now running!"
     showMessage "If you want to stop it, type: bash util/ubuntu/stop.sh"
@@ -27,6 +26,7 @@ runNow () {
 processScript () {
   checkWisplyIsRunning
   wisplyIs=$?
+  echo "state $wisplyIs"
   if [[ "$wisplyIs" == 1 ]];
     then
     showError "Wisply is already running!"

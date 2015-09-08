@@ -1,11 +1,9 @@
 #!/bin/bash
 
-#!/bin/bash
-
-source util/ubuntu/install/src/messages.fun
+source util/ubuntu/install/src/message.fun
 
 startScript () {
-  showIntro "Stopping"
+  showIntro "Stop"
 }
 stopNow () {
   showMessage "Tring to stop Wisply..."
@@ -17,7 +15,11 @@ processScript () {
   stopNow
 }
 exitProgram () {
-  kill -INT 888
+  PID=$!
+  # Wait
+  sleep 1
+  # Kill it
+  kill $PID
 }
 finishScript () {
   showHappyEnd

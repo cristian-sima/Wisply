@@ -3,7 +3,7 @@
 source util/ubuntu/install/src/message.fun
 
 startScript () {
-  showIntro "Running"
+  showIntro "Run"
 }
 checkWisplyIsRunning () {
   if pgrep "Wisply" > /dev/null;
@@ -35,7 +35,11 @@ processScript () {
   fi
 }
 exitProgram () {
-  kill -INT 888
+  PID=$!
+  # Wait
+  sleep 1
+  # Kill it
+  kill $PID
 }
 finishScript () {
   showHappyEnd

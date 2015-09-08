@@ -31,7 +31,7 @@ showHeading () {
 showIntro () {
     clear
     showMargin
-    showMessage "\x1B[01;93mHi! Welcome to Wisply $1 wizard\x1B[0m"
+    showMessage "\x1B[01;93mHi! Welcome to\x1B[0m \e[0;36mWisply\x1B[0m \x1B[01;93m - $1 wizard\x1B[0m"
     showBlankLine
 }
 showHappyEnd () {

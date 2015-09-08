@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source util/ubuntu/install/src/messages.fun
+source util/ubuntu/install/src/message.fun
 
 startScript () {
   showIntro "Running"

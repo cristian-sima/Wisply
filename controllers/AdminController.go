@@ -8,3 +8,7 @@ func (c *AdminController) ShowDashboard() {
 	c.Layout = "general/admin.tpl"
 	c.TplNames = "general/admin/dashboard.tpl"
 }
+
+func (c *AdminController) Prepare() {
+	
+}

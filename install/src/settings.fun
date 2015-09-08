@@ -1,6 +1,6 @@
 #!/bin/bash
 
-database="Wisply"
+database="wisply"
 MySQLUsername="root"
 MySQLPassword="Pv1XL_De_zHdhgjWu"
 databaseUsername="root"

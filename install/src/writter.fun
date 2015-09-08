@@ -7,7 +7,7 @@ getJSONcontent () {
   	'Port'       : '3306',
   	'Database'   : ${database}
   }"
-  return content
+  return $content
 }
 saveDatabaseConfiguration () {
   file="conf/database/custom.json"

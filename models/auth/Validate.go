@@ -4,11 +4,19 @@ import (
 	validity "github.com/cristian-sima/validity"
 )
 
-func ValidateSourceDetails(rawData map[string]interface{}) *validity.ValidationResults {
+func ValidateNewUserDetails(rawData map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{
-		"name":        []string{"String", "between_inclusive:3,255"},
-		"url":         []string{"String", "url", "between_inclusive:3,2083"},
-		"description": []string{"String", "max:255"},
+		"username": []string{"String", "alpha_dash", "between_inclusive:3,25"},
+		"password": []string{"String", "alpha_dash", "between_inclusive:6,25"},
+		"email":    []string{"String", "email", "between_inclusive:3,25"},
+	}
+	return validity.ValidateMap(rawData, rules)
+}
+
+func ValidateLoginDetails(rawData map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"username": []string{"String", "alpha_dash", "between_inclusive:3,25"},
+		"password": []string{"String", "alpha_dash", "between_inclusive:6,25"},
 	}
 	return validity.ValidateMap(rawData, rules)
 }

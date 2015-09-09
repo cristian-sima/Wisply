@@ -9,7 +9,13 @@ type MessageController struct {
 	beego.Controller
 }
 
-func (c *MessageController) DisplayErrorMessage(errors map[string][]string) {
+func (c *MessageController) DisplayErrorMessage(errorMessage string) {
+
+	content := errorMessage
+	c.DisplayMessage("error", content)
+}
+
+func (c *MessageController) DisplayErrorMessages(errors map[string][]string) {
 	var (
 		number  int    = len(errors)
 		message string = getMessage(number)

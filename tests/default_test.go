@@ -47,6 +47,24 @@ func TestPageContact(t *testing.T) {
 	checkPage(t, url, name)
 }
 
+func TestPageLogin(t *testing.T) {
+	url := "/auth/login"
+	name := "Login"
+	checkPage(t, url, name)
+}
+
+func TestPageRegister(t *testing.T) {
+	url := "/auth/register"
+	name := "Register"
+	checkPage(t, url, name)
+}
+
+func TestPageRecover(t *testing.T) {
+	url := "/auth/recover"
+	name := "Recover"
+	checkPage(t, url, name)
+}
+
 func checkPage(t *testing.T, url string, pageName string) {
 	r, _ := http.NewRequest("GET", url, nil)
 	w := httptest.NewRecorder()

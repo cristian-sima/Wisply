@@ -10,7 +10,7 @@
             <div class=" text-center">
                We need you to connect
             </div>
-            <form action="{{.actionURL}}" method="{{.actionType}}" class="form-horizontal" >
+            <form action="" method="POST" class="form-horizontal" >
               {{ .xsrf_input }}
               <fieldset>
                 <legend>{{.legend}}</legend>
@@ -39,7 +39,7 @@
       <div class="form-group">
         <div class="panel panel-default">
           <div class="panel-body">
-          Do you need an account?  <a href="/auth/register">Register</a> <br />
+          Are you new? <a href="/auth/register">Create</a> an account in less then 10 seconds <br />
           Do you need to recover your details? <a href="/auth/recover">Recover</a>
           </div>
         </div>

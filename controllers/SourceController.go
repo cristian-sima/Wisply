@@ -37,7 +37,7 @@ func (c *SourceController) InsertSource() {
 
 	problems, err := c.model.ValidateSource(rawData)
 	if err != nil {
-		c.DisplayErrorMessage(problems)
+		c.DisplayErrorMessages(problems)
 	} else {
 		databaseError := c.model.InsertNewSource(rawData)
 		if databaseError != nil {
@@ -85,7 +85,7 @@ func (c *SourceController) Update() {
 	} else {
 		problems, err := c.model.ValidateSource(rawData)
 		if err != nil {
-			c.DisplayErrorMessage(problems)
+			c.DisplayErrorMessages(problems)
 		} else {
 			databaseError := c.model.UpdateSourceById(sourceId, rawData)
 			if databaseError != nil {

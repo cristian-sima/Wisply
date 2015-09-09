@@ -21,6 +21,7 @@ function logoutUser (event) {
     "success": function() {
       showSuccessMessage("You have been disconnected! Refreshing page...");
       reloadPage();
+      $("#menu-logout-button").html("");
     },
     "error" : function() {
       showErrorMessage("There was a problem with your request!");

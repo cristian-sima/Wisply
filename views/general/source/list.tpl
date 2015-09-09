@@ -28,7 +28,7 @@
                                     <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="/admin/sources/modify/{{$element.Id}}">Modify</a></li>
-                                        <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$element.Name}}" href="/">Delete</a></li>
+                                        <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{ $element.Name }}" href="/">Delete</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -95,16 +95,23 @@
                  dataType: "text",
                 'method': "POST",
                 "type" : "POST",
-                "success": onSuccess
+                "success": showSuccess,
+                "error" : showError
             });
         }
-        function onSuccess(name) {
+        function showSuccess () {
+          showMessage("<div class='text-success'>Success</div>", "The source has been deleted! Refreshing page...");
+        }
+        function showError () {
+          showMessage("<div class='bg-warning>Sorry</div>", "There was a problem with your request!");
+        }
+        function showMessage(title, content) {
           bootbox.dialog({
-              title: "Success",
-              message: "The source has been deleted! Refreshing page..."
+              title: title,
+              message: content
           });
           setTimeout(function() {
             location.reload();
-          }, 1100)
+          }, 2000)
         }
     </script>

@@ -13,15 +13,31 @@ func init() {
 	beego.Router("/webscience", &controllers.DefaultController{}, "*:ShowWebsciencePage")
 	beego.Router("/sample", &controllers.DefaultController{}, "*:ShowSamplePage")
 
-	beego.Router("/admin", &controllers.AdminController{}, "*:ShowDashboard")
+	// ----------------------------- Admin --------------------------------------
 
-	// source
-	beego.Router("/admin/sources", &controllers.SourceController{}, "*:ListSources")
-	beego.Router("/admin/sources/add", &controllers.SourceController{}, "Get:AddNewSource")
-	beego.Router("/admin/sources/add", &controllers.SourceController{}, "Post:InsertSource")
-	beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Get:Modify")
-	beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Post:Update")
 
-	beego.Router("/admin/sources/delete/:id", &controllers.SourceController{}, "POST:Delete")
+	sourcesNamespace := beego.NSNamespace("/sources",
+		beego.NSRouter("", &controllers.SourceController{}, "*:ListSources"),
+		beego.NSNamespace("/add",
+				beego.NSRouter("", &controllers.SourceController{}, "Get:AddNewSource"),
+				beego.NSRouter("", &controllers.SourceController{}, "Post:InsertSource"),
+		),
+		beego.NSNamespace("/modify",
+				beego.NSRouter(":id", &controllers.SourceController{}, "Get:Modify"),
+				beego.NSRouter(":id", &controllers.SourceController{}, "Post:Update"),
+		),
+		beego.NSNamespace("/delete",
+				beego.NSRouter(":id", &controllers.SourceController{}, "Post:Delete"),
+		),
+	)
+
+	adminNamespace :=
+		beego.NewNamespace("/admin",
+			beego.NSRouter("",  &controllers.AdminController{}, "*:ShowDashboard"),
+			sourcesNamespace,
+		)
+
+	// register namespace
+	beego.AddNamespace(adminNamespace)
 
 }

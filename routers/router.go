@@ -24,6 +24,9 @@ func init() {
 			beego.NSRouter("", &controllers.AuthController{}, "Get:ShowRegisterForm"),
 			beego.NSRouter("", &controllers.AuthController{}, "Post:CreateNewUser"),
 		),
+		beego.NSNamespace("/logout",
+			beego.NSRouter("", &controllers.AuthController{}, "Post:Logout"),
+		),
 	)
 
 	// ----------------------------- Admin --------------------------------------

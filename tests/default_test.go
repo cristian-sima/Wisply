@@ -59,6 +59,12 @@ func TestPageRegister(t *testing.T) {
 	checkPage(t, url, name)
 }
 
+func TestPageLogout(t *testing.T) {
+	url := "/auth/logout"
+	name := "Logout"
+	checkPage(t, url, name)
+}
+
 func TestPageRecover(t *testing.T) {
 	url := "/auth/recover"
 	name := "Recover"

@@ -23,7 +23,7 @@
                 <div class="form-group">
                   <label for="login-password" class="col-lg-2 control-label">Password</label>
                   <div class="col-lg-10">
-                    <input type="text" value="{{.passowrd}}" class="form-control" name="login-password" id="login-password" placeholder="Password" required pattern=".{3,25}" title="The password has 3 up to 25 characters!">
+                    <input type="password" value="{{.passowrd}}" class="form-control" name="login-password" id="login-password" placeholder="Password" required pattern=".{3,25}" title="The password has 3 up to 25 characters!">
                   </div>
                 </div>
                 <div class="form-group">

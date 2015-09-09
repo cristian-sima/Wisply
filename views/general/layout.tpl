@@ -3,9 +3,9 @@
     {{ template "header" }}
     <body>
         {{ template "javascript" }}
-        {{ template "menu" }}
+        {{ template "menu" . }}
         <div class="container" >
-            {{.LayoutContent}}    
+            {{.LayoutContent}}
             {{ template "footer"}}
         </div>
     </body>

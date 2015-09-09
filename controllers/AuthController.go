@@ -68,12 +68,22 @@ func (c *AuthController) LoginUser() {
 	if err != nil {
 		c.DisplayErrorMessages(problems)
 	} else {
-		err := c.Model.TryLoginUser(rawData)
+		user, err := c.Model.TryLoginUser(rawData)
 		if err != nil {
 			c.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
 		} else {
-			// TODO
+			c.saveLoginDetails(user)
 			c.DisplaySuccessMessage("You are connected!", "/auth/login/")
 		}
 	}
+}
+
+func (c *AuthController) saveLoginDetails(user *User) {
+	c.SetSession("user", user.Username)
+}
+
+func (controller *AuthController) Logout() {
+	controller.DelSession("user")
+	controller.DestroySession()
+	controller.Redirect("/", 200)
 }

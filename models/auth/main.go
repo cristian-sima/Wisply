@@ -81,7 +81,7 @@ func (this *AuthModel) ValidateLoginDetails(rawData map[string]interface{}) (map
 	return nil, nil
 }
 
-func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) error {
+func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) (*User, error) {
 
 	var (
 		passwordIsValid         bool = false
@@ -99,7 +99,7 @@ func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) error {
 	error := orm.Raw("SELECT id, username, password, email, isAdmin FROM user WHERE username = ?", elements).QueryRow(&user)
 
 	if error != nil {
-		return errors.New("Problem")
+		return user, errors.New("Problem")
 	}
 
 	fmt.Println(user.Password)
@@ -107,11 +107,11 @@ func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) error {
 	passwordIsValid = checkPasswordIsCorrect(user.Password, plainPassword)
 
 	if !passwordIsValid {
-		return errors.New("Problem")
+		return user, errors.New("Problem")
 	}
 
 	// connect the user
-	return nil
+	return user, nil
 }
 
 func checkPasswordIsCorrect(hashedPassword, plainPassword string) bool {

@@ -10,6 +10,7 @@
             <p>
             <form action="{{.actionURL}}" method="{{.actionType}}" class="form-horizontal" >
                 {{ .xsrf_input }}
+                {{ $safeDescription := .sourceDescription|html}}
                 <fieldset>
                     <legend>{{.legend}}</legend>
                     <div class="form-group">
@@ -27,7 +28,7 @@
                     <div class="form-group">
                         <label for="source-description" class="col-lg-2 control-label">Description</label>
                         <div class="col-lg-10">
-                            <textarea value="{{.sourceDescription}}" class="form-control" rows="3" name="source-description" id="source-description" maxlength="255" ></textarea>
+                            <textarea class="form-control" rows="3" name="source-description" id="source-description" maxlength="255" >{{ .sourceDescription}}</textarea>
                             <span class="help-block">This field may contain notes about the intitution.</span>
                         </div>
                     </div>

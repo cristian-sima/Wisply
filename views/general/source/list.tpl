@@ -19,16 +19,17 @@
                     </thead>
                     <tbody>
                         {{range $index, $element := .sources}}
+                        {{$safe := $element.Name|html}}
                         <tr>
-                            <td>{{ $element.Name }}</td>
-                            <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url }}</a></td>
-                            <td>{{ $element.Description }}</td>
+                            <td>{{ $element.Name |html }}</td>
+                            <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url |html }}</a></td>
+                            <td>{{ $element.Description |html }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="/admin/sources/modify/{{$element.Id}}">Modify</a></li>
-                                        <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{ $element.Name }}" href="/">Delete</a></li>
+                                        <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
                                     </ul>
                                 </div>
                             </td>

@@ -23,9 +23,13 @@
 
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        {{range $index, $element := .TopLeftMenuItems}}
-            <li><a href="{{$element}}">{{$index}}</a></li>
-        {{end}}
+        {{ if .userDisconnected }}
+            <li><a href="/auth/login">Login</a></li>
+            <li><a href="/auth/register">Register</a></li>
+        {{ end }}
+        {{ if .userConnected }}
+            <li><a id="menu-logout-button" href="#">Logout</a></li>
+        {{ end }}
       </ul>
     </div>
   </div>

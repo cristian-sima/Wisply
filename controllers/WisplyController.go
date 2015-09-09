@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"html/template"
 )
 
@@ -13,32 +12,32 @@ func (this *WisplyController) GenerateXsrf() {
 	this.Data["xsrf_input"] = template.HTML(this.XsrfFormHtml())
 }
 
-func (c *WisplyController) getMenu() map[string]string {
-	items := make(map[string]string)
-
+func (c *WisplyController) getUserState() string {
 	if c.isUserLogged() {
-		items["Log out"] = "/auth/logout"
-	} else {
-		items["Login"] = "/auth/login"
-		items["Register"] = "/auth/register"
+		return "userConnected"
 	}
-	return items
-}
-
-func (c *WisplyController) createMenu() {
-	items := c.getMenu()
-	c.Data["TopLeftMenuItems"] = items
-}
-
-func (c *WisplyController) Prepare() {
-	c.createMenu()
+	return "userDisconnected"
 }
 
 func (c *WisplyController) isUserLogged() bool {
 	v := c.GetSession("user")
-	fmt.Println(v)
 	if v == nil {
 		return false
 	}
 	return true
+}
+
+func (c *WisplyController) createMenu() {
+	menuType := c.getUserState()
+
+	switch menuType {
+	case "userDisconnected":
+		c.Data["userDisconnected"] = true
+	case "userConnected":
+		c.Data["userConnected"] = true
+	}
+}
+
+func (c *WisplyController) Prepare() {
+	c.createMenu()
 }

@@ -27,10 +27,10 @@ func (c *AuthController) CreateNewUser() {
 		username, password, confirmPassowrd, email string
 	)
 
-	username = strings.TrimSpace(c.GetString("login-username"))
-	password = strings.TrimSpace(c.GetString("login-password"))
-	email = strings.TrimSpace(c.GetString("login-email"))
-	confirmPassowrd = strings.TrimSpace(c.GetString("login-password-confirm"))
+	username = strings.TrimSpace(c.GetString("register-username"))
+	password = strings.TrimSpace(c.GetString("register-password"))
+	email = strings.TrimSpace(c.GetString("register-email"))
+	confirmPassowrd = strings.TrimSpace(c.GetString("register-password-confirm"))
 
 	rawData := make(map[string]interface{})
 	rawData["username"] = username
@@ -73,7 +73,7 @@ func (c *AuthController) LoginUser() {
 			c.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
 		} else {
 			c.saveLoginDetails(user)
-			c.DisplaySuccessMessage("You are connected!", "/auth/login/")
+			c.Redirect("/", 302)
 		}
 	}
 }

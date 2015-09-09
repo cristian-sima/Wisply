@@ -3,14 +3,14 @@
     <div class="col-md-6 col-md-offset-3 col-centered" >
       <div class="panel panel-primary">
         <div class="panel-heading">
-         <h3 class="panel-title">Authentication</h3>
-       </div>
+          <h3 class="panel-title">Authentication</h3>
+        </div>
         <div class="panel-body">
           <p>
             <div class=" text-center">
-               We need you to connect
+              We need you to connect
             </div>
-            <form action="" method="POST" class="form-horizontal" >
+            <form action="" method="POST" class="form-horizontal" id="login-form">
               {{ .xsrf_input }}
               <fieldset>
                 <legend>{{.legend}}</legend>
@@ -27,8 +27,8 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="text-center">
-                    <input type="submit" class="btn btn-primary" href="#" role="button" value="Login" />
+                  <div class="text-center" id="login-submit-div">
+                    <input type="submit" class="btn btn-primary" href="#" role="button" id="login-submit-button" value="Login" />
                   </div>
                 </div>
               </fieldset>
@@ -39,16 +39,30 @@
       <div class="form-group">
         <div class="panel panel-default">
           <div class="panel-body">
-          Are you new? <a href="/auth/register">Create</a> an account in less then 10 seconds <br />
-          Do you need to recover your details? <a href="/auth/recover">Recover</a>
+            Are you new? <a href="/auth/register">Create</a> an account in less then 10 seconds <br />
+            Do you need to recover your details? <a href="/auth/recover">Recover</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <script>
-$(document).ready(function() {
+  $(document).ready(function() {
     $("#login-username").focus();
-});
+    loadLoginListeners();
+  });
+  function loadLoginListeners () {
+    $("#login-form").on("submit", loginFormSubmited)
+  }
+
+  function showLoading() {
+    setElementLoading($('#login-submit-div'), "medium")
+  }
+
+  function loginFormSubmited (event) {
+    showLoading();
+  }
+
 </script>

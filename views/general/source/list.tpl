@@ -43,8 +43,6 @@
             </div>
         </div>
     </div>
-    <script src="/static/js/base64_decode.js"></script>
-    <script src="/static/js/jquery.cookie.js"></script>
     <script>
         /* global bootbox */
         $(document).ready(function () {
@@ -84,35 +82,18 @@
               });
         }
         function deleteSource(id) {
-            var xsrf,
-              xsrflist,
-              args = {};
-              xsrf = $.cookie("_xsrf");
-              xsrflist = xsrf.split("|");
-              args._xsrf = base64_decode(xsrflist[0]);
-              $.ajax({
-                "url" : '/admin/sources/delete/' + id,
-                 "data": $.param(args),
-                 dataType: "text",
-                'method': "POST",
-                "type" : "POST",
-                "success": showSuccess,
-                "error" : showError
-            });
-        }
-        function showSuccess () {
-          showMessage("<div class='text-success'>Success</div>", "The source has been deleted! Refreshing page...");
-        }
-        function showError () {
-          showMessage("<div class='bg-warning>Sorry</div>", "There was a problem with your request!");
-        }
-        function showMessage(title, content) {
-          bootbox.dialog({
-              title: title,
-              message: content
-          });
-          setTimeout(function() {
-            location.reload();
-          }, 2000)
+            executePostAjax({
+              "url" : '/admin/sources/delete/' + id,
+               dataType: "text",
+              'method': "POST",
+              "type" : "POST",
+              "success": function() {
+                showSuccessMessage("The source has been deleted! Refreshing page...");
+                reloadPage();
+              },
+              "error" : function() {
+                showErrorMessage("There was a problem with your request!");
+              }
+          })
         }
     </script>

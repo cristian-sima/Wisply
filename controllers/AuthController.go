@@ -10,27 +10,28 @@ type AuthController struct {
 	Model AuthModel
 }
 
-func (c *AuthController) ShowLoginForm() {
-	c.GenerateXsrf()
-	c.TplNames = "general/auth/login.tpl"
-	c.Layout = "general/layout.tpl"
+func (controller *AuthController) ShowLoginForm() {
+	controller.GenerateXsrf()
+	controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
+	controller.TplNames = "general/auth/login.tpl"
+	controller.Layout = "general/layout.tpl"
 }
 
-func (c *AuthController) ShowRegisterForm() {
-	c.GenerateXsrf()
-	c.TplNames = "general/auth/register.tpl"
-	c.Layout = "general/layout.tpl"
+func (controller *AuthController) ShowRegisterForm() {
+	controller.GenerateXsrf()
+	controller.TplNames = "general/auth/register.tpl"
+	controller.Layout = "general/layout.tpl"
 }
 
-func (c *AuthController) CreateNewUser() {
+func (controller *AuthController) CreateNewUser() {
 	var (
 		username, password, confirmPassowrd, email string
 	)
 
-	username = strings.TrimSpace(c.GetString("register-username"))
-	password = strings.TrimSpace(c.GetString("register-password"))
-	email = strings.TrimSpace(c.GetString("register-email"))
-	confirmPassowrd = strings.TrimSpace(c.GetString("register-password-confirm"))
+	username = strings.TrimSpace(controller.GetString("register-username"))
+	password = strings.TrimSpace(controller.GetString("register-password"))
+	email = strings.TrimSpace(controller.GetString("register-email"))
+	confirmPassowrd = strings.TrimSpace(controller.GetString("register-password-confirm"))
 
 	rawData := make(map[string]interface{})
 	rawData["username"] = username
@@ -38,48 +39,75 @@ func (c *AuthController) CreateNewUser() {
 	rawData["email"] = email
 
 	if confirmPassowrd != password {
-		c.DisplayErrorMessage("The passwords do not match!")
+		controller.DisplayErrorMessage("The passwords do not match!")
 	} else {
-		problems, err := c.Model.ValidateRegisterDetails(rawData)
+		problems, err := controller.Model.ValidateRegisterDetails(rawData)
 		if err != nil {
-			c.DisplayErrorMessages(problems)
+			controller.DisplayErrorMessages(problems)
 		} else {
-			usernameAlreadyExists := c.Model.CheckUsernameExists(username)
+			usernameAlreadyExists := controller.Model.CheckUsernameExists(username)
 			if usernameAlreadyExists {
-				c.DisplayErrorMessage("The username is already used. Try another")
+				controller.DisplayErrorMessage("The username is already used. Try another")
 			} else {
-				databaseError := c.Model.CreateNewUser(rawData)
+				databaseError := controller.Model.CreateNewUser(rawData)
 				if databaseError != nil {
-					c.Abort("databaseError")
+					controller.Abort("databaseError")
 				} else {
-					c.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
+					controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
 				}
 			}
 		}
 	}
 }
 
-func (c *AuthController) LoginUser() {
+func (controller *AuthController) LoginUser() {
+	var sendMeAddress string = strings.TrimSpace(controller.GetString("sendMe"))
 	rawData := make(map[string]interface{})
-	rawData["username"] = strings.TrimSpace(c.GetString("login-username"))
-	rawData["password"] = strings.TrimSpace(c.GetString("login-password"))
+	rawData["username"] = strings.TrimSpace(controller.GetString("login-username"))
+	rawData["password"] = strings.TrimSpace(controller.GetString("login-password"))
 
-	problems, err := c.Model.ValidateLoginDetails(rawData)
+	problems, err := controller.Model.ValidateLoginDetails(rawData)
 	if err != nil {
-		c.DisplayErrorMessages(problems)
+		controller.DisplayErrorMessages(problems)
 	} else {
-		user, err := c.Model.TryLoginUser(rawData)
+		user, err := controller.Model.TryLoginUser(rawData)
 		if err != nil {
-			c.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
+			controller.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
 		} else {
-			c.saveLoginDetails(user)
-			c.Redirect("/", 302)
+			controller.saveLoginDetails(user)
+			controller.safeRedilectUser(sendMeAddress)
 		}
 	}
 }
 
-func (c *AuthController) saveLoginDetails(user *User) {
-	c.SetSession("user", user.Username)
+func (controller *AuthController) saveLoginDetails(user *User) {
+	controller.SetSession("user", user.Id)
+}
+
+func (controller *AuthController) safeRedilectUser(sendMe string) {
+	var safeAddress string
+	safeAddress = controller.getSafeURL(sendMe)
+	controller.Redirect(safeAddress, 302)
+}
+
+func (controller *AuthController) getSafeURL(urlToTest string) string {
+	var safeURL string = ""
+	if urlToTest == "" || urlToTest == "/auth/login/" || urlToTest == "/auth/login" {
+		safeURL = "/"
+	} else {
+		if controller.isSafeRedirection(urlToTest) {
+			safeURL = urlToTest
+		} else {
+			safeURL = "/"
+		}
+	}
+	return safeURL
+}
+
+func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
+	var isSafe bool
+	isSafe = strings.HasPrefix(urlToTest, "/")
+	return isSafe
 }
 
 func (controller *AuthController) Logout() {

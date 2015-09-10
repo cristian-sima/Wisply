@@ -6,7 +6,7 @@ import (
 )
 
 type SourceController struct {
-	DefaultController
+	AdminController
 	model SourcesModel.Model
 }
 

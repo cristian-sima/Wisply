@@ -13,13 +13,13 @@ func (this *WisplyController) GenerateXsrf() {
 }
 
 func (c *WisplyController) getUserState() string {
-	if c.isUserLogged() {
+	if c.IsUserConnected() {
 		return "userConnected"
 	}
 	return "userDisconnected"
 }
 
-func (c *WisplyController) isUserLogged() bool {
+func (c *WisplyController) IsUserConnected() bool {
 	v := c.GetSession("user")
 	if v == nil {
 		return false
@@ -35,6 +35,9 @@ func (c *WisplyController) createMenu() {
 		c.Data["userDisconnected"] = true
 	case "userConnected":
 		c.Data["userConnected"] = true
+	case "adminConnected":
+		c.Data["userConnected"] = true
+		c.Data["adminConnected"] = true
 	}
 }
 

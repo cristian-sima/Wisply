@@ -9,6 +9,14 @@ func (c *AdminController) ShowDashboard() {
 	c.TplNames = "general/admin/dashboard.tpl"
 }
 
-func (c *AdminController) Prepare() {
+func (controller *AdminController) Prepare() {
+	controller.WisplyController.Prepare()
+	if !controller.IsUserConnected() {
+		controller.UserIsNotConnected()
+	}
+}
 
+func (controller *AdminController) UserIsNotConnected() {
+	var currentPage string = controller.Ctx.Request.URL.Path
+	controller.Redirect("/auth/login?sendMe="+currentPage, 302)
 }

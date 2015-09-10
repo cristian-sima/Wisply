@@ -3,12 +3,12 @@
     {{ template "header" }}
     <body>
         {{ template "javascript" }}
-        {{ template "menu" }}
+        {{ template "menu" . }}
         <div class="container" >
             <div class="page-header" id="banner">
                 <div class="row" >
-                    <div class="col-lg-12 col-md-7 col-sm-6" >      
-                        {{.LayoutContent}}        
+                    <div class="col-lg-12 col-md-7 col-sm-6" >
+                        {{.LayoutContent}}
                         {{ template "admin-menu" }}
                     </div>
                 </div>

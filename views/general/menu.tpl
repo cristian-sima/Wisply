@@ -27,6 +27,9 @@
             <li><a href="/auth/login">Login</a></li>
             <li><a href="/auth/register">Register</a></li>
         {{ end }}
+        {{ if .adminConnected }}
+            <li><a href="/admin">Admin</a></li>
+        {{ end }}
         {{ if .userConnected }}
             <li><a id="menu-logout-button" href="#">Logout</a></li>
         {{ end }}

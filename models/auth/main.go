@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -102,8 +101,6 @@ func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) (*User, erro
 		return user, errors.New("Problem")
 	}
 
-	fmt.Println(user.Password)
-	fmt.Println(plainPassword)
 	passwordIsValid = checkPasswordIsCorrect(user.Password, plainPassword)
 
 	if !passwordIsValid {

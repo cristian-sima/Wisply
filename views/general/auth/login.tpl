@@ -12,6 +12,7 @@
             </div>
             <form action="" method="POST" class="form-horizontal" id="login-form">
               {{ .xsrf_input }}
+              <input type="hidden" value="{{.sendMe}}" name="login-send-me" />
               <fieldset>
                 <legend>{{.legend}}</legend>
                 <div class="form-group">
@@ -39,7 +40,7 @@
       <div class="form-group">
         <div class="panel panel-default">
           <div class="panel-body">
-            Are you new? <a href="/auth/register">Create</a> an account in less then 10 seconds <br />
+            Are you new? <a href="/auth/register">Register</a> in 4 seconds <br />
             Do you need to recover your details? <a href="/auth/recover">Recover</a>
           </div>
         </div>

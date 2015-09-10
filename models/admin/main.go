@@ -1,23 +1,23 @@
 package admin
 
 import (
-	sources "github.com/cristian-sima/Wisply/models/sources"
 	auth "github.com/cristian-sima/Wisply/models/auth"
+	sources "github.com/cristian-sima/Wisply/models/sources"
 )
 
 type Dashboard struct {
- 	Users int
+	Users   int
 	Sources int
 }
 
 func GetDashboard() *Dashboard {
 
-	numberOfUsers 	:= 	auth.Count();
-	numberOfSources := 	sources.Count();
+	numberOfUsers := auth.Count()
+	numberOfSources := sources.Count()
 
-		return &Dashboard{
-			Users: numberOfUsers,
-			Sources:  numberOfSources,
-		}
+	return &Dashboard{
+		Users:   numberOfUsers,
+		Sources: numberOfSources,
+	}
 
 }

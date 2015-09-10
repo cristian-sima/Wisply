@@ -209,7 +209,6 @@ func (model *AuthModel) GetAll() []User {
 	return list
 }
 
-
 func Count() int {
 
 	orm := orm.NewOrm()

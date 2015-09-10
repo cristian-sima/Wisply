@@ -10,7 +10,6 @@
         <form action="" method="POST" class="form-horizontal" id="modify">
           {{ .xsrf_input }}
           <fieldset>
-            <legend>Modify <span class="label label-default">{{ .userUsername }}</span></legend>
             <div class="form-group">
               <label for="modify-administrator" class="col-lg-2 control-label">Type</label>
               <div class="col-lg-10">

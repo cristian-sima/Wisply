@@ -11,7 +11,6 @@
           {{ .xsrf_input }}
           {{ $safeDescription := .sourceDescription|html}}
           <fieldset>
-            <legend>{{.legend}}</legend>
             <div class="form-group">
               <label for="source-name" class="col-lg-2 control-label">Name</label>
               <div class="col-lg-10">

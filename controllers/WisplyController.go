@@ -2,52 +2,38 @@ package controllers
 
 import (
 	"fmt"
+	. "github.com/cristian-sima/Wisply/models/auth"
+	. "github.com/cristian-sima/Wisply/models/wisply"
 	"html/template"
 )
 
 type WisplyController struct {
 	MessageController
+	UserConnected bool
+	User          User
+	Model         WisplyModel
 }
 
 func (this *WisplyController) GenerateXsrf() {
 	this.Data["xsrf_input"] = template.HTML(this.XsrfFormHtml())
 }
 
-func (c *WisplyController) getUserState() string {
-	if c.IsUserConnected() {
-		return "userConnected"
-	}
-	return "userDisconnected"
-}
-
-func (c *WisplyController) createMenu() {
-	menuType := c.getUserState()
-
-	switch menuType {
-	case "userDisconnected":
-		c.Data["userDisconnected"] = true
-	case "userConnected":
-		c.Data["userConnected"] = true
-	case "adminConnected":
-		c.Data["userConnected"] = true
-		c.Data["adminConnected"] = true
-	}
-}
-
 func (controller *WisplyController) Prepare() {
-	controller.loadCurrentUser()
-	controller.createMenu()
+	controller.updateUserConnection()
+	InitDatabase()
 }
 
-func (controller *WisplyController) loadCurrentUser() {
-	v := controller.GetSession("user")
-	fmt.Println(v)
-}
-
-func (c *WisplyController) IsUserConnected() bool {
-	v := c.GetSession("user")
-	if v == nil {
-		return false
+func (controller *WisplyController) updateUserConnection() {
+	session := controller.GetSession("user-id")
+	if session == nil {
+		controller.UserConnected = false
+		controller.Data["userDisconnected"] = true
+	} else {
+		id := (session).(string)
+		controller.User = NewUser(id)
+		fmt.Println(controller.User)
+		controller.UserConnected = true
+		controller.Data["userConnected"] = true
+		controller.Data["currentUser"] = controller.User
 	}
-	return true
 }

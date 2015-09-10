@@ -20,18 +20,18 @@
         <li>
           <a href="/contact">Contact</a>
         </li>
-
       </ul>
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" id="menu-top-left">
         {{ if .userDisconnected }}
-            <li><a href="/auth/login">Login</a></li>
-            <li><a href="/auth/register">Register</a></li>
-        {{ end }}
-        {{ if .adminConnected }}
-            <li><a href="/admin">Admin</a></li>
+        <li><a href="/auth/login">Login</a></li>
+        <li><a href="/auth/register">Register</a></li>
         {{ end }}
         {{ if .userConnected }}
-            <li><a id="menu-logout-button" href="#">Logout</a></li>
+        <li  class="text-muted"><a>Hi, <b>{{ .currentUser.Username }}</b></a></li>
+        {{ if .currentUser.Administrator }}
+        <li><a href="/admin">Admin</a></li>
+        {{ end }}
+        <li><a id="menu-logout-button" href="#">Logout</a></li>
         {{ end }}
       </ul>
     </div>

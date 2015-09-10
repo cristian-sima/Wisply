@@ -10,15 +10,10 @@ type AdminController struct {
 
 func (c *AdminController) ShowDashboard() {
 
-	var numberOfUsers, numberOfSources int
-
 	dashboard := model.GetDashboard()
 
-	numberOfUsers = dashboard.Users
-	numberOfSources = dashboard.Sources
-
-	c.Data["numberOfUsers"] = numberOfUsers
-	c.Data["numberOfSources"] = numberOfSources
+	c.Data["numberOfUsers"] = dashboard.Users
+	c.Data["numberOfSources"] = dashboard.Sources
 
 	c.Layout = "general/admin.tpl"
 	c.TplNames = "general/admin/dashboard.tpl"
@@ -26,12 +21,13 @@ func (c *AdminController) ShowDashboard() {
 
 func (controller *AdminController) Prepare() {
 	controller.WisplyController.Prepare()
-	if !controller.IsUserConnected() {
-		controller.UserIsNotConnected()
+
+	if !controller.UserConnected || !controller.User.IsAdministrator() {
+		controller.redirectUser()
 	}
 }
 
-func (controller *AdminController) UserIsNotConnected() {
+func (controller *AdminController) redirectUser() {
 	var currentPage string = controller.Ctx.Request.URL.Path
 	controller.Redirect("/auth/login?sendMe="+currentPage, 302)
 }

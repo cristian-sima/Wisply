@@ -9,21 +9,21 @@ type MessageController struct {
 	beego.Controller
 }
 
-func (c *MessageController) DisplayErrorMessage(errorMessage string) {
+func (controller *MessageController) DisplayErrorMessage(errorMessage string) {
 
 	content := errorMessage
-	c.DisplayMessage("error", content)
+	controller.DisplayMessage("error", content)
 }
 
-func (c *MessageController) DisplayErrorMessages(errors map[string][]string) {
+func (controller *MessageController) DisplayErrorMessages(errors map[string][]string) {
 	var (
 		number  int    = len(errors)
 		message string = getMessage(number)
 	)
 	content := "Your request was not successful. " + message
-	c.Data["validationFailed"] = true
-	c.Data["validationErrors"] = errors
-	c.DisplayMessage("error", content)
+	controller.Data["validationFailed"] = true
+	controller.Data["validationErrors"] = errors
+	controller.DisplayMessage("error", content)
 }
 
 func getMessage(number int) string {
@@ -36,14 +36,14 @@ func getMessage(number int) string {
 	return "There were problems with " + problemsMessage + ":"
 }
 
-func (c *MessageController) DisplaySuccessMessage(content string, backLink string) {
-	c.Data["backLink"] = backLink
-	c.DisplayMessage("success", content)
+func (controller *MessageController) DisplaySuccessMessage(content string, backLink string) {
+	controller.Data["backLink"] = backLink
+	controller.DisplayMessage("success", content)
 }
 
-func (c *MessageController) DisplayMessage(typeOfMessage string, content string) {
-	c.Data["messageContent"] = content
-	c.Data["displayMessage"] = true
-	c.TplNames = "general/message/" + typeOfMessage + ".tpl"
-	c.Layout = "general/message.tpl"
+func (controller *MessageController) DisplayMessage(typeOfMessage string, content string) {
+	controller.Data["messageContent"] = content
+	controller.Data["displayMessage"] = true
+	controller.TplNames = "general/message/" + typeOfMessage + ".tpl"
+	controller.Layout = "general/message.tpl"
 }

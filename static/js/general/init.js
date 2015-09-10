@@ -11,7 +11,8 @@ function loadListeners() {
 }
 
 function logoutUser (event) {
-  setElementLoading($("#menu-logout-button"), "small");
+  var menu = $("#menu-top-left");
+  setElementLoading(menu, "small");
   event.preventDefault();
   executePostAjax({
     "url" : '/auth/logout',
@@ -21,7 +22,7 @@ function logoutUser (event) {
     "success": function() {
       showSuccessMessage("You have been disconnected! Refreshing page...");
       reloadPage();
-      $("#menu-logout-button").html("");
+      $(menu).html("");
     },
     "error" : function() {
       showErrorMessage("There was a problem with your request!");

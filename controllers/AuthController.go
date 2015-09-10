@@ -2,6 +2,7 @@ package controllers
 
 import (
 	. "github.com/cristian-sima/Wisply/models/auth"
+	"strconv"
 	"strings"
 )
 
@@ -10,11 +11,21 @@ type AuthController struct {
 	Model AuthModel
 }
 
+func (controller *AuthController) Prepare() {
+	controller.WisplyController.Prepare()
+}
+
 func (controller *AuthController) ShowLoginForm() {
-	controller.GenerateXsrf()
-	controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
-	controller.TplNames = "general/auth/login.tpl"
-	controller.Layout = "general/layout.tpl"
+	if controller.UserConnected {
+		controller.Redirect("/", 302)
+		controller.TplNames = "general/auth/login.tpl"
+		controller.Layout = "general/layout.tpl"
+	} else {
+		controller.GenerateXsrf()
+		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
+		controller.TplNames = "general/auth/login.tpl"
+		controller.Layout = "general/layout.tpl"
+	}
 }
 
 func (controller *AuthController) ShowRegisterForm() {
@@ -24,9 +35,7 @@ func (controller *AuthController) ShowRegisterForm() {
 }
 
 func (controller *AuthController) CreateNewUser() {
-	var (
-		username, password, confirmPassowrd, email string
-	)
+	var username, password, confirmPassowrd, email string
 
 	username = strings.TrimSpace(controller.GetString("register-username"))
 	password = strings.TrimSpace(controller.GetString("register-password"))
@@ -85,8 +94,9 @@ func (controller *AuthController) connectUser(user *User, sendMeAddress string) 
 }
 
 func (controller *AuthController) saveLoginDetails(user *User) {
-	controller.Model.GenerateUserToken(string(user.Id))
-	controller.SetSession("user", user)
+	var userId string = strconv.Itoa(user.Id)
+	controller.Model.UpdateUserLoginToken(userId)
+	controller.SetSession("user-id", userId)
 }
 
 func (controller *AuthController) safeRedilectUser(sendMe string) {

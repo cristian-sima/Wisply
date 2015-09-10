@@ -13,7 +13,6 @@
             <form action="" method="POST" class="form-horizontal" id="register-form" >
               {{ .xsrf_input }}
               <fieldset>
-                <legend>{{.legend}}</legend>
                 <div class="form-group">
                   <label for="register-username" class="col-lg-2 control-label">Username</label>
                   <div class="col-lg-10">

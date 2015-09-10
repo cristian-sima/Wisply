@@ -8,13 +8,12 @@
         <div class="panel-body">
           <p>
             <div class=" text-center">
-              We need you to connect
+              <br />
             </div>
             <form action="" method="POST" class="form-horizontal" id="login-form">
               {{ .xsrf_input }}
               <input type="hidden" value="{{.sendMe}}" name="login-send-me" />
               <fieldset>
-                <legend>{{.legend}}</legend>
                 <div class="form-group">
                   <label for="login-username" class="col-lg-2 control-label">Username</label>
                   <div class="col-lg-10">

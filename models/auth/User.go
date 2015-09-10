@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -12,11 +13,17 @@ type User struct {
 	Administrator bool
 }
 
-func NewUser() User {
+func NewUser(id string) User {
 	var user User
-	orm := orm.NewOrm()
+	db := orm.NewOrm()
 
-	orm.Raw("SELECT username, password, administrator FROM user").QueryRow(&user)
+	err := db.Raw("SELECT id, username, password, administrator FROM user").QueryRow(&user)
+
+	fmt.Println(err)
 
 	return user
+}
+
+func (this *User) IsAdministrator() bool {
+	return this.Administrator
 }

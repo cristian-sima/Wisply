@@ -7,10 +7,12 @@
         <div class="container" >
             <div class="page-header" id="banner">
                 <div class="row" >
-                    <div class="col-lg-12 col-md-7 col-sm-6" >
-                        {{.LayoutContent}}
+                      <div class="col-md-2">
                         {{ template "admin-menu" }}
-                    </div>
+                      </div>
+                      <div class="col-md-10">
+                        {{.LayoutContent}}
+                      </div>
                 </div>
             </div>
             {{ template "footer"}}

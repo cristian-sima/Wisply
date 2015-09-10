@@ -46,10 +46,22 @@ func init() {
 		),
 	)
 
+	usersNamespace := beego.NSNamespace("/users",
+		beego.NSRouter("", &controllers.UserController{}, "*:ListUsers"),
+		beego.NSNamespace("/modify",
+			beego.NSRouter(":id", &controllers.UserController{}, "Get:Modify"),
+			beego.NSRouter(":id", &controllers.UserController{}, "Post:Update"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter(":id", &controllers.UserController{}, "Post:Delete"),
+		),
+	)
+
 	adminNamespace :=
 		beego.NewNamespace("/admin",
 			beego.NSRouter("", &controllers.AdminController{}, "*:ShowDashboard"),
 			sourcesNamespace,
+			usersNamespace,
 		)
 
 	// register namespace

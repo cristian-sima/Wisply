@@ -2,8 +2,11 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"github.com/astaxie/beego/orm"
+	"github.com/nu7hatch/gouuid"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type AuthModel struct {
@@ -17,6 +20,56 @@ func (this *AuthModel) ValidateRegisterDetails(rawData map[string]interface{}) (
 		return validationResult.Errors, errors.New("Validation invalid")
 	}
 	return nil, nil
+}
+
+func (this *AuthModel) ValidateModifyUser(rawData map[string]interface{}) (map[string][]string, error) {
+
+	validationResult := ValidateModify(rawData)
+
+	if !validationResult.IsValid {
+		return validationResult.Errors, errors.New("Validation invalid")
+	}
+	return nil, nil
+}
+
+func (model *AuthModel) DeleteUserById(id string) error {
+
+	orm := orm.NewOrm()
+
+	elememts := []string{id}
+
+	_, err := orm.Raw("DELETE from `user` WHERE id=?", elememts).Exec()
+
+	return err
+}
+
+func (model *AuthModel) GetUserById(rawIndex string) (*User, error) {
+
+	var isValid bool
+
+	orm := orm.NewOrm()
+	user := new(User)
+
+	isValid = ValidateIndex(rawIndex)
+
+	if !isValid {
+		return user, errors.New("Validation invalid")
+	}
+	error := orm.Raw("SELECT id, username, password, email, administrator FROM user WHERE id = ?", rawIndex).QueryRow(&user)
+	return user, error
+}
+
+func (model *AuthModel) UpdateUserType(userId string, isAdministrator string) error {
+
+	orm := orm.NewOrm()
+
+	fmt.Println(isAdministrator)
+	stringElements := []string{isAdministrator,
+		userId}
+
+	_, err := orm.Raw("UPDATE `user` SET administrator=? WHERE id=?", stringElements).Exec()
+
+	return err
 }
 
 func (this *AuthModel) CheckUsernameExists(username string) bool {
@@ -36,11 +89,11 @@ func (this *AuthModel) CheckUsernameExists(username string) bool {
 func (this *AuthModel) CreateNewUser(rawData map[string]interface{}) error {
 
 	var (
-		username, unsafePassword, hashedPassword, email string
-		isAdmin                                         string = "0"
+		username, unsafePassword, hashedPassword, email, isAdministrator string
 	)
 	orm := orm.NewOrm()
 
+	isAdministrator = "false"
 	username = rawData["username"].(string)
 	unsafePassword = rawData["password"].(string)
 	email = rawData["email"].(string)
@@ -51,10 +104,10 @@ func (this *AuthModel) CreateNewUser(rawData map[string]interface{}) error {
 		username,
 		hashedPassword,
 		email,
-		isAdmin,
+		isAdministrator,
 	}
 
-	_, err := orm.Raw("INSERT INTO `user` (`username`, `password`, `email`, `isAdmin`) VALUES (?, ?, ?, ?)", elements).Exec()
+	_, err := orm.Raw("INSERT INTO `user` (`username`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)", elements).Exec()
 
 	return err
 }
@@ -95,7 +148,7 @@ func (this *AuthModel) TryLoginUser(rawData map[string]interface{}) (*User, erro
 
 	elements := []string{username}
 
-	error := orm.Raw("SELECT id, username, password, email, isAdmin FROM user WHERE username = ?", elements).QueryRow(&user)
+	error := orm.Raw("SELECT id, username, password, email, administrator FROM user WHERE username = ?", elements).QueryRow(&user)
 
 	if error != nil {
 		return user, errors.New("Problem")
@@ -119,23 +172,51 @@ func checkPasswordIsCorrect(hashedPassword, plainPassword string) bool {
 	return false
 }
 
-type User struct {
-	Id       int
-	Username string
-	Password string
-	Email    string
-	isAdmin  bool
+func (model *AuthModel) GenerateUserToken(userId string) {
+
+	var timeStamp string
+
+	db := orm.NewOrm()
+	token, _ := uuid.NewV4()
+
+	t := time.Now()
+	timeStamp = t.Format(time.RFC850)
+
+	elementsDelete := []string{
+		userId,
+	}
+
+	elementsInsert := []string{
+		userId,
+		token.String(),
+		timeStamp,
+	}
+
+	db.Raw("DELETE from user_login WHERE userId= ? ", elementsDelete).Exec()
+
+	db.Raw("INSERT INTO `user_login` (`userId`, `token`, `timestamp`) VALUES (?, ?, ?)", elementsInsert).Exec()
+
 }
 
-func (user *User) isAdministrator() bool {
-	return user.isAdmin
-}
+func (model *AuthModel) GetAll() []User {
 
-func NewUser() User {
-	var user User
 	orm := orm.NewOrm()
 
-	orm.Raw("SELECT username, password, isAdmin FROM user").QueryRow(&user)
+	var list []User
 
-	return user
+	orm.Raw("SELECT id, username, password, email, administrator FROM user").QueryRows(&list)
+
+	return list
+}
+
+
+func Count() int {
+
+	orm := orm.NewOrm()
+
+	var number int
+
+	orm.Raw("SELECT count(*) FROM user").QueryRow(&number)
+
+	return number
 }

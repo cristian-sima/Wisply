@@ -74,14 +74,19 @@ func (controller *AuthController) LoginUser() {
 		if err != nil {
 			controller.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
 		} else {
-			controller.saveLoginDetails(user)
-			controller.safeRedilectUser(sendMeAddress)
+			controller.connectUser(user, sendMeAddress)
 		}
 	}
 }
 
+func (controller *AuthController) connectUser(user *User, sendMeAddress string) {
+	controller.saveLoginDetails(user)
+	controller.safeRedilectUser(sendMeAddress)
+}
+
 func (controller *AuthController) saveLoginDetails(user *User) {
-	controller.SetSession("user", user.Id)
+	controller.Model.GenerateUserToken(string(user.Id))
+	controller.SetSession("user", user)
 }
 
 func (controller *AuthController) safeRedilectUser(sendMe string) {

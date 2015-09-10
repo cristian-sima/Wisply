@@ -82,3 +82,14 @@ func (model *Model) InsertNewSource(rawData map[string]interface{}) error {
 
 	return err
 }
+
+func Count() int {
+
+	orm := orm.NewOrm()
+
+	var number int
+
+	orm.Raw("SELECT count(*) FROM source").QueryRow(&number)
+
+	return number
+}

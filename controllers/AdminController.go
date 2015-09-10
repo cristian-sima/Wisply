@@ -1,10 +1,25 @@
 package controllers
 
+import (
+	model "github.com/cristian-sima/Wisply/models/admin"
+)
+
 type AdminController struct {
 	WisplyController
 }
 
 func (c *AdminController) ShowDashboard() {
+
+	var numberOfUsers, numberOfSources int
+
+	dashboard := model.GetDashboard()
+
+	numberOfUsers = dashboard.Users
+	numberOfSources = dashboard.Sources
+
+	c.Data["numberOfUsers"] = numberOfUsers
+	c.Data["numberOfSources"] = numberOfSources
+
 	c.Layout = "general/admin.tpl"
 	c.TplNames = "general/admin/dashboard.tpl"
 }

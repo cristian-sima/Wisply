@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	validity "github.com/cristian-sima/validity"
 )
 
@@ -17,6 +18,14 @@ func ValidateLoginDetails(rawData map[string]interface{}) *validity.ValidationRe
 	rules := validity.ValidationRules{
 		"username": []string{"String", "alpha_dash", "between_inclusive:3,25"},
 		"password": []string{"String", "alpha_dash", "between_inclusive:6,25"},
+	}
+	return validity.ValidateMap(rawData, rules)
+}
+
+func ValidateModify(rawData map[string]interface{}) *validity.ValidationResults {
+	fmt.Println(rawData)
+	rules := validity.ValidationRules{
+		"administrator": []string{"String", "Regexp:^(true)|(false)$"},
 	}
 	return validity.ValidateMap(rawData, rules)
 }

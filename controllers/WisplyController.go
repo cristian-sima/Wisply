@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"html/template"
 )
 
@@ -19,14 +20,6 @@ func (c *WisplyController) getUserState() string {
 	return "userDisconnected"
 }
 
-func (c *WisplyController) IsUserConnected() bool {
-	v := c.GetSession("user")
-	if v == nil {
-		return false
-	}
-	return true
-}
-
 func (c *WisplyController) createMenu() {
 	menuType := c.getUserState()
 
@@ -41,6 +34,20 @@ func (c *WisplyController) createMenu() {
 	}
 }
 
-func (c *WisplyController) Prepare() {
-	c.createMenu()
+func (controller *WisplyController) Prepare() {
+	controller.loadCurrentUser()
+	controller.createMenu()
+}
+
+func (controller *WisplyController) loadCurrentUser() {
+	v := controller.GetSession("user")
+	fmt.Println(v)
+}
+
+func (c *WisplyController) IsUserConnected() bool {
+	v := c.GetSession("user")
+	if v == nil {
+		return false
+	}
+	return true
 }

@@ -1,9 +1,28 @@
 /*
-    Author     Cristian Sima
+Author     Cristian Sima
 */
 
 #logo {
-    height: 30px;
-    width: 30px;
-    display: inline;
+  height: 30px;
+  width: 30px;
+  display: inline;
+}
+
+h1 {
+  font-size:  30px
+}
+h2 {
+  font-size:  24px
+}
+h3 {
+  font-size:  22px
+}
+h4 {
+  font-size:  20px
+}
+h5 {
+  font-size:  16px
+}
+h6 {
+  font-size:  12px
 }

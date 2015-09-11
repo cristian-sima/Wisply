@@ -21,8 +21,8 @@ func (controller *UserController) ListUsers() {
 
 	controller.Data["anything"] = exists
 	controller.Data["users"] = users
-	controller.TplNames = "general/user/list.tpl"
-	controller.Layout = "general/admin.tpl"
+	controller.TplNames = "site/user/list.tpl"
+	controller.Layout = "site/admin.tpl"
 }
 
 func (controller *UserController) Modify() {
@@ -94,6 +94,6 @@ func (controller *UserController) showModifyForm(user *User) {
 	} else {
 		controller.Data["isUser"] = true
 	}
-	controller.Layout = "general/admin.tpl"
-	controller.TplNames = "general/user/form.tpl"
+	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/user/form.tpl"
 }

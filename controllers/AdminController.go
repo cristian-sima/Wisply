@@ -12,8 +12,8 @@ func (c *AdminController) ShowDashboard() {
 	dashboard := model.GetDashboard()
 	c.Data["numberOfUsers"] = dashboard.Users
 	c.Data["numberOfSources"] = dashboard.Sources
-	c.Layout = "general/admin.tpl"
-	c.TplNames = "general/admin/dashboard.tpl"
+	c.Layout = "site/admin.tpl"
+	c.TplNames = "site/admin/dashboard.tpl"
 }
 
 func (controller *AdminController) Prepare() {

@@ -20,8 +20,8 @@ func (controller *SourceController) ListSources() {
 
 	controller.Data["anything"] = exists
 	controller.Data["sources"] = list
-	controller.TplNames = "general/source/list.tpl"
-	controller.Layout = "general/admin.tpl"
+	controller.TplNames = "site/source/list.tpl"
+	controller.Layout = "site/admin.tpl"
 }
 
 func (controller *SourceController) AddNewSource() {
@@ -130,6 +130,6 @@ func (controller *SourceController) showForm(action string, legend string) {
 	controller.Data["legend"] = legend
 	controller.Data["actionURL"] = ""
 	controller.Data["actionType"] = "POST"
-	controller.Layout = "general/admin.tpl"
-	controller.TplNames = "general/source/form.tpl"
+	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/source/form.tpl"
 }

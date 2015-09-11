@@ -44,6 +44,6 @@ func (controller *MessageController) DisplaySuccessMessage(content string, backL
 func (controller *MessageController) DisplayMessage(typeOfMessage string, content string) {
 	controller.Data["messageContent"] = content
 	controller.Data["displayMessage"] = true
-	controller.TplNames = "general/message/" + typeOfMessage + ".tpl"
-	controller.Layout = "general/message.tpl"
+	controller.TplNames = "site/message/" + typeOfMessage + ".tpl"
+	controller.Layout = "site/message.tpl"
 }

@@ -5,25 +5,25 @@ type DefaultController struct {
 }
 
 func (c *DefaultController) ShowAboutPage() {
-	c.Layout = "general/layout.tpl"
-	c.TplNames = "general/page/about.tpl"
+	c.Layout = "site/layout.tpl"
+	c.TplNames = "site/default/about.tpl"
 }
 
 func (c *DefaultController) ShowContactPage() {
-	c.Layout = "general/layout.tpl"
-	c.TplNames = "general/page/contact.tpl"
+	c.Layout = "site/layout.tpl"
+	c.TplNames = "site/default/contact.tpl"
 }
 
 func (c *DefaultController) ShowIndexPage() {
-	c.Layout = "general/layout.tpl"
-	c.TplNames = "general/page/index.tpl"
+	c.Layout = "site/layout.tpl"
+	c.TplNames = "site/default/index.tpl"
 }
 
 func (c *DefaultController) ShowWebsciencePage() {
-	c.Layout = "general/layout.tpl"
-	c.TplNames = "general/page/webscience.tpl"
+	c.Layout = "site/layout.tpl"
+	c.TplNames = "site/default/webscience.tpl"
 }
 
 func (c *DefaultController) ShowSamplePage() {
-	c.TplNames = "general/sample.tpl"
+	c.TplNames = "site/default/sample.tpl"
 }

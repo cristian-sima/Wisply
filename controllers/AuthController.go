@@ -21,15 +21,15 @@ func (controller *AuthController) ShowLoginForm() {
 	} else {
 		controller.GenerateXsrf()
 		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
-		controller.TplNames = "general/auth/login.tpl"
-		controller.Layout = "general/layout.tpl"
+		controller.TplNames = "site/auth/login.tpl"
+		controller.Layout = "site/layout.tpl"
 	}
 }
 
 func (controller *AuthController) ShowRegisterForm() {
 	controller.GenerateXsrf()
-	controller.TplNames = "general/auth/register.tpl"
-	controller.Layout = "general/layout.tpl"
+	controller.TplNames = "site/auth/register.tpl"
+	controller.Layout = "site/layout.tpl"
 }
 
 func (controller *AuthController) CreateNewUser() {

@@ -125,3 +125,15 @@ I recommend XAMPP. This software contains the MySQL server and it has a good use
 11. Update the file `conf/database/default.json` with the details of this databse (username, password)
 12. Double click `/util/windows/Start bee go tool.bat`
 13. You are now running Wisply!
+
+
+## Update Wisply
+
+Wisply is evolving and you may want to get your last version on your server, but you do not want to install each time a realease is available. Thus, in order to update Wisply please follow these steps:
+
+1. Open a terminal windows
+2. Type `go get -u github.com/cristian-sima/Wisply`
+3. If there was no message shown, it means the update was successful
+
+The update is not affecting the current configuration (information about database, about server) and does not delete the existing data from database.
+ **Note** In case the new version has a different SQL schema, there is a need to install the application again

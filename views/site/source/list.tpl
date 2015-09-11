@@ -8,35 +8,37 @@
     <div class="panel-body">
       {{ if .anything }}
       <p>This is the list with the sources</p>
-      <table class="table table-striped table-hover ">
-        <thead>
-          <tr>
-            <th>Source</th>
-            <th>URL</th>
-            <th>Description</th>
-            <th style="text-align:left">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{range $index, $element := .sources}}
-          {{$safe := $element.Name|html}}
-          <tr>
-            <td>{{ $element.Name |html }}</td>
-            <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url |html }}</a></td>
-            <td>{{ $element.Description |html }}</td>
-            <td>
-              <div class="btn-group">
-                <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="/admin/sources/modify/{{$element.Id}}">Modify</a></li>
-                  <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          {{end }}
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover ">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>URL</th>
+              <th>Description</th>
+              <th style="text-align:left">Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range $index, $element := .sources}}
+            {{$safe := $element.Name|html}}
+            <tr>
+              <td>{{ $element.Name |html }}</td>
+              <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url |html }}</a></td>
+              <td>{{ $element.Description |html }}</td>
+              <td>
+                <div class="btn-group">
+                  <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/admin/sources/modify/{{$element.Id}}">Modify</a></li>
+                    <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+            {{end }}
+          </tbody>
+        </table>
+      </div>
       {{ else }}
       There are no sources... :(
       {{ end }}

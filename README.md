@@ -136,4 +136,5 @@ Wisply is evolving and you may want to get the last version on your server, but 
 3. If there was no message shown, it means the update was successful
 
 The update is not affecting the current configuration (information about database, about server) and does not delete the existing data from database.
- **Note** In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)
+
+**Note** In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)

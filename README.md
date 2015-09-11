@@ -28,9 +28,8 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 2. `GOPATH` is the path to the Go workspace. Here Go will download Wisply. So, type `export GOPATH=$HOME/path` where `path` is the path where you want to store Wisply
 3. You now have to save the changes. Type `export PATH=$PATH:$GOROOT/bin:$GOPATH/bin`
 
-### Install Wisply
 
-#### Get Wisply
+### Get Wisply
 
 Wisply can be downloaded using the `git` command throught Go
 
@@ -39,6 +38,9 @@ Wisply can be downloaded using the `git` command throught Go
   * In case you have problems with this step, it means you do not have Git. 
   * DigitalOcean has a very good tutorial about how to install Git on Ubuntu [here](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-14-04).
 3. You now have Wisply. Check next steps to see how to install it.
+
+
+### Install Wisply
 
 #### Install begoo tool
 

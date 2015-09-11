@@ -94,4 +94,35 @@ If you want to stop wisply, go to Wisply directory and type `bash util/ubuntu/st
 
 ### Windows
 
+#### Set up utilities
+
+Wisply comes with several utilities which you can use during the development process. 
+
+* *Format Wisply* - it can be used to format all the packages of Wisply. It closes itself after formating
+* *Start bee go tool* - this script runs the Wisply server and displays a command promt with live log. Also, it re-builds Wisply after each modification
+* *Test Wisply* - It shows a command promt with the result of testing Wisply. In case the test were not good, the user can type `y` to re-test Wisply, or type any other character to exit
+*  *Start goconvey* - It is a shorcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing
+
+1. Go to directory `util/windows/Utilities` 
+2. Edit every file and change the path to the one where Wisply is located
+3. In order to start them, just double click on the file
+
+
+##### 
+
+#### Install MySQL server
+
+I recommend XAMPP. This software contain the MySQL server and it has a good user interface. 
+
+1. You can download it from [here](https://www.apachefriends.org/download.html). 
+2. After you have installed it, open XAMPP, start Apache and MySQL modules
+3. For the MySQL module, click ADMIN. 
+4. Go to Databases
+5. Create a new database with the name `wisply`
+6. Go to Users and create a user
+7. Assign the user all the priviledges for the database `wisply`
+8. Click on database `wisply`
+9. Choose `import`
+10. Upload the file from '/util/ubuntu/install/sql/Wisply.sql'
+
 In the `util/` folder there are a few scrips which may help yout.

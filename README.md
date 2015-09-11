@@ -18,7 +18,7 @@ Wisply can be downloaded using the `git` command throught Go
 
 ## Gettings started
 
-We tested Wisply and we ensure you that it works on two main operating systems: Microsoft Windows (10) and Ubuntu. We provide bellow the details for how to set up and install Wisply.
+We tested Wisply and we ensure you that it works on two main operating systems: Microsoft Windows (10) and Ubuntu. We provide bellow the details of how to set up and install Wisply on your system.
 
 ## Ubuntu
 

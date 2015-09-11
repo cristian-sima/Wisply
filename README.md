@@ -83,6 +83,15 @@ These steps will help you to use the installer
 6. Follow the steps of the installer
 
 
+#### Start Wisply server
+
+In order to start wisply, go to Wisply directory and type `bash util/ubuntu/start.sh`. You will see the wizard for running. This script detects if there was any previous version of Wisply started.
+
+
+#### Stop Wisply server
+
+If you want to stop wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
+
 ### Windows
 
 In the `util/` folder there are a few scrips which may help yout.

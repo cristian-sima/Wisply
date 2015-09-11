@@ -18,11 +18,11 @@ Wisply can be downloaded using the `git` command throught Go
 
 ## Gettings started
 
-We tested Wisply and we ensure you that it works on two main operating systems: Microsoft Windows (10) and Ubuntu. We provide bellow the details of how to set up and install Wisply on your system.
+We tested Wisply and we ensure you that it works on two main operating systems: Microsoft Windows (10) and Ubuntu. We provide bellow the details of how to set up and install Wisply on your system.  Until you can start Wisply you need to install the language, framework and the server for database. Please follow the next steps.
 
 ## Ubuntu
 
-Wisply comes with a special installer which helps you to quickly set up and run the application. Until we can run the installer there must be installed the language, framework and the server for database. Please follow the next steps.
+Wisply comes with special tools which help you to quickly set up and run the application.
 
 #### Golang
 

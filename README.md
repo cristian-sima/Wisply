@@ -24,23 +24,23 @@ Wisply has been tested and it can work on two main operating systems: Microsoft 
 
 Wisply comes with a special installer which helps you to quickly set up and run the application. Until we can run the installer there must be installed the language, framework and the server for database. Please follow the next steps.
 
-### Golang
+#### Golang
 
 Wisply is created in Go (or Golang). You can find a lot of information about this language on the [official web page](http://golang.org/). Google even provides a virtual tour for the language [here](https://tour.golang.org/welcome/1)
 
-#### How to install Go?
+##### How to install Go?
 
 1. Open a terminal window
 2. Type `sudo apt-get install golang`
 3. Type `Y` and press enter
 
-#### Configure Golang
+##### Configure Golang
 
 1. `GOROOT` is the path where Go is installed. You do not have to change it, but in case you want type `export GOROOT=/usr/local/go`
 2. `GOPATH` is the path to the Go workspace. Here Go will download Wisply. So, type `export GOPATH=$HOME/path` where `path` is the path where you want to store Wisply
 3. You now have to save the changes. Type `export PATH=$PATH:$GOROOT/bin:$GOPATH/bin`
 
-#### Install begoo tool
+##### Install begoo tool
 
 Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaining Wisply. In order to install it:
 
@@ -48,7 +48,7 @@ Wisply is using [beego](http://beego.me/) framework. This framework provides a t
 2. Type `go get github.com/beego/bee`. If the script ends and there is nothing displayed, it means it is working
 2. For more information go [beego tool website](http://beego.me/docs/install/bee.md)
 
-#### Set up the SQL database
+#### SQL Database
 
 Wisply needs a SQL database where to store its data. We will show which are the steps to set up a database and make Wisply working
 
@@ -67,7 +67,7 @@ If you already have MySQL, skip this step.
   You will see a list of details regarding the service such as port, process id
   
 
-### Install Wisply
+#### Install Wisply
 
 It's very quick to do it.
 
@@ -77,24 +77,23 @@ These steps will help you to use the installer
 
 1. Open a terminal window
 2. Type `cd /the/path/to/Wisply/directory/` where *path/to/Wisply/directory* is the path on your server to the Wisply directory
-3. We need to allow the installer to execute. Type `chmod u+x install/installer.sh`
-4. Type `chmod u+x install` 
-4. Type `cd install` to go in the installer directory
-5. Type `bash ./installer.sh` in order to run the installer
+3. We need to allow the installer to execute. Type `chmod u+x util/ubuntu/install/installer.sh`
+4. Type `chmod u+x util/ubuntu/install` 
+5. In order to run the installer, typ `bash /util/ubuntu/installer.sh`
 6. Follow the steps of the installer
 
-#### Start Wisply server
+#### Run Wisply
 
 In order to start wisply, go to Wisply directory and type `bash util/ubuntu/start.sh`. You will see the wizard for running. This script detects if there was any previous version of Wisply started.
 
 
-#### Stop Wisply server
+#### Stop Wisply
 
 If you want to stop wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
 
 ## Windows
 
-Wisply comes with several utilities which you can use during the development process. You can find these utilities in the directory `util/windows/Utilities`.
+Wisply provides several utilities which you can use during the development process. You can find these utilities in the directory `util/windows/Utilities`.
 
 * **Format Wisply** - it can be used to format all the packages of Wisply. It closes itself after formating
 * **Start bee go tool** - this script runs the Wisply server and displays a command promt with live log. Also, it re-builds Wisply after each modification
@@ -102,15 +101,14 @@ Wisply comes with several utilities which you can use during the development pro
 *  **Start goconvey** - It is a shorcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing (you need to install this first)
 *  **CommitSQL** - When it is executed it exports the entire SQL database scheme (without data) to the file `util/ubuntu/install/src/sql/Wisply.sql`. Thus, it can be used to quickly update database
 
-
-### Set up utilities
+#### Set up utilities
 
 1. Go to directory `util/windows/Utilities` 
 2. Edit every file and change the path to the one where Wisply is located
 3. In order to start them, just double click on the file
 
 
-### MySQL server
+#### MySQL server
 
 I recommend XAMPP. This software contain the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html). 
 

@@ -50,7 +50,7 @@ Wisply is using [beego](http://beego.me/) framework. This framework provides a t
 
 #### SQL Database
 
-Wisply needs a SQL database in order to store its data. We will show you which are the steps to set up a database.
+Wisply needs a SQL database in order to store its data. We will show you the steps to set up a database.
 
 ##### Install MySQL server
 
@@ -88,16 +88,16 @@ In order to start Wisply, go to Wisply directory and type `bash util/ubuntu/star
 
 #### Stop Wisply
 
-If you want to stop wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
+If you want to stop Wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
 
 ## Windows
 
 Wisply provides several utilities which you can use during the development process. You can find these utilities in the directory `util/windows/Utilities`.
 
-* **Format Wisply** - It can be used to format the code of all the packages. It closes itself after formating.
-* **Start bee go tool** - this script runs the Wisply server and displays a command promt with live log. Also, it re-builds Wisply after each file has been modified.
+* **Format Wisply** - It can be used to format the code of all the packages. It closes itself after formatting.
+* **Start bee go tool** - this script runs the Wisply server and displays a command prompt. Also, it re-builds Wisply after each file has been modified.
 * **Test Wisply** - It shows a command promt with the result of testing Wisply. In case the tests were not good, the user can type `y` to re-test Wisply, or type any other character to exit.
-*  **Start goconvey** - It is a shorcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing (you need to install this first).
+*  **Start goconvey** - It is a shortcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing (you need to install this first).
 *  **CommitSQL** - When it is executed it exports the entire SQL database scheme (without data) to the file `util/ubuntu/install/src/sql/Wisply.sql`. Thus, it can be used to quickly update the database schema.
 
 #### Set up utilities
@@ -118,18 +118,18 @@ I recommend XAMPP. This software contains the MySQL server and it has a good use
 4. Go to `Databases`
 5. Create a new database with the name `wisply`
 6. Go to Users and create a user
-7. Assign the user all the priviledges for the database `wisply`
+7. Assign the user all the privileges for the database `wisply`
 8. Click on database `wisply`
 9. Choose `import`
 10. Upload the file from `/util/ubuntu/install/src/sql/Wisply.sql`
-11. Update the file `conf/database/default.json` with the details of this databse (username, password)
+11. Update the file `conf/database/default.json` with the details of this database (username, password)
 12. Double click `/util/windows/Start bee go tool.bat`
 13. You are now running Wisply!
 
 
 ## Update Wisply
 
-Wisply is evolving and you may want to get the last version on your server, but you do not want to install each time. Thus, in order to update Wisply please follow these steps:
+Wisply is evolving. You may want to get the last version on your server, but installing each version is time consuming. Thus, in order to quickly update Wisply, please follow the next steps:
 
 1. Open a terminal window
 2. Type `go get -u github.com/cristian-sima/Wisply`
@@ -137,4 +137,4 @@ Wisply is evolving and you may want to get the last version on your server, but 
 
 The update is not affecting the current configuration (information about database, about server) and does not delete the existing data from database.
 
-**Note** In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)
+**Note**: In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)

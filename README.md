@@ -114,22 +114,19 @@ Wisply comes with several utilities which you can use during the development pro
 
 #### MySQL server
 
-I recommend XAMPP. This software contain the MySQL server and it has a good user interface. 
+I recommend XAMPP. This software contain the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html). 
 
 #### Set up Wisply
 
-1. You can download it from [here](https://www.apachefriends.org/download.html). 
-2. After you have installed it, open XAMPP, start Apache and MySQL modules
+1. Open XAMPP, start Apache and MySQL modules
 3. For the MySQL module, click ADMIN. 
-4. Go to Databases
+4. Go to `Databases`
 5. Create a new database with the name `wisply`
 6. Go to Users and create a user
 7. Assign the user all the priviledges for the database `wisply`
 8. Click on database `wisply`
 9. Choose `import`
 10. Upload the file from `/util/ubuntu/install/src/sql/Wisply.sql`
-11. Update the file `conf/database/default.json`
+11. Update the file `conf/database/default.json` with the details of this databse (username, password)
 12. Double click `/util/windows/Start bee go tool.bat`
 13. You are now running Wisply!
- 
-In the `util/` folder there are a few scrips which may help yout.

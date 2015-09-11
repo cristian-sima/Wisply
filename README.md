@@ -111,7 +111,7 @@ Wisply provides several utilities which you can use during the development proce
 
 I recommend XAMPP. This software contains the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html). 
 
-### Set up Wisply
+### Install Wisply
 
 1. Open XAMPP, start Apache and MySQL modules
 3. For the MySQL module, click ADMIN. 

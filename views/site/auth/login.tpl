@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                   <div class="text-center" id="login-submit-div">
-                    <input type="submit" class="btn btn-primary" href="#" role="button" id="login-submit-button" value="Login" />
+                    <input type="submit" class="btn btn-primary" id="login-submit-button" value="Login" />
                   </div>
                 </div>
               </fieldset>
@@ -39,7 +39,7 @@
         <div class="panel panel-default">
           <div class="panel-body">
             Are you new? <a href="/auth/register">Register</a> in 4 seconds <br />
-            Do you need to recover your details? <a href="/auth/recover">Recover</a>
+            <!--Do you need to recover your details? <a href="/auth/recover">Recover</a>-->
           </div>
         </div>
       </div>

@@ -63,7 +63,7 @@ func (controller *UserController) Update() {
 			if databaseError != nil {
 				controller.Abort("databaseError")
 			} else {
-				controller.DisplaySuccessMessage("The source has been modified!", "/admin/users/")
+				controller.DisplaySuccessMessage("The user has been modified!", "/admin/users/")
 			}
 		}
 	}

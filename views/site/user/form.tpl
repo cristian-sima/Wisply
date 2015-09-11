@@ -6,8 +6,7 @@
       <li class="active">Modify</li>
     </ul></div>
     <div class="panel-body">
-      <p>
-        <form action="" method="POST" class="form-horizontal" id="modify">
+        <form method="POST" class="form-horizontal" id="modify">
           {{ .xsrf_input }}
           <fieldset>
             <div class="form-group">
@@ -21,12 +20,11 @@
             </div>
             <div class="form-group">
               <div class="col-lg-10 col-lg-offset-2">
-                <button type="submit" class="btn btn-primary">Modify</button><a href="/admin/users"> <button type="button" class="btn btn-default">Cancel</button></a>
+                <input type="submit" class="btn btn-primary" value="Modify"/> <a href="/admin/users" class="btn btn-default">Cancel</a>
               </div>
             </div>
           </fieldset>
         </form>
-      </p>
     </div>
   </div>
   <script>

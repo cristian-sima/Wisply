@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group" >
                   <div class="text-center" id="register-submit-div">
-                    <input type="submit" class="btn btn-primary" href="#" role="button" value="Create account" />
+                    <input type="submit" class="btn btn-primary" value="Create account" />
                   </div>
                 </div>
               </fieldset>

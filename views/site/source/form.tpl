@@ -6,8 +6,7 @@
       <li class="active">{{.action}}</li>
     </ul></div>
     <div class="panel-body">
-      <p>
-        <form action="{{.actionURL}}" method="{{.actionType}}" class="form-horizontal" >
+        <form method="{{.actionType}}" class="form-horizontal" >
           {{ .xsrf_input }}
           {{ $safeDescription := .sourceDescription|html}}
           <fieldset>
@@ -32,12 +31,11 @@
             </div>
             <div class="form-group">
               <div class="col-lg-10 col-lg-offset-2">
-                <button type="submit" class="btn btn-primary">Submit</button><a href="/admin/sources"> <button type="reset" class="btn btn-default">Reset</button></a>
+                <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/sources" class="btn btn-default">Cancel</a>
               </div>
             </div>
           </fieldset>
         </form>
-      </p>
     </div>
   </div>
   <script>

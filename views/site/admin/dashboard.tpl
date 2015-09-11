@@ -6,7 +6,7 @@
     <div class="panel-body">
       <div class="row">
         <div class="col-lg-4">
-          <ul class="list-group">
+          <div class="list-group">
             <a class="list-group-item" href="admin/users">
               <span class="badge">{{ .numberOfUsers}}</span>
               Users
@@ -15,7 +15,7 @@
               <span class="badge"> {{ .numberOfSources }}</span>
               Sources
             </a>
-          </ul>
+          </div>
         </div>
         <div class="col-lg-4">
         </div>

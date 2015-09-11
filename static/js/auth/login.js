@@ -17,8 +17,7 @@ var login;
       login.showLoading();
     },
     showLoading: function() {
-      var element = $('#login-submit-div');
-      wisply.showLoading(element, "medium");
+      wisply.showLoading('#login-submit-div', "medium");
     }
   };
   function initLogin() {

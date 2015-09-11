@@ -20,6 +20,9 @@ var wisply;
         title: title,
         message: content
       });
+    },
+    alert : function(args) {
+      bootbox.dialog(args);
     }
   };
 
@@ -32,9 +35,7 @@ var wisply;
       $("#menu-logout-button").click(this.FireLogoutUser);
     },
     FireLogoutUser: function (event) {
-      var menuDiv;
-      menuDiv = $("#menu-top-left");
-      wisply.showLoading(menuDiv, "small");
+      wisply.showLoading("#menu-top-left", "small");
       event.preventDefault();
       wisply.tryLogout();
     },
@@ -78,7 +79,7 @@ var wisply;
         location.reload();
       }, 2000);
     },
-    showLoading: function (element, size) {
+    showLoading: function (idElement, size) {
       function getDimension(size) {
         var px = 0;
         switch (size) {
@@ -94,15 +95,15 @@ var wisply;
         }
         return px;
       }
-
       function getHTML(dimension) {
         return "<img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
       }
-      var HTML, dimension;
+      var HTML, dimension, element;
 
       if (typeof size === 'undefined') {
         size = "small";
       }
+      element = $(idElement);
       dimension = getDimension(size);
       HTML = getHTML(dimension);
       element.html(HTML);

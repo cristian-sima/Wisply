@@ -10,7 +10,7 @@
             <div class=" text-center">
               <br />
             </div>
-            <form action="" method="POST" class="form-horizontal" id="login-form">
+            <form action="/auth/login" method="POST" class="form-horizontal" id="login-form">
               {{ .xsrf_input }}
               <input type="hidden" value="{{.sendMe}}" name="login-send-me" />
               <fieldset>
@@ -33,7 +33,6 @@
                 </div>
               </fieldset>
             </form>
-          </p>
         </div>
       </div>
       <div class="form-group">

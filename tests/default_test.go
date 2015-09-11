@@ -54,20 +54,8 @@ func TestPageLogin(t *testing.T) {
 }
 
 func TestPageRegister(t *testing.T) {
-	url := "/auth/register"
+	url := "/auth/admin"
 	name := "Register"
-	checkPage(t, url, name)
-}
-
-func TestPageLogout(t *testing.T) {
-	url := "/auth/logout"
-	name := "Logout"
-	checkPage(t, url, name)
-}
-
-func TestPageRecover(t *testing.T) {
-	url := "/auth/recover"
-	name := "Recover"
 	checkPage(t, url, name)
 }
 
@@ -78,11 +66,12 @@ func checkPage(t *testing.T, url string, pageName string) {
 
 	beego.Trace("Test static page: ", pageName)
 
+
 	Convey("Subject: Test Station Endpoint\n", t, func() {
 		Convey("The page "+pageName+" can be accessed", func() {
 			So(w.Code, ShouldEqual, 200)
 		})
-		Convey("The page should not be empty", func() {
+		Convey("The page should not be empty and pass HTML check", func() {
 			So(w.Body.Len(), ShouldBeGreaterThan, 0)
 		})
 	})

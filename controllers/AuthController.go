@@ -18,8 +18,6 @@ func (controller *AuthController) Prepare() {
 func (controller *AuthController) ShowLoginForm() {
 	if controller.UserConnected {
 		controller.Redirect("/", 302)
-		controller.TplNames = "general/auth/login.tpl"
-		controller.Layout = "general/layout.tpl"
 	} else {
 		controller.GenerateXsrf()
 		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))

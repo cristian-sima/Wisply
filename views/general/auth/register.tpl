@@ -10,7 +10,7 @@
             <div class=" text-center">
               We like privacy. We promise.
             </div>
-            <form action="" method="POST" class="form-horizontal" id="register-form" >
+            <form action="/auth/register" method="POST" class="form-horizontal" id="register-form" >
               {{ .xsrf_input }}
               <fieldset>
                 <div class="form-group">
@@ -44,14 +44,13 @@
                 </div>
               </fieldset>
             </form>
-          </p>
         </div>
       </div>
       <div class="form-group">
         <div class="panel panel-default">
           <div class="panel-body">
             Go back to the <a href="/auth/login"> Login</a> form.<br />
-            Do you need to recover your details? <a href="/auth/recover">Recover</a>
+            <!--Do you need to recover your details? <a href="/auth/recover">Recover</a>-->
           </div>
         </div>
       </div>

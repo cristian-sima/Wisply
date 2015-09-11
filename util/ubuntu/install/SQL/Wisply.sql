@@ -58,7 +58,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (15,'user','$2a$10$Gd/sGXRIli/UrZ/ZTLkpJeUn0tOnpopLqsSuk9vDzQ0Xy8a6TiTJi','cristian.sima93@yahoo.com','false'),(18,'admin','$2a$10$Oip169z98r6bjQnAp0pfyOovyK73r9oxPIMZCqEQUvrDqAuGd9oTK','admin@admin.me','true');
+INSERT INTO `user` VALUES (15,'admin','$2a$10$Gd/sGXRIli/UrZ/ZTLkpJeUn0tOnpopLqsSuk9vDzQ0Xy8a6TiTJi','cristian.sima93@yahoo.com','true');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,11 +80,12 @@ DROP TABLE IF EXISTS `user_login`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_login` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
+  `user` int(11) NOT NULL,
   `token` varchar(200) NOT NULL,
-  `timestamp` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
+  `timestamp` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +94,7 @@ CREATE TABLE `user_login` (
 
 LOCK TABLES `user_login` WRITE;
 /*!40000 ALTER TABLE `user_login` DISABLE KEYS */;
-INSERT INTO `user_login` VALUES (52,0,'4ef8c506-48aa-485d-469d-633eac03f771',0);
+INSERT INTO `user_login` VALUES (92,15,'823cd82e-289e-46b4-6565-3069cecc8bb0','1441927696');
 /*!40000 ALTER TABLE `user_login` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -106,4 +107,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-10 20:11:26
+-- Dump completed on 2015-09-11  0:38:39

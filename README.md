@@ -40,9 +40,6 @@ Wisply is created in Go (or Golang). You can find a lot of information about thi
 2. `GOPATH` is the path to the Go workspace. Here Go will download Wisply. So, type `export GOPATH=$HOME/path` where `path` is the path where you want to store Wisply
 3. You now have to save the changes. Type `export PATH=$PATH:$GOROOT/bin:$GOPATH/bin`
 
-
-### Install Wisply
-
 #### Install begoo tool
 
 Wisply is using [beego](http://beego.me/) framework. This framework provides a tool which simplifies the process of maintaining Wisply. In order to install it:
@@ -69,7 +66,8 @@ If you already have MySQL, skip this step.
   `sudo netstat -tap | grep mysql`
   You will see a list of details regarding the service such as port, process id
   
-#### Set up Wisply
+
+### Install Wisply
 
 It's very quick to do it.
 
@@ -85,7 +83,6 @@ These steps will help you to use the installer
 5. Type `bash ./installer.sh` in order to run the installer
 6. Follow the steps of the installer
 
-
 #### Start Wisply server
 
 In order to start wisply, go to Wisply directory and type `bash util/ubuntu/start.sh`. You will see the wizard for running. This script detects if there was any previous version of Wisply started.
@@ -95,7 +92,7 @@ In order to start wisply, go to Wisply directory and type `bash util/ubuntu/star
 
 If you want to stop wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
 
-### Windows
+## Windows
 
 Wisply comes with several utilities which you can use during the development process. You can find these utilities in the directory `util/windows/Utilities`.
 
@@ -106,20 +103,18 @@ Wisply comes with several utilities which you can use during the development pro
 *  **CommitSQL** - When it is executed it exports the entire SQL database scheme (without data) to the file `util/ubuntu/install/src/sql/Wisply.sql`. Thus, it can be used to quickly update database
 
 
-#### Set up utilities
+### Set up utilities
 
 1. Go to directory `util/windows/Utilities` 
 2. Edit every file and change the path to the one where Wisply is located
 3. In order to start them, just double click on the file
 
 
-##### 
-
-#### MySQL server
+### MySQL server
 
 I recommend XAMPP. This software contain the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html). 
 
-#### Set up Wisply
+### Set up Wisply
 
 1. Open XAMPP, start Apache and MySQL modules
 3. For the MySQL module, click ADMIN. 

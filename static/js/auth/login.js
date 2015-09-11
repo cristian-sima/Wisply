@@ -9,9 +9,13 @@ var login;
   Login.prototype = {
     init : function () {
       this.loadListeners();
+      this.focusUsername();
     },
     loadListeners: function() {
       $("#login-form").on("submit", this.FireFormSubmited);
+    },
+    focusUsername: function () {
+      $("#login-username").focus();
     },
     FireFormSubmited: function() {
       login.showLoading();

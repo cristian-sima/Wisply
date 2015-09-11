@@ -7,11 +7,12 @@ import (
 
 func init() {
 
-	beego.Router("/", &controllers.DefaultController{}, "*:ShowIndexPage")
-	beego.Router("/about", &controllers.DefaultController{}, "*:ShowAboutPage")
-	beego.Router("/contact", &controllers.DefaultController{}, "*:ShowContactPage")
-	beego.Router("/webscience", &controllers.DefaultController{}, "*:ShowWebsciencePage")
-	beego.Router("/sample", &controllers.DefaultController{}, "*:ShowSamplePage")
+	beego.Router("/", &controllers.DefaultController{}, "*:ShowIndex")
+	beego.Router("/about", &controllers.DefaultController{}, "*:ShowAbout")
+	beego.Router("/contact", &controllers.DefaultController{}, "*:ShowContact")
+	beego.Router("/webscience", &controllers.DefaultController{}, "*:ShowWebscience")
+	beego.Router("/sample", &controllers.DefaultController{}, "*:ShowSample")
+	beego.Router("/accessibility", &controllers.DefaultController{}, "*:ShowAccessibility")
 
 	// ----------------------------- Authentification --------------------------------------
 

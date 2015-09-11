@@ -10,6 +10,7 @@ var register;
     init : function () {
       this.loadListeners();
       this.checkConfirmPassword();
+      this.focusUsername();
     },
     loadListeners: function() {
       this.passwordCompletedListener();
@@ -19,6 +20,9 @@ var register;
       if($("#register-password-confirm").val() !== "") {
         $("#div-confirm-password").show();
       }
+    },
+    focusUsername: function () {
+      $("#register-username").focus();
     },
     formSubmittedListener : function() {
       $("#register-form").on("submit", this.FireFormSubmited);

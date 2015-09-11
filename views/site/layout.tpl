@@ -2,7 +2,7 @@
 <html lang="en" hola_ext_inject="disabled">
     {{ template "header" }}
     <body>
-        {{ template "javascript" }}
+        {{ template "javascript" . }}
         {{ template "menu" . }}
         <div class="container" >
             {{.LayoutContent}}

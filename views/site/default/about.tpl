@@ -1,4 +1,4 @@
-<div class="page-header" id="banner">
+<div class="page-header">
     <div class="row" >
         <div class="col-lg-8 col-md-7 col-sm-6" >
             <div class="panel panel-default">
@@ -8,7 +8,7 @@
                         <li class="active">About</li>
                     </ul></div>
                 <div class="panel-body">
-                   
+
                     <p> We want to change the way the Web science resources are mapped. Wisply tries to change the way the curricula is defined.</p>
 
                     <p> <b>Which is the problem? </b></p>
@@ -16,7 +16,7 @@
 
                     <p> <b>What is actually Wisply doing?</b></p>
                     <p>
-                    </p><ul><li>Wisply will identify resources from a range of different sources used in the teaching of Web science. It will aggregate and present the resources in a searchable form, mapping them to the Web science curriculum. This collection of aggregated data will be also available for analytical purposes. 
+                    </p><ul><li>Wisply will identify resources from a range of different sources used in the teaching of Web science. It will aggregate and present the resources in a searchable form, mapping them to the Web science curriculum. This collection of aggregated data will be also available for analytical purposes.
                         </li><li>	The general idea behind this project is to create a tool which can make the process of analysing resources about Web science, in terms of open data, more automated for the long term, with very little interaction from people.
                         </li></ul>
                     <p><b>Great, why should I use it?</b></p>

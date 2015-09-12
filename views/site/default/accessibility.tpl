@@ -29,7 +29,7 @@
             <h2>Answers</h2>
             <article id="accessibility-answers-1" class="well">
               <h3>Can I navigate on the website, using just the keyboard?</h3>
-              <span>Yes, you can. In order to navigate using the keyboard, you can use these combinations of keys:</span>
+              Yes, you can. In order to navigate using the keyboard, you can use these combinations of keys:
               <ul class="light-keys">
                 <li>
                   <kbd>SPACE</kbd> to scroll down
@@ -57,7 +57,7 @@
                   </ul>
                   <br />
                   <figure>
-                    <figcaption>Example of an element focused - <i>Modify</i> is focused</figcaption>
+                    <figcaption>Here, <i>Modify</i> is focused</figcaption>
                     <img class="img-responsive img-thumbnail" src="/static/img/default/accessibility/example-focused-element.jpg" alt="Example of an element focused" />
                   </figure>
                 </li>
@@ -65,25 +65,25 @@
             </article>
             <article id="accessibility-answers-2" class="well">
               <h3>Do you provide shortcuts?</h3>
-              <span>Yes, you can use shortcuts. This is a list of shortcuts:</span>
+              Yes, you can use shortcuts. <br />This is a list of useful shortcuts:
               <ul>
                 <li> All pages
                   <ul class="light-keys">
                     <li>
-                      <kbd>ALT</kbd> + <kbd>A</kbd> It access the accessibility page
+                      <kbd>ALT</kbd> + <kbd>A</kbd> - Wisply goes to accessibility page
                     </li>
                     <li>
-                      <kbd>ALT</kbd> + <kbd>H</kbd> It access the home page
+                      <kbd>ALT</kbd> + <kbd>H</kbd> - Wisply goes to home page
                     </li>
                     <li>
-                      <kbd>ALT</kbd> + <kbd>C</kbd> It accesss the contact page
+                      <kbd>ALT</kbd> + <kbd>C</kbd> - Wisply goes contact page
                     </li>
                   </ul>
                 </li>
                 <li> When you are connected
                   <ul class="light-keys">
                     <li>
-                      <kbd>ALT</kbd> + <kbd>L</kbd> It logs you out
+                      <kbd>ALT</kbd> + <kbd>L</kbd>  - Wisply logs you out
                     </li>
                   </ul>
                 </li>

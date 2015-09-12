@@ -9,9 +9,9 @@ import (
 
 type WisplyController struct {
 	MessageController
-	UserConnected bool
-	User          User
-	Model         WisplyModel
+	AccountConnected bool
+	Account          Account
+	Model            WisplyModel
 }
 
 func (this *WisplyController) GenerateXsrf() {
@@ -19,21 +19,21 @@ func (this *WisplyController) GenerateXsrf() {
 }
 
 func (controller *WisplyController) Prepare() {
-	controller.updateUserConnection()
+	controller.updateAccountConnection()
 	InitDatabase()
 }
 
-func (controller *WisplyController) updateUserConnection() {
-	session := controller.GetSession("user-id")
+func (controller *WisplyController) updateAccountConnection() {
+	session := controller.GetSession("account-id")
 	if session == nil {
-		controller.UserConnected = false
-		controller.Data["userDisconnected"] = true
+		controller.AccountConnected = false
+		controller.Data["accountDisconnected"] = true
 	} else {
 		id := (session).(string)
-		controller.User = NewUser(id)
-		fmt.Println(controller.User)
-		controller.UserConnected = true
-		controller.Data["userConnected"] = true
-		controller.Data["currentUser"] = controller.User
+		controller.Account = NewAccount(id)
+		fmt.Println(controller.Account)
+		controller.AccountConnected = true
+		controller.Data["accountConnected"] = true
+		controller.Data["currentAccount"] = controller.Account
 	}
 }

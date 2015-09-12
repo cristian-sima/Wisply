@@ -7,9 +7,9 @@
       <div class="row">
         <div class="col-lg-4">
           <div class="list-group">
-            <a class="list-group-item" href="admin/users">
-              <span class="badge">{{ .numberOfUsers}}</span>
-              Users
+            <a class="list-group-item" href="admin/accounts">
+              <span class="badge">{{ .numberOfAccounts}}</span>
+              Accounts
             </a>
             <a class="list-group-item" href="admin/sources">
               <span class="badge"> {{ .numberOfSources }}</span>

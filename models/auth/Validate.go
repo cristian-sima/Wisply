@@ -5,7 +5,7 @@ import (
 	validity "github.com/cristian-sima/validity"
 )
 
-func ValidateNewUserDetails(rawData map[string]interface{}) *validity.ValidationResults {
+func ValidateNewAccountDetails(rawData map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{
 		"username": []string{"String", "alpha_dash", "between_inclusive:3,25"},
 		"password": []string{"String", "alpha_dash", "between_inclusive:6,25"},

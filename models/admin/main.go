@@ -6,18 +6,18 @@ import (
 )
 
 type Dashboard struct {
-	Users   int
-	Sources int
+	Accounts int
+	Sources  int
 }
 
 func GetDashboard() *Dashboard {
 
-	numberOfUsers := auth.Count()
+	numberOfAccounts := auth.Count()
 	numberOfSources := sources.Count()
 
 	return &Dashboard{
-		Users:   numberOfUsers,
-		Sources: numberOfSources,
+		Accounts: numberOfAccounts,
+		Sources:  numberOfSources,
 	}
 
 }

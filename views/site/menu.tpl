@@ -27,13 +27,13 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" id="menu-top-left">
-        {{ if .userDisconnected }}
+        {{ if .accountDisconnected }}
         <li><a href="/auth/login">Login</a></li>
         <li><a href="/auth/register">Register</a></li>
         {{ end }}
-        {{ if .userConnected }}
-        <li  class="text-muted"><a>Hi, <b>{{ .currentUser.Username }}</b></a></li>
-        {{ if .currentUser.Administrator }}
+        {{ if .accountConnected }}
+        <li  class="text-muted"><a>Hi, <b>{{ .currentAccount.Username }}</b></a></li>
+        {{ if .currentAccount.Administrator }}
         <li><a href="/admin">Admin</a></li>
         {{ end }}
         <li><a id="menu-logout-button" href="#">Logout</a></li>

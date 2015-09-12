@@ -12,7 +12,7 @@
 
 <script src="/static/js/wisply/wisply.js"></script>
 
-{{ if .userConnected }}
+{{ if .accountConnected }}
 <script src="/static/js/wisply/Connection.js"></script>
 {{ end }}
 

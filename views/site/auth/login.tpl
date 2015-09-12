@@ -42,7 +42,7 @@
       <div class="form-group">
         <div class="panel panel-default">
           <div class="panel-body">
-            Are you new? <a href="/auth/register">Register</a> in 4 seconds <br />
+            Are you new? <a href="/auth/register">Register</a> in a few seconds <br />
             <!--Do you need to recover your details? <a href="/auth/recover">Recover</a>-->
           </div>
         </div>

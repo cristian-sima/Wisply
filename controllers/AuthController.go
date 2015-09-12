@@ -16,7 +16,7 @@ func (controller *AuthController) Prepare() {
 }
 
 func (controller *AuthController) ShowLoginForm() {
-	if controller.UserConnected {
+	if controller.AccountConnected {
 		controller.Redirect("/", 302)
 	} else {
 		controller.GenerateXsrf()
@@ -32,7 +32,7 @@ func (controller *AuthController) ShowRegisterForm() {
 	controller.Layout = "site/layout.tpl"
 }
 
-func (controller *AuthController) CreateNewUser() {
+func (controller *AuthController) CreateNewAccount() {
 	var username, password, confirmPassowrd, email string
 
 	username = strings.TrimSpace(controller.GetString("register-username"))
@@ -52,11 +52,11 @@ func (controller *AuthController) CreateNewUser() {
 		if err != nil {
 			controller.DisplayErrorMessages(problems)
 		} else {
-			usernameAlreadyExists := controller.Model.CheckUsernameExists(username)
+			usernameAlreadyExists := controller.Model.CheckAccountnameExists(username)
 			if usernameAlreadyExists {
 				controller.DisplayErrorMessage("The username is already used. Try another")
 			} else {
-				databaseError := controller.Model.CreateNewUser(rawData)
+				databaseError := controller.Model.CreateNewAccount(rawData)
 				if databaseError != nil {
 					controller.Abort("databaseError")
 				} else {
@@ -67,7 +67,7 @@ func (controller *AuthController) CreateNewUser() {
 	}
 }
 
-func (controller *AuthController) LoginUser() {
+func (controller *AuthController) LoginAccount() {
 	var sendMeAddress string = strings.TrimSpace(controller.GetString("login-send-me"))
 	rawData := make(map[string]interface{})
 	rawData["username"] = strings.TrimSpace(controller.GetString("login-username"))
@@ -77,29 +77,28 @@ func (controller *AuthController) LoginUser() {
 	if err != nil {
 		controller.DisplayErrorMessages(problems)
 	} else {
-		user, err := controller.Model.TryLoginUser(rawData)
+		account, err := controller.Model.TryLoginAccount(rawData)
 		if err != nil {
 			controller.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
 		} else {
-			controller.connectUser(user, sendMeAddress)
+			controller.connectAccount(account, sendMeAddress)
 		}
 	}
 }
 
-func (controller *AuthController) connectUser(user *User, sendMeAddress string) {
-	controller.saveLoginDetails(user)
-	controller.safeRedilectUser(sendMeAddress)
+func (controller *AuthController) connectAccount(account *Account, sendMeAddress string) {
+	controller.saveLoginDetails(account)
+	controller.safeRedilectAccount(sendMeAddress)
 }
 
-func (controller *AuthController) saveLoginDetails(user *User) {
-	var userId string = strconv.Itoa(user.Id)
-	controller.Model.UpdateUserLoginToken(userId)
-	controller.SetSession("user-id", userId)
-	controller.Ctx.SetCookie("wisply-connection", userId, 1<<31-1, "/")
+func (controller *AuthController) saveLoginDetails(account *Account) {
+	var accountId string = strconv.Itoa(account.Id)
+	controller.Model.UpdateAccountLoginToken(accountId)
+	controller.SetSession("account-id", accountId)
+	controller.Ctx.SetCookie("wisply-connection", accountId, 1<<31-1, "/")
 }
 
-
-func (controller *AuthController) safeRedilectUser(sendMe string) {
+func (controller *AuthController) safeRedilectAccount(sendMe string) {
 	var safeAddress string
 	safeAddress = controller.getSafeURL(sendMe)
 	controller.Redirect(safeAddress, 302)
@@ -126,7 +125,7 @@ func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
 }
 
 func (controller *AuthController) Logout() {
-	controller.DelSession("user")
+	controller.DelSession("account")
 	controller.DestroySession()
 	controller.Redirect("/", 200)
 }

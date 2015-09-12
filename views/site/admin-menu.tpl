@@ -16,7 +16,7 @@
           </ul>
         </li>
         <li >
-          <a href="/admin/users" > Users </a>
+          <a href="/admin/accounts" > Accounts </a>
         </li>
       </ul>
 {{ end }}

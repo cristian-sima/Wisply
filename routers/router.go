@@ -19,11 +19,11 @@ func init() {
 	authNamespace := beego.NewNamespace("/auth",
 		beego.NSNamespace("/login",
 			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowLoginForm"),
-			beego.NSRouter("", &controllers.AuthController{}, "POST:LoginUser"),
+			beego.NSRouter("", &controllers.AuthController{}, "POST:LoginAccount"),
 		),
 		beego.NSNamespace("/register",
 			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowRegisterForm"),
-			beego.NSRouter("", &controllers.AuthController{}, "POST:CreateNewUser"),
+			beego.NSRouter("", &controllers.AuthController{}, "POST:CreateNewAccount"),
 		),
 		beego.NSNamespace("/logout",
 			beego.NSRouter("", &controllers.AuthController{}, "POST:Logout"),
@@ -47,14 +47,14 @@ func init() {
 		),
 	)
 
-	usersNamespace := beego.NSNamespace("/users",
-		beego.NSRouter("", &controllers.UserController{}, "*:ListUsers"),
+	accountsNamespace := beego.NSNamespace("/accounts",
+		beego.NSRouter("", &controllers.AccountController{}, "*:ListAccounts"),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &controllers.UserController{}, "GET:Modify"),
-			beego.NSRouter(":id", &controllers.UserController{}, "POST:Update"),
+			beego.NSRouter(":id", &controllers.AccountController{}, "GET:Modify"),
+			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &controllers.UserController{}, "POST:Delete"),
+			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Delete"),
 		),
 	)
 
@@ -62,7 +62,7 @@ func init() {
 		beego.NewNamespace("/admin",
 			beego.NSRouter("", &controllers.AdminController{}, "*:ShowDashboard"),
 			sourcesNamespace,
-			usersNamespace,
+			accountsNamespace,
 		)
 
 	// register namespace

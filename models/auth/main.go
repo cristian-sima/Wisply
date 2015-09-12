@@ -1,12 +1,15 @@
 package auth
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"errors"
 	"github.com/astaxie/beego/orm"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/nu7hatch/gouuid"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -130,24 +133,97 @@ func checkPasswordIsCorrect(hashedPassword, plainPassword string) bool {
 	return false
 }
 
-func (model *AuthModel) UpdateAccountLoginToken(accountId string) {
-	var timeStamp string
-	token, _ := uuid.NewV4()
-	timeStamp = model.GetCurrentTimeStamp()
-	elementsDelete := []string{
-		accountId,
-	}
+func (model *AuthModel) GetLoginCookie(accountId string) string {
+	var cookie, plainToken, hashedToken string
+
+	plainToken = model.generateAccoutLoginToken(accountId)
+	hashedToken = model.getSHA1_digest(plainToken)
+
+	cookie = model.encryptCookie(accountId, hashedToken)
+	return cookie
+}
+
+func (model *AuthModel) getSHA1_digest(plainToken string) string {
+	array := []byte(plainToken)
+	hasher := sha1.New()
+	hasher.Write(array)
+	token := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+	return token
+}
+
+func (model *AuthModel) encryptCookie(accountId, hashedToken string) string {
+	var cookieValue string
+	cookieValue = accountId + "::" + hashedToken
+	return cookieValue
+}
+
+func (model *AuthModel) decrypyCookie(cookieValue string) (string, string) {
+	values := strings.Split(cookieValue, "::")
+	return values[0], values[1]
+}
+
+func (model *AuthModel) generateAccoutLoginToken(accountId string) string {
+	var timestamp, token string
+	tokenObject, _ := uuid.NewV4()
+	token = tokenObject.String()
+
+	timestamp = model.GetCurrentTimeStamp()
+
 	elementsInsert := []string{
 		"NULL",
 		accountId,
-		token.String(),
-		timeStamp,
+		timestamp,
 	}
-	Database.Raw("DELETE from account_login WHERE account= ? ", elementsDelete).Exec()
-	_, err := Database.Raw("INSERT INTO `account_login` (`id`, `account`, `token`, `timestamp`) VALUES (?, ?, ?, ?)", elementsInsert).Exec()
-	if err != nil {
-		panic(err)
+	Database.Raw("INSERT INTO `account_login` (`id`, `account`, `token`, `timestamp`) VALUES (?, ?, ?, ?)", elementsInsert).Exec()
+
+	return token
+}
+
+func (model *AuthModel) IsConnectionValid (accountId string) bool {
+	return model.checkTokenIsValid(accountId)
+}
+
+func (model *AuthModel) checkTokenIsValid(accountId string) bool {
+
+	var (
+		now, duration, login int
+		isValid bool
+	)
+
+	now,_ = strconv.Atoi(model.GetCurrentTimeStamp())
+	duration = beego.AppConfig.String("connectionDuration")
+
+	login = model.getAccountLoginTokenTimestamp();
+
+	isValid = (now <= (login + duration))
+	return isValid
+}
+
+func (model *AuthModel) getAccountLoginTokenTimestamp() int {
+
+		var token int
+		type Temp struct {
+			Timestamp string
 	}
+		temp := new(Temp)
+		Database.Raw("SELECT timestamp FROM account_login").QueryRow(&temp)
+		token,_  = strconv.Atoi(temp.Timestamp)
+		return token
+}
+
+func (model *AuthModel) DeleteOldTokens(accountId string) {
+
+		elementsDelete := []string{
+			accountId,
+		}
+		Database.Raw("DELETE from account_login WHERE account= ? AND timestamp ", elementsDelete).Exec()
+
+}
+
+func (model *AuthModel) IsLoginValid(accountId string) bool {
+	//var tokenValid bool
+	//tokenValid = model.checkTimestampIsValid()
+	return true
 }
 
 func (model *AuthModel) GetCurrentTimeStamp() string {

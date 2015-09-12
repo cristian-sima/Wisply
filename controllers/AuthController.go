@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
@@ -92,10 +93,16 @@ func (controller *AuthController) connectAccount(account *Account, sendMeAddress
 }
 
 func (controller *AuthController) saveLoginDetails(account *Account) {
-	var accountId string = strconv.Itoa(account.Id)
-	controller.Model.UpdateAccountLoginToken(accountId)
+	var (
+		accountId, cookieValue string
+		duration               int
+	)
+	duration = beego.AppConfig.String("connectionDuration")
+	accountId = strconv.Itoa(account.Id)
+	cookieValue = controller.Model.GetLoginCookie(accountId)
 	controller.SetSession("account-id", accountId)
-	controller.Ctx.SetCookie("wisply-connection", accountId, 1<<31-1, "/")
+	fmt.Println(cookieValue)
+	controller.Ctx.SetCookie("connection", cookieValue, duration, "/")
 }
 
 func (controller *AuthController) safeRedilectAccount(sendMe string) {

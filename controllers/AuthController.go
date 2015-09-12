@@ -7,7 +7,7 @@ import (
 )
 
 type AuthController struct {
-	DefaultController
+	WisplyController
 	Model AuthModel
 }
 
@@ -54,7 +54,7 @@ func (controller *AuthController) CreateNewAccount() {
 		} else {
 			emailAlreadyUsed := controller.Model.CheckEmailExists(email)
 			if emailAlreadyUsed {
-				controller.DisplayErrorMessage("Hmmm, the email " + email  + " is already used.")
+				controller.DisplayErrorMessage("Hmmm, the email " + email + " is already used.")
 			} else {
 				databaseError := controller.Model.CreateNewAccount(rawData)
 				if databaseError != nil {

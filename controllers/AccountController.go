@@ -11,7 +11,6 @@ type AccountController struct {
 	model AuthModel
 }
 
-
 func (controller *AccountController) ListAccounts() {
 
 	var exists bool = false
@@ -81,7 +80,7 @@ func (controller *AccountController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The account [" + account.Email + "] has been deleted. Well done!", "/admin/accounts/")
+			controller.DisplaySuccessMessage("The account ["+account.Email+"] has been deleted. Well done!", "/admin/accounts/")
 		}
 	}
 }

@@ -6,12 +6,11 @@ import (
 
 type Account struct {
 	Id            int
-	Name      		string
+	Name          string
 	Password      string
 	Email         string
 	Administrator bool
 }
-
 
 func NewAccount(id string) Account {
 	var account Account

@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
               <div class="col-lg-10 col-lg-offset-2">
-                <input type="submit" class="btn btn-primary" value="Modify"/> <a href="/admin/acounts" class="btn btn-default">Cancel</a>
+                <input type="submit" class="btn btn-primary" value="Modify"/> <a href="/admin/accounts" class="btn btn-default">Cancel</a>
               </div>
             </div>
           </fieldset>

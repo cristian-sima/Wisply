@@ -103,7 +103,7 @@ func (this *AuthModel) ValidateLoginDetails(rawData map[string]interface{}) (map
 
 func (model *AuthModel) TryLoginAccount(rawData map[string]interface{}) (*Account, error) {
 	var (
-		passwordIsValid         bool = false
+		passwordIsValid      bool = false
 		plainPassword, email string
 	)
 	account := new(Account)

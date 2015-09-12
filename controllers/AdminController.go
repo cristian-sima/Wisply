@@ -21,7 +21,13 @@ func (controller *AdminController) Prepare() {
 	controller.WisplyController.Prepare()
 	if !controller.UserConnected || !controller.User.IsAdministrator() {
 		controller.redirectUser()
+	} else {
+		controller.initPage();
 	}
+}
+
+func (controller *AdminController) initPage() {
+		controller.Data["isAdminPage"] = true;
 }
 
 func (controller *AdminController) redirectUser() {

@@ -1,9 +1,11 @@
 {{ define "admin-menu" }}
-  <div class="panel panel-default">
-    <div class="panel-heading">Menu</div>
-    <div class="panel-body">
-      <ul class="nav nav-pills nav-stacked">
-        <li ><a href="/admin">Home</a></li>
+  <header class="">
+    <button type="button" class="text-center btn btn-default btn-sm visible-xs" id="close-sidebar-admin">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </button>
+    </header>
+      <ul class="nav">
+        <li ><a href="/admin">Dashboard</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/sources" aria-expanded="true">
             Source <span class="caret"></span>
@@ -17,6 +19,4 @@
           <a href="/admin/users" > Users </a>
         </li>
       </ul>
-    </div>
-</div>
 {{ end }}

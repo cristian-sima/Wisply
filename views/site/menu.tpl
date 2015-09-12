@@ -3,11 +3,14 @@
   <div class="container">
     <div class="navbar-header">
       <a href="/"  class="navbar-brand"> <img id="logo" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply</a>
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+       <button type="button" class="navbar-toggle btn-lg" data-toggle="offcanvas" data-target=".sidebar-nav">
+         <span class="glyphicon glyphicon-cog"></span>
+       </button>
+       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+           <span class="icon-bar"></span>
+         </button>
     </div>
     <nav class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">

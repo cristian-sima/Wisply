@@ -48,9 +48,6 @@
     getRequestData: function (successCallback, errorCallback) {
       var request = {
         "url": '/auth/logout',
-        "dataType": "text",
-        'method': "POST",
-        "type": "POST",
         "success": successCallback,
         "error": errorCallback
       };

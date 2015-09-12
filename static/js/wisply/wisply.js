@@ -60,6 +60,9 @@ var wisply;
         },
         alert: function (args) {
             bootbox.dialog(args);
+        },
+        dialog: function (args) {
+            bootbox.dialog(args);
         }
     };
 
@@ -72,6 +75,9 @@ var wisply;
             if (typeof args.data === 'undefined') {
                 args.data = {};
             }
+            args.dataType = "text";
+            args.method = "POST";
+            args.type = "POST";
             var xsrf,
                 xsrflist;
             xsrf = $.cookie("_xsrf");
@@ -124,6 +130,9 @@ var wisply;
 
     function initPage() {
         wisply = new Wisply();
+        $('[data-toggle=offcanvas], #close-sidebar-admin').click(function() {
+          $('.row-offcanvas').toggleClass('active');
+});
     }
     $(document).ready(initPage);
 }(jQuery, wisply, bootbox));

@@ -4,6 +4,7 @@ import (
 	model "github.com/cristian-sima/Wisply/models/admin"
 )
 
+
 type AdminController struct {
 	WisplyController
 }

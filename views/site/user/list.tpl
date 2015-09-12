@@ -15,7 +15,8 @@
             <th>Username</th>
             <th>E-mail</th>
             <th>Type</th>
-            <th style="text-align:left">Options</th>
+            <th>Modify</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -33,13 +34,10 @@
               {{ end }}
             </td>
             <td>
-              <div class="btn-group"  >
-                <a href="/"  class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
-                <ul class="dropdown-menu" >
-                  <li><a href="/admin/users/modify/{{$element.Id}}">Modify</a></li>
-                  <li><a class="deleteUserButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
-                </ul>
-              </div>
+              <a href="/admin/users/modify/{{$element.Id}}">Modify</a>
+            </td>
+            <td>
+              <a class="deleteUserButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a>
             </td>
           </tr>
           {{end }}

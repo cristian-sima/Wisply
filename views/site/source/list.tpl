@@ -15,7 +15,8 @@
               <th>Source</th>
               <th>URL</th>
               <th>Description</th>
-              <th style="text-align:left">Options</th>
+              <th>Modify</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -26,13 +27,10 @@
               <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url |html }}</a></td>
               <td>{{ $element.Description |html }}</td>
               <td>
-                <div class="btn-group">
-                  <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="/admin/sources/modify/{{$element.Id}}">Modify</a></li>
-                    <li><a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
-                  </ul>
-                </div>
+                <a href="/admin/sources/modify/{{$element.Id}}">Modify</a>
+              </td>
+              <td>
+                <a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a>
               </td>
             </tr>
             {{end }}

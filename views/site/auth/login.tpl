@@ -6,7 +6,6 @@
           <h3 class="panel-title">Authentication</h3>
         </div>
         <div class="panel-body">
-          <p>
             <div class=" text-center">
               <br />
             </div>

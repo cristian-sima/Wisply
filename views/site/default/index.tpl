@@ -4,13 +4,12 @@
             <p class="lead" style="color:white"></p>
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
-            <div class="jumbotron" >
+            <article class="jumbotron" >
                 <h1>Web</h1>
                 <p>Understanding the largest and most complex engineered environment of the world is a difficult task. <br />
                     Let's simplify it.</p>
                 <p><a class="btn btn-primary btn-lg" href="/about">Learn more</a></p>
-            </div>
-
+            </article>
         </div>
     </div>
 </div>

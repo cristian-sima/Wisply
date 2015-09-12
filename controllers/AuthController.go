@@ -96,7 +96,10 @@ func (controller *AuthController) saveLoginDetails(user *User) {
 	var userId string = strconv.Itoa(user.Id)
 	controller.Model.UpdateUserLoginToken(userId)
 	controller.SetSession("user-id", userId)
+	controller.Ctx.SetCookie("wisply-connection", userId, 1<<31-1, "/")
 }
+
+
 
 func (controller *AuthController) safeRedilectUser(sendMe string) {
 	var safeAddress string

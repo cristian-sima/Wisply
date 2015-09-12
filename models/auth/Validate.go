@@ -7,7 +7,7 @@ import (
 
 func ValidateNewAccountDetails(rawData map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{
-		"name":     []string{"String", "alpha_dash", "between_inclusive:3,25"},
+		"name":     []string{"String", "full_name", "between_inclusive:3,25"},
 		"password": []string{"String", "alpha_dash", "between_inclusive:6,25"},
 		"email":    []string{"String", "email", "between_inclusive:3,25"},
 	}

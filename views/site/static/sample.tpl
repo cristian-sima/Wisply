@@ -81,18 +81,13 @@
                       </div>
                       <a href="http://bootswatch.com/paper/#" class="btn btn-default">Log in</a>
                         <a href="http://bootswatch.com/paper/#" class="btn btn-default">Sign up</a>
-
                     </form>
               </li>
              </ul>
-
         </div>
       </div>
     </div>
-
-
     <div class="container">
-
       <div class="page-header" id="banner">
         <div class="row">
           <div class="col-lg-8 col-md-7 col-sm-6">
@@ -100,17 +95,14 @@
             <p class="lead">This page is just for sample</p>
           </div>
           <div class="col-lg-4 col-md-5 col-sm-6">
-
               <div class="jumbotron">
                 <h1>Sample</h1>
                 <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
                 <p><a class="btn btn-primary btn-lg">Learn more</a></p>
               </div>
-
           </div>
         </div>
       </div>
-
       <!-- Navbar
       ================================================== -->
       <div class="bs-docs-section clearfix">

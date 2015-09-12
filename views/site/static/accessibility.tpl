@@ -58,7 +58,7 @@
                   <br />
                   <figure>
                     <figcaption>Here, <i>Modify</i> is focused</figcaption>
-                    <img class="img-responsive img-thumbnail" src="/static/img/default/accessibility/example-focused-element.jpg" alt="Example of an element focused" />
+                    <img class="img-responsive img-thumbnail" src="/static/img/static/accessibility/example-focused-element.jpg" alt="Example of an element focused" />
                   </figure>
                 </li>
               </ul>

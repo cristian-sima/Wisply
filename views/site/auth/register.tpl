@@ -14,9 +14,9 @@
               {{ .xsrf_input }}
               <fieldset>
                 <div class="form-group text-left">
-                  <label for="register-username" class="col-lg-2 control-label">Username</label>
+                  <label for="register-name" class="col-lg-2 control-label">Name</label>
                   <div class="col-lg-10">
-                    <input type="text" value="{{.username}}" class="form-control" name="register-username" id="register-username" placeholder="Username" required pattern=".{3,25}" title="The username has 3 up to 25 characters!">
+                    <input type="text" value="{{.name}}" class="form-control" name="register-name" id="register-name" placeholder="Full name" required pattern=".{3,25}" title="The name has 3 up to 25 characters!">
                   </div>
                 </div>
                 <div class="form-group text-left">

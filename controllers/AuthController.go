@@ -33,15 +33,15 @@ func (controller *AuthController) ShowRegisterForm() {
 }
 
 func (controller *AuthController) CreateNewAccount() {
-	var username, password, confirmPassowrd, email string
+	var name, password, confirmPassowrd, email string
 
-	username = strings.TrimSpace(controller.GetString("register-username"))
+	name = strings.TrimSpace(controller.GetString("register-name"))
 	password = strings.TrimSpace(controller.GetString("register-password"))
 	email = strings.TrimSpace(controller.GetString("register-email"))
 	confirmPassowrd = strings.TrimSpace(controller.GetString("register-password-confirm"))
 
 	rawData := make(map[string]interface{})
-	rawData["username"] = username
+	rawData["name"] = name
 	rawData["password"] = password
 	rawData["email"] = email
 
@@ -52,9 +52,9 @@ func (controller *AuthController) CreateNewAccount() {
 		if err != nil {
 			controller.DisplayErrorMessages(problems)
 		} else {
-			usernameAlreadyExists := controller.Model.CheckAccountnameExists(username)
-			if usernameAlreadyExists {
-				controller.DisplayErrorMessage("The username is already used. Try another")
+			emailAlreadyUsed := controller.Model.CheckEmailExists(email)
+			if emailAlreadyUsed {
+				controller.DisplayErrorMessage("Hmmm, the email " + email  + " is already used.")
 			} else {
 				databaseError := controller.Model.CreateNewAccount(rawData)
 				if databaseError != nil {
@@ -70,7 +70,7 @@ func (controller *AuthController) CreateNewAccount() {
 func (controller *AuthController) LoginAccount() {
 	var sendMeAddress string = strings.TrimSpace(controller.GetString("login-send-me"))
 	rawData := make(map[string]interface{})
-	rawData["username"] = strings.TrimSpace(controller.GetString("login-username"))
+	rawData["email"] = strings.TrimSpace(controller.GetString("login-email"))
 	rawData["password"] = strings.TrimSpace(controller.GetString("login-password"))
 
 	problems, err := controller.Model.ValidateLoginDetails(rawData)
@@ -79,7 +79,7 @@ func (controller *AuthController) LoginAccount() {
 	} else {
 		account, err := controller.Model.TryLoginAccount(rawData)
 		if err != nil {
-			controller.DisplayErrorMessage("There was a problem while login. We think the username or the password were not good.")
+			controller.DisplayErrorMessage("There was a problem while login. We think the email or the password were not valid.")
 		} else {
 			controller.connectAccount(account, sendMeAddress)
 		}

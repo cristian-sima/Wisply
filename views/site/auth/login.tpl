@@ -14,15 +14,15 @@
             <input type="hidden" value="{{.sendMe}}" name="login-send-me" />
             <fieldset>
               <div class="form-group text-left">
-                <label for="login-username" class="col-lg-2 control-label">Username</label>
+                <label for="login-email" class="col-lg-2 control-label">E-mail</label>
                 <div class="col-lg-10">
-                  <input type="text" value="{{.username}}" class="form-control" name="login-username" id="login-username" placeholder="Username" required pattern=".{3,25}" title="The username has 3 up to 25 characters!">
+                  <input type="email" class="form-control" name="login-email" id="login-email" placeholder="E-mail"  />
                 </div>
               </div>
               <div class="form-group text-left">
                 <label for="login-password" class="col-lg-2 control-label">Password</label>
                 <div class="col-lg-10">
-                  <input type="password" value="{{.passowrd}}" class="form-control" name="login-password" id="login-password" placeholder="Password" required pattern=".{3,25}" title="The password has 3 up to 25 characters!">
+                  <input type="password" class="form-control" name="login-password" id="login-password" placeholder="Password" required pattern=".{3,25}" title="The password has 3 up to 25 characters!">
                   <div class="checkbox">
                     <label for="login-remember-me">
                       <input type="checkbox" name="login-remember-me" id="login-remember-me"> Remember me

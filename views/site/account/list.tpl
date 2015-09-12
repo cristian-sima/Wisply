@@ -11,7 +11,7 @@
         <thead>
           <tr>
             <th class="hidden-xs">Id</th>
-            <th>Username</th>
+            <th>Name</th>
             <th>E-mail</th>
             <th>Type</th>
             <th>Modify</th>
@@ -23,7 +23,7 @@
           {{$safe := $element.Email|html}}
           <tr>
             <td class="hidden-xs">{{ $element.Id |html }}</td>
-            <td>{{ $element.Username |html }}</td>
+            <td>{{ $element.Name |html }}</td>
             <td><a href="mailto:{{ $safe }}">{{ $element.Email |html }}</a></td>
             <td>
               {{ if $element.Administrator }}

@@ -43,7 +43,7 @@ func (model *AuthModel) GetAccountById(rawIndex string) (*Account, error) {
 	if !isValid {
 		return account, errors.New("Validation invalid")
 	}
-	error := Database.Raw("SELECT id, username, password, email, administrator FROM account WHERE id = ?", rawIndex).QueryRow(&account)
+	error := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE id = ?", rawIndex).QueryRow(&account)
 	return account, error
 }
 
@@ -54,9 +54,9 @@ func (model *AuthModel) UpdateAccountType(accountId string, isAdministrator stri
 	return err
 }
 
-func (model *AuthModel) CheckAccountnameExists(username string) bool {
+func (model *AuthModel) CheckEmailExists(name string) bool {
 	var maps []orm.Params
-	num, err := Database.Raw("SELECT id, username FROM account WHERE username = ?", username).Values(&maps)
+	num, err := Database.Raw("SELECT id, name FROM account WHERE email = ?", name).Values(&maps)
 	if err == nil && num > 0 {
 		return true
 	}
@@ -64,21 +64,21 @@ func (model *AuthModel) CheckAccountnameExists(username string) bool {
 }
 
 func (model *AuthModel) CreateNewAccount(rawData map[string]interface{}) error {
-	var username, unsafePassword, hashedPassword, email, isAdministrator string
+	var name, unsafePassword, hashedPassword, email, isAdministrator string
 
 	isAdministrator = "false"
-	username = rawData["username"].(string)
+	name = rawData["name"].(string)
 	unsafePassword = rawData["password"].(string)
 	email = rawData["email"].(string)
 	hashedPassword = getHashedPassword(unsafePassword)
 
 	elements := []string{
-		username,
+		name,
 		hashedPassword,
 		email,
 		isAdministrator,
 	}
-	_, err := Database.Raw("INSERT INTO `account` (`username`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)", elements).Exec()
+	_, err := Database.Raw("INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)", elements).Exec()
 	return err
 }
 
@@ -104,13 +104,13 @@ func (this *AuthModel) ValidateLoginDetails(rawData map[string]interface{}) (map
 func (model *AuthModel) TryLoginAccount(rawData map[string]interface{}) (*Account, error) {
 	var (
 		passwordIsValid         bool = false
-		plainPassword, username string
+		plainPassword, email string
 	)
 	account := new(Account)
-	username = rawData["username"].(string)
+	email = rawData["email"].(string)
 	plainPassword = rawData["password"].(string)
-	elements := []string{username}
-	error := Database.Raw("SELECT id, username, password, email, administrator FROM account WHERE username = ?", elements).QueryRow(&account)
+	elements := []string{email}
+	error := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE email = ?", elements).QueryRow(&account)
 	if error != nil {
 		return account, errors.New("Problem")
 	}
@@ -159,7 +159,7 @@ func (model *AuthModel) GetCurrentTimeStamp() string {
 
 func (model *AuthModel) GetAll() []Account {
 	var list []Account
-	Database.Raw("SELECT id, username, password, email, administrator FROM account").QueryRows(&list)
+	Database.Raw("SELECT id, name, password, email, administrator FROM account").QueryRows(&list)
 	return list
 }
 

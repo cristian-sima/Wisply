@@ -32,7 +32,7 @@
         <li><a href="/auth/register">Register</a></li>
         {{ end }}
         {{ if .accountConnected }}
-        <li  class="text-muted"><a>Hi, <b>{{ .currentAccount.Username }}</b></a></li>
+        <li  class="text-muted"><a>Hi, <b>{{ .currentAccount.Name }}</b></a></li>
         {{ if .currentAccount.Administrator }}
         <li><a href="/admin">Admin</a></li>
         {{ end }}

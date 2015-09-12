@@ -11,6 +11,7 @@ type AccountController struct {
 	model AuthModel
 }
 
+
 func (controller *AccountController) ListAccounts() {
 
 	var exists bool = false
@@ -80,14 +81,14 @@ func (controller *AccountController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The account ["+account.Username+"] has been deleted. Well done!", "/admin/accounts/")
+			controller.DisplaySuccessMessage("The account [" + account.Email + "] has been deleted. Well done!", "/admin/accounts/")
 		}
 	}
 }
 
 func (controller *AccountController) showModifyForm(account *Account) {
 	controller.GenerateXsrf()
-	controller.Data["accountUsername"] = account.Username
+	controller.Data["accountName"] = account.Name
 
 	if account.Administrator {
 		controller.Data["isAdministrator"] = true

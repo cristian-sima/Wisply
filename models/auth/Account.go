@@ -6,17 +6,18 @@ import (
 
 type Account struct {
 	Id            int
-	Username      string
+	Name      		string
 	Password      string
 	Email         string
 	Administrator bool
 }
 
+
 func NewAccount(id string) Account {
 	var account Account
 	db := orm.NewOrm()
 
-	db.Raw("SELECT id, username, password, administrator FROM account").QueryRow(&account)
+	db.Raw("SELECT id, name, password, administrator FROM account").QueryRow(&account)
 	return account
 }
 

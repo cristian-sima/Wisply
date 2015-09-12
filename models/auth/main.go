@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"github.com/astaxie/beego/orm"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/nu7hatch/gouuid"
@@ -49,7 +48,6 @@ func (model *AuthModel) GetUserById(rawIndex string) (*User, error) {
 }
 
 func (model *AuthModel) UpdateUserType(userId string, isAdministrator string) error {
-	fmt.Println(isAdministrator)
 	stringElements := []string{isAdministrator,
 		userId}
 	_, err := Database.Raw("UPDATE `user` SET administrator=? WHERE id=?", stringElements).Exec()

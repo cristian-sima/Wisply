@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -17,10 +16,7 @@ func NewUser(id string) User {
 	var user User
 	db := orm.NewOrm()
 
-	err := db.Raw("SELECT id, username, password, administrator FROM user").QueryRow(&user)
-
-	fmt.Println(err)
-
+	db.Raw("SELECT id, username, password, administrator FROM user").QueryRow(&user)
 	return user
 }
 

@@ -11,7 +11,7 @@
       <table class="table table-striped table-hover ">
         <thead>
           <tr>
-            <th>Id</th>
+            <th class="hidden-xs">Id</th>
             <th>Username</th>
             <th>E-mail</th>
             <th>Type</th>
@@ -20,9 +20,9 @@
         </thead>
         <tbody>
           {{range $index, $element := .users}}
-          {{$safe := $element.Username|html}}
+          {{$safe := $element.Email|html}}
           <tr>
-            <td>{{ $element.Id |html }}</td>
+            <td class="hidden-xs">{{ $element.Id |html }}</td>
             <td>{{ $element.Username |html }}</td>
             <td><a href="mailto:{{ $safe }}">{{ $element.Email |html }}</a></td>
             <td>
@@ -33,9 +33,9 @@
               {{ end }}
             </td>
             <td>
-              <div class="btn-group">
-                <a href="/" class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
-                <ul class="dropdown-menu">
+              <div class="btn-group"  >
+                <a href="/"  class="btn btn-link dropdown-toggle btn-sm" data-toggle="dropdown"><span class="caret"></span></a>
+                <ul class="dropdown-menu" >
                   <li><a href="/admin/users/modify/{{$element.Id}}">Modify</a></li>
                   <li><a class="deleteUserButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a></li>
                 </ul>

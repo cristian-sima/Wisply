@@ -4,7 +4,6 @@ import (
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 type AuthController struct {
@@ -100,21 +99,17 @@ func (controller *AuthController) saveLoginDetails(user *User) {
 }
 
 
-
 func (controller *AuthController) safeRedilectUser(sendMe string) {
 	var safeAddress string
-	fmt.Println("safe redirect user")
 	safeAddress = controller.getSafeURL(sendMe)
 	controller.Redirect(safeAddress, 302)
 }
 
 func (controller *AuthController) getSafeURL(urlToTest string) string {
-	fmt.Println("Get safe URL from " + urlToTest)
 	var safeURL string = ""
 	if urlToTest == "" || urlToTest == "/auth/login/" || urlToTest == "/auth/login" {
 		safeURL = "/"
 	} else {
-		fmt.Println("Verificam daca este safe" + urlToTest)
 		if controller.isSafeRedirection(urlToTest) {
 			safeURL = urlToTest
 		} else {

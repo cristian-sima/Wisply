@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"html/template"
@@ -26,7 +25,6 @@ func (controller *WisplyController) Prepare() {
 func (controller *WisplyController) initState() {
 	session := controller.GetSession("account-id")
 	if session != nil {
-		fmt.Println("exista session cookie")
 		id := (session).(string)
 		controller.initConnectedState(id)
 	} else {
@@ -38,15 +36,10 @@ func (controller *WisplyController) checkConnectionCookie() {
 	cookieName := Settings["cookieName"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
 	if cookie != "" {
-		fmt.Println("Coookie este " + cookie)
-		fmt.Println("try to reconnect")
 		idUser, err := ReConnect(cookie)
 		if err == nil {
-			fmt.Println("a mers")
 			controller.initConnectedState(idUser)
 		} else {
-			fmt.Println("nu am putut pentru ca:")
-			fmt.Println(err)
 			controller.deleteConnectionCookie()
 			controller.initDisconnectedState()
 		}
@@ -56,7 +49,6 @@ func (controller *WisplyController) checkConnectionCookie() {
 }
 
 func (controller *WisplyController) deleteConnectionCookie() {
-	fmt.Println("sterg connection cookie")
 	cookieName := Settings["cookieName"].(string)
 	cookiePath := Settings["cookiePath"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)

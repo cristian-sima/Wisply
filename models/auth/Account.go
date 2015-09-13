@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/nu7hatch/gouuid"
 	"strconv"
@@ -20,7 +21,10 @@ func (this *Account) IsAdministrator() bool {
 
 func (account *Account) ChangeType(isAdministrator string) error {
 
-	// to do to check type
+	result := IsValidAdminType(isAdministrator)
+	if !result.IsValid {
+		return errors.New("Not a valid type")
+	}
 
 	stringElements := []string{
 		isAdministrator,

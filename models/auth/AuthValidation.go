@@ -32,11 +32,13 @@ func IsValidLogin(rawData map[string]interface{}) *ValidationResults {
 	return Validate(rawData, rules)
 }
 
-func IsValidAdminType(rawData map[string]interface{}) *ValidationResults {
+func IsValidAdminType(email string) *ValidationResults {
+	data := make(map[string]interface{})
+	data["email"] = email
 	rules := ValidationRules{
 		"administrator": rules["administrator"],
 	}
-	return Validate(rawData, rules)
+	return Validate(data, rules)
 }
 
 func IsValidEmail(email string) *ValidationResults {

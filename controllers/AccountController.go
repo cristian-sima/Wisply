@@ -41,29 +41,20 @@ func (controller *AccountController) Modify() {
 
 func (controller *AccountController) Update() {
 
-	var accountId, isAdministrator string
-	rawData := make(map[string]interface{})
+	accountId := controller.Ctx.Input.Param(":id")
 
-	accountId = controller.Ctx.Input.Param(":id")
+	newType := strings.TrimSpace(controller.GetString("modify-administrator"))
 
-	isAdministrator = strings.TrimSpace(controller.GetString("modify-administrator"))
-	rawData["administrator"] = isAdministrator
-
-	_, err := NewAccount(accountId)
+	account, err := NewAccount(accountId)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		/*problems, err := controller.model.ValidateModifyAccount(rawData)
+		err := account.ChangeType(newType)
 		if err != nil {
-			controller.DisplaySimpleError(problems)
+			controller.DisplaySimpleError("There was a problem...")
 		} else {
-			databaseError := controller.model.UpdateAccountType(accountId, isAdministrator)
-			if databaseError != nil {
-				controller.Abort("databaseError")
-			} else {
-				controller.DisplaySuccessMessage("The account has been modified!", "/admin/accounts/")
-			}
-		}*/
+			controller.DisplaySuccessMessage("The account has been modified!", "/admin/accounts/")
+		}
 	}
 }
 

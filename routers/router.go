@@ -7,21 +7,67 @@ import (
 
 func init() {
 
-	beego.Router("/", &controllers.DefaultController{}, "*:ShowIndexPage")
-	beego.Router("/about", &controllers.DefaultController{}, "*:ShowAboutPage")
-	beego.Router("/contact", &controllers.DefaultController{}, "*:ShowContactPage")
-	beego.Router("/webscience", &controllers.DefaultController{}, "*:ShowWebsciencePage")
-	beego.Router("/sample", &controllers.DefaultController{}, "*:ShowSamplePage")
+	beego.Router("/", &controllers.StaticController{}, "*:ShowIndex")
+	beego.Router("/about", &controllers.StaticController{}, "*:ShowAbout")
+	beego.Router("/contact", &controllers.StaticController{}, "*:ShowContact")
+	beego.Router("/webscience", &controllers.StaticController{}, "*:ShowWebscience")
+	beego.Router("/sample", &controllers.StaticController{}, "*:ShowSample")
+	beego.Router("/accessibility", &controllers.StaticController{}, "*:ShowAccessibility")
+	beego.Router("/help", &controllers.StaticController{}, "*:ShowHelp")
 
-	beego.Router("/admin", &controllers.AdminController{}, "*:ShowDashboard")
+	// ----------------------------- Authentification --------------------------------------
 
-	// source
-	beego.Router("/admin/sources", &controllers.SourceController{}, "*:ListSources")
-	beego.Router("/admin/sources/add", &controllers.SourceController{}, "Get:AddNewSource")
-	beego.Router("/admin/sources/add", &controllers.SourceController{}, "Post:InsertSource")
-	beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Get:Modify")
-	beego.Router("/admin/sources/modify/:id", &controllers.SourceController{}, "Post:Update")
+	authNamespace := beego.NewNamespace("/auth",
+		beego.NSNamespace("/login",
+			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowLoginForm"),
+			beego.NSRouter("", &controllers.AuthController{}, "POST:LoginAccount"),
+		),
+		beego.NSNamespace("/register",
+			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowRegisterForm"),
+			beego.NSRouter("", &controllers.AuthController{}, "POST:CreateNewAccount"),
+		),
+		beego.NSNamespace("/logout",
+			beego.NSRouter("", &controllers.AuthController{}, "POST:Logout"),
+		),
+	)
 
-	beego.Router("/admin/sources/delete/:id", &controllers.SourceController{}, "POST:Delete")
+	// ----------------------------- Admin --------------------------------------
+
+	sourcesNamespace := beego.NSNamespace("/sources",
+		beego.NSRouter("", &controllers.SourceController{}, "*:ListSources"),
+		beego.NSNamespace("/add",
+			beego.NSRouter("", &controllers.SourceController{}, "GET:AddNewSource"),
+			beego.NSRouter("", &controllers.SourceController{}, "POST:InsertSource"),
+		),
+		beego.NSNamespace("/modify",
+			beego.NSRouter(":id", &controllers.SourceController{}, "GET:Modify"),
+			beego.NSRouter(":id", &controllers.SourceController{}, "POST:Update"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter(":id", &controllers.SourceController{}, "POST:Delete"),
+		),
+	)
+
+	accountsNamespace := beego.NSNamespace("/accounts",
+		beego.NSRouter("", &controllers.AccountController{}, "*:ListAccounts"),
+		beego.NSNamespace("/modify",
+			beego.NSRouter(":id", &controllers.AccountController{}, "GET:Modify"),
+			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Update"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Delete"),
+		),
+	)
+
+	adminNamespace :=
+		beego.NewNamespace("/admin",
+			beego.NSRouter("", &controllers.AdminController{}, "*:ShowDashboard"),
+			sourcesNamespace,
+			accountsNamespace,
+		)
+
+	// register namespace
+	beego.AddNamespace(authNamespace)
+	beego.AddNamespace(adminNamespace)
 
 }

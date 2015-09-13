@@ -1,5 +1,6 @@
 W:
 cd go-workspace/src/github.com/cristian-sima/Wisply/tests/
+cd ../../../tests
 :loop
 CLS
 echo "Testing Wisply"

@@ -2,42 +2,37 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"strconv"
+	. "github.com/cristian-sima/Wisply/models/adapter"
 )
 
 type MessageController struct {
 	beego.Controller
 }
 
-func (c *MessageController) DisplayErrorMessage(errors map[string][]string) {
-	var (
-		number  int    = len(errors)
-		message string = getMessage(number)
-	)
-	content := "Your request was not successful. " + message
-	c.Data["validationFailed"] = true
-	c.Data["validationErrors"] = errors
-	c.DisplayMessage("error", content)
-}
-
-func getMessage(number int) string {
-	problemsMessage := ""
-	if number == 1 {
-		problemsMessage = "one field"
-	} else {
-		problemsMessage = strconv.Itoa(number) + " fields"
+func (controller *MessageController) DisplaySimpleError(msg string) {
+	err := WisplyError{
+		Message: msg,
 	}
-	return "There were problems with " + problemsMessage + ":"
+	controller.DisplayError(err)
 }
 
-func (c *MessageController) DisplaySuccessMessage(content string, backLink string) {
-	c.Data["backLink"] = backLink
-	c.DisplayMessage("success", content)
+func (controller *MessageController) DisplayError(err WisplyError) {
+	content := err.GetMessage()
+	if len(err.Data) != 0 {
+		controller.Data["validationFailed"] = true
+		controller.Data["validationErrors"] = err.Data
+	}
+	controller.DisplayMessage("error", content)
 }
 
-func (c *MessageController) DisplayMessage(typeOfMessage string, content string) {
-	c.Data["messageContent"] = content
-	c.Data["displayMessage"] = true
-	c.TplNames = "general/message/" + typeOfMessage + ".tpl"
-	c.Layout = "general/message.tpl"
+func (controller *MessageController) DisplaySuccessMessage(content string, backLink string) {
+	controller.Data["backLink"] = backLink
+	controller.DisplayMessage("success", content)
+}
+
+func (controller *MessageController) DisplayMessage(typeOfMessage string, content string) {
+	controller.Data["messageContent"] = content
+	controller.Data["displayMessage"] = true
+	controller.TplNames = "site/message/" + typeOfMessage + ".tpl"
+	controller.Layout = "site/message.tpl"
 }

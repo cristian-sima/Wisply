@@ -47,6 +47,18 @@ func TestPageContact(t *testing.T) {
 	checkPage(t, url, name)
 }
 
+func TestPageLogin(t *testing.T) {
+	url := "/auth/login"
+	name := "Login"
+	checkPage(t, url, name)
+}
+
+func TestPageRegister(t *testing.T) {
+	url := "/auth/admin"
+	name := "Register"
+	checkPage(t, url, name)
+}
+
 func checkPage(t *testing.T, url string, pageName string) {
 	r, _ := http.NewRequest("GET", url, nil)
 	w := httptest.NewRecorder()
@@ -58,7 +70,7 @@ func checkPage(t *testing.T, url string, pageName string) {
 		Convey("The page "+pageName+" can be accessed", func() {
 			So(w.Code, ShouldEqual, 200)
 		})
-		Convey("The page should not be empty", func() {
+		Convey("The page should not be empty and pass HTML check", func() {
 			So(w.Body.Len(), ShouldBeGreaterThan, 0)
 		})
 	})

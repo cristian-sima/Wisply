@@ -2,83 +2,58 @@ package sources
 
 import (
 	"errors"
-	"github.com/astaxie/beego/orm"
+	. "github.com/cristian-sima/Wisply/models/adapter"
+	. "github.com/cristian-sima/Wisply/models/wisply"
 )
 
 type Model struct {
 }
 
 func (model *Model) GetAll() []Source {
-
-	orm := orm.NewOrm()
-
 	var list []Source
-
-	orm.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
-
+	Database.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
 	return list
 }
 
-func (model *Model) GetSourceById(rawIndex string) (*Source, error) {
+func (model *Model) NewSource(rawIndex string) (*Source, error) {
 
-	var isValid bool
-
-	orm := orm.NewOrm()
 	source := new(Source)
-
-	isValid = ValidateIndex(rawIndex)
-
-	if !isValid {
+	isValid := IsValidId(rawIndex)
+	if !isValid.IsValid {
 		return source, errors.New("Validation invalid")
 	}
-	error := orm.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
-	return source, error
-}
-
-func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error) {
-
-	validationResult := ValidateSourceDetails(rawData)
-
-	if !validationResult.IsValid {
-		return validationResult.Errors, errors.New("Validation invalid")
+	err := Database.Raw("SELECT id, name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
+	if err != nil {
+		return source, errors.New("No source like that")
 	}
-	return nil, nil
+	return source, nil
 }
 
-func (model *Model) UpdateSourceById(sourceId string, rawData map[string]interface{}) error {
+func (model *Model) InsertNewSource(sourceDetails map[string]interface{}) (WisplyError, error) {
 
-	orm := orm.NewOrm()
+	var problem = WisplyError{}
 
-	stringElements := []string{rawData["name"].(string),
-		rawData["description"].(string),
-		rawData["url"].(string),
-		sourceId}
+	result := HasValidDetails(sourceDetails)
+	if !result.IsValid {
+		problem.Data = result.Errors
+		return problem, errors.New("Error")
+	}
 
-	_, err := orm.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
+	stringElements := []string{sourceDetails["name"].(string),
+		sourceDetails["description"].(string),
+		sourceDetails["url"].(string)}
+	_, err := Database.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
 
-	return err
+	if err != nil {
+		problem.Message = "No source like that"
+		return problem, errors.New("Error")
+	}
+
+	return problem, nil
 }
 
-func (model *Model) DeleteSourceById(id string) error {
-
-	orm := orm.NewOrm()
-
-	elememts := []string{id}
-
-	_, err := orm.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
-
-	return err
-}
-
-func (model *Model) InsertNewSource(rawData map[string]interface{}) error {
-
-	orm := orm.NewOrm()
-
-	stringElements := []string{rawData["name"].(string),
-		rawData["description"].(string),
-		rawData["url"].(string)}
-
-	_, err := orm.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
-
-	return err
+func CountSources() int {
+	var number int
+	Database.Raw("SELECT count(*) FROM source").QueryRow(&number)
+	return number
 }

@@ -1,0 +1,81 @@
+/*
+Author     Cristian Sima
+*/
+
+#logo {
+  height: 30px;
+  width: 30px;
+  display: inline;
+}
+
+/* Fix Mozilla responsive table for small screens */
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+#sidebar {
+  height: 100%;
+  padding-right: 0;
+  padding-top: 20px;
+}
+#sidebar .nav {
+  width: 95%;
+}
+#sidebar li {
+  border:0 #f2f2f2 solid;
+  border-bottom-width:1px;
+}
+
+/* collapsed sidebar styles */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
+  }
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -41.6%;
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -41.6%;
+  }
+  .row-offcanvas-right.active {
+    right: 41.6%;
+  }
+  .row-offcanvas-left.active {
+    left: 41.6%;
+  }
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 41.6%;
+  }
+  #sidebar {
+    padding-top:0;
+  }
+}
+
+
+/* The defualt headers were too big */
+h1 {
+  font-size:  30px
+}
+h2 {
+  font-size:  24px
+}
+h3 {
+  font-size:  22px
+}
+h4 {
+  font-size:  20px
+}
+h5 {
+  font-size:  16px
+}
+h6 {
+  font-size:  12px
+}

@@ -34,9 +34,11 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 
 	var timestamp, value string
 	temp, _ := uuid.NewV4()
-	value = temp.String()
+	plain := temp.String()
+	value = getSHA1_digest(plain)
 
 	timestamp = GetCurrentTimestamp()
+
 
 	elementsInsert := []string{
 		"NULL",
@@ -44,11 +46,15 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 		value,
 		timestamp,
 	}
-	Database.Raw("INSERT INTO `account_login` (`id`, `account`, `token`, `timestamp`) VALUES (?, ?, ?, ?)", elementsInsert).Exec()
+	_, err := Database.Raw("INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)", elementsInsert).Exec()
+
+	if err != nil {
+		panic(err)
+	}
 
 	intTimestamp, _ := strconv.Atoi(timestamp)
 	token := Token{
-		Value:     value,
+		Value:     plain,
 		Timestamp: intTimestamp,
 	}
 

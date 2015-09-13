@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
@@ -61,7 +62,14 @@ func (controller *AuthController) CreateNewAccount() {
 }
 
 func (controller *AuthController) LoginAccount() {
-	var sendMeAddress string = strings.TrimSpace(controller.GetString("login-send-me"))
+
+		sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
+		rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))
+
+		fmt.Println("remember me:")
+
+		fmt.Println(rememberMe)
+
 	loginDetails := make(map[string]interface{})
 	loginDetails["email"] = strings.TrimSpace(controller.GetString("login-email"))
 	loginDetails["password"] = strings.TrimSpace(controller.GetString("login-password"))
@@ -72,6 +80,9 @@ func (controller *AuthController) LoginAccount() {
 		controller.DisplayError(problems)
 	} else {
 		account, _ := GetAccountByEmail(loginDetails["email"].(string))
+		if rememberMe == "on" {
+			controller.rememberConnection(account)
+		}
 		controller.connectAccount(account, sendMeAddress)
 	}
 }
@@ -82,12 +93,18 @@ func (controller *AuthController) connectAccount(account *Account, sendMeAddress
 }
 
 func (controller *AuthController) saveLoginDetails(account *Account) {
-	cookieName := Settings["cookieName"].(string)
 	accountId := strconv.Itoa(account.Id)
 	controller.SetSession("account-id", accountId)
-	cookie := account.GenerateConnectionCookie()
-	controller.deleteConnectionCookie()
-	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), strconv.Itoa(cookie.Duration), cookie.Path)
+}
+
+func (controller *AuthController) rememberConnection(account *Account) {
+
+	cookieName := Settings["cookieName"].(string)
+		cookie := account.GenerateConnectionCookie()
+		controller.deleteConnectionCookie()
+		fmt.Println("expire")
+		fmt.Println( strconv.Itoa(cookie.Duration))
+		controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 
 func (controller *AuthController) safeRedilectAccount(sendMe string) {
@@ -125,13 +142,4 @@ func (controller *AuthController) Logout() {
 func (controller *AuthController) distroySession() {
 	controller.DelSession("session")
 	controller.DestroySession()
-}
-
-func (controller *AuthController) deleteConnectionCookie() {
-	cookieName := Settings["cookieName"].(string)
-	cookiePath := Settings["cookiePath"].(string)
-	cookie := controller.Ctx.GetCookie(cookieName)
-	if cookie != "" {
-		controller.Ctx.SetCookie(cookieName, "", -1, cookiePath)
-	}
 }

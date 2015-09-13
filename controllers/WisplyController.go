@@ -26,6 +26,7 @@ func (controller *WisplyController) Prepare() {
 func (controller *WisplyController) initState() {
 	session := controller.GetSession("account-id")
 	if session != nil {
+		fmt.Println("exista session cookie")
 		id := (session).(string)
 		controller.initConnectedState(id)
 	} else {
@@ -36,21 +37,34 @@ func (controller *WisplyController) initState() {
 func (controller *WisplyController) checkConnectionCookie() {
 	cookieName := Settings["cookieName"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
-	fmt.Println("Coookie este " + cookie)
-	if cookie == "" {
+	if cookie != "" {
+		fmt.Println("Coookie este " + cookie)
 		fmt.Println("try to reconnect")
 		idUser, err := ReConnect(cookie)
 		if err == nil {
+			fmt.Println("a mers")
 			controller.initConnectedState(idUser)
 		} else {
-			fmt.Println("nu am putut pentru nca")
+			fmt.Println("nu am putut pentru ca:")
 			fmt.Println(err)
+			controller.deleteConnectionCookie()
 			controller.initDisconnectedState()
 		}
 	} else {
 		controller.initDisconnectedState()
 	}
 }
+
+func (controller *WisplyController) deleteConnectionCookie() {
+	fmt.Println("sterg connection cookie")
+	cookieName := Settings["cookieName"].(string)
+	cookiePath := Settings["cookiePath"].(string)
+	cookie := controller.Ctx.GetCookie(cookieName)
+	if cookie != "" {
+		controller.Ctx.SetCookie(cookieName, "", -1, cookiePath)
+	}
+}
+
 
 func (controller *WisplyController) initDisconnectedState() {
 	controller.AccountConnected = false

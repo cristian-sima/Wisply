@@ -33,7 +33,8 @@ func (controller *WisplyController) initState() {
 }
 
 func (controller *WisplyController) checkConnectionCookie() {
-	cookie := controller.Ctx.GetCookie("connection")
+	cookieName := Settings["cookieName"].(string)
+	cookie := controller.Ctx.GetCookie(cookieName)
 	if cookie == "" {
 		idUser, err := ReConnect(cookie)
 		if err == nil {

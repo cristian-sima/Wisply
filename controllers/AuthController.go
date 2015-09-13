@@ -4,6 +4,7 @@ import (
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
+	"fmt"
 )
 
 type AuthController struct {
@@ -85,6 +86,8 @@ func (controller *AuthController) saveLoginDetails(account *Account) {
 	accountId := strconv.Itoa(account.Id)
 	controller.SetSession("account-id", accountId)
 	cookie := account.GenerateConnectionCookie()
+	fmt.Println("asta e: ")
+	fmt.Println(cookie)
 	controller.Ctx.SetCookie(cookie.Name, cookie.GetValue(), strconv.Itoa(cookie.Duration), cookie.Path)
 }
 
@@ -115,7 +118,21 @@ func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
 }
 
 func (controller *AuthController) Logout() {
-	controller.DelSession("account")
-	controller.DestroySession()
+	controller.distroySession()
+	controller.deleteConnectionCookie()
 	controller.Redirect("/", 200)
+}
+
+func (controller *AuthController) distroySession() {
+	controller.DelSession("session")
+	controller.DestroySession()
+}
+
+func (controller *AuthController) deleteConnectionCookie() {
+	cookieName := Settings["cookieName"].(string)
+	cookiePath := Settings["cookiePath"].(string)
+	cookie := controller.Ctx.GetCookie(cookieName)
+	if cookie != "" {
+		controller.Ctx.SetCookie(cookieName, "", "-1", cookiePath)
+	}
 }

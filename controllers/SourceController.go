@@ -79,17 +79,17 @@ func (controller *SourceController) Update() {
 		controller.Abort("databaseError")
 	} else {
 		/*
-		problems, err := controller.model.ValidateSource(sourceDetails)
-		if err != nil {
-			controller.DisplayError(problems)
-		} else {
-			databaseError := controller.model.UpdateSourceById(sourceId, sourceDetails)
-			if databaseError != nil {
-				controller.Abort("databaseError")
+			problems, err := controller.model.ValidateSource(sourceDetails)
+			if err != nil {
+				controller.DisplayError(problems)
 			} else {
-				controller.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
+				databaseError := controller.model.UpdateSourceById(sourceId, sourceDetails)
+				if databaseError != nil {
+					controller.Abort("databaseError")
+				} else {
+					controller.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
+				}
 			}
-		}
 		*/
 	}
 }
@@ -106,7 +106,7 @@ func (controller *SourceController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!", "/admin/sources/")
+			controller.DisplaySuccessMessage("The source ["+source.Name+"] has been deleted. Well done!", "/admin/sources/")
 		}
 	}
 }

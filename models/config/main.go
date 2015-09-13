@@ -14,7 +14,6 @@ func GetDatabase() *SQLConfiguration {
 	return conf
 }
 
-
 func getFile(pathToFile string) (*os.File, error) {
 	var directory string
 	directory = "conf/"

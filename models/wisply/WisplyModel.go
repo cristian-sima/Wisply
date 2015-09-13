@@ -1,12 +1,11 @@
 package WisplyModel
 
 import (
-	"fmt"
 	orm "github.com/astaxie/beego/orm"
 )
 
 var (
-	Database      orm.Ormer
+	Database orm.Ormer
 )
 
 type WisplyModel struct {
@@ -23,5 +22,4 @@ func IsEmptyQuery(sql string, elements []string) bool {
 
 func InitDatabase() {
 	Database = orm.NewOrm()
-	fmt.Println("initializez baza de date")
 }

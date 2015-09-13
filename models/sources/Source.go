@@ -1,8 +1,7 @@
 package sources
 
-import(
-
-		. "github.com/cristian-sima/Wisply/models/wisply"
+import (
+	. "github.com/cristian-sima/Wisply/models/wisply"
 	"strconv"
 )
 
@@ -12,7 +11,6 @@ type Source struct {
 	Url         string
 	Description string
 }
-
 
 func (source *Source) Delete() error {
 	elememts := []string{

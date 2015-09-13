@@ -55,8 +55,8 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 	cookie := Cookie{
 		Account:  account,
 		Token:    &token,
-		Duration: settings["duration"].(int),
-		Path:     settings["path"].(string),
+		Duration: Settings["duration"].(int),
+		Path:     Settings["path"].(string),
 	}
 
 	return &cookie

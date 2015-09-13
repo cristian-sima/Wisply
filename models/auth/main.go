@@ -4,17 +4,19 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
-var settings = map[string]interface{}{
+var Settings = map[string]interface{}{
 	"duration":        (60 * 60 * 24 * 7), // one week
 	"path":            "/",
 	"separatorCookie": "::",
+	"cookieName":      "connection",
+	"cookiePath":      "/",
 }
 
 type AuthModel struct {
@@ -57,7 +59,7 @@ func isTokenValid(accountId, hashedToken string) bool {
 	}
 
 	now, _ := strconv.Atoi(GetCurrentTimestamp())
-	duration := settings["duration"].(int)
+	duration := Settings["duration"].(int)
 
 	isValid := (now <= (token.Timestamp + duration))
 	return isValid
@@ -68,7 +70,7 @@ func deleteOldTokens() {
 		now, duration, diff int
 	)
 	now, _ = strconv.Atoi(GetCurrentTimestamp())
-	duration = settings["duration"].(int)
+	duration = Settings["duration"].(int)
 	diff = now - duration
 
 	elementsDelete := []string{
@@ -101,7 +103,7 @@ func GetCurrentTimestamp() string {
 func splitCookie(cookieValue string) ([]string, error) {
 	var (
 		toReturn  []string
-		separator string = settings["separatorCookie"].(string)
+		separator string = Settings["separatorCookie"].(string)
 	)
 
 	validFormat := strings.Contains(cookieValue, separator)
@@ -154,7 +156,7 @@ func NewAccount(rawId string) (*Account, error) {
 	err := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE id= ?", elements).QueryRow(&account)
 
 	if err != nil {
-		return account,errors.New("Error")
+		return account, errors.New("Error")
 	}
 
 	return account, nil

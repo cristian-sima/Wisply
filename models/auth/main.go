@@ -65,8 +65,6 @@ func isTokenValid(accountId, hashedToken string) bool {
 	now, _ := strconv.Atoi(GetCurrentTimestamp())
 	duration := Settings["duration"].(int)
 
-
-
 	isValid := (now <= (token.Timestamp + duration))
 	return isValid
 }

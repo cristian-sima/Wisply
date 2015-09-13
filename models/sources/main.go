@@ -29,29 +29,6 @@ func (model *Model) NewSource(rawIndex string) (*Source, error) {
 	return source, nil
 }
 
-func (model *Model) ValidateSource(sourceDetails map[string]interface{}) (map[string][]string, error) {
-	validationResult := HasValidDetails(sourceDetails)
-	if !validationResult.IsValid {
-		return validationResult.Errors, errors.New("Validation invalid")
-	}
-	return nil, nil
-}
-
-func (model *Model) UpdateSourceById(sourceId string, sourceDetails map[string]interface{}) error {
-	stringElements := []string{sourceDetails["name"].(string),
-		sourceDetails["description"].(string),
-		sourceDetails["url"].(string),
-		sourceId}
-	_, err := Database.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
-	return err
-}
-
-func (model *Model) DeleteSourceById(id string) error {
-	elememts := []string{id}
-	_, err := Database.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
-	return err
-}
-
 func (model *Model) InsertNewSource(sourceDetails map[string]interface{}) (WisplyError, error) {
 
 	var problem = WisplyError{}

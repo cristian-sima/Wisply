@@ -74,23 +74,16 @@ func (controller *SourceController) Update() {
 	sourceDetails["description"] = strings.TrimSpace(controller.GetString("source-description"))
 	sourceDetails["url"] = strings.TrimSpace(controller.GetString("source-URL"))
 
-	_, err := controller.model.NewSource(sourceId)
+	source, err := controller.model.NewSource(sourceId)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		/*
-			problems, err := controller.model.ValidateSource(sourceDetails)
-			if err != nil {
-				controller.DisplayError(problems)
-			} else {
-				databaseError := controller.model.UpdateSourceById(sourceId, sourceDetails)
-				if databaseError != nil {
-					controller.Abort("databaseError")
-				} else {
-					controller.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
-				}
-			}
-		*/
+		problems, err := source.Modify(sourceDetails)
+		if err != nil {
+			controller.DisplayError(problems)
+		} else {
+			controller.DisplaySuccessMessage("The account has been modified!", "/admin/sources/")
+		}
 	}
 }
 

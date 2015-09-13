@@ -20,4 +20,4 @@
 -- --------------------------------------------------------
 
 INSERT INTO `account` (`id`, `name`, `password`, `email`, `administrator`) VALUES
-(15, 'Cristian Sima', 0x2432612431302447642f73475852496c692f55725a2f5a544c6b704a65556e30744f6e706f704c717353756b3976447a513058793861365469544a69, 'cristian.sima93@yahoo.com', 'true'),
+(15, 'Cristian Sima', 0x2432612431302447642f73475852496c692f55725a2f5a544c6b704a65556e30744f6e706f704c717353756b3976447a513058793861365469544a69, 'cristian.sima93@yahoo.com', 'true');

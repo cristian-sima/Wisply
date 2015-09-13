@@ -9,7 +9,6 @@ type Cookie struct {
 	Account  *Account
 	Path     string
 	Duration int
-	Name     string
 }
 
 func (cookie *Cookie) GetValue() string {

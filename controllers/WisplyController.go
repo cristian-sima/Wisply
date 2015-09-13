@@ -4,6 +4,7 @@ import (
 	. "github.com/cristian-sima/Wisply/models/auth"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"html/template"
+	"fmt"
 )
 
 type WisplyController struct {
@@ -35,11 +36,15 @@ func (controller *WisplyController) initState() {
 func (controller *WisplyController) checkConnectionCookie() {
 	cookieName := Settings["cookieName"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
+	fmt.Println("Coookie este " + cookie)
 	if cookie == "" {
+		fmt.Println("try to reconnect")
 		idUser, err := ReConnect(cookie)
 		if err == nil {
 			controller.initConnectedState(idUser)
 		} else {
+			fmt.Println("nu am putut pentru nca")
+			fmt.Println(err)
 			controller.initDisconnectedState()
 		}
 	} else {

@@ -20,19 +20,29 @@ createDatabaseUsername () {
   fi
 }
 #----------------------------------- Start ------------------------------------
-executeSQLFile () {
+loadSchema () {
   SQLFile="util/ubuntu/install/SQL/Wisply.sql"
   if mysql -u"$MySQLUsername" -p"$MySQLPassword" $database < "$SQLFile";
   then
+    showSuccess "The database has been constructed"
+  else
+    showError "There was an error while constructing database"
+  fi
+}
+loadDefaultData () {
+  DataFile="util/ubuntu/install/SQL/Data.sql"
+  if mysql -u"$MySQLUsername" -p"$MySQLPassword" $database < "$DataFile";
+  then
     showSuccess "The database has been populated"
   else
-    showError "There was an error while executing the SQL script"
+    showError "There was an error while populating database"
   fi
 }
 populateDatabase () {
   showHeading "4" "Populating database"
   showMessage "Please wait..."
-  executeSQLFile
+  loadSchema
+  loadDefaultData
 }
 setUsername () {
   showHeading "3" "Database username"

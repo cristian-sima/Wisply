@@ -25,13 +25,13 @@ func (database *Database) connect() {
 	databaseString = database.getString()
 
 	for !connected {
-		fmt.Println("[Info] Connecting to database...")
+		fmt.Println("[INFO] Connecting to database...")
 		error := orm.RegisterDataBase("default", "mysql", databaseString)
 		if error == nil {
-			fmt.Println("[Success]: Connected to database!\n")
+			fmt.Println("[SUCCESS]: Connected to database!\n")
 			connected = true
 		} else {
-			fmt.Println("[Error]: Problem trying to connect to database. Wisply tries again in 3 seconds...\n")
+			fmt.Println("[ERROR]: Problem trying to connect to database. Wisply tries again in 3 seconds...\n")
 			time.Sleep(3000 * time.Millisecond)
 		}
 	}

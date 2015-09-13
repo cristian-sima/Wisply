@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"strconv"
 	"strings"
@@ -66,17 +65,7 @@ func isTokenValid(accountId, hashedToken string) bool {
 	now, _ := strconv.Atoi(GetCurrentTimestamp())
 	duration := Settings["duration"].(int)
 
-	fmt.Println(elements)
-	fmt.Println(token)
 
-	fmt.Println("now: ")
-	fmt.Println(now)
-
-	fmt.Println("duration: ")
-	fmt.Println(duration)
-
-	fmt.Println("value: ")
-	fmt.Println(token.Timestamp)
 
 	isValid := (now <= (token.Timestamp + duration))
 	return isValid
@@ -151,7 +140,6 @@ func GetAccountByEmail(email string) (*Account, error) {
 	err := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE email = ? ", elements).QueryRow(&account)
 
 	if err != nil {
-		fmt.Println(err)
 		return &account, errors.New("No such account")
 	}
 

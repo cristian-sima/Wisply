@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
@@ -66,10 +65,6 @@ func (controller *AuthController) LoginAccount() {
 	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
 	rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))
 
-	fmt.Println("remember me:")
-
-	fmt.Println(rememberMe)
-
 	loginDetails := make(map[string]interface{})
 	loginDetails["email"] = strings.TrimSpace(controller.GetString("login-email"))
 	loginDetails["password"] = strings.TrimSpace(controller.GetString("login-password"))
@@ -102,8 +97,6 @@ func (controller *AuthController) rememberConnection(account *Account) {
 	cookieName := Settings["cookieName"].(string)
 	cookie := account.GenerateConnectionCookie()
 	controller.deleteConnectionCookie()
-	fmt.Println("expire")
-	fmt.Println(strconv.Itoa(cookie.Duration))
 	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 

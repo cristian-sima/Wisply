@@ -22,7 +22,7 @@ createDatabaseUsername () {
 #----------------------------------- Start ------------------------------------
 executeSQLFile () {
   SQLFile="util/ubuntu/install/SQL/Wisply.sql"
-  if mysql -u"$MySQLUsername" -p"$MySQLPassword" < "$SQLFile";
+  if mysql -u"$MySQLUsername" -p"$MySQLPassword" $databaseUsername < "$SQLFile";
   then
     showSuccess "The database has been populated"
   else

@@ -2,6 +2,7 @@ package sources
 
 import (
 	"errors"
+	. "github.com/cristian-sima/Wisply/models/adapter"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 )
 
@@ -14,29 +15,32 @@ func (model *Model) GetAll() []Source {
 	return list
 }
 
-func (model *Model) GetSourceById(rawIndex string) (*Source, error) {
-	var isValid bool
+func (model *Model) NewSource(rawIndex string) (*Source, error) {
+
 	source := new(Source)
-	isValid = ValidateIndex(rawIndex)
-	if !isValid {
+	isValid := IsValidId(rawIndex)
+	if !isValid.IsValid {
 		return source, errors.New("Validation invalid")
 	}
-	error := Database.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
-	return source, error
+	err := Database.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
+	if err != nil {
+		return source, errors.New("No source like that")
+	}
+	return source, nil
 }
 
-func (model *Model) ValidateSource(rawData map[string]interface{}) (map[string][]string, error) {
-	validationResult := ValidateSourceDetails(rawData)
+func (model *Model) ValidateSource(sourceDetails map[string]interface{}) (map[string][]string, error) {
+	validationResult := HasValidDetails(sourceDetails)
 	if !validationResult.IsValid {
 		return validationResult.Errors, errors.New("Validation invalid")
 	}
 	return nil, nil
 }
 
-func (model *Model) UpdateSourceById(sourceId string, rawData map[string]interface{}) error {
-	stringElements := []string{rawData["name"].(string),
-		rawData["description"].(string),
-		rawData["url"].(string),
+func (model *Model) UpdateSourceById(sourceId string, sourceDetails map[string]interface{}) error {
+	stringElements := []string{sourceDetails["name"].(string),
+		sourceDetails["description"].(string),
+		sourceDetails["url"].(string),
 		sourceId}
 	_, err := Database.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
 	return err
@@ -48,15 +52,30 @@ func (model *Model) DeleteSourceById(id string) error {
 	return err
 }
 
-func (model *Model) InsertNewSource(rawData map[string]interface{}) error {
-	stringElements := []string{rawData["name"].(string),
-		rawData["description"].(string),
-		rawData["url"].(string)}
+func (model *Model) InsertNewSource(sourceDetails map[string]interface{}) (WisplyError, error) {
+
+	var problem = WisplyError{}
+
+	result := HasValidDetails(sourceDetails)
+	if !result.IsValid {
+		problem.Data = result.Errors
+		return problem, errors.New("Error")
+	}
+
+	stringElements := []string{sourceDetails["name"].(string),
+		sourceDetails["description"].(string),
+		sourceDetails["url"].(string)}
 	_, err := Database.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
-	return err
+
+	if err != nil {
+		problem.Message = "No source like that"
+		return problem, errors.New("Error")
+	}
+
+	return problem, nil
 }
 
-func Count() int {
+func CountSources() int {
 	var number int
 	Database.Raw("SELECT count(*) FROM source").QueryRow(&number)
 	return number

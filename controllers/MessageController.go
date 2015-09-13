@@ -2,38 +2,27 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"strconv"
+	. "github.com/cristian-sima/Wisply/models/adapter"
 )
 
 type MessageController struct {
 	beego.Controller
 }
 
-func (controller *MessageController) DisplayErrorMessage(errorMessage string) {
-
-	content := errorMessage
-	controller.DisplayMessage("error", content)
-}
-
-func (controller *MessageController) DisplayErrorMessages(errors map[string][]string) {
-	var (
-		number  int    = len(errors)
-		message string = getMessage(number)
-	)
-	content := "Your request was not successful. " + message
-	controller.Data["validationFailed"] = true
-	controller.Data["validationErrors"] = errors
-	controller.DisplayMessage("error", content)
-}
-
-func getMessage(number int) string {
-	problemsMessage := ""
-	if number == 1 {
-		problemsMessage = "one field"
-	} else {
-		problemsMessage = strconv.Itoa(number) + " fields"
+func (controller *MessageController) DisplaySimpleError(msg string) {
+	err := WisplyError{
+		Message: msg,
 	}
-	return "There were problems with " + problemsMessage + ":"
+	controller.DisplayError(err)
+}
+
+func (controller *MessageController) DisplayError(err WisplyError) {
+	content := err.GetMessage()
+	if len(err.Data) != 0 {
+		controller.Data["validationFailed"] = true
+		controller.Data["validationErrors"] = err.Data
+	}
+	controller.DisplayMessage("error", content)
 }
 
 func (controller *MessageController) DisplaySuccessMessage(content string, backLink string) {

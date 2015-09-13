@@ -12,8 +12,8 @@ type Dashboard struct {
 
 func GetDashboard() *Dashboard {
 
-	numberOfAccounts := auth.Count()
-	numberOfSources := sources.Count()
+	numberOfAccounts := auth.CountAccounts()
+	numberOfSources := sources.CountSources()
 
 	return &Dashboard{
 		Accounts: numberOfAccounts,

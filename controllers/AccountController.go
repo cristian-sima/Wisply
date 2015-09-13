@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strings"
 )
@@ -15,7 +14,7 @@ func (controller *AccountController) ListAccounts() {
 
 	var exists bool = false
 
-	accounts := controller.model.GetAll()
+	accounts := controller.model.GetAllAccounts()
 
 	exists = (len(accounts) != 0)
 
@@ -31,10 +30,9 @@ func (controller *AccountController) Modify() {
 
 	id = controller.Ctx.Input.Param(":id")
 
-	account, err := controller.model.GetAccountById(id)
+	account, err := NewAccount(id)
 
 	if err != nil {
-		fmt.Println(err)
 		controller.Abort("databaseError")
 	} else {
 		controller.showModifyForm(account)
@@ -51,13 +49,13 @@ func (controller *AccountController) Update() {
 	isAdministrator = strings.TrimSpace(controller.GetString("modify-administrator"))
 	rawData["administrator"] = isAdministrator
 
-	_, err := controller.model.GetAccountById(accountId)
+	_, err := NewAccount(accountId)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		problems, err := controller.model.ValidateModifyAccount(rawData)
+		/*problems, err := controller.model.ValidateModifyAccount(rawData)
 		if err != nil {
-			controller.DisplayErrorMessages(problems)
+			controller.DisplaySimpleError(problems)
 		} else {
 			databaseError := controller.model.UpdateAccountType(accountId, isAdministrator)
 			if databaseError != nil {
@@ -65,18 +63,18 @@ func (controller *AccountController) Update() {
 			} else {
 				controller.DisplaySuccessMessage("The account has been modified!", "/admin/accounts/")
 			}
-		}
+		}*/
 	}
 }
 
 func (controller *AccountController) Delete() {
 	var id string
 	id = controller.Ctx.Input.Param(":id")
-	account, err := controller.model.GetAccountById(id)
+	account, err := NewAccount(id)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		databaseError := controller.model.DeleteAccountById(id)
+		databaseError := account.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {

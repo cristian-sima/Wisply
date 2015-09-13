@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
@@ -20,16 +19,18 @@ func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {
 		controller.Redirect("/", 302)
 	} else {
-		controller.GenerateXsrf()
 		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
-		controller.TplNames = "site/auth/login.tpl"
-		controller.Layout = "site/layout.tpl"
+		controller.showForm("login")
 	}
 }
 
 func (controller *AuthController) ShowRegisterForm() {
+	controller.showForm("register")
+}
+
+func (controller *AuthController) showForm(name string) {
 	controller.GenerateXsrf()
-	controller.TplNames = "site/auth/register.tpl"
+	controller.TplNames = "site/auth/" + name + ".tpl"
 	controller.Layout = "site/layout.tpl"
 }
 
@@ -41,49 +42,37 @@ func (controller *AuthController) CreateNewAccount() {
 	email = strings.TrimSpace(controller.GetString("register-email"))
 	confirmPassowrd = strings.TrimSpace(controller.GetString("register-password-confirm"))
 
-	rawData := make(map[string]interface{})
-	rawData["name"] = name
-	rawData["password"] = password
-	rawData["email"] = email
+	userDetails := make(map[string]interface{})
+	userDetails["name"] = name
+	userDetails["password"] = password
+	userDetails["email"] = email
 
 	if confirmPassowrd != password {
-		controller.DisplayErrorMessage("The passwords do not match!")
+		controller.DisplaySimpleError("The passwords do not match!")
 	} else {
-		problems, err := controller.Model.ValidateRegisterDetails(rawData)
+		register := Register{}
+		problem, err := register.Try(userDetails)
 		if err != nil {
-			controller.DisplayErrorMessages(problems)
+			controller.DisplayError(problem)
 		} else {
-			emailAlreadyUsed := controller.Model.CheckEmailExists(email)
-			if emailAlreadyUsed {
-				controller.DisplayErrorMessage("Hmmm, the email " + email + " is already used.")
-			} else {
-				databaseError := controller.Model.CreateNewAccount(rawData)
-				if databaseError != nil {
-					controller.Abort("databaseError")
-				} else {
-					controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
-				}
-			}
+			controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
 		}
 	}
 }
 
 func (controller *AuthController) LoginAccount() {
 	var sendMeAddress string = strings.TrimSpace(controller.GetString("login-send-me"))
-	rawData := make(map[string]interface{})
-	rawData["email"] = strings.TrimSpace(controller.GetString("login-email"))
-	rawData["password"] = strings.TrimSpace(controller.GetString("login-password"))
+	loginDetails := make(map[string]interface{})
+	loginDetails["email"] = strings.TrimSpace(controller.GetString("login-email"))
+	loginDetails["password"] = strings.TrimSpace(controller.GetString("login-password"))
 
-	problems, err := controller.Model.ValidateLoginDetails(rawData)
+	login := Login{}
+	problems, err := login.Try(loginDetails)
 	if err != nil {
-		controller.DisplayErrorMessages(problems)
+		controller.DisplayError(problems)
 	} else {
-		account, err := controller.Model.TryLoginAccount(rawData)
-		if err != nil {
-			controller.DisplayErrorMessage("There was a problem while login. We think the email or the password were not valid.")
-		} else {
-			controller.connectAccount(account, sendMeAddress)
-		}
+		account, _ := GetAccountByEmail(loginDetails["email"].(string))
+		controller.connectAccount(account, sendMeAddress)
 	}
 }
 
@@ -93,16 +82,10 @@ func (controller *AuthController) connectAccount(account *Account, sendMeAddress
 }
 
 func (controller *AuthController) saveLoginDetails(account *Account) {
-	var (
-		accountId, cookieValue string
-		duration               int
-	)
-	duration = beego.AppConfig.String("connectionDuration")
-	accountId = strconv.Itoa(account.Id)
-	cookieValue = controller.Model.GetLoginCookie(accountId)
+	accountId := strconv.Itoa(account.Id)
 	controller.SetSession("account-id", accountId)
-	fmt.Println(cookieValue)
-	controller.Ctx.SetCookie("connection", cookieValue, duration, "/")
+	cookie := account.GenerateConnectionCookie()
+	controller.Ctx.SetCookie(cookie.Name, cookie.GetValue(), strconv.Itoa(cookie.Duration), cookie.Path)
 }
 
 func (controller *AuthController) safeRedilectAccount(sendMe string) {

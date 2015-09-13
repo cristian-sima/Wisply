@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"html/template"
@@ -10,7 +9,7 @@ import (
 type WisplyController struct {
 	MessageController
 	AccountConnected bool
-	Account          Account
+	Account          *Account
 	Model            WisplyModel
 }
 
@@ -19,21 +18,43 @@ func (this *WisplyController) GenerateXsrf() {
 }
 
 func (controller *WisplyController) Prepare() {
-	controller.updateAccountConnection()
+	controller.initState()
 	InitDatabase()
 }
 
-func (controller *WisplyController) updateAccountConnection() {
+func (controller *WisplyController) initState() {
 	session := controller.GetSession("account-id")
-	if session == nil {
-		controller.AccountConnected = false
-		controller.Data["accountDisconnected"] = true
-	} else {
+	if session != nil {
 		id := (session).(string)
-		controller.Account = NewAccount(id)
-		fmt.Println(controller.Account)
-		controller.AccountConnected = true
-		controller.Data["accountConnected"] = true
-		controller.Data["currentAccount"] = controller.Account
+		controller.initConnectedState(id)
+	} else {
+		controller.checkConnectionCookie()
 	}
+}
+
+func (controller *WisplyController) checkConnectionCookie() {
+	cookie := controller.Ctx.GetCookie("connection")
+	if cookie == "" {
+		idUser, err := ReConnect(cookie)
+		if err == nil {
+			controller.initConnectedState(idUser)
+		} else {
+			controller.initDisconnectedState()
+		}
+	} else {
+		controller.initDisconnectedState()
+	}
+}
+
+func (controller *WisplyController) initDisconnectedState() {
+	controller.AccountConnected = false
+	controller.Data["accountDisconnected"] = true
+}
+
+func (controller *WisplyController) initConnectedState(id string) {
+	account, _ := NewAccount(id)
+	controller.Account = account
+	controller.AccountConnected = true
+	controller.Data["accountConnected"] = true
+	controller.Data["currentAccount"] = controller.Account
 }

@@ -30,21 +30,16 @@ func (controller *SourceController) AddNewSource() {
 
 func (controller *SourceController) InsertSource() {
 
-	rawData := make(map[string]interface{})
-	rawData["name"] = strings.TrimSpace(controller.GetString("source-name"))
-	rawData["description"] = strings.TrimSpace(controller.GetString("source-description"))
-	rawData["url"] = strings.TrimSpace(controller.GetString("source-URL"))
+	sourceDetails := make(map[string]interface{})
+	sourceDetails["name"] = strings.TrimSpace(controller.GetString("source-name"))
+	sourceDetails["description"] = strings.TrimSpace(controller.GetString("source-description"))
+	sourceDetails["url"] = strings.TrimSpace(controller.GetString("source-URL"))
 
-	problems, err := controller.model.ValidateSource(rawData)
+	problems, err := controller.model.InsertNewSource(sourceDetails)
 	if err != nil {
-		controller.DisplayErrorMessages(problems)
+		controller.DisplayError(problems)
 	} else {
-		databaseError := controller.model.InsertNewSource(rawData)
-		if databaseError != nil {
-			controller.Abort("databaseError")
-		} else {
-			controller.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
-		}
+		controller.DisplaySuccessMessage("The source has been added!", "/admin/sources/")
 	}
 }
 
@@ -54,7 +49,7 @@ func (controller *SourceController) Modify() {
 
 	id = controller.Ctx.Input.Param(":id")
 
-	source, err := controller.model.GetSourceById(id)
+	source, err := controller.model.NewSource(id)
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -71,44 +66,47 @@ func (controller *SourceController) Modify() {
 func (controller *SourceController) Update() {
 
 	var sourceId string
-	rawData := make(map[string]interface{})
+	sourceDetails := make(map[string]interface{})
 
 	sourceId = controller.Ctx.Input.Param(":id")
 
-	rawData["name"] = strings.TrimSpace(controller.GetString("source-name"))
-	rawData["description"] = strings.TrimSpace(controller.GetString("source-description"))
-	rawData["url"] = strings.TrimSpace(controller.GetString("source-URL"))
+	sourceDetails["name"] = strings.TrimSpace(controller.GetString("source-name"))
+	sourceDetails["description"] = strings.TrimSpace(controller.GetString("source-description"))
+	sourceDetails["url"] = strings.TrimSpace(controller.GetString("source-URL"))
 
-	_, err := controller.model.GetSourceById(sourceId)
+	_, err := controller.model.NewSource(sourceId)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		problems, err := controller.model.ValidateSource(rawData)
+		/*
+		problems, err := controller.model.ValidateSource(sourceDetails)
 		if err != nil {
-			controller.DisplayErrorMessages(problems)
+			controller.DisplayError(problems)
 		} else {
-			databaseError := controller.model.UpdateSourceById(sourceId, rawData)
+			databaseError := controller.model.UpdateSourceById(sourceId, sourceDetails)
 			if databaseError != nil {
 				controller.Abort("databaseError")
 			} else {
 				controller.DisplaySuccessMessage("The source has been modified!", "/admin/sources/")
 			}
 		}
+		*/
 	}
 }
 
 func (controller *SourceController) Delete() {
 	var id string
 	id = controller.Ctx.Input.Param(":id")
-	source, err := controller.model.GetSourceById(id)
+
+	source, err := controller.model.NewSource(id)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		databaseError := controller.model.DeleteSourceById(id)
+		databaseError := source.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The source ["+source.Name+"] has been deleted. Well done!", "/admin/sources/")
+			controller.DisplaySuccessMessage("The source [" + source.Name + "] has been deleted. Well done!", "/admin/sources/")
 		}
 	}
 }

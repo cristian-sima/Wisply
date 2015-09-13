@@ -9,7 +9,7 @@ var (
 	rules = map[string][]string{
 		"name":          {"String", "full_name", "between_inclusive:3,25"},
 		"password":      {"String", "alpha_dash", "between_inclusive:6,25"},
-		"email":         {"String", "email", "between_inclusive:3,25"},
+		"email":         {"String", "email", "between_inclusive:3,60"},
 		"id":            {"Int"},
 		"administrator": {"String", "Regexp:^(true)|(false)$"},
 	}

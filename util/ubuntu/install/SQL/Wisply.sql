@@ -24,31 +24,31 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(25) NOT NULL,
+  `name` varchar(60) NOT NULL,
   `password` binary(60) NOT NULL,
   `email` varchar(25) NOT NULL,
   `administrator` enum('false','true') NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `account_login`
+-- Table structure for table `account_token`
 --
 
-DROP TABLE IF EXISTS `account_login`;
+DROP TABLE IF EXISTS `account_token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account_login` (
+CREATE TABLE `account_token` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL,
-  `token` varchar(200) NOT NULL,
-  `expiration` varchar(200) NOT NULL,
+  `value` varchar(200) NOT NULL,
+  `timestamp` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,4 +77,4 @@ CREATE TABLE `source` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-12 22:27:46
+-- Dump completed on 2015-09-13 23:13:56

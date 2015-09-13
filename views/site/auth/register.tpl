@@ -34,7 +34,7 @@
                 <div class="form-group text-left">
                   <label for="register-email" class="col-lg-2 control-label">E-mail</label>
                   <div class="col-lg-10">
-                    <input type="email" value="{{.email}}" class="form-control" name="register-email" id="register-email" placeholder="E-mail address" required pattern=".{3,25}" title="You should provide a valid e-mail address.">
+                    <input type="email" value="{{.email}}" class="form-control" name="register-email" id="register-email" placeholder="E-mail address" required pattern=".{3,60}" title="You should provide a valid e-mail address.">
                   </div>
                 </div>
                 <div class="form-group" >

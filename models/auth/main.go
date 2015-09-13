@@ -56,7 +56,7 @@ func isTokenValid(accountId, hashedToken string) bool {
 		return false
 	}
 
-	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?";
+	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
 	err := Database.Raw(sql, elements).QueryRow(&token)
 
 	if err != nil {
@@ -77,8 +77,6 @@ func isTokenValid(accountId, hashedToken string) bool {
 
 	fmt.Println("value: ")
 	fmt.Println(token.Timestamp)
-
-
 
 	isValid := (now <= (token.Timestamp + duration))
 	return isValid

@@ -39,7 +39,6 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 
 	timestamp = GetCurrentTimestamp()
 
-
 	elementsInsert := []string{
 		"NULL",
 		strconv.Itoa(account.Id),

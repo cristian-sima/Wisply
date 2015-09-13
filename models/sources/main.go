@@ -22,7 +22,7 @@ func (model *Model) NewSource(rawIndex string) (*Source, error) {
 	if !isValid.IsValid {
 		return source, errors.New("Validation invalid")
 	}
-	err := Database.Raw("SELECT name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
+	err := Database.Raw("SELECT id, name, url, description FROM source WHERE id = ?", rawIndex).QueryRow(&source)
 	if err != nil {
 		return source, errors.New("No source like that")
 	}

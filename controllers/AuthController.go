@@ -63,12 +63,12 @@ func (controller *AuthController) CreateNewAccount() {
 
 func (controller *AuthController) LoginAccount() {
 
-		sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
-		rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))
+	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
+	rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))
 
-		fmt.Println("remember me:")
+	fmt.Println("remember me:")
 
-		fmt.Println(rememberMe)
+	fmt.Println(rememberMe)
 
 	loginDetails := make(map[string]interface{})
 	loginDetails["email"] = strings.TrimSpace(controller.GetString("login-email"))
@@ -100,11 +100,11 @@ func (controller *AuthController) saveLoginDetails(account *Account) {
 func (controller *AuthController) rememberConnection(account *Account) {
 
 	cookieName := Settings["cookieName"].(string)
-		cookie := account.GenerateConnectionCookie()
-		controller.deleteConnectionCookie()
-		fmt.Println("expire")
-		fmt.Println( strconv.Itoa(cookie.Duration))
-		controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
+	cookie := account.GenerateConnectionCookie()
+	controller.deleteConnectionCookie()
+	fmt.Println("expire")
+	fmt.Println(strconv.Itoa(cookie.Duration))
+	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 
 func (controller *AuthController) safeRedilectAccount(sendMe string) {

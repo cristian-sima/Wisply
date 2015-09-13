@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	. "github.com/cristian-sima/Wisply/models/auth"
 	. "github.com/cristian-sima/Wisply/models/wisply"
 	"html/template"
-	"fmt"
 )
 
 type WisplyController struct {
@@ -64,7 +64,6 @@ func (controller *WisplyController) deleteConnectionCookie() {
 		controller.Ctx.SetCookie(cookieName, "", -1, cookiePath)
 	}
 }
-
 
 func (controller *WisplyController) initDisconnectedState() {
 	controller.AccountConnected = false

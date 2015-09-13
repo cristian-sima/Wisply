@@ -17,7 +17,7 @@ func (config *SQLConfiguration) GetPath() string {
 	path = "database/"
 	defaultFile = path + "default.json"
 	customFile = path + "custom.json"
-	if _, err := os.Open("/conf/" + customFile); err == nil {
+	if _, err := os.Open("conf/" + customFile); err == nil {
 		return customFile
 	}
 	return defaultFile

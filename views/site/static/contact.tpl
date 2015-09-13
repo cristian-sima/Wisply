@@ -9,7 +9,8 @@
           </ul></div>
           <article class="panel-body">
             <h1>Contact</h1>
-            Do you want to contact personally the developer? Great, its your choise:
+            Do you want to contact personally the developer? Great, its your choise: <br /><br />
+            <div>
             <div class="row text-center">
               <div class="text-center col-xs-3 col-md-3">
                 <a title="Be social with us on GitHub" href="https://github.com/cristian-sima/Wisply" target="_blank" class="thumbnail">
@@ -32,6 +33,7 @@
                 </a>
               </div>
             </div>
+          </div>
           </article>
         </div>
       </div>

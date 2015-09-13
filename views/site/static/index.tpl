@@ -5,8 +5,8 @@
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
             <article class="jumbotron" >
-                <h1>Web</h1>
-                <p>Understanding the largest and most complex engineered environment of the world is a difficult task. <br />
+                <h1>Web<small>science</small></h1>
+                <p>Understanding world’s largest and most complex engineered environment is a difficult task to achieve. <br />
                     Let's simplify it.</p>
                 <p><a class="btn btn-primary btn-lg" href="/about">Learn more</a></p>
             </article>

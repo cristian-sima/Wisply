@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://wisply.me/</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/about</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/webscience</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/contact</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/auth/login</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/auth/register</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/help</loc>
+  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/accessibility</loc>
+  <changefreq>daily</changefreq>
+</url>
+</urlset>

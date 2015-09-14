@@ -1,6 +1,6 @@
 # Wisply
 
-![Wisply](http://wisply.me/static/img/logo.jpg) 
+![Wisply](http://wisply.me/static/img/logo.jpg)
 
 
 Building the hive of education
@@ -11,7 +11,7 @@ Wisply can be downloaded using the `git` command through Go
 
 1. Open a terminal window
 2. Type `go get github.com/cristian-sima/Wisply`
-  * In case you have problems with this step, it means you do not have Git. 
+  * In case you have problems with this step, it means you do not have Git.
   * DigitalOcean has a very good tutorial about how to install Git on Ubuntu [here](https://www.digitalocean.com/community/tutorials/how-to-install-git-on-ubuntu-14-04).
 3. Now, you have Wisply. Check the next steps to see how to install it.
 
@@ -66,7 +66,7 @@ If you already have a MySQL server, skip this step.
 7. Once the installation is completed, the MySQL server should be started automatically. You can run the following command from a terminal prompt to check whether the MySQL server is running:
   `sudo netstat -tap | grep mysql`
   You will see a list of details regarding the service such as port and process id.
-  
+
 
 #### Install Wisply
 
@@ -78,9 +78,11 @@ How to use the installer?
 
 1. Open a terminal window
 2. Type `cd /the/path/to/Wisply/directory/` where *path/to/Wisply/directory* is the path on your server to the Wisply directory
-3. We need to allow the installer to execute. Type `chmod u+x util/ubuntu/install/installer.sh` and type `chmod u+x util/ubuntu/install` 
+3. We need to allow the installer to execute. Type `chmod u+x util/ubuntu/install/installer.sh` and type `chmod u+x util/ubuntu/install`
 4. In order to run the installer, type `bash /util/ubuntu/installer.sh`
-5. Follow the steps shown by installer
+5. Follow the steps shown by installer:
+
+![Installer Example](http://wisply.me/static/wisply/example/installer.jpg)
 
 #### Run Wisply
 
@@ -88,7 +90,7 @@ In order to start Wisply, go to Wisply directory and type `bash util/ubuntu/star
 
 #### Stop Wisply
 
-If you want to stop Wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`. 
+If you want to stop Wisply, go to Wisply directory and type `bash util/ubuntu/stop.sh`.
 
 ## Windows
 
@@ -102,19 +104,19 @@ Wisply provides several utilities which you can use during the development proce
 
 #### Set up utilities
 
-1. Go to directory `util/windows/Utilities` 
+1. Go to directory `util/windows/Utilities`
 2. Edit every file and change the path where the Wisply directory is
 3. In order to start a script, double click on the file
 
 
 #### MySQL server
 
-I recommend XAMPP. This software contains the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html). 
+I recommend XAMPP. This software contains the MySQL server and it has a good user interface. You can download XAMPP from [here](https://www.apachefriends.org/download.html).
 
 ### Install Wisply
 
 1. Open XAMPP, start Apache and MySQL modules
-3. For the MySQL module, click ADMIN. 
+3. For the MySQL module, click ADMIN.
 4. Go to `Databases`
 5. Create a new database with the name `wisply`
 6. Go to Users and create a user

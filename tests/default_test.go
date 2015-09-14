@@ -6,7 +6,7 @@ import (
 	"testing"
 	"runtime"
 	"path/filepath"
-	"github.com/cristian-sima/Wisply/routers"
+	_ "github.com/cristian-sima/Wisply/routers"
 
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"

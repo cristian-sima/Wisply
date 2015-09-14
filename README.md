@@ -82,7 +82,7 @@ How to use the installer?
 4. In order to run the installer, type `bash /util/ubuntu/installer.sh`
 5. Follow the steps shown by installer:
 
-![Installer Example](http://wisply.me/static/wisply/example/installer.jpg)
+![Installer Example](http://wisply.me/static/img/wisply/example/installer.jpg)
 
 #### Run Wisply
 

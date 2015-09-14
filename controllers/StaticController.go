@@ -37,7 +37,6 @@ func (controller *StaticController) ShowHelp() {
 func (controller *StaticController) showStaticPage(pageName string) {
 	controller.Layout = "site/layout.tpl"
 	controller.TplNames = "site/static/" + pageName + ".tpl"
-	controller.TplNames = "site/static/" + pageName + ".tpl"
 }
 
 // different

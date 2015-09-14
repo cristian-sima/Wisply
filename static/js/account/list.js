@@ -64,7 +64,7 @@ var accounts;
 
           errorCallback = function () {
               wisply.message.showError("There was a problem with your request!");
-          }
+          };
 
           request = {
             "url": '/admin/accounts/delete/' + account.id,

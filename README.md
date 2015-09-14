@@ -1,5 +1,7 @@
 # Wisply
 
+[![Build Status](https://travis-ci.org/cristian-sima/Wisply.svg)](https://travis-ci.org/cristian-sima/Wisply)
+
 ![Wisply](http://wisply.me/static/img/logo.jpg)
 
 

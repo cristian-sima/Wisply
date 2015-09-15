@@ -14,6 +14,6 @@
     <link rel="stylesheet" href="/static/3rd_party/product/paper/bootstrap.css" media="screen">
     <link rel="stylesheet" href="/static/3rd_party/product/paper/bootswatch.min.css">
 
-    <link rel="stylesheet" href="/static/css/wisply/wisply.css">
+    <link rel="stylesheet" href="/static/css/wisply/Wisply.css">
 </head>
 {{ end }}

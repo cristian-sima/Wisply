@@ -4,22 +4,44 @@ var sources;
 (function ($) {
     'use strict';
 
+    /**
+     * It represents a source
+     * @param {number} id   The id of the source
+     * @param {string} name The name of the source
+     */
     function Source(id, name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * It encapsulets the functionality for the sources
+     * The constructor activates the listeners
+     */
     function Sources() {
         this.activateListeners();
     }
     Sources.prototype = {
+        /**
+         * It activates the listener for deleting a source
+         */
         activateListeners: function () {
             $(".deleteSourceButton").click(confirmDelete);
         },
+        /**
+         * It is called when the user wants to delete a source. It asks for confirmation
+         * @param  {Source} source The reference to the source object
+         */
         confirmDelete: function (source) {
             var msg = this.getDialogMessage(source);
             wisply.message.dialog(msg);
         },
+        /**
+         * It returns the object which contain the arguments for the confirmation dialog
+         * @param  {[type]} source The source object
+         * @return {[type]}        The arguements for dialog
+         * @see http://bootboxjs.com/
+         */
         getDialogMessage: function (source) {
             var buttons,
                 cancelButton,
@@ -52,16 +74,26 @@ var sources;
             };
             return msg;
         },
+        /**
+         * It delets a source
+         * @param  {[type]} source The source object
+         */
         delete: function (source) {
           var request,
           successCallback,
           errorCallback;
 
+          /**
+           * The callback called when the source has been deleted. It shows a message and reloads the page in 2 seconds
+           */
           successCallback =  function () {
               wisply.message.showSuccess("The source has been removed! Refreshing page...");
-              wisply.reloadPage();
+              wisply.reloadPage(2000);
           };
 
+          /**
+           * The callback called when there was a problem. It shows a message
+           */
           errorCallback = function () {
               wisply.message.showError("There was a problem with your request!");
           };
@@ -75,6 +107,10 @@ var sources;
         }
     };
 
+    /**
+     * It is called when the user clicks the delete button. It creates the source button and asks for confirmation
+     * @param  {event} e The event generated
+     */
     function confirmDelete(e) {
         e.preventDefault();
         var instance,
@@ -88,6 +124,9 @@ var sources;
         sources.confirmDelete(source);
     }
 
+    /**
+     * It is called when the page loads. It creates the sources object
+     */
     function initSources() {
         sources = new Sources();
     }

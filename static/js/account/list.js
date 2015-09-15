@@ -4,22 +4,43 @@ var accounts;
 (function ($) {
     'use strict';
 
+    /**
+     * It represents an account
+     * @param {number} id   The id of the account
+     * @param {string} name The name of the account
+     */
     function Account(id, name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * It encapsulets the functions for accounts.
+     * The constructor activates the listeners
+     */
     function Accounts() {
         this.activateListeners();
     }
     Accounts.prototype = {
+        /**
+         * It activates the listener for all delete buttons
+         */
         activateListeners: function () {
             $(".deleteAccountButton").click(confirmDelete);
         },
+        /**
+         * It requests the user to confirm
+         * @param  {Account} account  The Account object to be deleted
+         */
         confirmDelete: function (account) {
             var msg = this.getDialogMessage(account);
             wisply.message.dialog(msg);
         },
+        /**
+         * It returns the arguements of the confimation message
+         * @param  {Account} account The Account object to be deleted
+         * @return {object}         The arguements of the confimation message
+         */
         getDialogMessage: function (account) {
             var buttons,
                 cancelButton,
@@ -52,16 +73,27 @@ var accounts;
             };
             return msg;
         },
+        /**
+         * It delets a user
+         * @param  {Account} account The account to be deleted
+         */
         delete: function (account) {
           var request,
           successCallback,
           errorCallback;
 
+          /**
+           * It is called when the deletion has been done. It reloads the page in 2 seconds
+           * @return {[type]} [description]
+           */
           successCallback =  function () {
               wisply.message.showSuccess("The account has been removed! Refreshing page...");
               wisply.reloadPage();
           };
 
+          /**
+           * It is called when there has been problems
+           */
           errorCallback = function () {
               wisply.message.showError("There was a problem with your request!");
           };
@@ -75,7 +107,11 @@ var accounts;
         }
     };
 
-    function confirmDelete(e) {
+    /**
+     * It is called when the user clicks the delete button. It requests the user to confirm
+     * @param  {Event} event The event generated
+     */
+    function confirmDelete(event) {
         e.preventDefault();
         var instance,
             name,
@@ -88,6 +124,9 @@ var accounts;
         accounts.confirmDelete(account);
     }
 
+    /**
+     * It is called when the page has loaded. It creates tha Accounts object
+     */
     function initAccounts() {
         accounts = new Accounts();
     }

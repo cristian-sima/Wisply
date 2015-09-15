@@ -1,11 +1,12 @@
 package main
 
 import (
+	"html/template"
+	"net/http"
+
 	"github.com/astaxie/beego"
 	. "github.com/cristian-sima/Wisply/models/database"
 	_ "github.com/cristian-sima/Wisply/routers"
-	"html/template"
-	"net/http"
 )
 
 func init() {

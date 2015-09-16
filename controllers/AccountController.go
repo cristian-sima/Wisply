@@ -3,14 +3,14 @@ package controllers
 import (
 	"strings"
 
-	"github.com/cristian-sima/Wisply/models/auth"
+	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
 // AccountController It manages the operations with the accounts (such as delete, modify type, list all)
 // It inherits the AdminController, thus an administrator account is required
 type AccountController struct {
 	AdminController
-	model auth.AuthModel
+	model auth.Model
 }
 
 // ListAccounts It lists all the Wisply accounts

@@ -22,7 +22,7 @@ var Settings = map[string]interface{}{
 
 // Model It encapsulates all the main operations for authentication
 type Model struct {
-	wisply.WisplyModel
+	wisply.Model
 }
 
 // ReConnect It tries to reconnect the user using the value from the connection cookiePath

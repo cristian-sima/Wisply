@@ -63,7 +63,7 @@ func (controller *SourceController) Modify() {
 		sourceDetails := map[string]string{
 			"Name":        source.Name,
 			"Description": source.Description,
-			"Url":         source.Url,
+			"Url":         source.URL,
 		}
 		controller.showModifyForm(sourceDetails)
 	}

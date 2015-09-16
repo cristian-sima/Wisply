@@ -13,7 +13,7 @@ type WisplyController struct {
 	MessageController
 	AccountConnected bool
 	Account          *auth.Account
-	Model            wisply.WisplyModel
+	Model            wisply.Model
 }
 
 // GenerateXSRF It generates and sends to template the XSRF code

@@ -11,7 +11,7 @@ import (
 // It manages the operations with the authentication
 type AuthController struct {
 	WisplyController
-	Model auth.AuthModel
+	Model auth.Model
 }
 
 // Prepare It calls the WisplyController Prepare method
@@ -105,7 +105,7 @@ func (controller *AuthController) connectAccount(account *auth.Account, sendMeAd
 
 // saveLoginDetails It creates a new session for the account
 func (controller *AuthController) saveLoginDetails(account *auth.Account) {
-	accountID := strconv.Itoa(account.Id)
+	accountID := strconv.Itoa(account.ID)
 	controller.SetSession("account-id", accountID)
 }
 

@@ -4,13 +4,12 @@ import (
 	orm "github.com/astaxie/beego/orm"
 )
 
+// It represents the connection to the database
 var (
 	Database orm.Ormer
 )
 
-type WisplyModel struct {
-}
-
+// IsEmptyQuery checks if a query is empty or not
 func IsEmptyQuery(sql string, elements []string) bool {
 	var list orm.ParamsList
 	num, err := Database.Raw(sql, elements).ValuesFlat(&list)
@@ -20,6 +19,11 @@ func IsEmptyQuery(sql string, elements []string) bool {
 	return false
 }
 
+// InitDatabase loads the database driver
 func InitDatabase() {
 	Database = orm.NewOrm()
+}
+
+// Model encapsulates the general operations for all models
+type Model struct {
 }

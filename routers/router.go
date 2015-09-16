@@ -1,3 +1,7 @@
+// @APIVersion 1.0
+// @Wisply API
+// @The Wisply API
+// @Contact cs25g13@soton.ac.uk
 package routers
 
 import (

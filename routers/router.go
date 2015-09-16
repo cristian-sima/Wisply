@@ -1,7 +1,3 @@
-// @APIVersion 1.0
-// @Wisply API
-// @The Wisply API
-// @Contact cs25g13@soton.ac.uk
 package routers
 
 import (
@@ -65,7 +61,7 @@ func init() {
 
 	adminNamespace :=
 		beego.NewNamespace("/admin",
-			beego.NSRouter("", &controllers.AdminController{}, "*:ShowDashboard"),
+			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
 			sourcesNamespace,
 			accountsNamespace,
 		)

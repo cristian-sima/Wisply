@@ -4,12 +4,14 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
-	. "github.com/cristian-sima/Wisply/models/wisply"
 	"strconv"
 	"strings"
 	"time"
+
+	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
+// Settings The authentication's settings
 var Settings = map[string]interface{}{
 	"duration":        (60 * 60 * 24 * 7), // one week
 	"path":            "/",
@@ -18,51 +20,56 @@ var Settings = map[string]interface{}{
 	"cookiePath":      "/",
 }
 
-type AuthModel struct {
-	WisplyModel
+// Model It encapsulates all the main operations for authentication
+type Model struct {
+	wisply.WisplyModel
 }
 
+// ReConnect It tries to reconnect the user using the value from the connection cookiePath
+// The value is splited in 2 values: ID and hashedToken
+// Then the values are verified in the database
+// Finally, it is checked if the token is still valid
 func ReConnect(plainCookie string) (string, error) {
-	var accountId string = ""
+	ID := ""
 
 	elements, err := splitCookie(plainCookie)
 	if err != nil {
-		return accountId, errors.New("The cookie has an invalid format")
+		return ID, errors.New("The cookie has an invalid format")
 	}
 
-	accountId = elements[0]
+	ID = elements[0]
 	hashedToken := elements[1]
 
-	validToken := isTokenValid(accountId, hashedToken)
+	validToken := isTokenValid(ID, hashedToken)
 	if !validToken {
-		return accountId, errors.New("The token is not valid")
+		return ID, errors.New("The token is not valid")
 	}
 
 	deleteOldTokens()
 
-	return accountId, nil
+	return ID, nil
 }
 
-func isTokenValid(accountId, hashedToken string) bool {
+func isTokenValid(ID, hashedToken string) bool {
 
 	elements := []string{
-		accountId,
+		ID,
 		hashedToken,
 	}
 	token := Token{}
 
-	if Database == nil {
+	if wisply.Database == nil {
 		return false
 	}
 
 	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
-	err := Database.Raw(sql, elements).QueryRow(&token)
+	err := wisply.Database.Raw(sql, elements).QueryRow(&token)
 
 	if err != nil {
 		return false
 	}
 
-	now, _ := strconv.Atoi(GetCurrentTimestamp())
+	now, _ := strconv.Atoi(getCurrentTimestamp())
 	duration := Settings["duration"].(int)
 
 	isValid := (now <= (token.Timestamp + duration))
@@ -73,31 +80,31 @@ func deleteOldTokens() {
 	var (
 		now, duration, diff int
 	)
-	now, _ = strconv.Atoi(GetCurrentTimestamp())
+	now, _ = strconv.Atoi(getCurrentTimestamp())
 	duration = Settings["duration"].(int)
 	diff = now - duration
 
 	elementsDelete := []string{
 		strconv.Itoa(diff),
 	}
-	Database.Raw("DELETE from account_token WHERE timestamp < ?", elementsDelete).Exec()
+	wisply.Database.Raw("DELETE from account_token WHERE timestamp < ?", elementsDelete).Exec()
 }
 
-func (model *AuthModel) GetAllAccounts() []Account {
+// GetAllAccounts It returns an array of Account with all the accounts
+func (model *Model) GetAllAccounts() []Account {
 	var list []Account
-	Database.Raw("SELECT id, name, password, email, administrator FROM account").QueryRows(&list)
+	wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account").QueryRows(&list)
 	return list
 }
 
-// --------------------
-
+// CountAccounts It returns the number of accounts
 func CountAccounts() int {
-	var number int = 0
-	Database.Raw("SELECT count(*) FROM account").QueryRow(&number)
+	number := 0
+	wisply.Database.Raw("SELECT count(*) FROM account").QueryRow(&number)
 	return number
 }
 
-func GetCurrentTimestamp() string {
+func getCurrentTimestamp() string {
 	var timestamp string
 	unixTime := time.Now().Unix()
 	timestamp = strconv.FormatInt(unixTime, 10)
@@ -107,7 +114,7 @@ func GetCurrentTimestamp() string {
 func splitCookie(cookieValue string) ([]string, error) {
 	var (
 		toReturn  []string
-		separator string = Settings["separatorCookie"].(string)
+		separator = Settings["separatorCookie"].(string)
 	)
 
 	validFormat := strings.Contains(cookieValue, separator)
@@ -122,11 +129,12 @@ func splitCookie(cookieValue string) ([]string, error) {
 	return toReturn, nil
 }
 
+// GetAccountByEmail It searches and returns the account with that email
 func GetAccountByEmail(email string) (*Account, error) {
 
 	account := Account{}
 
-	id := IsValidEmail(email)
+	id := isValidEmail(email)
 	if !id.IsValid {
 		return &account, errors.New("The id is not valid")
 	}
@@ -135,7 +143,7 @@ func GetAccountByEmail(email string) (*Account, error) {
 		email,
 	}
 
-	err := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE email = ? ", elements).QueryRow(&account)
+	err := wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE email = ? ", elements).QueryRow(&account)
 
 	if err != nil {
 		return &account, errors.New("No such account")
@@ -144,19 +152,19 @@ func GetAccountByEmail(email string) (*Account, error) {
 	return &account, nil
 }
 
-func NewAccount(rawId string) (*Account, error) {
+// NewAccount It creates an account using the ID
+func NewAccount(ID string) (*Account, error) {
 
-	id := IsValidId(rawId)
-	if !id.IsValid {
+	result := isValidID(ID)
+	if !result.IsValid {
 		return nil, errors.New("The id is not valid")
 	}
-
 	account := new(Account)
 
 	elements := []string{
-		rawId,
+		ID,
 	}
-	err := Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE id= ?", elements).QueryRow(&account)
+	err := wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE id= ?", elements).QueryRow(&account)
 
 	if err != nil {
 		return account, errors.New("Error")
@@ -165,7 +173,7 @@ func NewAccount(rawId string) (*Account, error) {
 	return account, nil
 }
 
-func getSHA1_digest(plainToken string) string {
+func getSHA1Digest(plainToken string) string {
 	array := []byte(plainToken)
 	hasher := sha1.New()
 	hasher.Write(array)

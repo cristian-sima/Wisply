@@ -10,9 +10,9 @@ type AdminController struct {
 	WisplyController
 }
 
-// ShowDashboard It shows the administrator dashboard
-func (controller *AdminController) ShowDashboard() {
-	dashboard := model.GetDashboard()
+// DisplayDashboard It shows the administrator dashboard
+func (controller *AdminController) DisplayDashboard() {
+	dashboard := model.NewDashboard()
 	controller.Data["numberOfAccounts"] = dashboard.Accounts
 	controller.Data["numberOfSources"] = dashboard.Sources
 	controller.Layout = "site/admin.tpl"

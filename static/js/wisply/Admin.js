@@ -1,10 +1,8 @@
 /* global jQuery, wisply */
 
-(function ($) {
-  'use strict';
-
   /**
   * It manages the general functionality for administrators
+  * @namespace Admin
   */
   function Admin() {
     this.init();
@@ -30,4 +28,3 @@
     wisply.admin = new Admin();
   }
   $(document).ready(initPage);
-}(jQuery, wisply));

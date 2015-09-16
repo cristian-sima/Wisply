@@ -50,4 +50,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/auth/login.js"></script>
+<script src="/static/js/static/auth/login.js"></script>

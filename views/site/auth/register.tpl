@@ -57,4 +57,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/auth/register.js"></script>
+<script src="/static/js/auth/static/register.js"></script>

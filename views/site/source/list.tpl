@@ -51,4 +51,4 @@
     {{ end }}
   </div>
 </div>
-<script src="/static/js/source/list.js"></script>
+<script src="/static/js/admin/source/list.js"></script>

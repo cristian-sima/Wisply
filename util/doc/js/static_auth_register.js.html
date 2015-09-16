@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: static/auth/register.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: static/auth/register.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global jQuery, document, $, wisply*/
+var register;
+
+/**
+* @file Encapsulates the functionality for register page
+* @author Cristian Sima
+*/
+
+/**
+* @namespace Register
+*/
+var Register = function () {
+  'use strict';
+
+  /**
+  * It does nothing important
+  * @class Form
+  * @memberof Register
+  * @classdesc It encapsulates the functionality for registering an account
+  */
+  function Form() {
+  }
+  Form.prototype =
+  /**
+  * @lends Register.Form
+  */
+  {
+    /**
+    * It activates the listeners and focuses the name
+    */
+    init : function () {
+      this.loadListeners();
+      this.checkConfirmPassword();
+      this.focusName();
+    },
+    /**
+    * It activates the listeners for form submitted and password focused
+    */
+    loadListeners: function() {
+      this.passwordCompletedListener();
+      this.submittedListener();
+    },
+    /**
+    * It is called when the user clicks on the back button of the browser (or in the case Wisply detects problems with the form and the user goes back to the form). In case the value of the password is not empty, it shows the confirmation password field
+    */
+    checkConfirmPassword : function () {
+      if($("#register-password-confirm").val() !== "") {
+        $("#div-confirm-password").show();
+      }
+    },
+    /**
+    * It focuses the name field
+    */
+    focusName: function () {
+      $("#register-name").focus();
+    },
+    /**
+    * It is called when the form has been submitted. It shows the loading button
+    */
+    submittedListener : function() {
+      $("#register-form").on("submit", this.FireSubmited);
+    },
+    /**
+    * It is called when the register form has been submitted. It checks if the confirmation password is the same as the password. If so, it submits the form, else it shows a message
+    * @param  {Event} event The event which is generated
+    */
+    FireSubmited: function(event) {
+      event.preventDefault();
+      var password = $('#register-password').val(),
+      confirmationPassword = $("#register-password-confirm").val();
+      if (password === confirmationPassword) {
+        register.showLoading();
+        this.submit();
+      } else {
+        register.showPasswordsDoNotMatch();
+      }
+    },
+    /**
+    * It shows the confirmation password field
+    */
+    passwordCompletedListener : function () {
+      $("#register-password").focus(function() {
+        $("#div-confirm-password").show();
+      });
+    },
+    /**
+    * It shows the loading image
+    */
+    showLoading: function() {
+      wisply.showLoading('#register-submit-div', "medium");
+    },
+    /**
+    * It tells the account that the passwords do not match
+    */
+    showPasswordsDoNotMatch: function () {
+      var args = {
+        title: "I got a problem",
+        message: "The confirmation password is equal to the password. Correct this.",
+        onEscape: true,
+        buttons: {
+          cancel: {
+            label: "Ok",
+            className: "btn-default",
+            callback: function() {
+              this.modal('hide');
+            }
+          }}
+        };
+        wisply.message.alert(args);
+      }
+    };
+  };
+  jQuery(document).ready(function() {
+    "use strict";
+    register = new Register.Form();
+    register.init();
+  });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Sources.Manager.html">Manager</a></li><li><a href="Sources.Source.html">Source</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Sources.html">Sources</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Sep 16 2015 15:11:17 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

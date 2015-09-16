@@ -10,13 +10,13 @@
 <script src="/static/3rd_party/others/js/jquery.cookie.js"></script>
 <script src="/static/3rd_party/others/js/jquery.hotkeys.js"></script>
 
-<script src="/static/js/wisply/Wisply.js"></script>
+<script src="/static/js/wisply/wisply.js"></script>
 
 {{ if .accountConnected }}
-<script src="/static/js/wisply/Connection.js"></script>
+<script src="/static/js/wisply/connection.js"></script>
 
 {{ if .currentAccount.Administrator }}
-<script src="/static/js/wisply/Admin.js"></script>
+<script src="/static/js/admin/admin.js"></script>
 {{end}}
 {{ end }}
 

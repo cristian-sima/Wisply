@@ -70,7 +70,7 @@ func (controller *AccountController) Delete() {
 
 // It shows the form to modify an account
 func (controller *AccountController) showModifyForm(account *auth.Account) {
-	controller.GenerateXsrf()
+	controller.GenerateXSRF()
 	controller.Data["accountName"] = account.Name
 	if account.Administrator {
 		controller.Data["isAdministrator"] = true

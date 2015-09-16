@@ -36,7 +36,7 @@ func (controller *AuthController) ShowRegisterForm() {
 
 // It shows a form indicated by the parameter name. It can be "login" or "register"
 func (controller *AuthController) showForm(name string) {
-	controller.GenerateXsrf()
+	controller.GenerateXSRF()
 	controller.TplNames = "site/auth/" + name + ".tpl"
 	controller.Layout = "site/layout.tpl"
 }

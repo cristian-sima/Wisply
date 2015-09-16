@@ -124,7 +124,7 @@ func (controller *SourceController) showAddForm() {
 }
 
 func (controller *SourceController) showForm(action string, legend string) {
-	controller.GenerateXsrf()
+	controller.GenerateXSRF()
 	controller.Data["action"] = action
 	controller.Data["legend"] = legend
 	controller.Data["actionURL"] = ""

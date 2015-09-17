@@ -53,17 +53,8 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 	timestamp = getCurrentTimestamp()
 
 	sql := "INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)"
-	query, err := wisply.Database.Prepare(sql)
-
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = query.Exec("NULL", strconv.Itoa(account.ID), value, timestamp)
-
-	if err != nil {
-		panic(err)
-	}
+	query, _ := wisply.Database.Prepare(sql)
+	query.Exec("NULL", strconv.Itoa(account.ID), value, timestamp)
 
 	intTimestamp, _ := strconv.Atoi(timestamp)
 	token := Token{

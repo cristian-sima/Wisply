@@ -1,6 +1,6 @@
 # Wisply
 
-![Wisply](http://wisply.me/static/img/logo.jpg)
+![Wisply](http://wisply.me/static/img/wisply/logo.jpg)
 
 
 Building the hive of education

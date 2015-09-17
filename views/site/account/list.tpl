@@ -22,21 +22,21 @@
           {{range $index, $element := .accounts}}
           {{$safe := $element.Email|html}}
           <tr>
-            <td class="hidden-xs">{{ $element.Id |html }}</td>
+            <td class="hidden-xs">{{ $element.ID |html }}</td>
             <td>{{ $element.Name |html }}</td>
             <td><a href="mailto:{{ $safe }}">{{ $element.Email |html }}</a></td>
             <td>
-              {{ if $element.Administrator }}
+              {{ if $element.IsAdministrator }}
               <span class="label label-info">Administrator</span>
               {{ else }}
               <span class="label label-default">User</span>
               {{ end }}
             </td>
             <td>
-              <a href="/admin/accounts/modify/{{$element.Id}}">Modify</a>
+              <a href="/admin/accounts/modify/{{$element.ID}}">Modify</a>
             </td>
             <td>
-              <a class="deleteAccountButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a>
+              <a class="deleteAccountButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
             </td>
           </tr>
           {{end }}

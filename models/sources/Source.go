@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Source represents a source for resources
@@ -18,35 +18,32 @@ type Source struct {
 
 // Delete removes the source from database
 func (source *Source) Delete() error {
-	elememts := []string{
-		strconv.Itoa(source.ID),
-	}
-	_, err := wisply.Database.Raw("DELETE from `source` WHERE id=?", elememts).Exec()
+	sql := "DELETE from `source` WHERE id=?"
+	query, err := database.Database.Prepare(sql)
+	query.Exec(strconv.Itoa(source.ID))
 	return err
 }
 
 // Modify changes the details of the source
 func (source *Source) Modify(sourceDetails map[string]interface{}) (adapter.WisplyError, error) {
-
 	var problem = adapter.WisplyError{}
-
 	result := hasValidDetails(sourceDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
 		return problem, errors.New("It does not have valid details")
 	}
-
-	err := source.update(sourceDetails)
-
+	err := source.updateDatabase(sourceDetails)
 	return problem, err
 }
 
-func (source *Source) update(sourceDetails map[string]interface{}) error {
-	stringElements := []string{sourceDetails["name"].(string),
-		sourceDetails["description"].(string),
-		sourceDetails["url"].(string),
-		strconv.Itoa(source.ID),
-	}
-	_, err := wisply.Database.Raw("UPDATE `source` SET name=?, description=?, url=? WHERE id=?", stringElements).Exec()
+func (source *Source) updateDatabase(sourceDetails map[string]interface{}) error {
+	name := sourceDetails["name"].(string)
+	description := sourceDetails["description"].(string)
+	url := sourceDetails["url"].(string)
+	id := strconv.Itoa(source.ID)
+
+	sql := "UPDATE `source` SET name=?, description=?, url=? WHERE id=?"
+	query, _ := database.Database.Prepare(sql)
+	_, err := query.Exec(name, description, url, id)
 	return err
 }

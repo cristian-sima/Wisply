@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Model contains the main operations for sources
@@ -14,7 +14,14 @@ type Model struct {
 // GetAll returns an array of Source with all sources
 func (model *Model) GetAll() []Source {
 	var list []Source
-	wisply.Database.Raw("SELECT id, name, url, description FROM source").QueryRows(&list)
+	sql := "SELECT id, name, url, description FROM source"
+	rows, _ := database.Database.Query(sql)
+	for rows.Next() {
+		source := Source{}
+		rows.Scan(&source.ID, &source.Name, &source.URL, &source.Description)
+		list = append(list, source)
+	}
+
 	return list
 }
 
@@ -26,7 +33,9 @@ func (model *Model) NewSource(ID string) (*Source, error) {
 	if !isValid.IsValid {
 		return source, errors.New("Validation invalid")
 	}
-	err := wisply.Database.Raw("SELECT id, name, url, description FROM source WHERE id = ?", ID).QueryRow(&source)
+	sql := "SELECT id, name, url, description FROM source WHERE id = ?"
+	query, err := database.Database.Prepare(sql)
+	query.QueryRow(ID).Scan(&source.ID, &source.Name, &source.URL, &source.Description)
 	if err != nil {
 		return source, errors.New("No source like that")
 	}
@@ -44,11 +53,12 @@ func (model *Model) InsertNewSource(sourceDetails map[string]interface{}) (adapt
 		return problem, errors.New("Error")
 	}
 
-	stringElements := []string{sourceDetails["name"].(string),
-		sourceDetails["description"].(string),
-		sourceDetails["url"].(string)}
-	_, err := wisply.Database.Raw("INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)", stringElements).Exec()
-
+	name := sourceDetails["name"].(string)
+	description := sourceDetails["description"].(string)
+	url := sourceDetails["url"].(string)
+	sql := "INSERT INTO `source` (`name`, `description`, `url`) VALUES (?, ?, ?)"
+	query, err := database.Database.Prepare(sql)
+	query.Exec(name, description, url)
 	if err != nil {
 		problem.Message = "No source like that"
 		return problem, errors.New("Error")
@@ -60,6 +70,7 @@ func (model *Model) InsertNewSource(sourceDetails map[string]interface{}) (adapt
 // CountSources returns the number of sources
 func CountSources() int {
 	var number int
-	wisply.Database.Raw("SELECT count(*) FROM source").QueryRow(&number)
+	query, _ := database.Database.Prepare("SELECT count(*) FROM source")
+	query.QueryRow().Scan(&number)
 	return number
 }

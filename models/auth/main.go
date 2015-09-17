@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -143,11 +142,8 @@ func GetAccountByEmail(email string) (*Account, error) {
 	}
 
 	sql := "SELECT id, name, password, email, administrator FROM account WHERE email = ? "
-	fmt.Println(wisply.Database)
 	query, err := wisply.Database.Prepare(sql)
 	query.QueryRow(email).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
-
-	fmt.Println(account)
 
 	if err != nil {
 		return &account, errors.New("No such account")

@@ -2,18 +2,21 @@ package auth
 
 import (
 	"errors"
-	. "github.com/cristian-sima/Wisply/models/adapter"
-	. "github.com/cristian-sima/Wisply/models/wisply"
+
+	adapter "github.com/cristian-sima/Wisply/models/adapter"
+	wisply "github.com/cristian-sima/Wisply/models/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Register It manages the operations for creating a new account
 type Register struct {
 }
 
-func (register *Register) Try(userDetails map[string]interface{}) (WisplyError, error) {
-	var problem = WisplyError{}
+// Try It tries to create a new account
+func (register *Register) Try(userDetails map[string]interface{}) (adapter.WisplyError, error) {
+	var problem = adapter.WisplyError{}
 
-	registerDetails := IsValidRegister(userDetails)
+	registerDetails := isValidRegister(userDetails)
 	if !registerDetails.IsValid {
 		problem.Data = registerDetails.Errors
 		return problem, errors.New("Error")
@@ -26,12 +29,13 @@ func (register *Register) Try(userDetails map[string]interface{}) (WisplyError, 
 		return problem, errors.New("Error")
 	}
 
-	register.CreateNewAccount(userDetails)
+	register.createNewAccount(userDetails)
 
 	return problem, nil
 }
 
-func (register *Register) CreateNewAccount(details map[string]interface{}) error {
+// It creates the new account
+func (register *Register) createNewAccount(details map[string]interface{}) error {
 	var name, unsafePassword, hashedPassword, email, isAdministrator string
 
 	isAdministrator = "false"
@@ -40,13 +44,9 @@ func (register *Register) CreateNewAccount(details map[string]interface{}) error
 	email = details["email"].(string)
 	hashedPassword = register.getHashedPassword(unsafePassword)
 
-	elements := []string{
-		name,
-		hashedPassword,
-		email,
-		isAdministrator,
-	}
-	_, err := Database.Raw("INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)", elements).Exec()
+	sql := "INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)"
+	query, err := wisply.Database.Prepare(sql)
+	query.Exec(name, hashedPassword, email, isAdministrator)
 	return err
 }
 
@@ -62,10 +62,12 @@ func (register *Register) getHashedPassword(plainPassword string) string {
 }
 
 func (register *Register) checkEmailExists(email string) bool {
-
+	var exists bool
 	sql := "SELECT id FROM account WHERE email = ?"
-	elements := []string{
-		email,
+	query, err := wisply.Database.Prepare(sql)
+	if err != nil {
+		panic(err)
 	}
-	return IsEmptyQuery(sql, elements)
+	query.QueryRow(email).Scan(&email)
+	return exists
 }

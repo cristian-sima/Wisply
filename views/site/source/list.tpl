@@ -33,13 +33,13 @@
           {{$safe := $element.Name|html}}
           <tr>
             <td>{{ $element.Name |html }}</td>
-            <td><a href="{{ $element.Url }}" target="_blank">{{ $element.Url |html }}</a></td>
+            <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>
             <td>
-              <a href="/admin/sources/modify/{{$element.Id}}">Modify</a>
+              <a href="/admin/sources/modify/{{$element.ID}}">Modify</a>
             </td>
             <td>
-              <a class="deleteSourceButton" data-id="{{$element.Id}}" data-name="{{$safe}}" href="/">Delete</a>
+              <a class="deleteSourceButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
             </td>
           </tr>
           {{end }}
@@ -51,4 +51,4 @@
     {{ end }}
   </div>
 </div>
-<script src="/static/js/source/list.js"></script>
+<script src="/static/js/admin/source/list.js"></script>

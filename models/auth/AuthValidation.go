@@ -1,8 +1,8 @@
 package auth
 
 import (
-	. "github.com/cristian-sima/Wisply/models/adapter"
-	. "github.com/cristian-sima/validity"
+	wisply "github.com/cristian-sima/Wisply/models/adapter"
+	validity "github.com/cristian-sima/validity"
 )
 
 var (
@@ -15,46 +15,46 @@ var (
 	}
 )
 
-func IsValidRegister(rawData map[string]interface{}) *ValidationResults {
-	rules := ValidationRules{
+func isValidRegister(rawData map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
 		"name":     rules["name"],
 		"password": rules["password"],
 		"email":    rules["email"],
 	}
-	return Validate(rawData, rules)
+	return wisply.Validate(rawData, rules)
 }
 
-func IsValidLogin(rawData map[string]interface{}) *ValidationResults {
-	rules := ValidationRules{
+func isValidLogin(rawData map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
 		"email":    rules["email"],
 		"password": rules["password"],
 	}
-	return Validate(rawData, rules)
+	return wisply.Validate(rawData, rules)
 }
 
-func IsValidAdminType(email string) *ValidationResults {
+func isValidAdminType(email string) *validity.ValidationResults {
 	data := make(map[string]interface{})
 	data["email"] = email
-	rules := ValidationRules{
+	rules := validity.ValidationRules{
 		"administrator": rules["administrator"],
 	}
-	return Validate(data, rules)
+	return wisply.Validate(data, rules)
 }
 
-func IsValidEmail(email string) *ValidationResults {
+func isValidEmail(email string) *validity.ValidationResults {
 	data := make(map[string]interface{})
 	data["email"] = email
-	rules := ValidationRules{
+	rules := validity.ValidationRules{
 		"email": rules["email"],
 	}
-	return Validate(data, rules)
+	return wisply.Validate(data, rules)
 }
 
-func IsValidId(id string) *ValidationResults {
+func isValidID(id string) *validity.ValidationResults {
 	data := make(map[string]interface{})
 	data["id"] = id
-	rules := ValidationRules{
+	rules := validity.ValidationRules{
 		"id": rules["id"],
 	}
-	return Validate(data, rules)
+	return wisply.Validate(data, rules)
 }

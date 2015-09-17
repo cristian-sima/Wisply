@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
-	. "github.com/cristian-sima/Wisply/models/database"
-	_ "github.com/cristian-sima/Wisply/routers"
 	"html/template"
 	"net/http"
+
+	"github.com/astaxie/beego"
+	database "github.com/cristian-sima/Wisply/models/database"
+	_ "github.com/cristian-sima/Wisply/routers"
 )
 
 func init() {
-	database := new(Database)
+	database := database.Db{}
 	database.Init()
 }
 

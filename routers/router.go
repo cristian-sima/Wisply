@@ -61,7 +61,7 @@ func init() {
 
 	adminNamespace :=
 		beego.NewNamespace("/admin",
-			beego.NSRouter("", &controllers.AdminController{}, "*:ShowDashboard"),
+			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
 			sourcesNamespace,
 			accountsNamespace,
 		)

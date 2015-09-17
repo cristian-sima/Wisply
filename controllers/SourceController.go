@@ -1,18 +1,21 @@
 package controllers
 
 import (
-	SourcesModel "github.com/cristian-sima/Wisply/models/sources"
 	"strings"
+
+	SourcesModel "github.com/cristian-sima/Wisply/models/sources"
 )
 
+// SourceController It manages the operations for sources (list, delete, add)
 type SourceController struct {
 	AdminController
 	model SourcesModel.Model
 }
 
+// ListSources It shows all the sources
 func (controller *SourceController) ListSources() {
 
-	var exists bool = false
+	var exists bool
 
 	list := controller.model.GetAll()
 
@@ -24,10 +27,12 @@ func (controller *SourceController) ListSources() {
 	controller.Layout = "site/admin.tpl"
 }
 
+// AddNewSource It shows the form to add a new source
 func (controller *SourceController) AddNewSource() {
 	controller.showAddForm()
 }
 
+// InsertSource It inserts a source in the database
 func (controller *SourceController) InsertSource() {
 
 	sourceDetails := make(map[string]interface{})
@@ -43,13 +48,14 @@ func (controller *SourceController) InsertSource() {
 	}
 }
 
+// Modify It shows the form to modify a source's details
 func (controller *SourceController) Modify() {
 
-	var id string
+	var ID string
 
-	id = controller.Ctx.Input.Param(":id")
+	ID = controller.Ctx.Input.Param(":id")
 
-	source, err := controller.model.NewSource(id)
+	source, err := controller.model.NewSource(ID)
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -57,24 +63,25 @@ func (controller *SourceController) Modify() {
 		sourceDetails := map[string]string{
 			"Name":        source.Name,
 			"Description": source.Description,
-			"Url":         source.Url,
+			"Url":         source.URL,
 		}
 		controller.showModifyForm(sourceDetails)
 	}
 }
 
+// Update It updates a source in the database
 func (controller *SourceController) Update() {
 
-	var sourceId string
+	var ID string
 	sourceDetails := make(map[string]interface{})
 
-	sourceId = controller.Ctx.Input.Param(":id")
+	ID = controller.Ctx.Input.Param(":id")
 
 	sourceDetails["name"] = strings.TrimSpace(controller.GetString("source-name"))
 	sourceDetails["description"] = strings.TrimSpace(controller.GetString("source-description"))
 	sourceDetails["url"] = strings.TrimSpace(controller.GetString("source-URL"))
 
-	source, err := controller.model.NewSource(sourceId)
+	source, err := controller.model.NewSource(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
@@ -87,11 +94,12 @@ func (controller *SourceController) Update() {
 	}
 }
 
+// Delete It deletes the source specified by parameter id
 func (controller *SourceController) Delete() {
-	var id string
-	id = controller.Ctx.Input.Param(":id")
+	var ID string
+	ID = controller.Ctx.Input.Param(":id")
 
-	source, err := controller.model.NewSource(id)
+	source, err := controller.model.NewSource(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
@@ -116,7 +124,7 @@ func (controller *SourceController) showAddForm() {
 }
 
 func (controller *SourceController) showForm(action string, legend string) {
-	controller.GenerateXsrf()
+	controller.GenerateXSRF()
 	controller.Data["action"] = action
 	controller.Data["legend"] = legend
 	controller.Data["actionURL"] = ""

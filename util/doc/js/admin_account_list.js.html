@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: admin/account/list.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: admin/account/list.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global jQuery,$, wisply */
+
+/**
+* @file Encapsulates the functionality for managing the accounts
+* @author Cristian Sima
+*/
+
+
+/**
+* @namespace Accounts
+*/
+var Accounts = function () {
+  'use strict';
+
+  /**
+  * The constructor does nothing
+  * @class
+  * @memberof Accounts
+  * @classdesc It represents a Wisply account
+  * @param {number} id   The id of the account
+  * @param {string} name The name of the account
+  */
+  var Account = function Account(id, name) {
+    this.id = id;
+    this.name = name;
+  };
+
+  /**
+  * The constructor activates the listeners
+  * @class Manager
+  * @memberof Accounts
+  * @classdesc It encapsulets the functions for accounts.
+  */
+  var Manager = function Manager() {
+    this.activateListeners();
+  };
+  /**
+  * @memberof Manager
+  */
+  Manager.prototype =
+  /** @lends Accounts.Manager */
+  {
+    /**
+    * It activates the listener for all delete buttons
+    * @fires AccountsManager#confirmDelete
+    */
+    activateListeners: function () {
+      $(".deleteAccountButton").click(confirmDelete);
+    },
+    /**
+    * It requests the user to confirm
+    * @param  {Account} account  The Account object to be deleted
+    */
+    confirmDelete: function (account) {
+      var msg = this.getDialogMessage(account);
+      wisply.message.dialog(msg);
+    },
+    /**
+    * It returns the arguements of the confimation message
+    * @param  {Account} account The Account object to be deleted
+    * @return {object}         The arguements of the confimation message
+    */
+    getDialogMessage: function (account) {
+      var buttons,
+      cancelButton,
+      msg,
+      mainButton;
+
+      cancelButton = {
+        label: "Cancel",
+        className: "btn-default",
+        callback: function () {
+          this.modal('hide');
+        }
+      };
+      mainButton = {
+        label: "Delete",
+        className: "btn-primary",
+        callback: function () {
+          wisply.accountsManager.delete(account);
+        }
+      };
+      buttons = {
+        "cancel": cancelButton,
+        "main": mainButton
+      };
+      msg = {
+        title: "Please confirm!",
+        message: "The account &lt;b>" + account.name + "&lt;/b> will be permanently removed. Are you sure?",
+        onEscape: true,
+        buttons: buttons
+      };
+      return msg;
+    },
+    /**
+    * It delets a user
+    * @param  {Account} account The account to be deleted
+    */
+    delete: function (account) {
+      var request,
+      successCallback,
+      errorCallback;
+
+      /**
+      * It is called when the deletion has been done. It reloads the page in 2 seconds
+      * @ignore
+      */
+      successCallback =  function () {
+        wisply.message.showSuccess("The account has been removed! Refreshing page...");
+        wisply.reloadPage();
+      };
+
+      /**
+      * It is called when there has been problems
+      * @ignore
+      */
+      errorCallback = function () {
+        wisply.message.showError("There was a problem with your request!");
+      };
+
+      request = {
+        "url": '/admin/accounts/delete/' + account.id,
+        "success": successCallback,
+        "error": errorCallback
+      };
+      wisply.executePostAjax(request);
+    }
+  };
+
+  /**
+  * It is called when the user clicks the delete button. It requests the user to confirm
+  * @event AccountsManager#confirmDelete
+  */
+  function confirmDelete() {
+    event.preventDefault();
+    var instance,
+    name,
+    id,
+    account;
+    instance = $(this);
+    id = instance.data("id");
+    name = instance.data("name");
+    account = new Account(id, name);
+    wisply.accountsManager.confirmDelete(account);
+  }
+
+  return {
+    Manager: Manager,
+    Account: Account
+  };
+};
+jQuery(document).ready(function() {
+  "use strict";
+  var module = new Accounts();
+  wisply.accountsManager = new module.Manager();
+  wisply.accountsManager.init();
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Sources.Manager.html">Manager</a></li><li><a href="Sources.Source.html">Source</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Sources.html">Sources</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Sep 16 2015 15:40:10 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

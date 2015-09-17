@@ -1,8 +1,8 @@
 package sources
 
 import (
-	. "github.com/cristian-sima/Wisply/models/adapter"
-	. "github.com/cristian-sima/validity"
+	adapter "github.com/cristian-sima/Wisply/models/adapter"
+	validity "github.com/cristian-sima/validity"
 )
 
 var (
@@ -14,20 +14,20 @@ var (
 	}
 )
 
-func HasValidDetails(details map[string]interface{}) *ValidationResults {
-	rules := ValidationRules{
+func hasValidDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
 		"name":     rules["name"],
 		"password": rules["password"],
 		"email":    rules["email"],
 	}
-	return Validate(details, rules)
+	return adapter.Validate(details, rules)
 }
 
-func IsValidId(id string) *ValidationResults {
+func isValidID(ID string) *validity.ValidationResults {
 	data := make(map[string]interface{})
-	data["id"] = id
-	rules := ValidationRules{
+	data["id"] = ID
+	rules := validity.ValidationRules{
 		"id": rules["id"],
 	}
-	return Validate(data, rules)
+	return adapter.Validate(data, rules)
 }

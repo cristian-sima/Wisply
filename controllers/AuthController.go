@@ -1,20 +1,25 @@
 package controllers
 
 import (
-	. "github.com/cristian-sima/Wisply/models/auth"
 	"strconv"
 	"strings"
+
+	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
+// AuthController It inherits the WisplyController
+// It manages the operations with the authentication
 type AuthController struct {
 	WisplyController
-	Model AuthModel
+	Model auth.Model
 }
 
+// Prepare It calls the WisplyController Prepare method
 func (controller *AuthController) Prepare() {
 	controller.WisplyController.Prepare()
 }
 
+// ShowLoginForm It shows the login form
 func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {
 		controller.Redirect("/", 302)
@@ -24,42 +29,52 @@ func (controller *AuthController) ShowLoginForm() {
 	}
 }
 
+// ShowRegisterForm It shows the form to register a new account
 func (controller *AuthController) ShowRegisterForm() {
 	controller.showForm("register")
 }
 
+// It shows a form indicated by the parameter name. It can be "login" or "register"
 func (controller *AuthController) showForm(name string) {
-	controller.GenerateXsrf()
+	controller.GenerateXSRF()
 	controller.TplNames = "site/auth/" + name + ".tpl"
 	controller.Layout = "site/layout.tpl"
 }
 
+// CreateNewAccount It checks if the password and the confirmation are the same
+// If so it sends the details of the user to processRegisterRequest
+// The parameters should be: register-name, register-password, register-email and register-password-confirm
 func (controller *AuthController) CreateNewAccount() {
-	var name, password, confirmPassowrd, email string
 
-	name = strings.TrimSpace(controller.GetString("register-name"))
-	password = strings.TrimSpace(controller.GetString("register-password"))
-	email = strings.TrimSpace(controller.GetString("register-email"))
-	confirmPassowrd = strings.TrimSpace(controller.GetString("register-password-confirm"))
+	confirmPassowrd := strings.TrimSpace(controller.GetString("register-password-confirm"))
+	password := strings.TrimSpace(controller.GetString("register-password"))
 
 	userDetails := make(map[string]interface{})
-	userDetails["name"] = name
+	userDetails["name"] = strings.TrimSpace(controller.GetString("register-name"))
 	userDetails["password"] = password
-	userDetails["email"] = email
+	userDetails["email"] = strings.TrimSpace(controller.GetString("register-email"))
 
 	if confirmPassowrd != password {
 		controller.DisplaySimpleError("The passwords do not match!")
 	} else {
-		register := Register{}
-		problem, err := register.Try(userDetails)
-		if err != nil {
-			controller.DisplayError(problem)
-		} else {
-			controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
-		}
+		controller.processRegisterRequest(userDetails)
 	}
 }
 
+// It
+func (controller *AuthController) processRegisterRequest(userDetails map[string]interface{}) {
+
+	register := auth.Register{}
+	problem, err := register.Try(userDetails)
+	if err != nil {
+		controller.DisplayError(problem)
+	} else {
+		controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
+	}
+
+}
+
+// LoginAccount It checks if the details provided are good and it logins the account
 func (controller *AuthController) LoginAccount() {
 
 	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
@@ -69,12 +84,12 @@ func (controller *AuthController) LoginAccount() {
 	loginDetails["email"] = strings.TrimSpace(controller.GetString("login-email"))
 	loginDetails["password"] = strings.TrimSpace(controller.GetString("login-password"))
 
-	login := Login{}
+	login := auth.Login{}
 	problems, err := login.Try(loginDetails)
 	if err != nil {
 		controller.DisplayError(problems)
 	} else {
-		account, _ := GetAccountByEmail(loginDetails["email"].(string))
+		account, _ := auth.GetAccountByEmail(loginDetails["email"].(string))
 		if rememberMe == "on" {
 			controller.rememberConnection(account)
 		}
@@ -82,32 +97,36 @@ func (controller *AuthController) LoginAccount() {
 	}
 }
 
-func (controller *AuthController) connectAccount(account *Account, sendMeAddress string) {
+// connectAccount It creates a session for the account and redirects
+func (controller *AuthController) connectAccount(account *auth.Account, sendMeAddress string) {
 	controller.saveLoginDetails(account)
 	controller.safeRedilectAccount(sendMeAddress)
 }
 
-func (controller *AuthController) saveLoginDetails(account *Account) {
-	accountId := strconv.Itoa(account.Id)
-	controller.SetSession("account-id", accountId)
+// saveLoginDetails It creates a new session for the account
+func (controller *AuthController) saveLoginDetails(account *auth.Account) {
+	accountID := strconv.Itoa(account.ID)
+	controller.SetSession("account-id", accountID)
 }
 
-func (controller *AuthController) rememberConnection(account *Account) {
-
-	cookieName := Settings["cookieName"].(string)
+// rememberConnection It remember the account by using a connection cookie
+func (controller *AuthController) rememberConnection(account *auth.Account) {
+	cookieName := auth.Settings["cookieName"].(string)
 	cookie := account.GenerateConnectionCookie()
 	controller.deleteConnectionCookie()
 	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 
+// safeRedilectAccount It gets the safe address to redirect the account and redirects
 func (controller *AuthController) safeRedilectAccount(sendMe string) {
 	var safeAddress string
 	safeAddress = controller.getSafeURL(sendMe)
 	controller.Redirect(safeAddress, 302)
 }
 
+// getSafeURL It
 func (controller *AuthController) getSafeURL(urlToTest string) string {
-	var safeURL string = ""
+	var safeURL string
 	if urlToTest == "" || urlToTest == "/auth/login/" || urlToTest == "/auth/login" {
 		safeURL = "/"
 	} else {
@@ -126,6 +145,7 @@ func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
 	return isSafe
 }
 
+// Logout It logs out the account
 func (controller *AuthController) Logout() {
 	controller.distroySession()
 	controller.deleteConnectionCookie()

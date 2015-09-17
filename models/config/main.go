@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// GetDatabase returns the configuration of database
 func GetDatabase() *SQLConfiguration {
 	conf := new(SQLConfiguration)
 	path := conf.GetPath()

@@ -4,32 +4,42 @@ import (
 	model "github.com/cristian-sima/Wisply/models/admin"
 )
 
+// AdminController This controller must be inherited by all the pages that are for administrators
+// It ensures that an account is connected when accesing the page
 type AdminController struct {
 	WisplyController
 }
 
-func (c *AdminController) ShowDashboard() {
-	dashboard := model.GetDashboard()
-	c.Data["numberOfAccounts"] = dashboard.Accounts
-	c.Data["numberOfSources"] = dashboard.Sources
-	c.Layout = "site/admin.tpl"
-	c.TplNames = "site/admin/dashboard.tpl"
+// DisplayDashboard It shows the administrator dashboard
+func (controller *AdminController) DisplayDashboard() {
+	dashboard := model.NewDashboard()
+	controller.Data["numberOfAccounts"] = dashboard.Accounts
+	controller.Data["numberOfSources"] = dashboard.Sources
+	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/admin/dashboard.tpl"
 }
 
+// Prepare If the account is not connect it redirects to a login page, else it loads the page
 func (controller *AdminController) Prepare() {
 	controller.WisplyController.Prepare()
-	if !controller.AccountConnected || !controller.Account.IsAdministrator() {
+	if !controller.AccountConnected || !controller.Account.IsAdministrator {
 		controller.redirectAccount()
 	} else {
 		controller.initPage()
 	}
 }
 
+// initPage it is called when an administrator is connected
 func (controller *AdminController) initPage() {
 	controller.Data["isAdminPage"] = true
 }
 
+// redirectAccount It redirects the account to the login page
 func (controller *AdminController) redirectAccount() {
-	var currentPage string = controller.Ctx.Request.URL.Path
-	controller.Redirect("/auth/login?sendMe="+currentPage, 302)
+
+	loginPath := "/auth/login"
+	addressParameter := "sendMe"
+
+	currentPage := controller.Ctx.Request.URL.Path
+	controller.Redirect(loginPath+"?"+addressParameter+"="+currentPage, 302)
 }

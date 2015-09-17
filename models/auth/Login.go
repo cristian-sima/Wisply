@@ -2,20 +2,23 @@ package auth
 
 import (
 	"errors"
-	. "github.com/cristian-sima/Wisply/models/adapter"
+
+	adapter "github.com/cristian-sima/Wisply/models/adapter"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Login It manages the login operations
 type Login struct {
 }
 
-func (login *Login) Try(loginDetails map[string]interface{}) (WisplyError, error) {
+// Try It tries to log in the username
+func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyError, error) {
 
-	var genericMessage string = "There was a problem while login. We think the email or the password were not valid."
+	genericMessage := "There was a problem while login. We think the email or the password were not valid."
 
-	problem := WisplyError{}
+	problem := adapter.WisplyError{}
 
-	goodLoginDetails := IsValidLogin(loginDetails)
+	goodLoginDetails := isValidLogin(loginDetails)
 	if !goodLoginDetails.IsValid {
 		problem.Data = goodLoginDetails.Errors
 		return problem, errors.New("Error")

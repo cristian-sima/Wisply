@@ -1,0 +1,5 @@
+{
+  "source": {
+      "include": [ "W:/go-workspace/src/github.com/cristian-sima/Wisply/static/js" ]
+  }
+}

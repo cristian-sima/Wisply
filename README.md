@@ -101,6 +101,8 @@ Wisply provides several utilities which you can use during the development proce
 * **Test Wisply** - It shows a command promt with the result of testing Wisply. In case the tests were not good, the user can type `y` to re-test Wisply, or type any other character to exit.
 *  **Start goconvey** - It is a shortcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing (you need to install this first).
 *  **CommitSQL** - When it is executed it exports the entire SQL database scheme (without data) to the file `util/ubuntu/install/src/sql/Wisply.sql`. Thus, it can be used to quickly update the database schema.
+* **GenerateJsDoc** - A shortcut to the JSDoc generated which generates the HTML documentation for JavaScript code. (Please edit the `conf.json` and change the paths to yours)
+
 
 #### Set up utilities
 
@@ -140,3 +142,19 @@ Wisply is evolving. You may want to get the last version on your server, but ins
 The update is not affecting the current configuration (information about database, about server) and does not delete the existing data from database.
 
 **Note**: In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)
+
+# Documentation
+
+Wisply considers that documentation is an essential element to maintain an application. The software provides a lot of information regarding documentation.
+
+## Go
+
+Every method or property that is exported is well documented. You can see all the documentation by runnning the `go fmt`
+The documentation is according to the official google style. You can find it  [here](	http://blog.golang.org/godoc-documenting-go-code).
+
+## JavaScript
+
+JavaScript has a lot of documentation. The documentation passes the guidelines of [JSDoc](http://usejsdoc.org/). The documentation can be accessed in browser (see bellow). The HTML files have been generated using [JSDoc 3](https://github.com/jsdoc3/jsdoc). The html file are in the directory `util/doc/js`.
+
+**Note!**
+* Due to security reasons, the JavaScript documentation *can't* be accessed using the Wisply server (for instance http://wisply.me/doc/js). You can access it by using the absolute path in your browser (C:\path\util\doc\js\index.html for Windows)

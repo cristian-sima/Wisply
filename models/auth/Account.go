@@ -4,22 +4,17 @@ import (
 	"errors"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/database"
 	"github.com/nu7hatch/gouuid"
 )
 
 // Account It represents an account
 type Account struct {
-	ID            int
-	Name          string
-	Password      string
-	Email         string
-	Administrator bool
-}
-
-// IsAdministrator It checks if it the account is an administrator
-func (account *Account) IsAdministrator() bool {
-	return account.Administrator
+	ID              int
+	Name            string
+	Password        string
+	Email           string
+	IsAdministrator bool
 }
 
 // ChangeType It changes the type of the account
@@ -30,11 +25,20 @@ func (account *Account) ChangeType(isAdministrator string) error {
 		return errors.New("Not a valid type")
 	}
 
-	stringElements := []string{
-		isAdministrator,
-		strconv.Itoa(account.ID),
+	err := account.modifyStatus(isAdministrator)
+	return err
+}
+
+func (account *Account) modifyStatus(isAdministrator string) error {
+
+	stmt, err := wisply.Database.Prepare("UPDATE `account` SET administrator=? WHERE id=?")
+	if err != nil {
+		panic(err)
 	}
-	_, err := wisply.Database.Raw("UPDATE `account` SET administrator=? WHERE id=?", stringElements).Exec()
+	_, err = stmt.Exec(isAdministrator, strconv.Itoa(account.ID))
+	if err != nil {
+		panic(err)
+	}
 	return err
 }
 
@@ -48,13 +52,14 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 
 	timestamp = getCurrentTimestamp()
 
-	elementsInsert := []string{
-		"NULL",
-		strconv.Itoa(account.ID),
-		value,
-		timestamp,
+	sql := "INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)"
+	query, err := wisply.Database.Prepare(sql)
+
+	if err != nil {
+		panic(err)
 	}
-	_, err := wisply.Database.Raw("INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)", elementsInsert).Exec()
+
+	_, err = query.Exec("NULL", strconv.Itoa(account.ID), value, timestamp)
 
 	if err != nil {
 		panic(err)
@@ -78,9 +83,14 @@ func (account *Account) GenerateConnectionCookie() *Cookie {
 
 // Delete It delets the account
 func (account *Account) Delete() error {
-	elememts := []string{
-		strconv.Itoa(account.ID),
+
+	sql := "DELETE from `account` WHERE id=?"
+
+	query, _ := wisply.Database.Prepare(sql)
+	_, err := query.Exec(strconv.Itoa(account.ID))
+
+	if err != nil {
+		panic(err)
 	}
-	_, err := wisply.Database.Raw("DELETE from `account` WHERE id=?", elememts).Exec()
 	return err
 }

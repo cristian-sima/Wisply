@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"html/template"
 
 	auth "github.com/cristian-sima/Wisply/models/auth"
@@ -25,7 +26,6 @@ func (controller *WisplyController) GenerateXSRF() {
 // Prepare It checks the state of connection and inits the database
 func (controller *WisplyController) Prepare() {
 	controller.initState()
-	wisply.InitDatabase()
 }
 
 func (controller *WisplyController) initState() {
@@ -70,6 +70,8 @@ func (controller *WisplyController) initDisconnectedState() {
 
 func (controller *WisplyController) initConnectedState(id string) {
 	account, _ := auth.NewAccount(id)
+	fmt.Println("aici")
+	fmt.Println(account)
 	controller.Account = account
 	controller.AccountConnected = true
 	controller.Data["accountConnected"] = true

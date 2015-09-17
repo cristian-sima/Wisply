@@ -15,7 +15,7 @@
 {{ if .accountConnected }}
 <script src="/static/js/wisply/connection.js"></script>
 
-{{ if .currentAccount.Administrator }}
+{{ if .currentAccount.IsAdministrator }}
 <script src="/static/js/admin/admin.js"></script>
 {{end}}
 {{ end }}

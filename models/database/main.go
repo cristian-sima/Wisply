@@ -1,28 +1,32 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 
-	"github.com/astaxie/beego/orm"
 	config "github.com/cristian-sima/Wisply/models/config"
 
-	// used by orm
+	// the driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Database manages the connection to database
-type Database struct {
+// Database It represents the connection to the database
+var (
+	Database *sql.DB
+)
+
+// Db manages the connection to database
+type Db struct {
 }
 
 // Init registers the driver and tries to connect to database
-func (database *Database) Init() {
-	orm.RegisterDriver("mysql", orm.DR_MySQL)
+func (database *Db) Init() {
 	go database.connect()
 }
 
 // It tries to connect to database. If it can not, tries again
-func (database *Database) connect() {
+func (database *Db) connect() {
 	var (
 		connected        bool
 		databaseString   string
@@ -33,8 +37,11 @@ func (database *Database) connect() {
 
 	for !connected {
 		fmt.Println("[INFO] Connecting to database...")
-		error := orm.RegisterDataBase("default", "mysql", databaseString)
-		if error == nil {
+		db, err := sql.Open("mysql", databaseString)
+		Database = db
+		// Open doesn't open a connection. Validate DSN data:
+		err = db.Ping()
+		if err == nil {
 			fmt.Println("[SUCCESS]: Connected to database!")
 			fmt.Println("")
 			connected = true
@@ -44,10 +51,9 @@ func (database *Database) connect() {
 			time.Sleep(delayMiliseconds * time.Millisecond)
 		}
 	}
-
 }
 
-func (database *Database) getString() string {
+func (database *Db) getString() string {
 	var (
 		mysqlAddress   string
 		databaseString string

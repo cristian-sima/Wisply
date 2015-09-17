@@ -4,11 +4,12 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Settings The authentication's settings
@@ -22,7 +23,6 @@ var Settings = map[string]interface{}{
 
 // Model It encapsulates all the main operations for authentication
 type Model struct {
-	wisply.Model
 }
 
 // ReConnect It tries to reconnect the user using the value from the connection cookiePath
@@ -52,10 +52,6 @@ func ReConnect(plainCookie string) (string, error) {
 
 func isTokenValid(ID, hashedToken string) bool {
 
-	elements := []string{
-		ID,
-		hashedToken,
-	}
 	token := Token{}
 
 	if wisply.Database == nil {
@@ -63,7 +59,8 @@ func isTokenValid(ID, hashedToken string) bool {
 	}
 
 	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
-	err := wisply.Database.Raw(sql, elements).QueryRow(&token)
+	query, err := wisply.Database.Prepare(sql)
+	query.QueryRow(ID, hashedToken).Scan(&token)
 
 	if err != nil {
 		return false
@@ -84,23 +81,29 @@ func deleteOldTokens() {
 	duration = Settings["duration"].(int)
 	diff = now - duration
 
-	elementsDelete := []string{
-		strconv.Itoa(diff),
-	}
-	wisply.Database.Raw("DELETE from account_token WHERE timestamp < ?", elementsDelete).Exec()
+	query, _ := wisply.Database.Prepare("DELETE from account_token WHERE timestamp < ?")
+	query.Exec(strconv.Itoa(diff))
 }
 
 // GetAllAccounts It returns an array of Account with all the accounts
 func (model *Model) GetAllAccounts() []Account {
 	var list []Account
-	wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account").QueryRows(&list)
+	sql := "SELECT id, name, password, email, administrator FROM account"
+	rows, _ := wisply.Database.Query(sql)
+	for rows.Next() {
+		account := Account{}
+		rows.Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
+		list = append(list, account)
+	}
+
 	return list
 }
 
 // CountAccounts It returns the number of accounts
 func CountAccounts() int {
 	number := 0
-	wisply.Database.Raw("SELECT count(*) FROM account").QueryRow(&number)
+	query, _ := wisply.Database.Prepare("SELECT count(*) FROM account")
+	query.QueryRow().Scan(&number)
 	return number
 }
 
@@ -139,11 +142,12 @@ func GetAccountByEmail(email string) (*Account, error) {
 		return &account, errors.New("The id is not valid")
 	}
 
-	elements := []string{
-		email,
-	}
+	sql := "SELECT id, name, password, email, administrator FROM account WHERE email = ? "
+	fmt.Println(wisply.Database)
+	query, err := wisply.Database.Prepare(sql)
+	query.QueryRow(email).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 
-	err := wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE email = ? ", elements).QueryRow(&account)
+	fmt.Println(account)
 
 	if err != nil {
 		return &account, errors.New("No such account")
@@ -161,10 +165,9 @@ func NewAccount(ID string) (*Account, error) {
 	}
 	account := new(Account)
 
-	elements := []string{
-		ID,
-	}
-	err := wisply.Database.Raw("SELECT id, name, password, email, administrator FROM account WHERE id= ?", elements).QueryRow(&account)
+	sql := "SELECT id, name, password, email, administrator FROM account WHERE id= ?"
+	query, err := wisply.Database.Prepare(sql)
+	query.QueryRow(ID).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 
 	if err != nil {
 		return account, errors.New("Error")

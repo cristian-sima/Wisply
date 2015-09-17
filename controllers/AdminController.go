@@ -22,7 +22,7 @@ func (controller *AdminController) DisplayDashboard() {
 // Prepare If the account is not connect it redirects to a login page, else it loads the page
 func (controller *AdminController) Prepare() {
 	controller.WisplyController.Prepare()
-	if !controller.AccountConnected || !controller.Account.IsAdministrator() {
+	if !controller.AccountConnected || !controller.Account.IsAdministrator {
 		controller.redirectAccount()
 	} else {
 		controller.initPage()

@@ -33,7 +33,7 @@
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted"><a>Hi, <b>{{ .currentAccount.Name }}</b></a></li>
-        {{ if .currentAccount.Administrator }}
+        {{ if .currentAccount.IsAdministrator }}
         <li><a href="/admin">Admin</a></li>
         {{ end }}
         <li><a id="menu-logout-button" href="#">Logout</a></li>

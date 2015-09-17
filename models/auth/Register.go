@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -44,13 +44,9 @@ func (register *Register) createNewAccount(details map[string]interface{}) error
 	email = details["email"].(string)
 	hashedPassword = register.getHashedPassword(unsafePassword)
 
-	elements := []string{
-		name,
-		hashedPassword,
-		email,
-		isAdministrator,
-	}
-	_, err := wisply.Database.Raw("INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)", elements).Exec()
+	sql := "INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)"
+	query, err := wisply.Database.Prepare(sql)
+	query.Exec(name, hashedPassword, email, isAdministrator)
 	return err
 }
 
@@ -66,10 +62,12 @@ func (register *Register) getHashedPassword(plainPassword string) string {
 }
 
 func (register *Register) checkEmailExists(email string) bool {
-
+	var exists bool
 	sql := "SELECT id FROM account WHERE email = ?"
-	elements := []string{
-		email,
+	query, err := wisply.Database.Prepare(sql)
+	if err != nil {
+		panic(err)
 	}
-	return wisply.IsEmptyQuery(sql, elements)
+	query.QueryRow(email).Scan(&email)
+	return exists
 }

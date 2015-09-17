@@ -19,11 +19,6 @@ func IsEmptyQuery(sql string, elements []string) bool {
 	return false
 }
 
-// InitDatabase loads the database driver
-func InitDatabase() {
-	Database = orm.NewOrm()
-}
-
 // Model encapsulates the general operations for all models
 type Model struct {
 }

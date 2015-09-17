@@ -3,9 +3,10 @@ package test
 import (
 	"net/http"
 	"net/http/httptest"
-	"testing"
-	"runtime"
 	"path/filepath"
+	"runtime"
+	"testing"
+
 	_ "github.com/cristian-sima/Wisply/routers"
 
 	"github.com/astaxie/beego"
@@ -14,11 +15,9 @@ import (
 
 func init() {
 	_, file, _, _ := runtime.Caller(1)
-	apppath, _ := filepath.Abs(filepath.Dir(filepath.Join(file, ".." + string(filepath.Separator))))
+	apppath, _ := filepath.Abs(filepath.Dir(filepath.Join(file, ".."+string(filepath.Separator))))
 	beego.TestBeegoInit(apppath)
 }
-
-
 
 func TestPageHome(t *testing.T) {
 	url := "/"
@@ -26,13 +25,11 @@ func TestPageHome(t *testing.T) {
 	checkPage(t, url, name)
 }
 
-
 func TestPageSample(t *testing.T) {
 	url := "/sample"
 	name := "Sample"
 	checkPage(t, url, name)
 }
-
 
 func TestPageAbout(t *testing.T) {
 	url := "/about"
@@ -52,7 +49,6 @@ func TestPageContact(t *testing.T) {
 	checkPage(t, url, name)
 }
 
-
 func TestPageLogin(t *testing.T) {
 	url := "/auth/login"
 	name := "Login"
@@ -65,13 +61,11 @@ func TestPageRegister(t *testing.T) {
 	checkPage(t, url, name)
 }
 
-
 func TestPageHelp(t *testing.T) {
 	url := "/help"
 	name := "Help"
 	checkPage(t, url, name)
 }
-
 
 func TestPageAccesibility(t *testing.T) {
 	url := "/accessibility"
@@ -88,8 +82,8 @@ func checkPage(t *testing.T, url string, name string) {
 	beego.Trace("testing", "Test", name)
 
 	Convey("Subject: Test Station Endpoint\n", t, func() {
-	        Convey("Status Code Should Be 200", func() {
-	                So(w.Code, ShouldEqual, 200)
-	        })
+		Convey("Status Code Should Be 200", func() {
+			So(w.Code, ShouldEqual, 200)
+		})
 	})
 }

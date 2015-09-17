@@ -72,7 +72,7 @@ func (controller *AccountController) Delete() {
 func (controller *AccountController) showModifyForm(account *auth.Account) {
 	controller.GenerateXSRF()
 	controller.Data["accountName"] = account.Name
-	if account.Administrator {
+	if account.IsAdministrator {
 		controller.Data["isAdministrator"] = true
 	} else {
 		controller.Data["isUser"] = true

@@ -160,5 +160,24 @@ JavaScript has a lot of documentation. The documentation passes the guidelines o
 * Due to security reasons, the JavaScript documentation *can't* be accessed using the Wisply server (for instance http://wisply.me/doc/js). You can access it by using the absolute path in your browser (C:\path\util\doc\js\index.html for Windows)
 
 
-## Installer
-The Shell code is documentated according to the guidelines presented by [Inquisitor](http://www.inquisitor.ru/doc/shelldoc.html)
+## Utilities
+The Shell code is documentated according to the guidelines presented by [Inquisitor](http://www.inquisitor.ru/doc/shelldoc.html). Also, the utilities for Windows have comments in order to adapt them to your system
+
+
+# Tips (optional)
+
+This section contains information regarding the development progress which you may find it useful.
+
+## Editor
+
+If you want to use Golang, but you do not what editor to choose, I recommend (Atom)[]. It is simple, easy to use and fast. Also, I suggest these plugins (the description is the offial one):
+
+* (**atom-pretiffy**)[https://atom.io/packages/atom-prettify] Pretiffy your HTML
+* (**auto-indent**)[https://atom.io/packages/auto-indent] This package will allow you to auto-indent your current file. Use the auto-indent:apply command.
+* (**docblockr**)[https://atom.io/packages/docblockr] A helper package for writing documentation.
+* (**go-plus**)[https://atom.io/packages/go-plus] *It saves you a lot of time* Adds `gocode`, `gofmt`, `goimports`, `go vet`, `golint`, `go build` and `go test` functionality for the go language.
+* (**linter**)[https://atom.io/packages/linter] A Base Linter with Cow Powers
+* (**linter-jshint**)[https://atom.io/packages/linter-jshint] Linter plugin for JavaScript, using jshint
+
+
+Do you have a prefered editor or a plugin which I did not mention, please add it.

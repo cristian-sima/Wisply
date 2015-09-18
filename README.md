@@ -170,14 +170,14 @@ This section contains information regarding the development progress which you m
 
 ## Editor
 
-If you want to use Golang, but you do not what editor to choose, I recommend (Atom)[]. It is simple, easy to use and fast. Also, I suggest these plugins (the description is the offial one):
+If you want to use Golang, but you do not what editor to choose, I recommend [Atom](https://atom.io). It is simple, easy to use and fast. Also, I suggest these plugins (the description is the offial one):
 
-* **(atom-pretiffy)[https://atom.io/packages/atom-prettify]** Pretiffy your HTML
-* **(auto-indent)[https://atom.io/packages/auto-indent]** This package will allow you to auto-indent your current file. Use the auto-indent:apply command.
-* **(docblockr)[https://atom.io/packages/docblockr]** A helper package for writing documentation.
-* **(go-plus)[https://atom.io/packages/go-plus]** *It saves you a lot of time* Adds `gocode`, `gofmt`, `goimports`, `go vet`, `golint`, `go build` and `go test` functionality for the go language.
-* **(linter)[https://atom.io/packages/linter]** A Base Linter with Cow Powers
-* **(linter-jshint)[https://atom.io/packages/linter-jshint]** Linter plugin for JavaScript, using jshint
+* **[atom-pretiffy](https://atom.io/packages/atom-prettify)** Pretiffy your HTML
+* **[auto-indent](https://atom.io/packages/auto-indent)** This package will allow you to auto-indent your current file. Use the auto-indent:apply command.
+* **[docblockr](https://atom.io/packages/docblockr)** A helper package for writing documentation.
+* **[go-plus](https://atom.io/packages/go-plus)** *It saves you a lot of time* Adds `gocode`, `gofmt`, `goimports`, `go vet`, `golint`, `go build` and `go test` functionality for the go language.
+* **[linter](https://atom.io/packages/linter)** A Base Linter with Cow Powers
+* **[linter-jshint](https://atom.io/packages/linter-jshint)** Linter plugin for JavaScript, using jshint
 
 
 Do you have a prefered editor or a plugin which I did not mention, please add it.

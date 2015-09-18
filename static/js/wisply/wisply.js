@@ -158,6 +158,13 @@ var Wisply = function () {
       this.shortcutManager.init();
     },
     /**
+     * It preloads the loading image in the background and stores it in the browser cache
+     */
+    preloadLoadingImage: function() {
+      var img = new Image();
+        img.src = "/static/img/wisply/load.gif";
+    },
+    /**
     * It executes a JQuery post request, adding to it the xsrf token value
     * @param  {object} args Same arguments for as for a JQuery AJAX request
     * @see {@link http://api.jquery.com/jquery.ajax/|JQuery AJAX API}

@@ -32,6 +32,7 @@ var Register = function () {
       this.loadListeners();
       this.checkConfirmPassword();
       this.focusName();
+      wisply.preloadLoadingImage();
     },
     /**
     * It activates the listeners for form submitted and password focused
@@ -109,7 +110,7 @@ var Register = function () {
         wisply.message.alert(args);
       }
     };
-    return {      
+    return {
       Form: Form
     };
   };

@@ -29,6 +29,7 @@ var Login = function () {
     init : function () {
       this.loadListeners();
       this.focusName();
+      wisply.preloadLoadingImage();
     },
     /**
     * It adds a listener for form submit

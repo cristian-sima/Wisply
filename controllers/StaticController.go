@@ -33,12 +33,16 @@ func (controller *StaticController) ShowWebscience() {
 func (controller *StaticController) ShowAccessibility() {
 	pageName := "accessibility"
 	controller.showStaticPage(pageName)
+	// Please use http://www.timestampgenerator.com/
+	controller.IndicateLastModification(1441987477)
 }
 
 // ShowHelp It shows the help page
 func (controller *StaticController) ShowHelp() {
 	pageName := "help"
 	controller.showStaticPage(pageName)
+	// Please use http://www.timestampgenerator.com/
+	controller.IndicateLastModification(1441987477)
 }
 
 func (controller *StaticController) showStaticPage(pageName string) {

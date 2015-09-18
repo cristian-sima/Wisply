@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"html/template"
+	"time"
 
 	auth "github.com/cristian-sima/Wisply/models/auth"
 	wisply "github.com/cristian-sima/Wisply/models/wisply"
@@ -73,4 +74,12 @@ func (controller *WisplyController) initConnectedState(id string) {
 	controller.AccountConnected = true
 	controller.Data["accountConnected"] = true
 	controller.Data["currentAccount"] = controller.Account
+}
+
+// IndicateLastModification shows in the footer the data when the page has been last modified
+// Please use http://www.timestampgenerator.com/
+func (controller *WisplyController) IndicateLastModification(timestamp int64) {
+	formatedString := time.Unix(timestamp, 0).Format(time.ANSIC)
+	controller.Data["indicateLastModification"] = true
+	controller.Data["lastModification"] = formatedString
 }

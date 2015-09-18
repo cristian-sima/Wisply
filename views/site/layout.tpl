@@ -6,7 +6,7 @@
         {{ template "menu" . }}
         <div class="container" >
             {{.LayoutContent}}
-            {{ template "footer"}}
+            {{ template "footer" .}}
         </div>
     </body>
 </html>

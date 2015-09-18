@@ -8,9 +8,8 @@ Author     Cristian Sima
   display: inline;
 }
 
-/* Fix Mozilla responsive table for small screens */
-@-moz-document url-prefix() {
-  fieldset { display: table-cell; }
+.panel-body {
+    padding-top: 0px;
 }
 
 #sidebar {

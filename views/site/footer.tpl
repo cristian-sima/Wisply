@@ -19,6 +19,9 @@
           </div>
         </li>
         <li class="pull-right"><a href="#top">Back to top</a></li>                        </ul>
+        {{ if .indicateLastModification }}
+        <p>This page has been modified on {{ .lastModification }}.</p>
+        {{ end }}
         <!--<p>We have done the best to express our <a href="/licence" rel="nofollow">Licence</a>.</p> -->
       </div>
     </div>

@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-    {{ template "footer"}}
+    {{ template "footer" .}}
   </div>
 </body>
 </html>

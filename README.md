@@ -190,4 +190,4 @@ If you want to edit the source files, but you do not what editor to choose, I re
 * **[linter-jshint](https://atom.io/packages/linter-jshint)** Linter plugin for JavaScript, using jshint
 
 
-Do you have a prefered editor or a plugin which I did not mention, please add it.
+Do you have a preferred editor or a plugin which I did not mention? Great, please suggest it!

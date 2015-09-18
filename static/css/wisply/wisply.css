@@ -79,3 +79,9 @@ h5 {
 h6 {
   font-size:  12px
 }
+
+
+/* Footbar menu */
+#moreButton {
+    cursor: pointer;
+}

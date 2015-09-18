@@ -5,6 +5,16 @@
 
 Building the hive of education
 
+**Menu:**
+
+- [Get Wisply](#get-wisply)
+- [Ubuntu](#ubuntu)
+- [Windows](#windows)
+- [Update Wisply](#update-wisply)
+- [Documentation](#documentation)
+- [Tips](#tips)
+
+
 ## Get Wisply
 
 Wisply can be downloaded using the `git` command through Go
@@ -143,16 +153,16 @@ The update is not affecting the current configuration (information about databas
 
 **Note**: In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)
 
-# Documentation
+## Documentation
 
 Wisply considers that documentation is an essential element to maintain an application. The software provides a lot of information regarding documentation.
 
-## Go
+### Go
 
 Every method or property that is exported is well documented. You can see all the documentation by runnning the `go fmt`
 The documentation is according to the official google style. You can find it  [here](	http://blog.golang.org/godoc-documenting-go-code).
 
-## JavaScript
+### JavaScript
 
 JavaScript has a lot of documentation. The documentation passes the guidelines of [JSDoc](http://usejsdoc.org/). The documentation can be accessed in browser (see bellow). The HTML files have been generated using [JSDoc 3](https://github.com/jsdoc3/jsdoc). The html file are in the directory `util/doc/js`.
 
@@ -160,17 +170,17 @@ JavaScript has a lot of documentation. The documentation passes the guidelines o
 * Due to security reasons, the JavaScript documentation *can't* be accessed using the Wisply server (for instance http://wisply.me/doc/js). You can access it by using the absolute path in your browser (C:\path\util\doc\js\index.html for Windows)
 
 
-## Utilities
+### Utilities
 The Shell code is documentated according to the guidelines presented by [Inquisitor](http://www.inquisitor.ru/doc/shelldoc.html). Also, the utilities for Windows have comments in order to adapt them to your system
 
 
-# Tips (optional)
+## Tips
 
-This section contains information regarding the development progress which you may find it useful.
+This section is optional and it contains information regarding the development progress which you may find it useful.
 
-## Editor
+### Editor
 
-If you want to use Golang, but you do not what editor to choose, I recommend [Atom](https://atom.io). It is simple, easy to use and fast. Also, I suggest these plugins (the description is the offial one):
+If you want to edit the source files, but you do not what editor to choose, I recommend [Atom](https://atom.io). It is simple, easy to use and fast. Also, I suggest these plugins (the description is the official one):
 
 * **[atom-pretiffy](https://atom.io/packages/atom-prettify)** Pretiffy your HTML
 * **[auto-indent](https://atom.io/packages/auto-indent)** This package will allow you to auto-indent your current file. Use the auto-indent:apply command.

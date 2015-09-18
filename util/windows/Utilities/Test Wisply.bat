@@ -1,6 +1,13 @@
+:: Shortcut for testing Wisply
+
+
+:: Change this to your path
 W:
 cd go-workspace/src/github.com/cristian-sima/Wisply/tests/
 cd ../../../tests
+
+
+:: Leave these like this
 :loop
 CLS
 echo "Testing Wisply"

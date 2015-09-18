@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# It checks if the MySQL server is installed
+#
+# Output
+# 1 if the server is installed
+# 0 if the server is not installed
 isMysqlInstalled () {
   showMessage "- Checking MySQL..."
   command="mysql"
@@ -9,6 +15,8 @@ isMysqlInstalled () {
     return 1
   fi
 }
+
+# It requests and saves the credentials for MySQL connection
 requestMySQLCredentials () {
   showMessage "Please type the username for MySQL (by default it is root):"
   read -r MySQLUsername
@@ -16,6 +24,8 @@ requestMySQLCredentials () {
   read -r MySQLPassword
   showMessage "Thanks!"
 }
+
+# It verifies the MySQL credentials
 verifySQLCredentials () {
   if ! mysql -u "$MySQLUsername" -p"$MySQLPassword" -e "quit";
   then
@@ -24,6 +34,8 @@ verifySQLCredentials () {
     showSuccess "The user and the password are good"
   fi
 }
+
+# It checks if the MySQL server is installed. If not, is shows a link to a tutorial
 checkServer () {
   showHeading "1" "Starting the work"
   notInstalled=0

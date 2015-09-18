@@ -6,6 +6,7 @@
 # Folders
 _obj
 _test
+tests/acceptance/node/node_modules
 
 # Architecture specific extensions/prefixes
 *.[568vq]

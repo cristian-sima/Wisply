@@ -2,9 +2,16 @@
 
 source util/ubuntu/install/src/message.fun
 
+# It shows the Run wizard
 startScript () {
   showIntro "Run"
 }
+
+# It checks if the Wisply server is already running in background
+#
+# Output
+# 1 Wisply server is already running
+# 0 Wisply server is not running
 checkWisplyIsRunning () {
   if pgrep Wisply > /dev/null;
   then
@@ -13,6 +20,7 @@ checkWisplyIsRunning () {
       return 0
   fi
 }
+# It tries to run Wisply. If Wisply is already running, it stops
 runNow () {
   showMessage "Tring to run Wisply..."
   nohup bee run &
@@ -26,6 +34,8 @@ runNow () {
     exitProgram
   fi
 }
+
+# It checks if there is no Wisply server running. If so, it starts Wisply
 processScript () {
   checkWisplyIsRunning
   wisplyIs=$?
@@ -36,9 +46,13 @@ processScript () {
     runNow
   fi
 }
+
+# It shows that the script has been executed without problems
 finishScript () {
   showHappyEnd
 }
+
+# It starts, processes and finishes the script
 runWisply () {
   startScript
   processScript

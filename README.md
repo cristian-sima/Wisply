@@ -158,3 +158,7 @@ JavaScript has a lot of documentation. The documentation passes the guidelines o
 
 **Note!**
 * Due to security reasons, the JavaScript documentation *can't* be accessed using the Wisply server (for instance http://wisply.me/doc/js). You can access it by using the absolute path in your browser (C:\path\util\doc\js\index.html for Windows)
+
+
+## Installer
+The Shell code is documentated according to the guidelines presented by [Inquisitor](http://www.inquisitor.ru/doc/shelldoc.html)

@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# It deletes the installing directory. In case the user has chosen not to delete, it shows an warning
 deleteInstallDirectory () {
   showHeading "Finishing" "Deleting the installer files..."
   if [ $deleteDirectory = "YES" ]; then

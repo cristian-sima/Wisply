@@ -13,8 +13,10 @@ func init() {
 	beego.Router("/webscience", &controllers.StaticController{}, "*:ShowWebscience")
 	beego.Router("/sample", &controllers.StaticController{}, "*:ShowSample")
 	beego.Router("/accessibility", &controllers.StaticController{}, "*:ShowAccessibility")
+
 	beego.Router("/help", &controllers.StaticController{}, "*:ShowHelp")
 	beego.Router("/privacy", &controllers.StaticController{}, "*:ShowPrivacyPolicy")
+	beego.Router("/cookies", &controllers.StaticController{}, "*:ShowCookiesPolicy")
 
 	// ----------------------------- Authentification --------------------------------------
 

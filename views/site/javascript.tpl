@@ -1,5 +1,6 @@
 {{ define "javascript" }}
 
+
 <script src="/static/3rd_party/product/paper/jquery-1.10.2.min.js"></script>
 <script src="/static/3rd_party/product/paper/bootstrap.min.js"></script>
 <script src="/static/3rd_party/product/paper/bootswatch.js"></script>
@@ -10,6 +11,7 @@
 <script src="/static/3rd_party/others/js/jquery.cookie.js"></script>
 <script src="/static/3rd_party/others/js/jquery.hotkeys.js"></script>
 
+
 <script src="/static/js/wisply/wisply.js"></script>
 
 {{ if .accountConnected }}
@@ -18,6 +20,12 @@
 {{ if .currentAccount.IsAdministrator }}
 <script src="/static/js/admin/admin.js"></script>
 {{end}}
+{{ else }}
+<script>
+    window.cookieconsent_options = {"message":"Wisply uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":"/cookies","theme":"light-bottom"};
+</script>
+<script src="/static/3rd_party/others/js/cookieconsent.latest.min.js"></script>
+
 {{ end }}
 
 <!-- Google Analytics-->

@@ -46,6 +46,7 @@
             <ol>
               <li><h5><a href="/privacy">Privacy Policy</a></h5></li>
               <li><h5><a href="/cookies">Cookies Policy</a></h5></li>
+              <li><h5><a href="/terms-and-conditions">Terms and conditions</a></h5></li>
             </ol>
           </section>
         </section>

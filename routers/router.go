@@ -17,6 +17,7 @@ func init() {
 	beego.Router("/help", &controllers.StaticController{}, "*:ShowHelp")
 	beego.Router("/privacy", &controllers.StaticController{}, "*:ShowPrivacyPolicy")
 	beego.Router("/cookies", &controllers.StaticController{}, "*:ShowCookiesPolicy")
+	beego.Router("/terms-and-conditions", &controllers.StaticController{}, "*:ShowTermsPage")
 
 	// ----------------------------- Authentification --------------------------------------
 

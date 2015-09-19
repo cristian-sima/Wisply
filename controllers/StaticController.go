@@ -62,7 +62,16 @@ func (controller *StaticController) ShowPrivacyPolicy() {
 	controller.IndicateLastModification(1442660323)
 }
 
-// ShowCookiePolicy shows the policy for cookies
+// ShowTermsPage shows the privacy policy of the website
+func (controller *StaticController) ShowTermsPage() {
+	pageName := "terms-and-conditions"
+	controller.showStaticPage(pageName)
+
+	controller.SetCustomTitle("Wisply Terms and Conditions")
+	controller.IndicateLastModification(1442661323)
+}
+
+// ShowCookiesPolicy shows the policy for cookies
 func (controller *StaticController) ShowCookiesPolicy() {
 	pageName := "cookies"
 	controller.showStaticPage(pageName)

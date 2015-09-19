@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group" >
                   <div class="text-center" id="register-submit-div">
-                    <p class="text-muted">By creating this account, your you agree to respect our <a target="_blank" href="/help#legal-aspects">legal aspects</a>.</p>
+                    <p class="text-muted">By creating this account, you agree to respect our <a target="_blank" href="/help#legal-aspects">legal aspects</a>.</p>
                     <input type="submit" class="btn btn-primary" value="Create account" />
                   </div>
                 </div>

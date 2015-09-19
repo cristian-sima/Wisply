@@ -25,12 +25,14 @@ func (controller *AuthController) ShowLoginForm() {
 		controller.Redirect("/", 302)
 	} else {
 		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
+		controller.SetCustomTitle("Login to Wisply")
 		controller.showForm("login")
 	}
 }
 
 // ShowRegisterForm It shows the form to register a new account
 func (controller *AuthController) ShowRegisterForm() {
+	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
 }
 

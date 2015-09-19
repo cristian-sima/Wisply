@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" hola_ext_inject="disabled">
-{{ template "header" }}
+{{ template "header" . }}
 <body>
   {{ template "javascript" . }}
   {{ template "menu" . }}

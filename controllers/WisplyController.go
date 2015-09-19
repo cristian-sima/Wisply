@@ -83,3 +83,8 @@ func (controller *WisplyController) IndicateLastModification(timestamp int64) {
 	controller.Data["indicateLastModification"] = true
 	controller.Data["lastModification"] = formatedString
 }
+
+// SetTitle sets a custom title for the page. In case the function is not called, it sets the title "Wisply"
+func (controller *WisplyController) SetCustomTitle(title string) {
+	controller.Data["customTitle"] = title
+}

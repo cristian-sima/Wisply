@@ -25,6 +25,7 @@ Author     Cristian Sima
   border-bottom-width:1px;
 }
 
+
 /* collapsed sidebar styles */
 @media screen and (max-width: 767px) {
   .row-offcanvas {

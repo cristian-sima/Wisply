@@ -15,6 +15,7 @@
             </span>
             <ul class="dropdown-menu" aria-labelledby="moreOptionsFooter">
               <li><a href="/help">Help</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
             </ul>
           </div>
         </li>

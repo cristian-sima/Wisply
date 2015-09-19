@@ -1,11 +1,16 @@
 var uth = require('./auth.js'),
- webdriverio = require('webdriverio');
+ webdriverio = require('webdriverio'),
+ client = {};
 
 var options = {
     desiredCapabilities: {
         browserName: 'firefox'
     }
 };
+
+client = webdriverio
+    .remote(options)
+    .init();
 
 /**
  * It shows the introduction to testing
@@ -26,12 +31,21 @@ function suscces(msg) {
   console.log("[Success] " + msg);
 }
 
+client.addCommand("checkPageExists", function(url) {
+    return this.url(url).then(function(urlResult) {
+        return this.isExisting("#logo").then(function(isExisting) {
+            expect(isExisting).toBeFalsy();
+        });
+    });
+});
+
+
+
 function testStaticPages() {
   console.log("[Testing] Static pages");
-  webdriverio
-      .remote(options)
-      .init()
+  client
       .url("http://127.0.0.1:8081")
+      .checkPageExists("/sfsdfg")
       .title(function(err, res) {
           suscces("The home page is available");
       })

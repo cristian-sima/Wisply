@@ -1,30 +1,30 @@
 <link rel="stylesheet" href="/static/3rd_party/others/css/keys.css" property='stylesheet'>
 <div class="page-header">
    <div class="row">
-     <div class="col-lg-4 col-md-5 col-sm-5">
-        <div class="panel panel-info" >
-           <div class="panel-heading">
-              <h3 class="panel-title">Privacy Policy Contents</h3>
-           </div>
-           <div class="panel-body">
-            <ul>
-                 <li><a class="scroll" href="#privacy-policy">Introduction</a></li>
-                 <li><a  class="scroll" href="#personal-identification-information">Personal identification information</a></li>
-                 <li><a class="scroll" href="#non-personal-identification-information">Non-personal identification information</a></li>
-                 <li><a class="scroll" href="#web-browser-cookies">Web browser cookies</a></li>
-                 <li><a class="scroll" href="#how-we-use-collected-information">How we use collected information</a></li>
-                 <li><a class="scroll" href="#how-we-protect-your-information">How we protect your information</a></li>
-                 <li><a class="scroll" href="#third-party-websites">Third party websites</a></li>
-                 <li><a class="scroll" href="#coppa">Children Protection</a></li>
-                 <li><a class="scroll" href="#fair-information-practices">Fair Information Practices</a></li>
-                 <li><a class="scroll" href="#can-spam-act">CAN SPAM Act</a></li>
-                 <li><a class="scroll" href="#changes">Changes to this privacy policy</a></li>
-                 <li><a class="scroll" href="#your-acceptance-of-these-terms">Your acceptance of these terms</a></li>
-                 <li><a class="scroll" href="#contacting-us">Contacting us</a></li>
-              </ul>
+      <div class="col-lg-4 col-md-5 col-sm-5">
+         <div class="panel panel-info" >
+            <div class="panel-heading">
+               <h3 class="panel-title">Privacy Policy Contents</h3>
+            </div>
+            <div class="panel-body">
+               <ul>
+                  <li><a class="scroll" href="#privacy-policy">Introduction</a></li>
+                  <li><a  class="scroll" href="#personal-identification-information">Personal identification information</a></li>
+                  <li><a class="scroll" href="#non-personal-identification-information">Non-personal identification information</a></li>
+                  <li><a class="scroll" href="#web-browser-cookies">Web browser cookies</a></li>
+                  <li><a class="scroll" href="#how-we-use-collected-information">How we use collected information</a></li>
+                  <li><a class="scroll" href="#how-we-protect-your-information">How we protect your information</a></li>
+                  <li><a class="scroll" href="#third-party-websites">Third party websites</a></li>
+                  <li><a class="scroll" href="#coppa">Children Protection</a></li>
+                  <li><a class="scroll" href="#fair-information-practices">Fair Information Practices</a></li>
+                  <li><a class="scroll" href="#can-spam-act">CAN SPAM Act</a></li>
+                  <li><a class="scroll" href="#changes">Changes to this privacy policy</a></li>
+                  <li><a class="scroll" href="#your-acceptance-of-these-terms">Your acceptance of these terms</a></li>
+                  <li><a class="scroll" href="#contacting-us">Contacting us</a></li>
+               </ul>
+            </div>
+         </div>
       </div>
-     </div>
-   </div>
       <div class="col-lg-8 col-md-7 col-sm-7">
          <div class="panel panel-default">
             <aside class="panel-heading" style="padding-bottom:0px">
@@ -37,21 +37,35 @@
             </aside>
             <section class="panel-body">
             <h1 id="privacy-policy">Privacy Policy</h1>
-            <p>This Privacy Policy governs the manner in which Wisply collects, uses, maintains and discloses information collected from "accounts" (for more see <a href="/terms-and-conditions">Terms and Conditions</a>) of the http://wisply.me website ("Site"). This privacy policy applies to the Site and all products and services offered by Wisply.</p>
+            <p>This Privacy Policy governs the manner in which Wisply collects, uses, maintains and discloses information collected from "Users" of the domain <a href="http://wisply.me">http://wisply.me</a> ("Site"). This privacy policy applies to the Site and all products and services offered by Wisply.</p>
             <p>This privacy policy has been compiled to better serve those who are concerned with how their 'Personally identifiable information' (PII) is being used online. PII, as used in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.</p>
             <article>
                <h2 id="personal-identification-information">
                   <span class="glyphicon glyphicon-user"></span> Personal identification information
                </h2>
-               We may collect personal identification information from Users in a variety of ways, including, but not limited to, when Users visit our site, register on the sitefill out a formrespond to a survey and in connection with other activities, services, features or resources we make available on our Site. Users may be asked for, as appropriate, name, email address,
-               Users may, however, visit our Site anonymously.
-               We will collect personal identification information from Users only if they voluntarily submit such information to us. Users can always refuse to supply personally identification information, except that it may prevent them from engaging in certain Site related activities.
+               <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to when users:
+               <ul>
+                  <li>Visit our site </li>
+                  <li>Register on the site</li>
+                  <li>Fill out a form</li>
+               </ul>
+               <p> Also, we store information in connection with other activities, services, features or resources we make available on our Site. Users may be asked for, as appropriate, name, email address for confirmation purposes.</p>
+               <p>
+                  Users may, however, visit our Site anonymously.
+               <p>
+               <p>We will collect personal identification information from Users only if they voluntarily submit such information to us. Users can always refuse to supply personally identification information, except that it may prevent them from engaging in certain Site related activities.</p>
             </article>
             <article>
                <h2 id="non-personal-identification-information">
                   <span class="glyphicon glyphicon-globe"></span> Non-personal identification information
                </h2>
-               We may collect non-personal identification information about Users whenever they interact with our Site. Non-personal identification information may include the browser name, the type of computer and technical information about Users means of connection to our Site, such as the operating system and the Internet service providers utilized and other similar information.
+               <p>We may collect non-personal identification information about Users whenever they interact with our Site. Non-personal identification information may include the browser name, the type of computer and technical information about Users means of connection to our Site, such as the operating system and the Internet service providers utilized and other similar information.</p>
+               <p>We work with third-party vendors, such as Google use first-party cookies (such as the Google Analytics cookies) or other third-party identifiers together in order to improve our services.
+               </p>
+               <p>
+                  Opting out:
+               </p>
+               <p>Users can opt out by visiting the Network Advertising initiative opt out page or permanently using the Google Analytics Opt Out Browser add on.</p>
             </article>
             <article>
                <h2 id="web-browser-cookies">
@@ -182,7 +196,7 @@
             </article>
             <article>
                <h2 id="contacting-us">
-                <span class="glyphicon glyphicon-envelope"></span> Contacting us
+                  <span class="glyphicon glyphicon-envelope"></span> Contacting us
                </h2>
                <p>If you have any questions about this Privacy Policy, the practices of this site, or your dealings with this site, please contact us at the <a href="/contact">contact page</a>.
                </p>

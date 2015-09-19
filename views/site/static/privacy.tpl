@@ -37,7 +37,7 @@
             </aside>
             <section class="panel-body">
             <h1 id="privacy-policy">Privacy Policy</h1>
-            <p>This Privacy Policy governs the manner in which Wisply collects, uses, maintains and discloses information collected from "Users" of the domain <a href="http://wisply.me">http://wisply.me</a> ("Site"). This privacy policy applies to the Site and all products and services offered by Wisply.</p>
+            <p>This Privacy Policy governs the manner in which Wisply collects, uses, maintains and discloses information collected from "Users" on the domain <a href="http://wisply.me">http://wisply.me</a> (known as "Site"). This privacy policy applies to the Site and all products and services offered by Wisply.</p>
             <p>This privacy policy has been compiled to better serve those who are concerned with how their 'Personally identifiable information' (PII) is being used online. PII, as used in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.</p>
             <article>
                <h2 id="personal-identification-information">
@@ -45,41 +45,38 @@
                </h2>
                <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to when users:
                <ul>
-                  <li>Visit our site </li>
                   <li>Register on the site</li>
-                  <li>Fill out a form</li>
                </ul>
                <p> Also, we store information in connection with other activities, services, features or resources we make available on our Site. Users may be asked for, as appropriate, name, email address for confirmation purposes.</p>
                <p>
                   Users may, however, visit our Site anonymously.
                <p>
                <p>We will collect personal identification information from Users only if they voluntarily submit such information to us. Users can always refuse to supply personally identification information, except that it may prevent them from engaging in certain Site related activities.</p>
+               <p>The <strong>email</strong> address Users provide for order processing, will only be used to send them information and updates pertaining to their order. It may also be used to respond to their inquiries, and/or other requests or questions. If User decides to opt-in to our mailing list, they will receive emails that may include company news, updates, related product or service information, etc. If at any time the User would like to unsubscribe from receiving future emails, we include detailed unsubscribe instructions at the bottom of each email or User may contact us via our Site</p>
+
             </article>
             <article>
                <h2 id="non-personal-identification-information">
                   <span class="glyphicon glyphicon-globe"></span> Non-personal identification information
                </h2>
                <p>We may collect non-personal identification information about Users whenever they interact with our Site. Non-personal identification information may include the browser name, the type of computer and technical information about Users means of connection to our Site, such as the operating system and the Internet service providers utilized and other similar information.</p>
-               <p>We work with third-party vendors, such as Google use first-party cookies (such as the Google Analytics cookies) or other third-party identifiers together in order to improve our services.
+               <p>We work together with third-party vendors, such as Google use first-party cookies (e.g Google Analytics cookies) in order to improve our services.
                </p>
-               <p>
-                  Opting out:
-               </p>
-               <p>Users can opt out by visiting the Network Advertising initiative opt out page or permanently using the Google Analytics Opt Out Browser add on.</p>
+               <p>Users can opt out by visiting the <a href="https://www.networkadvertising.org/">Network Advertising initiative</a> opt out page or permanently using the Google Analytics Opt Out Browser extension.</p>
             </article>
             <article>
                <h2 id="web-browser-cookies">
                   <span class="glyphicon glyphicon-hdd"></span> Web browser cookies
                </h2>
                <p>Our Site may use "cookies" to enhance User experience. User's web browser places cookies on their hard drive for record-keeping purposes and sometimes to track information about them. User may choose to set their web browser to refuse cookies, or to alert you when cookies are being sent. If they do so, note that some parts of the Site may not function properly.</p>
-               <p>We consider that the cookies is an important subject. Thus, for more information please read <a href="/cookie-policy">Cookie policy</a></p>
+               <p>We conside "cookies" an important subject. Therefore, for more information please read our <a href="/cookie-policy">Cookie policy</a></p>
             </article>
             <article>
                <h2 id="how-we-use-collected-information">
                   <span class="glyphicon glyphicon-tasks"></span> How we use collected information
                </h2>
                <p>
-                  Wisply collects and uses Accounts personal information for the following purposes:
+                  Wisply collects and uses Users personal information for the following purposes:
                </p>
                <ul>
                   <li>
@@ -102,13 +99,6 @@
                      <ul>
                         <li> We continually strive to improve our website offerings based on the information and feedback we receive from you.
                         </li>
-                     </ul>
-                  </li>
-                  <li>
-                     <strong> To share your information with third parties</strong>
-                     <ul>
-                        <li>Do not worry, we do not sell it or publish sensitive information! We share it for educational purposes.</li>
-                        <li> The email address Users provide for order processing, will only be used to send them information and updates pertaining to their order. It may also be used to respond to their inquiries, and/or other requests or questions. If User decides to opt-in to our mailing list, they will receive emails that may include company news, updates, related product or service information, etc. If at any time the User would like to unsubscribe from receiving future emails, we include detailed unsubscribe instructions at the bottom of each email or User may contact us via our Site.</li>
                      </ul>
                   </li>
                </ul>
@@ -138,7 +128,7 @@
                <h2 id="third-party-websites">
                   <span class="glyphicon glyphicon-transfer"></span> Third party websites
                </h2>
-               <p>Users may not find advertising or similar content on our Site that link to the sites and services of our partners, suppliers, advertisers, sponsors, licensors and other third parties. We do not control the content or links that appear on these sites and are not responsible for the practices employed by websites linked to or from our Site. In addition, these sites or services, including their content and links, may be constantly changing. These sites and services may have their own privacy policies and customer service policies. Browsing and interaction on any other website, including websites which have a link to our Site, is subject to that website\'s own terms and policies.
+               <p>Users may not find advertising or similar content on our Site that link to the sites and services of our partners, suppliers, advertisers, sponsors, licensors and other third parties. We do not control the content or links that appear on these sites and are not responsible for the practices employed by websites linked to or from our Site. In addition, these sites or services, including their content and links, may be constantly changing. These sites and services may have their own privacy policies and customer service policies. Browsing and interaction on any other website, including websites which have a link to our Site, is subject to that website's own terms and policies.
                <p>
                <p>We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information unless we provide you with advance notice. This does not include website hosting partners and other parties who assist us in operating our website, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others' rights, property, or safety. </p>
                <p> However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.</p>
@@ -151,7 +141,7 @@
             <article>
                <h2 id="fair-information-practices"><span class="glyphicon glyphicon-heart"></span> Fair Information Practices</h2>
                <p>The Fair Information Practices Principles form the backbone of privacy law in the United States and the concepts they include have played a significant role in the development of data protection laws around the globe. Understanding the Fair Information Practice Principles and how they should be implemented is critical to comply with the various privacy laws that protect personal information.</p>
-               <p><strong>In order to be in line with Fair Information Practices we will take the following responsive action, should a data breach occur:</strong></p>
+               <p><strong>In order to be in line with Fair Information Practices we will take the following responsive action, when a data breach occur:</strong></p>
                <p>
                <ul>
                   <li>
@@ -189,7 +179,7 @@
                Wisply has the discretion to update this privacy policy at any time. When we do, revise the updated date at the bottom of this page,. We encourage Users to frequently check this page for any changes to stay informed about how we are helping to protect the personal information we collect. You acknowledge and agree that it is your responsibility to review this privacy policy periodically and become aware of modifications.
             </article>
             <article>
-               <h2>
+               <h2 id="your-acceptance-of-these-terms">
                   <span class="glyphicon glyphicon-ok"></span> Your acceptance of these terms
                </h2>
                By using this Site, you signify your acceptance of this policy and terms of service. If you do not agree to this policy, please do not use our Site. Your continued use of the Site following the posting of changes to this policy will be deemed your acceptance of those changes.

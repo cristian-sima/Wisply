@@ -41,7 +41,7 @@
                <p>This privacy policy has been compiled to better serve those who are concerned with how their 'Personally identifiable information' (PII) is being used online. PII, as used in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our website.</p>
                <article>
                   <h2 id="personal-identification-information">
-                     <span class="glyphicon glyphicon-user"></span> Personal identification information
+                     <a class="scroll" href="#personal-identification-information"><span class="glyphicon glyphicon-user"></span></a> Personal identification information
                   </h2>
                   <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to when users:</p>
                   <ul>
@@ -56,7 +56,7 @@
                </article>
                <article>
                   <h2 id="non-personal-identification-information">
-                     <span class="glyphicon glyphicon-globe"></span> Non-personal identification information
+                     <a class="scroll" href="#non-personal-identification-information"><span class="glyphicon glyphicon-globe"></span></a> Non-personal identification information
                   </h2>
                   <p>We may collect non-personal identification information about Users whenever they interact with our Site. Non-personal identification information may include the browser name, the type of computer and technical information about Users means of connection to our Site, such as the operating system and the Internet service providers utilized and other similar information.</p>
                   <p>We work together with third-party vendors, such as Google use first-party cookies (e.g Google Analytics cookies) in order to improve our services.
@@ -65,14 +65,14 @@
                </article>
                <article>
                   <h2 id="web-browser-cookies">
-                     <span class="glyphicon glyphicon-hdd"></span> Web browser cookies
+                     <a class="scroll" href="#web-browser-cookies"><span class="glyphicon glyphicon-hdd"></span></a> Web browser cookies
                   </h2>
                   <p>Our Site may use "cookies" to enhance User experience. User's web browser places cookies on their hard drive for record-keeping purposes and sometimes to track information about them. User may choose to set their web browser to refuse cookies, or to alert you when cookies are being sent. If they do so, note that some parts of the Site may not function properly.</p>
                   <p>We conside "cookies" an important subject. Therefore, for more information please read our <a href="/cookies">Cookie policy</a></p>
                </article>
                <article>
                   <h2 id="how-we-use-collected-information">
-                     <span class="glyphicon glyphicon-tasks"></span> How we use collected information
+                     <a class="scroll" href="#how-we-use-collected-information"><span class="glyphicon glyphicon-tasks"></span></a> How we use collected information
                   </h2>
                   <p>
                      Wisply collects and uses Users personal information for the following purposes:
@@ -104,7 +104,7 @@
                </article>
                <article>
                   <h2 id="how-we-protect-your-information">
-                     <span class="glyphicon glyphicon-thumbs-up"></span> How we protect your information
+                     <a class="scroll" href="#how-we-protect-your-information"><span class="glyphicon glyphicon-thumbs-up"></span></a> How we protect your information
                   </h2>
                   <p class="strong">Security is a serious topic for us! </p>
                   <p>We adopt appropriate data collection, storage and processing practices and security measures to protect against unauthorized access, alteration, disclosure or destruction of your personal information, username, password, transaction information and data stored on our Site.
@@ -122,7 +122,7 @@
                </article>
                <article>
                   <h2 id="third-party-websites">
-                     <span class="glyphicon glyphicon-transfer"></span> Third party websites
+                     <a class="scroll" href="#third-party-websites"><span class="glyphicon glyphicon-transfer"></span></a> Third party websites
                   </h2>
                   <p>Users may not find advertising or similar content on our Site that link to the sites and services of our partners, suppliers, advertisers, sponsors, licensors and other third parties. We do not control the content or links that appear on these sites and are not responsible for the practices employed by websites linked to or from our Site. In addition, these sites or services, including their content and links, may be constantly changing. These sites and services may have their own privacy policies and customer service policies. Browsing and interaction on any other website, including websites which have a link to our Site, is subject to that website's own terms and policies.
                   </p>
@@ -130,12 +130,12 @@
                   <p> However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.</p>
                </article>
                <article>
-                  <h2 id="coppa"><span class="glyphicon glyphicon-book"></span> COPPA (Children Online Privacy Protection Act)</h2>
+                  <h2 id="coppa"><a class="scroll" href="#coppa"><span class="glyphicon glyphicon-book"></span></a> COPPA (Children Online Privacy Protection Act)</h2>
                   <p>When it comes to the collection of personal information from children under 13, the Children's Online Privacy Protection Act (COPPA) puts parents in control. The Federal Trade Commission, the nation's consumer protection agency, enforces the COPPA Rule, which spells out what operators of websites and online services must do to protect children's privacy and safety online.</p>
                   <p>We do not specifically market to children under 13.</p>
                </article>
                <article>
-                  <h2 id="fair-information-practices"><span class="glyphicon glyphicon-heart"></span> Fair Information Practices</h2>
+                  <h2 id="fair-information-practices"><a class="scroll" href="#fair-information-practices"><span class="glyphicon glyphicon-heart"></span></a> Fair Information Practices</h2>
                   <p>The Fair Information Practices Principles form the backbone of privacy law in the United States and the concepts they include have played a significant role in the development of data protection laws around the globe. Understanding the Fair Information Practice Principles and how they should be implemented is critical to comply with the various privacy laws that protect personal information.</p>
                   <p><strong>In order to be in line with Fair Information Practices we will take the following responsive action, when a data breach occur:</strong></p>
                   <ul>
@@ -149,7 +149,7 @@
                   <p>We also agree to the individual redress principle, which requires that individuals have a right to pursue legally enforceable rights against data collectors and processors who fail to adhere to the law. This principle requires not only that individuals have enforceable rights against data users, but also that individuals have recourse to courts or a government agency to investigate and/or prosecute non-compliance by data processors.</p>
                </article>
                <article>
-                  <h2 id="can-spam-act"><span class="glyphicon glyphicon-book"></span> CAN SPAM Act</h2>
+                  <h2 id="can-spam-act"><a class="scroll" href="#can-spam-act"><span class="glyphicon glyphicon-book"></span></a> CAN SPAM Act</h2>
                   <p>The CAN-SPAM Act is a law that sets the rules for commercial email, establishes requirements for commercial messages, gives recipients the right to have emails stopped from being sent to them, and spells out tough penalties for violations.</p>
                   <p>We collect your email address in order to:</p>
                   To be in accordance with CANSPAM we agree to the following:
@@ -167,19 +167,19 @@
                </article>
                <article>
                   <h2 id="changes">
-                     <span class="glyphicon glyphicon-edit"></span> Changes to this privacy policy
+                     <a class="scroll" href="#changes"><span class="glyphicon glyphicon-edit"></span></a> Changes to this privacy policy
                   </h2>
                   Wisply has the discretion to update this privacy policy at any time. When we do, revise the updated date at the bottom of this page,. We encourage Users to frequently check this page for any changes to stay informed about how we are helping to protect the personal information we collect. You acknowledge and agree that it is your responsibility to review this privacy policy periodically and become aware of modifications.
                </article>
                <article>
                   <h2 id="your-acceptance-of-these-terms">
-                     <span class="glyphicon glyphicon-ok"></span> Your acceptance of these terms
+                     <a class="scroll" href="#your-acceptance-of-these-terms"><span class="glyphicon glyphicon-ok"></span></a> Your acceptance of these terms
                   </h2>
                   By using this Site, you signify your acceptance of this policy and terms of service. If you do not agree to this policy, please do not use our Site. Your continued use of the Site following the posting of changes to this policy will be deemed your acceptance of those changes.
                </article>
                <article>
                   <h2 id="contacting-us">
-                     <span class="glyphicon glyphicon-envelope"></span> Contacting us
+                     <a class="scroll" href="#contacting-us"><span class="glyphicon glyphicon-envelope"></span></a> Contacting us
                   </h2>
                   <p>If you have any questions about this Privacy Policy, the practices of this site, or your dealings with this site, please contact us at the <a href="/contact">contact page</a>.
                   </p>

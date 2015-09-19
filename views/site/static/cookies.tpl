@@ -31,7 +31,7 @@
                We use cookies to improve the "Site" performance and to enhance your user experience. This policy explains how we do that.
                <article>
                   <h2 id="what-are-cookies">
-                     <span class="glyphicon glyphicon-info-sign"></span> What are cookies?
+                     <a class="scroll" href="#what-are-cookies"><span class="glyphicon glyphicon-info-sign"></span></a> What are cookies?
                   </h2>
                   <p>Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.</p>
                   <p>There are many functions cookies serve. For example, they can help us to remember your account and preferences, analyse how well Wisply is performing, or even allow us to recommend resources we believe will be most relevant to you.</p>
@@ -41,7 +41,7 @@
                </article>
                <article>
                   <h2 id="what-cookies-do-we-use">
-                     <span class="glyphicon glyphicon-th"></span> What cookies do we use?
+                     <a class="scroll" href="#what-cookies-do-we-use"><span class="glyphicon glyphicon-th"></span></a> What cookies do we use?
                   </h2>
                   In order to deliver its services, Wisply uses these cookies:
                   <ol>
@@ -67,7 +67,7 @@
                </article>
                <article>
                   <h2 id="does-anyone-else-use-cookies-on-Wisply">
-                     <span class="glyphicon glyphicon-transfer"></span> Does anyone else use cookies on Wisply?
+                     <a class="scroll" href="#does-anyone-else-use-cookies-on-Wisply"><span class="glyphicon glyphicon-transfer"></span></a> Does anyone else use cookies on Wisply?
                   </h2>
                   <p>
                      We do use or allow third parties to serve cookies that fall into the two categories above. For example, like many companies, we may place cookies to help us monitor our traffic. We may also use third party cookies to help us with market research, revenue tracking, improving site functionality and monitoring compliance with our terms and conditions and policies.
@@ -77,7 +77,7 @@
                </article>
                <article>
                   <h2 id="can-I-delete-the-cookies">
-                     <span class="glyphicon glyphicon-trash"></span> Can I delete the cookies?
+                     <a class="scroll" href="#can-I-delete-the-cookies"><span class="glyphicon glyphicon-trash"></span></a> Can I delete the cookies?
                   </h2>
                   <p> As there was mentioned above, cookies help you to get the most out of Wisply website.</p>
                   <p>However, if you do wish to disable cookies then you can do so by amending the settings within your browser or mobile device. Another solution is to use an incognito browser, which does not saves the cookies.</p>

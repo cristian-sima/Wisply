@@ -7,14 +7,14 @@
         <li><a href="https://www.facebook.com/wisply" target="_blank">Facebook</a></li>
         <li><a href="https://twitter.com/wisplyOfficial" target="_blank">Twitter</a></li>
         <li><a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub</a></li>
-        <li><a href="/accessibility">Accessibility</a></li>
+        <li><a href="/help">Help</a></li>        
         <li>
           <div class="dropup">
             <span role="button" class="hover link dropdown-toggle" id="moreOptionsFooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <a id="moreButton">More<span class="caret"></span></a>
             </span>
             <ul class="dropdown-menu" aria-labelledby="moreOptionsFooter">
-              <li><a href="/help">Help</a></li>
+              <li><a href="/accessibility">Accessibility</a></li>
               <li><a href="/privacy">Privacy Policy</a></li>
             </ul>
           </div>

@@ -8,7 +8,7 @@
         <div class="panel-body">
           <p>
             <div class=" text-center">
-              We like privacy. We promise.
+              We promise to respect your privacy.
             </div>
             <form action="/auth/register" method="POST" class="form-horizontal" id="register-form" >
               {{ .xsrf_input }}
@@ -39,6 +39,7 @@
                 </div>
                 <div class="form-group" >
                   <div class="text-center" id="register-submit-div">
+                    <p class="text-muted">By creating this account, your you agree to respect our <a target="_blank" href="/help#legal-aspects">legal aspects</a>.</p>
                     <input type="submit" class="btn btn-primary" value="Create account" />
                   </div>
                 </div>
@@ -57,4 +58,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/auth/static/register.js"></script>
+<script src="/static/js/static/auth/register.js"></script>

@@ -1,32 +1,36 @@
 <link rel="stylesheet" href="/static/3rd_party/others/css/keys.css" property='stylesheet'>
 <div class="page-header">
   <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+     <div class="col-lg-4 col-md-5 col-sm-5">
+        <div class="panel panel-default" >
+           <div class="panel-heading">
+              <h3 class="panel-title">How can we help you?</h3>
+           </div>
+           <div class="panel-body">
+              <ul>
+                <li><a class="scroll" href="#FAQ">FAQ</a></li>
+                <li><a class="scroll" href="#legal-aspects">Legal aspects</a></li>
+              </ul>
+           </div>
+        </div>
+     </div>
+    <div class="col-lg-8 col-md-7 col-sm-7">
       <div class="panel panel-default">
-        <aside class="panel-heading" style="padding-bottom:0px">
+        <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a>
             </li>
             <li class="active">Help center</li>
           </ul>
-        </aside>
+        </div>
         <section class="panel-body">
           <h1>Help</h1>
-          This section contain information which may help you.
+          This page contain information which may help you.
 
-            <div class="panel panel-default">
-              <div class="panel-heading">Menu</div>
-              <div class="panel-body">
-                <ul>
-                  <li><a href="#FAQ">FAQ</a></li>
-                  <li><a href="#legal-aspects">Legal aspects</a></li>
-                </ul>
-              </div>
-            </div>
           <section>
             <h2 id="#FAQ">FAQ</h2>
               <ol>
-                <li><a href="#help-answers-1">I need an email to log in. Why don't you use an username?</a>
+                <li><a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?</a>
                 </li>
               </ol>
             <section id="help-answers">

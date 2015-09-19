@@ -41,7 +41,7 @@ var Login = function () {
     * It focuses the name field.
     */
     focusName: function () {
-      $("#login-name").focus();
+      $("#login-email").focus();
     },
     /**
     * It is fired when the form has been submitted. It shows the loading image

@@ -1,3 +1,4 @@
+// Package sources manages the sources
 package sources
 
 import (

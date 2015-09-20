@@ -1,3 +1,4 @@
+// Package admin manages the administrator overview page
 package admin
 
 import (

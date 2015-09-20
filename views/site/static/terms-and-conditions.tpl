@@ -90,7 +90,7 @@
                <article>
                   <h2 id="governing-law"><a class="scroll" href="#governing-law"><span class="glyphicon glyphicon-paperclip"></span></a> Governing Law</h2>
                   <p>Any claim relating to Wisply's web site shall be governed by the laws of United Kingdom and European Union, without regard to its conflict of law provisions.</p>
-                  <p> General Terms and Conditions applicable to Use of a Web Site.</p>
+
                </article>
                <article>
                   <h2 id="use-licence"><a class="scroll" href="#use-licence"><span class="glyphicon glyphicon-heart-empty"></span></a> Use Licence</h2>

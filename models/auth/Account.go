@@ -1,3 +1,4 @@
+// Package auth contains all the functions for creating, login and logout an account
 package auth
 
 import (

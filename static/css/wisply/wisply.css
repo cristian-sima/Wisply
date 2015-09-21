@@ -12,6 +12,10 @@ Author     Cristian Sima
     padding-top: 0px;
 }
 
+.progress {
+  height:20px
+}
+
 #sidebar {
   height: 100%;
   padding-right: 0;

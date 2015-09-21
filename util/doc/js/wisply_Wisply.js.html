@@ -268,6 +268,15 @@ var Wisply = function () {
     * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
     */
     showLoading: function (idElement, size) {
+      HTML = this.getLoadingImage(size);
+      element.html(HTML);
+    },
+    /**
+        * It gets the HTML of the loading image
+        * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+        * @return {string} The HTML for Wisply loading image
+        */
+    getLoadingImage: function(size) {
       /**
       * It returns the dimension in pixels acording to string type
       * @param  {string} size The demension of the image. It can be small (for 20px), medium (for 55px) and large (for 110px)
@@ -275,38 +284,37 @@ var Wisply = function () {
       */
       function getDimension(size) {
         var px = 0;
-        switch (size) {
-          case "small":
-          px = 20;
-          break;
-          case "medium":
-          px = 55;
-          break;
-          case "big":
-          px = 110;
-          break;
-        }
-        return px;
+      switch (size) {
+        case "small":
+        px = 20;
+        break;
+        case "medium":
+        px = 55;
+        break;
+        case "big":
+        px = 110;
+        break;
       }
+      return px;
+    }
 
-      /**
-      * It returns the HTML code for the loading element
-      * @param  {number} dimension The size of the image in px
-      * @return {string}           The HTML code for loading element
-      */
-      function getHTML(dimension) {
-        return "&lt;img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
-      }
-      var HTML, dimension, element;
+    /**
+    * It returns the HTML code for the loading element
+    * @param  {number} dimension The size of the image in px
+    * @return {string}           The HTML code for loading element
+    */
+    function getHTML(dimension) {
+      return "&lt;img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
+    }
+    var HTML, dimension, element;
 
-      if (typeof size === 'undefined') {
-        size = "small";
-      }
-      element = $(idElement);
-      dimension = getDimension(size);
-      HTML = getHTML(dimension);
-      element.html(HTML);
-    },
+    if (typeof size === 'undefined') {
+      size = "small";
+    }
+    element = $(idElement);
+    dimension = getDimension(size);
+    return getHTML(dimension);
+  },
     /**
     * It redirects the account to a certain page
     * @param  {string} address The address of the page
@@ -342,13 +350,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Sources.Manager.html">Manager</a></li><li><a href="Sources.Source.html">Source</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Sources.html">Sources</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.Connection.html">Connection</a></li><li><a href="Repositories.History.html">History</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Page.html">Page</a></li><li><a href="Sources.Manager.html">Manager</a></li><li><a href="Sources.Source.html">Source</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Sources.html">Sources</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Sep 20 2015 13:10:05 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Sep 21 2015 22:45:34 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

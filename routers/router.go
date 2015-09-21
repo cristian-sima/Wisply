@@ -51,9 +51,9 @@ func init() {
 			beego.NSRouter(":id", &controllers.SourceController{}, "POST:Delete"),
 		),
 	)
-
 	repositoryController := beego.NSNamespace("/repositories",
-		beego.NSRouter("", &controllers.RepositoryController{}, "GET:Test"),
+		beego.NSRouter("", &controllers.RepositoryController{}, "*:ShowPanel"),
+		beego.NSRouter("/ws", &controllers.RepositoryController{}, "GET:WebsocketConnection"),
 	)
 
 	accountsNamespace := beego.NSNamespace("/accounts",

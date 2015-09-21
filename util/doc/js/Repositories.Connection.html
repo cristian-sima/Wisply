@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Source</title>
+    <title>JSDoc: Class: Connection</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Source</h1>
+    <h1 class="page-title">Class: Connection</h1>
 
     
 
@@ -29,9 +29,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="Sources.html">Sources</a>.</span>Source</h2>
+            <span class="ancestors"><a href="Repositories.html">Repositories</a>.</span>Connection</h2>
         
-            <div class="class-description">It represents a source</div>
+            <div class="class-description">It represents a websocket connection</div>
         
     
 </header>
@@ -45,14 +45,14 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Source"><span class="type-signature"></span>new Source<span class="signature">(id, name)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Connection"><span class="type-signature"></span>new Connection<span class="signature">(processor)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    The constructor does nothing important
+    Starts the connection and inits the listeners
 </div>
 
 
@@ -88,13 +88,13 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>processor</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -104,30 +104,7 @@
 
             
 
-            <td class="description last">The id of the source</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The name of the source</td>
+            <td class="description last">A callback called when a message is received</td>
         </tr>
 
     
@@ -168,7 +145,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_source_list.js.html">admin/source/list.js</a>, <a href="admin_source_list.js.html#line15">line 15</a>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line136">line 136</a>
     </li></ul></dd>
     
 
@@ -209,6 +186,223 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".initListeners"><span class="type-signature">(static) </span>initListeners<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line157">line 157</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".sendMessage"><span class="type-signature">(static) </span>sendMessage<span class="signature">(value)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It sends a message
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The value of the message</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line173">line 173</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

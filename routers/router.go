@@ -52,6 +52,10 @@ func init() {
 		),
 	)
 
+	repositoryController := beego.NSNamespace("/repositories",
+		beego.NSRouter("", &controllers.RepositoryController{}, "GET:Test"),
+	)
+
 	accountsNamespace := beego.NSNamespace("/accounts",
 		beego.NSRouter("", &controllers.AccountController{}, "*:ListAccounts"),
 		beego.NSNamespace("/modify",
@@ -68,6 +72,7 @@ func init() {
 			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
 			sourcesNamespace,
 			accountsNamespace,
+			repositoryController,
 		)
 
 	// register namespace

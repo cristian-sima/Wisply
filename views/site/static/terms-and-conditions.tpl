@@ -104,13 +104,14 @@
                </article>
                <article>
                   <h2 id="prohibited-uses"><a class="scroll" href="#prohibited-uses"><span class="glyphicon glyphicon-fire"></span></a> Prohibited uses</h2>
+                  <p>You are not allowed to use Wisply: </p>
                   <ul >
-                     <li >in any way that breaches any applicable local, national or international law or regulation</li>
-                     <li >in any way that is unlawful or fraudulent, or has any unlawful or fraudulent purpose or effect</li>
-                     <li >for the purpose of harming or attempting to harm minors in any way</li>
-                     <li >to send, knowingly receive, upload, download, use or re-use any material which does not comply with our content standards</li>
-                     <li >to transmit, or procure the sending of, any unsolicited or unauthorised advertising or promotional material or any other form of similar solicitation (spam) and/or</li>
-                     <li >to knowingly transmit any data, send or upload any material that contains viruses, Trojan horses, worms, time-bombs, keystroke loggers, spyware, adware or any other harmful programs or similar computer code designed to adversely affect the operation of any computer software or hardware.</li>
+                     <li>in any way that breaches any applicable local, national or international law or regulation</li>
+                     <li>in any way that is unlawful or fraudulent, or has any unlawful or fraudulent purpose or effect</li>
+                     <li>for the purpose of harming or attempting to harm minors in any way</li>
+                     <li>to send, knowingly receive, upload, download, use or re-use any material which does not comply with our content standards</li>
+                     <li>to transmit, or procure the sending of, any unsolicited or unauthorised advertising or promotional material or any other form of similar solicitation (spam) and/or</li>
+                     <li>to knowingly transmit any data, send or upload any material that contains viruses, Trojan horses, worms, time-bombs, keystroke loggers, spyware, adware or any other harmful programs or similar computer code designed to adversely affect the operation of any computer software or hardware.</li>
                   </ul>
                   <p>
                      We consider you
@@ -118,24 +119,24 @@
                      do not</strong>:
                   </p>
                   <ul >
-                     <li >use excessive bandwidth</li>
-                     <li >initiate excessive file uploads</li>
-                     <li >initiate excessive application programming interface (API) calls</li>
-                     <li >reproduce, duplicate, copy or re-sell any part of Wisply in contravention of the provisions of our terms of use</li>
-                     <li >access without authority, interfere with, damage or disrupt:</li>
+                     <li>use excessive bandwidth</li>
+                     <li>initiate excessive file uploads</li>
+                     <li>initiate excessive application programming interface (API) calls</li>
+                     <li>reproduce, duplicate, copy or re-sell any part of Wisply in contravention of the provisions of our terms of use</li>
+                     <li>access without authority, interfere with, damage or disrupt:</li>
                      <ul>
-                        <li >any part of Wisply;</li>
-                        <li >any equipment or network on which Wisply is stored;</li>
-                        <li >any software used in the provision of Wisply; or</li>
-                        <li >any equipment or network or software owned or used by any third party.</li>
+                        <li>any part of Wisply;</li>
+                        <li>any equipment or network on which Wisply is stored;</li>
+                        <li>any software used in the provision of Wisply; or</li>
+                        <li>any equipment or network or software owned or used by any third party.</li>
                      </ul>
                   </ul>
 
                   Any of the illegal activities presented above will attract these consequences:<br />
                   <ul>
                     <li>E-mail notice</li>
-                    <li>Restriction of user on the domain</li>
-                    <li>Legal appeal against the attack in the United Kingdom court of justice</li>
+                    <li>Restriction of user on the domain http://wisply.me</li>
+                    <li>Legal appeal against the user in the United Kingdom court of justice</li>
                   </ul>
                   <p> We consider and hope the users are understanding these serious consequences and they will react corresponding.</p>
                </article>

@@ -240,6 +240,7 @@ var Wisply = function () {
     * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
     */
     showLoading: function (idElement, size) {
+      var element = $(idElement), HTML;
       HTML = this.getLoadingImage(size);
       element.html(HTML);
     },
@@ -278,12 +279,11 @@ var Wisply = function () {
     function getHTML(dimension) {
       return "<img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
     }
-    var HTML, dimension, element;
+    var dimension;
 
     if (typeof size === 'undefined') {
       size = "small";
     }
-    element = $(idElement);
     dimension = getDimension(size);
     return getHTML(dimension);
   },

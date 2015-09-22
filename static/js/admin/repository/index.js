@@ -1,4 +1,4 @@
-/* global $, wisply,window */
+/* global $, wisply,window, host*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -155,17 +155,17 @@ var Repositories = function() {
              * It
              */
             initListeners: function() {
-                this.value.onopen = function(evt) {
+                this.value.onopen = function() {
                     wisply.repositories.history.log("The websocket connection has been created");
                     $("#connectionStatus").html("<span class='text-success'>WebSocket connection established</span>");
                 };
-                this.value.onclose = function(evt) {
+                this.value.onclose = function() {
                     wisply.repositories.history.logError("The webscoket connection is closed");
                     $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
                     wisply.repositories.page.errorOcurred();
                 };
                 this.value.onmessage = this.processor;
-                this.value.onerror = function(evt) {
+                this.value.onerror = function() {
                     wisply.repositories.history.logWarning("There was a an error with web scoket connection");
                 };
             },
@@ -192,8 +192,21 @@ var Repositories = function() {
     var StageManager = function StageManager(repositoriesManager) {
         this.repo = repositoriesManager;
         this.data = [{
+            name: "Prepare resources",
+            id:0,
+            perform : function (stageManager) {
+                this.paint();
+              var manager = stageManager;
+              setTimeout(function() {
+                  manager.firedStageFinished();
+              }, 5000);
+            },
+            paint: function() {
+                $('#current').html(wisply.getLoadingImage("big"));
+            }
+        },{
             name: "Connect to server",
-            id: 0,
+            id: 1,
             perform: function(stageManager) {
                 var manager = stageManager.repo;
                 if (window.WebSocket) {
@@ -201,23 +214,29 @@ var Repositories = function() {
                         wisply.repositories.processMessage(data);
                     });
                 } else {
-                    alert("Your browser does not support WebSockets");
+                    this.complain();
                     return;
                 }
                 setTimeout(function() {
                     stageManager.firedStageFinished();
                 }, 400);
+            },
+            complain: function() {
+                  $('#current').html("Wisply was not able to realize the connection. Your browser does not support WebSockets");
+            },
+            paint: function() {
+                $('#current').html(wisply.getLoadingImage("big"));
             }
         }, {
             name: "Test URL",
-            id: 1,
+            id: 2,
+            showBar: true,
             perform: function(stageManager) {
+                this.paint();
+                this.disableModifyURL();
                 var instance = stageManager;
-
                 instance.repo.history.log("Indentifing the source");
-
-                  instance.repo.connection.sendMessage("testURL", "something");
-
+                instance.repo.connection.sendMessage("testURL", $("#Source-URL").val());
             },
             result: function(stageManager, content) {
                   console.log(content);
@@ -225,13 +244,29 @@ var Repositories = function() {
                     stageManager.repo.history.log("The URL is valid");
                     stageManager.firedStageFinished();
                 } else {
-                    stageManager.repo.history.log("The URL is not valid!");
-                    stageManager.repo.page.errorOcurred();
+                    this.complain(stageManager);
                 }
+            },
+            paint: function() {
+                $('#current').html(wisply.getLoadingImage("big"));
+            },
+            complain: function(stageManager) {
+                $('#current').html("The URL is not valid or the address can not be visited. Please correct it and click 'Modify'");
+                stageManager.repo.history.log("The URL is not valid!");
+                stageManager.repo.page.errorOcurred();
+                this.enableModifyURL();
+            },
+            disableModifyURL: function() {
+               $('#modifyButton').prop('disabled', true);
+               $('#Source-URL').prop('disabled', true);
+            },
+            enableModifyURL: function() {
+               $('#modifyButton').prop('disabled', false);
+               $('#Source-URL').prop('disabled', false);
             }
         }, {
             name: "Identify Source",
-            id: 2,
+            id: 3,
             perform: function(stageManager) {
                 var instance = stageManager;
 
@@ -239,7 +274,47 @@ var Repositories = function() {
 
                 instance.repo.connection.sendMessage("identify", "something");
             },
-            result: function(content) {}
+            result: function(stageManager, indentifyInfo) {
+                  console.log(indentifyInfo);
+                if (indentifyInfo.state === true) {
+                    this.paint(indentifyInfo.data.Identify);
+                    stageManager.repo.history.log("The source has been identified");
+                    stageManager.firedStageFinished();
+                } else {
+                    stageManager.repo.history.log("There has error during identification!");
+                    stageManager.repo.errorOcurred();
+                }
+            },
+            paint: function (data) {
+
+                function getHTML(data) {
+                    var html = "";
+                      html += '<ul class="list-group text-left">';
+
+                      for (var property in data) {
+                          if (data.hasOwnProperty(property)) {
+                              if (property === "Description") {
+                                continue;
+                              } else if (typeof data[property] === 'object') {
+                                html += '<li class="list-group-item"> ' + property;
+                                html += getHTML(data[property]);
+                                html += '</li>';
+                              } else {
+                                html += "  <li class='list-group-item'>";
+                                html += property + ": <strong>" + data[property] + "</strong>";
+                                html += "</li>";
+                              }
+                          }
+                      }
+
+                      html += "</ul>";
+                      return html;
+                }
+
+                var html = getHTML(data);
+
+                $("#current").html(html);
+            }
 
         }];
         this.current = "None";
@@ -263,12 +338,15 @@ var Repositories = function() {
             },
             performStage: function(id) {
                 var stage = this.data[id];
+                this.repo.page.update();
                 this.stage = stage;
                 stage.perform(this);
             },
             forceStop: function() {
                 this.current = "None";
-                this.stage.stop();
+                if(this.stage.stop) {
+                    this.stage.stop();
+                  }
             },
             firedStageFinished: function() {
                 this.repo.page.update();
@@ -278,6 +356,11 @@ var Repositories = function() {
             firedEnd: function() {
                 this.repo.page.update();
                 this.repo.history.log("The process has been finished!");
+            },
+            restart: function(number) {
+              this.repo.history.log("Restarting from stage " + (number+1) + "...");
+              this.current = number-1;
+              this.next();
             }
         };
 
@@ -303,9 +386,7 @@ var Repositories = function() {
             init: function() {
               var instance = this;
                 this.page.update();
-                setTimeout(function() {
                   instance.stageManager.start();
-                }, 1000);
             },
             /**
              * It processes the messages received from the server
@@ -331,13 +412,19 @@ var Repositories = function() {
              */
             chooseAction: function(name, content) {
                 switch (name) {
-                    case "identified":
-                        this.stageManager.firedStageFinished();
-                        break;
-                    case "URLTested":
+                    case "FinishIdentify":
+                    case "FinishTestingURL":
                         this.stageManager.stage.result(this.stageManager, content);
                         break;
                 }
+            },
+            errorOcurred: function() {
+              this.stageManager.forceStop();
+              this.page.errorOcurred();
+            },
+            restart: function(stageNumber) {
+              this.stageManager.restart(stageNumber);
+              this.page.restart();
             }
         };
 
@@ -346,9 +433,8 @@ var Repositories = function() {
      * @memberof Repositories
      * @class Page
      * @classdesc It manages the GUI of the page
-     * @param {function} processor A callback called when a message is received
      */
-    var Page = function Page(processor) {
+    var Page = function Page() {
         this.init();
         this.currentTab = "current";
     };
@@ -364,6 +450,10 @@ var Repositories = function() {
                 $("#historyButton").click(function() {
                     instance.showHistory();
                 });
+                $("#modifyButton").click(function() {
+                    wisply.repositories.restart(2);
+                });
+
             },
             showHistory: function() {
                 this.changeTab("history");
@@ -410,18 +500,22 @@ var Repositories = function() {
                 for (id = 0; id < stages.length; id++) {
                     stage = stages[id];
                     if (id === current) {
-                        item = '<li class="list-group-item active">' + stage.name + '</li>';
+                        item = '<li class="list-group-item active">' + stage.name + ' <br />';
+                        if(stage.showBar) {
+                            item += "<div class='progress'><div class='progress-bar progress-bar-success' style='width: 40%''></div></div>";
+                        }
+                        item += "</li>";
                     } else {
                         if (id < current) {
                             item = '<li class="list-group-item text-muted"><del>' + stage.name + '</del></li>';
                         } else {
-                            item = '<li class="list-group-item">' + stage.name + '</li>';
+                            item = '<li class="list-group-item">' + stage.name;
                         }
                     }
                     html += item;
                 }
                 if (current === stages.length) {
-                    html += '<div class="panel panel-primary">  <div class="panel-heading">    <h3 class="panel-title">Great!</h3></div>  <div class="panel-body">    The process is over.  </div></div>';
+                    html += '<div class="panel panel-success">  <div class="panel-heading">    <h3 class="panel-title">Great!</h3></div>  <div class="panel-body">    The process is over.  </div></div>';
                     this.processFinished();
                 }
                 $("#stages").html(html);
@@ -432,7 +526,7 @@ var Repositories = function() {
                     current = manager.current,
                     total = manager.data.length,
                     percent = 0;
-                if (current === "NONE") {
+                if (current === "None") {
                     percent = 0;
                 } else {
                     percent = (current) / total;
@@ -456,10 +550,14 @@ var Repositories = function() {
                 var general = $("#generalIndicator");
                 general.removeClass("progress-striped");
                 general.find(".progress-bar").addClass("progress-bar-danger");
+            },
+            restart: function () {
+                  var general = $("#generalIndicator");
+                  general.addClass("progress-striped");
+                  general.find(".progress-bar").removeClass("progress-bar-danger");
+                  this.updateGeneralIndicator();
             }
         };
-
-
     return {
         Manager: Manager
     };

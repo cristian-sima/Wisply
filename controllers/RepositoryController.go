@@ -123,7 +123,7 @@ func (c *connection) chooseAction(name, value string) {
 	switch name {
 	case "testURL":
 		{
-			c.controller.TestURL()
+			c.controller.TestURL(value)
 		}
 	case "identify":
 		{
@@ -163,6 +163,11 @@ func (c *connection) write(opCode int, payload []byte) error {
 	return c.ws.WriteMessage(opCode, payload)
 }
 
+type JSONMessage struct {
+	Name    string      `json:"name"`
+	Content interface{} `json:"content"`
+}
+
 // RepositoryController It manages the operations for sources (list, delete, add)
 type RepositoryController struct {
 	AdminController
@@ -190,14 +195,25 @@ func (controller *RepositoryController) WebsocketConnection() {
 	c.readPump()
 }
 
-func (controller *RepositoryController) TestURL() {
+func (controller *RepositoryController) TestURL(address string) {
 
-	_, err := http.Get("http://google.com")
-	if err != nil {
-		h.broadcast <- []byte("{\"name\": \"URLTested\", \"content\" :\"false\"}")
+	var isOk bool = true
+
+	request, err := http.Get(address)
+	fmt.Println(request)
+	if request == nil || err != nil {
+		isOk = false
+	} else if http.StatusOK != request.StatusCode {
+		isOk = false
+	}
+
+	// change in database
+
+	if !isOk {
+		h.broadcast <- []byte("{\"name\": \"FinishTestingURL\", \"content\" :\"false\"}")
 		fmt.Println("nu e bun")
 	} else {
-		h.broadcast <- []byte("{\"name\": \"URLTested\", \"content\":\"true\"}")
+		h.broadcast <- []byte("{\"name\": \"FinishTestingURL\", \"content\":\"true\"}")
 		fmt.Println("e bun")
 	}
 
@@ -212,7 +228,27 @@ func (controller *RepositoryController) IdentifySource() {
 	})
 
 	req.Harvest(func(record *oai.Response) {
-		h.broadcast <- []byte("{\"name\":\"identified\"}")
+
+		type Content struct {
+			State bool          `json:"state"`
+			Data  *oai.Response `json:"data"`
+		}
+
+		content := Content{
+			State: true,
+			Data:  record,
+		}
+
+		msg := JSONMessage{
+			Name:    "FinishIdentify",
+			Content: content,
+		}
+		jsonMsg, _ := json.Marshal(&msg)
+		fmt.Println("maica")
+		fmt.Println(jsonMsg)
+		s := string(jsonMsg[:])
+		fmt.Println(s)
+		h.broadcast <- jsonMsg
 	})
 
 }

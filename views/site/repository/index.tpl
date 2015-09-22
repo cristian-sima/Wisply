@@ -8,10 +8,13 @@
   </div>
   <div class="panel-body">
     <div class="row">
-        <div class="col-md-4">
-            <input type="input" id="Source-URL" value="http://www.edshare.soton.ac.uk/cgi/oai2"/>
+        <div class="col-md-8">
+            <div class="input-group">
+              <input type="input" id="Source-URL" disabled value="http://www.edshare.soton.ac.uk/cgi/oai2"/>  <span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton" />
+            </span>
           </div>
-        <div class="col-md-4 col-md-offset-4"><div id="connectionStatus">Please wait...</div></div>
+          </div>
+        <div class="col-md-4"><div id="connectionStatus">Please wait...</div></div>
     </div>
     <br />
     <div id="generalIndicator" class="progress progress-striped active">
@@ -29,8 +32,6 @@
         </ul>
         <div id="myTabContent" class="tab-content" >
           <div class="tab-pane fade active in text-center" id="current">
-            <img src="/static/img/wisply/load.gif" alt="Loading" />
-
           </div>
           <div class="tab-pane fade" id="history">
 

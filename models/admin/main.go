@@ -3,21 +3,19 @@ package admin
 
 import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
-	sources "github.com/cristian-sima/Wisply/models/sources"
+	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Dashboard It represents the administrator's dashboard
 type Dashboard struct {
-	Accounts int
-	Sources  int
+	Accounts     int
+	Repositories int
 }
 
 // NewDashboard It creates a new Dashboard
 func NewDashboard() *Dashboard {
-	numberOfAccounts := auth.CountAccounts()
-	numberOfSources := sources.CountSources()
 	return &Dashboard{
-		Accounts: numberOfAccounts,
-		Sources:  numberOfSources,
+		Accounts:     auth.CountAccounts(),
+		Repositories: repository.CountRepositories(),
 	}
 }

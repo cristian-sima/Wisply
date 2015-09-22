@@ -48,21 +48,23 @@ CREATE TABLE `account_token` (
   `timestamp` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=329 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `source`
+-- Table structure for table `repository`
 --
 
-DROP TABLE IF EXISTS `source`;
+DROP TABLE IF EXISTS `repository`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `source` (
+CREATE TABLE `repository` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   `url` varchar(2083) NOT NULL,
+  `status` enum('unverified','verification-failed','good','problems-harvesting') NOT NULL,
+  `lastHarvest` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -77,4 +79,4 @@ CREATE TABLE `source` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-20 13:09:56
+-- Dump completed on 2015-09-22 17:46:10

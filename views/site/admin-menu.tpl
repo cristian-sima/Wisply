@@ -7,12 +7,12 @@
       <ul class="nav">
         <li ><a href="/admin">Dashboard</a></li>
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/sources" aria-expanded="true">
-            Source <span class="caret"></span>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/repositories" aria-expanded="true">
+            Repository <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/admin/sources/add">Add</a></li>
-            <li><a href="/admin/sources/">Manage</a></li>
+            <li><a href="/admin/repositories/add">Add</a></li>
+            <li><a href="/admin/repositories/">Manage</a></li>
           </ul>
         </li>
         <li >

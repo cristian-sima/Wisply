@@ -12,8 +12,8 @@
               Accounts
             </a>
             <a class="list-group-item" href="admin/sources">
-              <span class="badge"> {{ .numberOfSources }}</span>
-              Sources
+              <span class="badge"> {{ .numberOfRepositories }}</span>
+              Repositories
             </a>
           </div>
         </div>

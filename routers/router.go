@@ -37,23 +37,23 @@ func init() {
 
 	// ----------------------------- Admin --------------------------------------
 
-	sourcesNamespace := beego.NSNamespace("/sources",
-		beego.NSRouter("", &controllers.SourceController{}, "*:ListSources"),
+	repositoryNamespace := beego.NSNamespace("/repositories",
+		beego.NSRouter("", &controllers.RepositoryController{}, "*:ListRepositories"),
 		beego.NSNamespace("/add",
-			beego.NSRouter("", &controllers.SourceController{}, "GET:AddNewSource"),
-			beego.NSRouter("", &controllers.SourceController{}, "POST:InsertSource"),
+			beego.NSRouter("", &controllers.RepositoryController{}, "GET:AddNewRepository"),
+			beego.NSRouter("", &controllers.RepositoryController{}, "POST:InsertRepository"),
 		),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &controllers.SourceController{}, "GET:Modify"),
-			beego.NSRouter(":id", &controllers.SourceController{}, "POST:Update"),
+			beego.NSRouter(":id", &controllers.RepositoryController{}, "GET:Modify"),
+			beego.NSRouter(":id", &controllers.RepositoryController{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &controllers.SourceController{}, "POST:Delete"),
+			beego.NSRouter(":id", &controllers.RepositoryController{}, "POST:Delete"),
 		),
-	)
-	repositoryController := beego.NSNamespace("/repositories",
-		beego.NSRouter("", &controllers.RepositoryController{}, "*:ShowPanel"),
-		beego.NSRouter("/ws", &controllers.RepositoryController{}, "GET:WebsocketConnection"),
+		beego.NSNamespace("/init",
+			beego.NSRouter("", &controllers.HarvestController{}, "*:ShowPanel"),
+			beego.NSRouter("/ws", &controllers.HarvestController{}, "GET:InitWebsocketConnection"),
+		),
 	)
 
 	accountsNamespace := beego.NSNamespace("/accounts",
@@ -70,9 +70,8 @@ func init() {
 	adminNamespace :=
 		beego.NewNamespace("/admin",
 			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
-			sourcesNamespace,
 			accountsNamespace,
-			repositoryController,
+			repositoryNamespace,
 		)
 
 	// register namespace

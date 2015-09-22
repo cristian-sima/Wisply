@@ -50,8 +50,10 @@ func init() {
 		beego.NSNamespace("/delete",
 			beego.NSRouter(":id", &controllers.RepositoryController{}, "POST:Delete"),
 		),
+	)
+	harvestNamespace := beego.NSNamespace("/harvest",
 		beego.NSNamespace("/init",
-			beego.NSRouter("", &controllers.HarvestController{}, "*:ShowPanel"),
+			beego.NSRouter(":id", &controllers.HarvestController{}, "POST:ShowPanel"),
 			beego.NSRouter("/ws", &controllers.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
 	)
@@ -72,6 +74,7 @@ func init() {
 			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
 			accountsNamespace,
 			repositoryNamespace,
+			harvestNamespace,
 		)
 
 	// register namespace

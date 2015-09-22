@@ -212,12 +212,17 @@ var Wisply = function () {
       }
       args.dataType = "text";
       args.method = args.type = "POST";
+      args.data._xsrf = this.getXSRF();
+      $.ajax(args);
+    },
+    getXSRF : function() {
       var xsrf,
-      xsrflist;
+      xsrflist,
+      value;
       xsrf = $.cookie("_xsrf");
       xsrflist = xsrf.split("|");
-      args.data._xsrf = base64_decode(xsrflist[0]);
-      $.ajax(args);
+      value = base64_decode(xsrflist[0]);
+      return value;
     },
     /**
     * It refreshes the page

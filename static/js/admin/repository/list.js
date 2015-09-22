@@ -48,6 +48,7 @@ var Repositories = function () {
     */
     activateListeners: function () {
       $(".deleteRepositoryButton").click(confirmDelete);
+      $(".repositories-init-harvest").click(initRepository);
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
       });
@@ -148,6 +149,23 @@ var Repositories = function () {
     repository = new Repository(id, name);
     wisply.repositoriesManager.confirmDelete(repository);
   }
+
+  function initRepository(e) {
+      e.preventDefault();
+      var instance,
+      id,
+      xsrf,
+      repository;
+      instance = $(this);
+      id = instance.data("id");
+      xsrf = wisply.getXSRF();
+
+        $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
+          '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
+          '</form>').submit();
+
+  }
+
   return {
     Repository: Repository,
     Manager: Manager

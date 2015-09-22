@@ -36,21 +36,29 @@
             <td>{{ $element.Name |html }}</td>
             <td>
               {{ if eq  $element.Status "unverified" }}
-              <a href="init/{{ $element.ID }}"><span class="label label-warning">Unverified</span></a>
+              <span class="label label-warning">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Validate now!' class='repositories-init-harvest glyphicon glyphicon-circle-arrow-down hover' ></span>
+
               {{ else if eq  $element.Status "ok" }}
               <span class="label label-success">Ok</span>
+
+
               {{ else if eq  $element.Status "verifying" }}
               <span class="label label-info">Verifing</span>
+
+
               {{ else if eq  $element.Status "updating" }}
               <span class="label label-warning">Updating</span>
+
+
               {{ else if eq  $element.Status "verification-failed" }}
-              <span class="label label-danger">Verification failed</span> <a href="" data-toggle="tooltip" data-placement="top" title="" data-original-title="Try again"><span class="glyphicon glyphicon-refresh"  ></span></a>
+              <span class="label label-danger">Verification failed</span>
+              <a href='' data-toggle='tooltip' data-placement='top' title='' data-original-title='Try again'><span class='glyphicon glyphicon-refresh'  ></span></a>
+
+
               {{ else if eq  $element.Status "problems-harvesting" }}
               <span class="label label-danger">Problems harvesting</span>
+
               {{ end }}
-
-
-
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Manager</title>
+    <title>JSDoc: Class: StageManager</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Manager</h1>
+    <h1 class="page-title">Class: StageManager</h1>
 
     
 
@@ -29,9 +29,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="Repositories.html">Repositories</a>.</span>Manager</h2>
+            <span class="ancestors"><a href="Harvest.html">Harvest</a>.</span>StageManager</h2>
         
-            <div class="class-description">It encapsulets the functionality for the repositories</div>
+            <div class="class-description">It encapsulets the functionality for the sources</div>
         
     
 </header>
@@ -45,14 +45,14 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Manager"><span class="type-signature"></span>new Manager<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="StageManager"><span class="type-signature"></span>new StageManager<span class="signature">(Manager<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    The constructor activates the listeners
+    Saves the stages
 </div>
 
 
@@ -61,6 +61,62 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Manager</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">repositoriesManager The reference to the repositories manager</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -96,7 +152,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line28">line 28</a>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -145,14 +201,14 @@
 
     
 
-    <h4 class="name" id=".activateListeners"><span class="type-signature">(static) </span>activateListeners<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".firedEnd"><span class="type-signature">(static) </span>firedEnd<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It activates the listener for deleting a repository
+    It is called when all the stages has been called. It updates the page
 </div>
 
 
@@ -196,7 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line49">line 49</a>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line438">line 438</a>
     </li></ul></dd>
     
 
@@ -210,11 +266,6 @@
 
 
 
-
-<h5>Fires:</h5>
-<ul>
-    <li>RepositoriesManager#event:confirmDelete</li>
-</ul>
 
 
 
@@ -232,14 +283,342 @@
 
     
 
-    <h4 class="name" id=".confirmDelete"><span class="type-signature">(static) </span>confirmDelete<span class="signature">(repository)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".firedStageFinished"><span class="type-signature">(static) </span>firedStageFinished<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It is called when the user wants to delete a repository. It asks for confirmation
+    Called when a stage has finished. It updates the page and calls the next stage
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line426">line 426</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".forceStop"><span class="type-signature">(static) </span>forceStop<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It forces the manager to stop. It forces the current stage to stop
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line415">line 415</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".next"><span class="type-signature">(static) </span>next<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It calls the next stage. If there are no stages, it calls firedEnd
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line392">line 392</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".pause"><span class="type-signature">(static) </span>pause<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It pauses the manager
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line455">line 455</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".performStage"><span class="type-signature">(static) </span>performStage<span class="signature">(id)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It performs a stage
 </div>
 
 
@@ -275,13 +654,13 @@
 
         <tr>
             
-                <td class="name"><code>repository</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Repository</span>
+<span class="param-type">number</span>
 
 
             
@@ -291,7 +670,7 @@
 
             
 
-            <td class="description last">The reference to the repository object</td>
+            <td class="description last">The id of the stage</td>
         </tr>
 
     
@@ -332,7 +711,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line60">line 60</a>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line404">line 404</a>
     </li></ul></dd>
     
 
@@ -363,14 +742,14 @@
 
     
 
-    <h4 class="name" id=".delete"><span class="type-signature">(static) </span>delete<span class="signature">(repository)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".restart"><span class="type-signature">(static) </span>restart<span class="signature">(number)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It delets a repository
+    It performs again a stage
 </div>
 
 
@@ -406,13 +785,13 @@
 
         <tr>
             
-                <td class="name"><code>repository</code></td>
+                <td class="name"><code>number</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Repository</span>
+<span class="param-type">number</span>
 
 
             
@@ -422,7 +801,7 @@
 
             
 
-            <td class="description last">The repository object</td>
+            <td class="description last">The id of the stage</td>
         </tr>
 
     
@@ -463,7 +842,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line106">line 106</a>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line447">line 447</a>
     </li></ul></dd>
     
 
@@ -494,174 +873,14 @@
 
     
 
-    <h4 class="name" id=".getDialogMessage"><span class="type-signature">(static) </span>getDialogMessage<span class="signature">(repository)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".start"><span class="type-signature">(static) </span>start<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It returns the object which contain the arguments for the confirmation dialog
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>repository</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Repository</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The repository object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line70">line 70</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="http://bootboxjs.com/">http://bootboxjs.com/</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The arguements for dialog
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".init"><span class="type-signature">(static) </span>init<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It activates the listeners
+    It starts the manager. It calls the first stage
 </div>
 
 
@@ -705,7 +924,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line42">line 42</a>
+        <a href="admin_harvest_init.js.html">admin/harvest/init.js</a>, <a href="admin_harvest_init.js.html#line385">line 385</a>
     </li></ul></dd>
     
 

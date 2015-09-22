@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: admin/account/list.js</title>
+    <title>JSDoc: Source: admin/repository/list.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: admin/account/list.js</h1>
+    <h1 class="page-title">Source: admin/repository/list.js</h1>
 
     
 
@@ -26,69 +26,76 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global jQuery,$, wisply */
+            <pre class="prettyprint source linenums"><code>/* global $, wisply */
 
 /**
-* @file Encapsulates the functionality for managing the accounts
+* @file Encapsulates the functionality for managing the repositories
 * @author Cristian Sima
 */
 
 
 /**
-* @namespace Accounts
+* @namespace Repositories
 */
-var Accounts = function () {
+var Repositories = function () {
   'use strict';
 
   /**
-  * The constructor does nothing
-  * @class
-  * @memberof Accounts
-  * @classdesc It represents a Wisply account
-  * @param {number} id   The id of the account
-  * @param {string} name The name of the account
+  * The constructor does nothing important
+  * @class Repository
+  * @memberof Repositories
+  * @classdesc It represents a repository
+  * @param {number} id   The id of the repository
+  * @param {string} name The name of the repository
   */
-  var Account = function Account(id, name) {
+  var Repository = function Repository(id, name) {
     this.id = id;
     this.name = name;
   };
 
   /**
   * The constructor activates the listeners
+  * @memberof Repositories
   * @class Manager
-  * @memberof Accounts
-  * @classdesc It encapsulets the functions for accounts.
+  * @classdesc It encapsulets the functionality for the repositories
   */
   var Manager = function Manager() {
-    this.activateListeners();
   };
-  /**
-  * @memberof Manager
-  */
   Manager.prototype =
-  /** @lends Accounts.Manager */
+  /** @lends Repositories.Manager */
   {
     /**
-    * It activates the listener for all delete buttons
-    * @fires AccountsManager#confirmDelete
+    * It activates the listeners
     */
-    activateListeners: function () {
-      $(".deleteAccountButton").click(confirmDelete);
+    init: function () {
+      this.activateListeners();
     },
     /**
-    * It requests the user to confirm
-    * @param  {Account} account  The Account object to be deleted
+    * It activates the listener for deleting a repository
+    * @fires RepositoriesManager#confirmDelete
     */
-    confirmDelete: function (account) {
-      var msg = this.getDialogMessage(account);
+    activateListeners: function () {
+      $(".deleteRepositoryButton").click(confirmDelete);
+      $(".repositories-init-harvest").click(initRepository);
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    },
+    /**
+    * It is called when the user wants to delete a repository. It asks for confirmation
+    * @param  {Repository} repository The reference to the repository object
+    */
+    confirmDelete: function (repository) {
+      var msg = this.getDialogMessage(repository);
       wisply.message.dialog(msg);
     },
     /**
-    * It returns the arguements of the confimation message
-    * @param  {Account} account The Account object to be deleted
-    * @return {object}         The arguements of the confimation message
+    * It returns the object which contain the arguments for the confirmation dialog
+    * @param  {Repository} repository The repository object
+    * @return {Object}        The arguements for dialog
+    * @see http://bootboxjs.com/
     */
-    getDialogMessage: function (account) {
+    getDialogMessage: function (repository) {
       var buttons,
       cancelButton,
       msg,
@@ -105,7 +112,7 @@ var Accounts = function () {
         label: "Delete",
         className: "btn-primary",
         callback: function () {
-          wisply.accountsManager.delete(account);
+          wisply.repositoriesManager.delete(repository);
         }
       };
       buttons = {
@@ -114,40 +121,38 @@ var Accounts = function () {
       };
       msg = {
         title: "Please confirm!",
-        message: "The account &lt;b>" + account.name + "&lt;/b> will be permanently removed. Are you sure?",
+        message: "The repository &lt;b>" + repository.name + "&lt;/b> will be permanently removed. Are you sure?",
         onEscape: true,
         buttons: buttons
       };
       return msg;
     },
     /**
-    * It delets a user
-    * @param  {Account} account The account to be deleted
+    * It delets a repository
+    * @param  {Repository} repository The repository object
     */
-    delete: function (account) {
+    delete: function (repository) {
       var request,
       successCallback,
       errorCallback;
 
       /**
-      * It is called when the deletion has been done. It reloads the page in 2 seconds
-      * @ignore
+      * The callback called when the repository has been deleted. It shows a message and reloads the page in 2 seconds
       */
       successCallback =  function () {
-        wisply.message.showSuccess("The account has been removed! Refreshing page...");
-        wisply.reloadPage();
+        wisply.message.showSuccess("The repository has been removed! Refreshing page...");
+        wisply.reloadPage(2000);
       };
 
       /**
-      * It is called when there has been problems
-      * @ignore
+      * The callback called when there was a problem. It shows a message
       */
       errorCallback = function () {
         wisply.message.showError("There was a problem with your request!");
       };
 
       request = {
-        "url": '/admin/accounts/delete/' + account.id,
+        "url": '/admin/repositories/delete/' + repository.id,
         "success": successCallback,
         "error": errorCallback
       };
@@ -156,32 +161,49 @@ var Accounts = function () {
   };
 
   /**
-  * It is called when the user clicks the delete button. It requests the user to confirm
-  * @event AccountsManager#confirmDelete
+  * It is called when the user clicks the delete button. It creates the repository button and asks for confirmation
+  * @fires RepositoriesManager#confirmDelete()
+  * @param  {event} e The event generated
   */
-  function confirmDelete() {
-    event.preventDefault();
+  function confirmDelete(e) {
+    e.preventDefault();
     var instance,
     name,
     id,
-    account;
+    repository;
     instance = $(this);
     id = instance.data("id");
     name = instance.data("name");
-    account = new Account(id, name);
-    wisply.accountsManager.confirmDelete(account);
+    repository = new Repository(id, name);
+    wisply.repositoriesManager.confirmDelete(repository);
+  }
+
+  function initRepository(e) {
+      e.preventDefault();
+      var instance,
+      id,
+      xsrf,
+      repository;
+      instance = $(this);
+      id = instance.data("id");
+      xsrf = wisply.getXSRF();
+
+        $('&lt;form action="/admin/harvest/init/' + id + '" method="POST">' +
+          '&lt;input type="hidden" name="_xsrf" value="' + xsrf + '">' +
+          '&lt;/form>').submit();
+
   }
 
   return {
-    Manager: Manager,
-    Account: Account
+    Repository: Repository,
+    Manager: Manager
   };
 };
-jQuery(document).ready(function() {
+$(document).ready(function() {
   "use strict";
-  var module = new Accounts();
-  wisply.accountsManager = new module.Manager();
-  wisply.accountsManager.init();
+  var module = new Repositories();
+  wisply.repositoriesManager = new module.Manager();
+  wisply.repositoriesManager.init();
 });
 </code></pre>
         </article>

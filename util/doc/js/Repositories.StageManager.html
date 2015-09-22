@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Message</title>
+    <title>JSDoc: Class: StageManager</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Message</h1>
+    <h1 class="page-title">Class: StageManager</h1>
 
     
 
@@ -29,9 +29,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="Wisply.html">Wisply</a>.</span>Message</h2>
+            <span class="ancestors"><a href="Repositories.html">Repositories</a>.</span>StageManager</h2>
         
-            <div class="class-description">It uses manages the operating regarding JavaScript messages</div>
+            <div class="class-description">It encapsulets the functionality for the sources</div>
         
     
 </header>
@@ -45,14 +45,14 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Message"><span class="type-signature"></span>new Message<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="StageManager"><span class="type-signature"></span>new StageManager<span class="signature">(Manager<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It creates the object
+    Saves the stages
 </div>
 
 
@@ -61,6 +61,62 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Manager</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">repositoriesManager The reference to the repositories manager</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -96,7 +152,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line72">line 72</a>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -145,14 +201,14 @@
 
     
 
-    <h4 class="name" id=".alert"><span class="type-signature">(static) </span>alert<span class="signature">(args)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".firedEnd"><span class="type-signature">(static) </span>firedEnd<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It represents an adapter for the bootbox alert function. It shows an error message
+    It is called when all the stages has been called. It updates the page
 </div>
 
 
@@ -161,55 +217,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>args</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The arguments for the dialog</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -245,306 +252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line118">line 118</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="http://bootboxjs.com/">Bootbox official website</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".dialog"><span class="type-signature">(static) </span>dialog<span class="signature">(args)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It represents an adapter for the bootbox alert function. It shows a dialog message
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>args</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The arguments for the dialog</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line126">line 126</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="http://bootboxjs.com/">Bootbox official website</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".show"><span class="type-signature">(static) </span>show<span class="signature">(title, content)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It shows a message
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>title</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The title of the message</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>content</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The content of the message</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line107">line 107</a>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line434">line 434</a>
     </li></ul></dd>
     
 
@@ -575,14 +283,14 @@
 
     
 
-    <h4 class="name" id=".showError"><span class="type-signature">(static) </span>showError<span class="signature">(message)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".firedStageFinished"><span class="type-signature">(static) </span>firedStageFinished<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It shows an error message
+    Called when a stage has finished. It updates the page and calls the next stage
 </div>
 
 
@@ -591,55 +299,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The content of the message to be displayed</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -675,7 +334,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line99">line 99</a>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line426">line 426</a>
     </li></ul></dd>
     
 
@@ -706,14 +365,260 @@
 
     
 
-    <h4 class="name" id=".showSuccess"><span class="type-signature">(static) </span>showSuccess<span class="signature">(message)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".forceStop"><span class="type-signature">(static) </span>forceStop<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It shows a succesful message
+    It forces the manager to stop. It forces the current stage to stop
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line415">line 415</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".next"><span class="type-signature">(static) </span>next<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It calls the next stage. If there are no stages, it calls firedEnd
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line392">line 392</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".pause"><span class="type-signature">(static) </span>pause<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It pauses the manager
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line451">line 451</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".performStage"><span class="type-signature">(static) </span>performStage<span class="signature">(id)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It performs a stage
 </div>
 
 
@@ -749,13 +654,13 @@
 
         <tr>
             
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
             
@@ -765,7 +670,7 @@
 
             
 
-            <td class="description last">The content of the message to be displayed</td>
+            <td class="description last">The id of the stage</td>
         </tr>
 
     
@@ -806,7 +711,220 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_wisply.js.html">wisply/wisply.js</a>, <a href="wisply_wisply.js.html#line92">line 92</a>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line404">line 404</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".restart"><span class="type-signature">(static) </span>restart<span class="signature">(number)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It performs again a stage
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The id of the stage</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line443">line 443</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".start"><span class="type-signature">(static) </span>start<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It starts the manager. It calls the first stage
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_index.js.html">admin/repository/index.js</a>, <a href="admin_repository_index.js.html#line385">line 385</a>
     </li></ul></dd>
     
 

@@ -6,9 +6,8 @@
 /**
  * @namespace Repositories
  */
-var Repositories = function() {
+var Repositories = function () {
     'use strict';
-
     /**
      * Creates an empty history
      * @memberof Repositories
@@ -18,7 +17,6 @@ var Repositories = function() {
     var History = function History() {
         this.data = [];
     };
-
     History.prototype =
         /** @lends Repositories.History */
         {
@@ -26,44 +24,41 @@ var Repositories = function() {
              * It adds a log message
              * @param [string] content The content of the event
              */
-            log: function(content) {
+            log: function (content) {
                 this.add(content, "LOG");
             },
             /**
              * It adds an error message
              * @param [string] content The content of the message
              */
-            logError: function(content) {
+            logError: function (content) {
                 this.add(content, "ERROR");
             },
             /**
              * It adds a warning message
              * @param [string] content The content of the message
              */
-            logWarning: function(content) {
+            logWarning: function (content) {
                 this.add(content, "WARN");
             },
             /**
-             * It adds an event to history. It assigns the datestamp
+             * It is called by log, logError and logWarning. It adds an event to history. It assigns the datestamp. It calls the updater
+             * @private
              * @param {string} content The content of the message
              * @param {string} type    The type of the message. It can be "LOG", "ERROR" or "WARN"
              */
-            add: function(content, type) {
+            add: function (content, type) {
                 var datetime;
-
-                function getNiceDate() {
+                /**
+                 * It returns the date in a human readable form
+                 * @return {string} The date in a human readable form
+                 */
+                function getHumanDate() {
                     var currentdate = new Date(),
-                        datetime = currentdate.getDate() + "." +
-                        (currentdate.getMonth() + 1) + "." +
-                        currentdate.getFullYear() + " at " +
-                        currentdate.getHours() + ":" +
-                        currentdate.getMinutes() + ":" +
-                        currentdate.getSeconds();
+                        datetime = currentdate.getDate() + "." + (currentdate.getMonth() + 1) + "." + currentdate.getFullYear() + " at " + currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
                     return datetime;
                 }
-
-                datetime = getNiceDate();
-
+                datetime = getHumanDate();
                 this.data.unshift({
                     date: datetime,
                     content: content,
@@ -77,40 +72,50 @@ var Repositories = function() {
              * It returns the history in HTML format
              * @return [string] The history in HTML format
              */
-            getHTML: function() {
-
+            getHTML: function () {
+                /**
+                 * It creates the HTML header of the table
+                 * @return {string} The HTMl header of the table
+                 */
                 function getHeader() {
                     var header = "";
                     header = "<thead><tr><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
                     return header;
                 }
 
+                /**
+                 * It creates the body of the table
+                 * @param  {string} arrray The events
+                 * @return {string}        The HTML body of the table
+                 */
                 function getBody(arrray) {
                     var result = "<tbody>",
                         i, currentEvent;
 
-
+                    /**
+                     * It returns the type of HTML code
+                     * @param  {string} type It can be "LOG", "ERROR" or "WARN"
+                     * @return {string}      The HTML code for the type of the event
+                     */
                     function getType(type) {
                         var textClass = "",
                             content = "";
                         switch (type) {
-                            case "LOG":
-                                textClass = "";
-                                content = "Event";
-                                break;
-                            case "ERROR":
-                                textClass = "text-danger";
-                                content = "Error";
-                                break;
-                            case "WARN":
-                                textClass = "text-warning";
-                                content = "Warn";
-                                break;
+                        case "LOG":
+                            textClass = "";
+                            content = "Event";
+                            break;
+                        case "ERROR":
+                            textClass = "text-danger";
+                            content = "Error";
+                            break;
+                        case "WARN":
+                            textClass = "text-warning";
+                            content = "Warning";
+                            break;
                         }
                         return "<span class='" + textClass + "'>" + content + "</span>";
                     }
-
-
                     for (i = 0; i < arrray.length; i++) {
                         currentEvent = arrray[i];
                         result += "<tr>";
@@ -122,7 +127,6 @@ var Repositories = function() {
                     result += "</tbody>";
                     return result;
                 }
-
                 var html = "<table class='table table=condensed table-hover ''>",
                     events = "";
                 html += getHeader();
@@ -132,7 +136,6 @@ var Repositories = function() {
                 return html;
             }
         };
-
     /**
      * Starts the connection and inits the listeners
      * @memberof Repositories
@@ -141,39 +144,37 @@ var Repositories = function() {
      * @param {function} processor A callback called when a message is received
      */
     var Connection = function Connection(processor) {
-
         this.value = new WebSocket("ws://" + host + "/admin/repositories/ws");
-
         this.processor = processor;
         this.initListeners();
     };
-
     Connection.prototype =
         /** @lends Repositories.Connection */
         {
             /**
              * It
              */
-            initListeners: function() {
-                this.value.onopen = function() {
+            initListeners: function () {
+                this.value.onopen = function () {
                     wisply.repositories.history.log("The websocket connection has been created");
                     $("#connectionStatus").html("<span class='text-success'>WebSocket connection established</span>");
                 };
-                this.value.onclose = function() {
+                this.value.onclose = function () {
                     wisply.repositories.history.logError("The webscoket connection is closed");
                     $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
                     wisply.repositories.page.stop();
                 };
                 this.value.onmessage = this.processor;
-                this.value.onerror = function() {
+                this.value.onerror = function () {
                     wisply.repositories.history.logWarning("There was a an error with web scoket connection");
                 };
             },
             /**
              * It sends a message
-             * @param  {string} value The value of the message
+             * @param  {string} name The name of the message
+             * @param  {object} value The value of the message
              */
-            sendMessage: function(name, value) {
+            sendMessage: function (name, value) {
                 var msg = {
                     name: name,
                     value: value
@@ -181,65 +182,91 @@ var Repositories = function() {
                 this.value.send(JSON.stringify(msg));
             }
         };
-
     /**
      * Saves the stages
      * @memberof Repositories
-     * @class StagerManager
+     * @class StageManager
      * @classdesc It encapsulets the functionality for the sources
      * @param [Manager] repositoriesManager The reference to the repositories manager
      */
     var StageManager = function StageManager(repositoriesManager) {
         this.status = "stopped";
         this.repo = repositoriesManager;
+        // stages
         this.data = [{
             name: "Prepare resources",
-            id:0,
-            perform : function (stageManager) {
+            id: 0,
+            /**
+             * It prepares the resources
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
                 this.paint();
-              var manager = stageManager;
-              setTimeout(function() {
-                  manager.firedStageFinished();
-              }, 5000);
+                var manager = stageManager;
+                setTimeout(function () {
+                    manager.firedStageFinished();
+                }, 5000);
             },
-            paint: function() {
+            /**
+             * It shows the loading image
+             */
+            paint: function () {
                 $('#current').html(wisply.getLoadingImage("big"));
             }
-        },{
+        }, {
             name: "Connect to server",
             id: 1,
-            perform: function(stageManager) {
+            /**
+             * It tries to connect to server using websockets and saves the connection
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
                 var manager = stageManager.repo;
                 if (window.WebSocket) {
-                    manager.connection = new Connection(function(data) {
+                    manager.connection = new Connection(function (data) {
                         wisply.repositories.processMessage(data);
                     });
                 } else {
                     this.complain();
                     return;
                 }
-                setTimeout(function() {
+                setTimeout(function () {
                     stageManager.firedStageFinished();
                 }, 400);
             },
-            complain: function() {
-                  $('#current').html("Wisply was not able to realize the connection. Your browser does not support WebSockets");
+            /**
+             * It tells the user the connection was not done
+             */
+            complain: function () {
+                $('#current').html("Wisply was not able to realize the connection. Your browser does not support WebSockets");
             },
-            paint: function() {
+            /**
+             * It shows the loading image
+             */
+            paint: function () {
                 $('#current').html(wisply.getLoadingImage("big"));
             }
         }, {
-            name: "Test URL",
+            name: "Verify URL address",
             id: 2,
             showBar: true,
-            perform: function(stageManager) {
+            /**
+             * It tries to verify the address
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
                 this.paint();
                 this.disableModifyURL();
                 var instance = stageManager;
                 instance.repo.history.log("Indentifing the source");
                 instance.repo.connection.sendMessage("testURL", $("#Source-URL").val());
             },
-            result: function(stageManager, content) {
+            /**
+             * It checks if the server has verified the URL
+             * @param  {Manager} stageManager The reference to the repositories manager
+             * @param  {object} content      The content of the message from server
+             */
+            result: function (stageManager, content) {
                 if (content === "true") {
                     stageManager.repo.history.log("The URL is valid");
                     this.end();
@@ -248,42 +275,61 @@ var Repositories = function() {
                     this.complain(stageManager);
                 }
             },
-            paint: function() {
+            /**
+             * It shows the loading image
+             */
+            paint: function () {
                 $('#current').html(wisply.getLoadingImage("big"));
             },
-            complain: function(stageManager) {
+            /**
+             * It tells the user that the URL was not valid. It allows the user to edit it
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            complain: function (stageManager) {
                 $('#current').html("The URL is not valid or the address can not be visited. Please correct it and click 'Modify'");
                 stageManager.repo.history.log("The URL is not valid!");
                 stageManager.repo.pause();
                 this.enableModifyURL();
             },
-            disableModifyURL: function() {
-               $('#modifyButton').prop('disabled', true);
-               $('#Source-URL').prop('disabled', true);
+            /**
+             * It disables the possibility to modify the URL
+             */
+            disableModifyURL: function () {
+                $('#modifyButton').prop('disabled', true);
+                $('#Source-URL').prop('disabled', true);
             },
-            enableModifyURL: function() {
-               $('#modifyButton').prop('disabled', false);
-               $('#Source-URL').prop('disabled', false);
+            /**
+              * It enables the possibility to modify the URL
+             */
+            enableModifyURL: function () {
+                $('#modifyButton').prop('disabled', false);
+                $('#Source-URL').prop('disabled', false);
             },
-            end: function() {
-
-                  $("#URL-input").toggle();
-                  $("#Name-Repository").toggle();
-
-
+            /**
+             * It hides the URL and button for modify and shows the name of the repository
+             */
+            end: function () {
+                $("#URL-input").toggle();
+                $("#Name-Repository").toggle();
                 $("#modifyButton").hide();
             }
         }, {
             name: "Identify Source",
             id: 3,
-            perform: function(stageManager) {
+            /**
+             * It tells the server to identify the source
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
                 var instance = stageManager;
-
                 instance.repo.history.log("Indentifing the source");
-
                 instance.repo.connection.sendMessage("identify", "something");
             },
-            result: function(stageManager, indentifyInfo) {
+            /**
+             * It checks if the server has identified the repository
+             * @param  {object} indentifyInfo The value of the message from the server
+             */
+            result: function (stageManager, indentifyInfo) {
                 if (indentifyInfo.state === true) {
                     this.paint(indentifyInfo.data.Identify);
                     stageManager.repo.history.log("The source has been identified");
@@ -293,37 +339,39 @@ var Repositories = function() {
                     stageManager.repo.errorOcurred();
                 }
             },
+            /**
+             * It shows in the current table the details about the repository
+             */
             paint: function (data) {
-
+                /**
+                 * It returns the HTML table for an object
+                 * @param  {object} data The object
+                 * @return {string} HTML table for the object's data
+                 */
                 function getHTML(data) {
                     var html = "";
-                      html += '<ul class="list-group text-left">';
-
-                      for (var property in data) {
-                          if (data.hasOwnProperty(property)) {
-                              if (property === "Description") {
+                    html += '<ul class="list-group text-left">';
+                    for (var property in data) {
+                        if (data.hasOwnProperty(property)) {
+                            if (property === "Description") {
                                 continue;
-                              } else if (typeof data[property] === 'object') {
+                            } else if (typeof data[property] === 'object') {
                                 html += '<li class="list-group-item"> ' + property;
                                 html += getHTML(data[property]);
                                 html += '</li>';
-                              } else {
+                            } else {
                                 html += "  <li class='list-group-item'>";
                                 html += property + ": <strong>" + data[property] + "</strong>";
                                 html += "</li>";
-                              }
-                          }
-                      }
-
-                      html += "</ul>";
-                      return html;
+                            }
+                        }
+                    }
+                    html += "</ul>";
+                    return html;
                 }
-
                 var html = getHTML(data);
-
                 $("#current").html(html);
             }
-
         }];
         this.current = "None";
         this.stage = {};
@@ -331,59 +379,84 @@ var Repositories = function() {
     StageManager.prototype =
         /** @lends Repositories.StageManager */
         {
-            start: function() {
+            /**
+             * It starts the manager. It calls the first stage
+             */
+            start: function () {
                 this.current = 0;
                 this.performStage(0);
             },
-            next: function() {
+            /**
+             * It calls the next stage. If there are no stages, it calls firedEnd
+             */
+            next: function () {
                 this.current++;
                 if (this.current >= this.data.length) {
                     this.firedEnd();
                 } else {
-                    this.repo.history.log("Starting stage " + (this.current + 1) + "...");
                     this.performStage(this.current);
                 }
             },
-            performStage: function(id) {
+            /**
+             * It performs a stage
+             * @param  {number} id The id of the stage
+             */
+            performStage: function (id) {
                 var stage = this.data[id];
                 this.status = "running";
+                this.repo.history.log("Starting stage <b>" + this.name + "</b>...");
                 this.repo.page.update();
                 this.stage = stage;
                 stage.perform(this);
             },
-            forceStop: function() {
-                this.current = "None";
+            /**
+             * It forces the manager to stop. It forces the current stage to stop
+             */
+            forceStop: function () {
+                this.repo.history.log("The stage manager has been forced to stop.");
+                this.current = "Stopped";
                 this.state = "stopped";
-                if(this.stage.stop) {
+                if (this.stage.stop) {
                     this.stage.stop();
-                  }
+                }
             },
-            firedStageFinished: function() {
+            /**
+             * Called when a stage has finished. It updates the page and calls the next stage
+             */
+            firedStageFinished: function () {
                 this.repo.page.update();
                 this.repo.history.log("Stage " + (this.current + 1) + " finished!");
                 this.next();
             },
-            firedEnd: function() {
+            /**
+             * It is called when all the stages has been called. It updates the page
+             */
+            firedEnd: function () {
                 this.status = "finish";
                 this.repo.page.update();
                 this.repo.history.log("The process has been finished!");
             },
-            restart: function(number) {
-              this.repo.history.log("Restarting from stage " + (number+1) + "...");
-              this.current = number-1;
-              this.next();
+            /**
+             * It performs again a stage
+             * @param  {number} number The id of the stage
+             */
+            restart: function (number) {
+                this.repo.history.log("Restarting from stage " + (number + 1) + "...");
+                this.current = number - 1;
+                this.next();
             },
-            pause: function() {
-              this.status = "paused";
+            /**
+             * It pauses the manager
+             */
+            pause: function () {
+                this.status = "paused";
             }
         };
-
-
     /**
-     * The constructor activates the listeners
+     * The constructor creates the history, page and stage manager
      * @memberof Repositories
      * @class Manager
-     * @classdesc It encapsulets the functionality for the sources
+     * @classdesc It contains references to the Page object, StageManager and History
      */
     var Manager = function Manager() {
         this.history = new History();
@@ -397,23 +470,27 @@ var Repositories = function() {
             /**
              * It activates the listeners
              */
-            init: function() {
-              var instance = this;
+            init: function () {
+                var instance = this;
                 this.page.update();
-                  instance.stageManager.start();
+                instance.stageManager.start();
             },
             /**
              * It processes the messages received from the server
+             * @param [event] evt The event which has been generated
              */
-            processMessage: function(evt) {
+            processMessage: function (evt) {
                 var msg = JSON.parse(evt.data);
 
+                /**
+                 * It returns a description of the content of the message
+                 * @param  {object} content The content of the message
+                 * @return {string} The description of the content
+                 */
                 function getContentMessage(content) {
-
                     if (content) {
                         return " with content [" + content + "]";
                     }
-
                     return ", which does not has content";
                 }
                 this.history.log("I received the socket [<b>" + msg.name + "</b>]" + getContentMessage(msg.content));
@@ -424,30 +501,39 @@ var Repositories = function() {
              * @param  {string} name    The name of the message
              * @param  {string} content The content of the message
              */
-            chooseAction: function(name, content) {
+            chooseAction: function (name, content) {
                 switch (name) {
-                    case "FinishIdentify":
-                    case "FinishTestingURL":
-                        this.stageManager.stage.result(this.stageManager, content);
-                        break;
+                case "FinishIdentify":
+                case "FinishTestingURL":
+                    this.stageManager.stage.result(this.stageManager, content);
+                    break;
                 }
             },
+            /**
+             * It stops the entire process
+             */
             stop: function () {
                 this.stageManager.forceStop();
                 this.page.errorOcurred();
                 this.page.update();
             },
-            pause: function() {
-              this.stageManager.pause();
-              this.page.warningOccured();
-              this.page.update();
+            /**
+             * It pauses the entire process
+             */
+            pause: function () {
+                this.stageManager.pause();
+                this.page.warningOccured();
+                this.page.update();
             },
-            restart: function(stageNumber) {
-              this.stageManager.restart(stageNumber);
-              this.page.restart();
+            /**
+             * It starts the process from a certain stage
+             * @param  {number} stageNumber The number of the stage from which it starts again
+             */
+            restart: function (stageNumber) {
+                this.stageManager.restart(stageNumber);
+                this.page.restart();
             }
         };
-
     /**
      *
      * @memberof Repositories
@@ -458,47 +544,52 @@ var Repositories = function() {
         this.init();
         this.currentTab = "current";
     };
-
     Page.prototype =
         /** @lends Repositories.Page */
         {
             /**
              * It activates the listeners
              */
-            init: function() {
+            init: function () {
                 var instance = this;
-                $("#historyButton").click(function() {
+                $("#historyButton").click(function () {
                     instance.showHistory();
                 });
-                $("#modifyButton").click(function() {
+                $("#modifyButton").click(function () {
                     wisply.repositories.restart(2);
                 });
-
             },
-            showHistory: function() {
+            /**
+             * It change the tab to the history
+             */
+            showHistory: function () {
                 this.changeTab("history");
             },
-            changeTab: function(newTab) {
+            /**
+             * It changes the tab to a certian one
+             * @param  {string} newTab It can be "history", "current"
+             */
+            changeTab: function (newTab) {
                 this.currentTab = newTab;
                 this.update();
             },
             /**
-             * It refreshes the history
+             * It generates the HTML history and assigns it to the tab
              */
-            refreshHistory: function() {
-                $("#history").html(wisply.repositories.history.getHTML());
+            refreshHistory: function () {
+                var html = wisply.repositories.history.getHTML();
+                $("#history").html(html);
             },
             /**
              * It updates the current view
              */
-            update: function() {
+            update: function () {
                 switch (this.currentTab) {
-                    case "current":
-                        break;
-                    case "history":
-                        this.refreshHistory();
-                        break;
-
+                case "current":
+                    break;
+                case "history":
+                    this.refreshHistory();
+                    break;
                 }
                 this.updateStages();
                 this.updateHistoryNumber();
@@ -507,11 +598,14 @@ var Repositories = function() {
             /**
              * It updates the number of events in history
              */
-            updateHistoryNumber: function() {
+            updateHistoryNumber: function () {
                 var nr = wisply.repositories.history.data.length;
                 $("#historyButton").find("#historyBadge").html(nr);
             },
-            updateStages: function() {
+            /**
+             * It updates the list of current stages
+             */
+            updateStages: function () {
                 var manager = wisply.repositories.stageManager,
                     current = manager.current,
                     stages = manager.data,
@@ -522,7 +616,7 @@ var Repositories = function() {
                     stage = stages[id];
                     if (id === current) {
                         item = '<li class="list-group-item active">' + stage.name + '  <br />';
-                        if(stage.showBar) {
+                        if (stage.showBar) {
                             item += "<div class='progress'><div class='progress-bar progress-bar-success' style='width: 40%''></div></div>";
                         }
                         item += "</li>";
@@ -542,7 +636,10 @@ var Repositories = function() {
                 $("#stages").html(html);
                 this.updateGeneralIndicator();
             },
-            updateGeneralIndicator: function() {
+            /**
+             * It updates the general indicator. This shows the progress based on the number of finished stages
+             */
+            updateGeneralIndicator: function () {
                 var manager = wisply.repositories.stageManager,
                     current = manager.current,
                     total = manager.data.length,
@@ -553,68 +650,80 @@ var Repositories = function() {
                     percent = (current) / total;
                 }
                 percent = percent * 100;
-
                 if (this.animateGeneralIndicator) {
                     this.animateGeneralIndicator.finish();
                 }
-
                 this.animateGeneralIndicator = $("#generalIndicator").find(".progress-bar").animate({
                     "width": percent + "%"
                 }, 100);
             },
-            processFinished: function() {
-                var general = $("#generalIndicator");
-                general.removeClass("progress-striped");
-                general.find(".progress-bar").addClass("progress-bar-success");
+            /**
+             * It is called when the process has finished. It removes the stripes and makes the bar green
+             */
+            processFinished: function () {
+                this.changeIndicator("success");
             },
-            warningOccured: function() {
+            /**
+             * It changes the design of indicator for a warning situation
+             */
+            warningOccured: function () {
                 this.changeIndicator("warning");
             },
-            errorOcurred: function() {
+            /**
+             * It changes the design of indicator for an error situation
+             */
+            errorOcurred: function () {
                 this.changeIndicator("danger");
             },
-            changeIndicator: function(type) {
+            /**
+             * It changes the design of the indicator for a certain situation
+             * @param  {string} type The situation. It can be "danger" or "warning" or "success"
+             */
+            changeIndicator: function (type) {
                 var general = $("#generalIndicator");
                 general.removeClass("progress-striped");
                 general.find(".progress-bar").addClass("progress-bar-" + type);
             },
+            /**
+             * It activates the stripes for the indicator, it removes the warning design and it updates the general indicator
+             */
             restart: function () {
-                  var general = $("#generalIndicator");
-                  general.addClass("progress-striped");
-                  general.find(".progress-bar").removeClass("progress-bar-warning");
-                  this.updateGeneralIndicator();
+                var general = $("#generalIndicator");
+                general.addClass("progress-striped");
+                general.find(".progress-bar").removeClass("progress-bar-warning");
+                this.updateGeneralIndicator();
             },
-            updateStatus: function() {
-              var status = wisply.repositories.stageManager.status,
-              html = "Status: ";
-
-
-              switch(status) {
+            /**
+             * It updates the general status of the process
+             */
+            updateStatus: function () {
+                var status = wisply.repositories.stageManager.status,
+                    html = "Status: ";
+                switch (status) {
                 case "stopped":
-                  html += '<span class="label label-warning">Stopped</span>';
-                break;
+                    html += '<span class="label label-danger">Stopped</span>';
+                    break;
                 case "paused":
-                  html += '<span class="label label-warning">Paused</span>';
-                break;
+                    html += '<span class="label label-warning">Paused</span>';
+                    break;
                 case "finish":
-                  html += '<span class="label label-success">Finish</span>';
-                break;
+                    html += '<span class="label label-success">Finish</span>';
+                    break;
                 case "running":
-                  html += wisply.getLoadingImage("small");
-                break;
+                    html += wisply.getLoadingImage("small");
+                    break;
                 default:
-                  html += "Problem";
-                  break;
-              }
-
-              $("#process-status").html(html);
+                    html += "Problem";
+                    break;
+                }
+                $("#process-status").html(html);
             }
         };
     return {
         Manager: Manager
     };
 };
-$(document).ready(function() {
+$(document).ready(function () {
     "use strict";
     var module = new Repositories();
     wisply.repositories = new module.Manager();

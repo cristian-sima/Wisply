@@ -106,8 +106,8 @@ func (c *connection) readPump() {
 				break
 			}
 			type Message struct {
-				Name  string `json:“name”`
-				Value string `json:“value”`
+				Name  string `json:"name"`
+				Value string `json:"value"`
 			}
 
 			var msg Message
@@ -127,7 +127,7 @@ func (c *connection) chooseAction(name, value string) {
 		}
 	case "identify":
 		{
-			c.controller.IdentifySource()
+			c.controller.IdenfityRepository()
 		}
 	}
 }
@@ -163,6 +163,8 @@ func (c *connection) write(opCode int, payload []byte) error {
 	return c.ws.WriteMessage(opCode, payload)
 }
 
+// JSONMessage represents a message sent from server to browser
+// It contains 2 fields: the name and the content
 type JSONMessage struct {
 	Name    string      `json:"name"`
 	Content interface{} `json:"content"`
@@ -178,7 +180,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// Get It shows all the sources
+// WebsocketConnection Initiats the websocket connection
 func (controller *RepositoryController) WebsocketConnection() {
 	// Print the OAI Response object to stdout
 
@@ -195,9 +197,10 @@ func (controller *RepositoryController) WebsocketConnection() {
 	c.readPump()
 }
 
+// TestURL verifies if an address can be reached
 func (controller *RepositoryController) TestURL(address string) {
 
-	var isOk bool = true
+	var isOk bool
 
 	request, err := http.Get(address)
 	fmt.Println(request)
@@ -219,7 +222,8 @@ func (controller *RepositoryController) TestURL(address string) {
 
 }
 
-func (controller *RepositoryController) IdentifySource() {
+// IdenfityRepository requests an identification
+func (controller *RepositoryController) IdenfityRepository() {
 
 	fmt.Println("This is the test")
 	req := (&oai.Request{
@@ -250,15 +254,11 @@ func (controller *RepositoryController) IdentifySource() {
 		fmt.Println(s)
 		h.broadcast <- jsonMsg
 	})
-
 }
 
-// Get It shows all the sources
+// ShowPanel shows the panel to collect data from repository
 func (controller *RepositoryController) ShowPanel() {
-	// Print the OAI Response object to stdout
-
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/repository/index.tpl"
 	controller.Layout = "site/admin.tpl"
-
 }

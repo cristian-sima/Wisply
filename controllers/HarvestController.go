@@ -259,6 +259,6 @@ func (controller *HarvestController) IdenfityRepository() {
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
 	controller.Data["host"] = controller.Ctx.Request.Host
-	controller.TplNames = "site/repository/index.tpl"
+	controller.TplNames = "site/harvest/init.tpl"
 	controller.Layout = "site/admin.tpl"
 }

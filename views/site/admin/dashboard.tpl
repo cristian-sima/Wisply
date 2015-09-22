@@ -11,7 +11,7 @@
               <span class="badge">{{ .numberOfAccounts}}</span>
               Accounts
             </a>
-            <a class="list-group-item" href="admin/sources">
+            <a class="list-group-item" href="admin/repositories">
               <span class="badge"> {{ .numberOfRepositories }}</span>
               Repositories
             </a>

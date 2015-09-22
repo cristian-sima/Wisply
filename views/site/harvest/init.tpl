@@ -56,4 +56,4 @@
   <script>
   var host = {{ .host }};
   </script>
-  <script src="/static/js/admin/repository/index.js"></script>
+  <script src="/static/js/admin/harvest/init.js"></script>

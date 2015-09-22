@@ -144,7 +144,7 @@ var Harvest = function () {
      * @param {function} processor A callback called when a message is received
      */
     var Connection = function Connection(processor) {
-        this.value = new WebSocket("ws://" + host + "/admin/repositories/ws");
+        this.value = new WebSocket("ws://" + host + "/admin/harvest/init/ws");
         this.processor = processor;
         this.initListeners();
     };
@@ -162,7 +162,7 @@ var Harvest = function () {
                 this.value.onclose = function () {
                     wisply.harvest.history.logError("The webscoket connection is closed");
                     $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
-                    wisply.harvest.page.stop();
+                    wisply.harvest.stop();
                 };
                 this.value.onmessage = this.processor;
                 this.value.onerror = function () {
@@ -424,9 +424,13 @@ var Harvest = function () {
              * Called when a stage has finished. It updates the page and calls the next stage
              */
             firedStageFinished: function () {
-                this.repo.page.update();
-                this.repo.history.log("Stage " + (this.current + 1) + " finished!");
-                this.next();
+                if(this.state === "stopped" || this.state === "paused") {
+                this.repo.history.log("Imposible to continue!");
+                } else {
+                  this.repo.page.update();
+                  this.repo.history.log("Stage " + (this.current + 1) + " finished!");
+                  this.next();
+                }
             },
             /**
              * It is called when all the stages has been called. It updates the page

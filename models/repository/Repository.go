@@ -28,7 +28,7 @@ func (repository *Repository) Delete() error {
 // Modify changes the details of the repository
 func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (adapter.WisplyError, error) {
 	var problem = adapter.WisplyError{}
-	result := hasValidDetails(repositoryDetails)
+	result := hasValidModificationDetails(repositoryDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
 		return problem, errors.New("It does not have valid details")
@@ -40,11 +40,10 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)
-	url := repositoryDetails["url"].(string)
 	id := strconv.Itoa(repository.ID)
 
-	sql := "UPDATE `repository` SET name=?, description=?, url=? WHERE id=?"
+	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
 	query, _ := database.Database.Prepare(sql)
-	_, err := query.Exec(name, description, url, id)
+	_, err := query.Exec(name, description, id)
 	return err
 }

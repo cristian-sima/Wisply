@@ -14,11 +14,19 @@ var (
 	}
 )
 
-func hasValidDetails(details map[string]interface{}) *validity.ValidationResults {
+func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{
-		"name":     rules["name"],
-		"password": rules["password"],
-		"email":    rules["email"],
+		"name":        rules["name"],
+		"url":         rules["url"],
+		"description": rules["description"],
+	}
+	return adapter.Validate(details, rules)
+}
+
+func hasValidModificationDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"name":        rules["name"],
+		"description": rules["description"],
 	}
 	return adapter.Validate(details, rules)
 }

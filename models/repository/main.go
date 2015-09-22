@@ -48,7 +48,7 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 
 	problem := adapter.WisplyError{}
 
-	result := hasValidDetails(repositoryDetails)
+	result := hasValidInsertDetails(repositoryDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
 		return problem, errors.New("Error")

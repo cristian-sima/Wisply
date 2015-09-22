@@ -63,7 +63,6 @@ func (controller *RepositoryController) Modify() {
 		repositoryDetails := map[string]string{
 			"Name":        repository.Name,
 			"Description": repository.Description,
-			"Url":         repository.URL,
 		}
 		controller.showModifyForm(repositoryDetails)
 	}
@@ -79,7 +78,6 @@ func (controller *RepositoryController) Update() {
 
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
-	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
 
 	repository, err := controller.model.NewRepository(ID)
 	if err != nil {

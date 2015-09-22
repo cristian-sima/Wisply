@@ -4,13 +4,13 @@
  * @author Cristian Sima
  */
 /**
- * @namespace Repositories
+ * @namespace Harvest
  */
-var Repositories = function () {
+var Harvest = function () {
     'use strict';
     /**
      * Creates an empty history
-     * @memberof Repositories
+     * @memberof Harvest
      * @class History
      * @classdesc It holds a history of events
      */
@@ -18,7 +18,7 @@ var Repositories = function () {
         this.data = [];
     };
     History.prototype =
-        /** @lends Repositories.History */
+        /** @lends Harvest.History */
         {
             /**
              * It adds a log message
@@ -64,8 +64,8 @@ var Repositories = function () {
                     content: content,
                     type: type
                 });
-                if (wisply.repositories) {
-                    wisply.repositories.page.update();
+                if (wisply.harvest) {
+                    wisply.harvest.page.update();
                 }
             },
             /**
@@ -138,7 +138,7 @@ var Repositories = function () {
         };
     /**
      * Starts the connection and inits the listeners
-     * @memberof Repositories
+     * @memberof Harvest
      * @class Connection
      * @classdesc It represents a websocket connection
      * @param {function} processor A callback called when a message is received
@@ -149,24 +149,24 @@ var Repositories = function () {
         this.initListeners();
     };
     Connection.prototype =
-        /** @lends Repositories.Connection */
+        /** @lends Harvest.Connection */
         {
             /**
              * It
              */
             initListeners: function () {
                 this.value.onopen = function () {
-                    wisply.repositories.history.log("The websocket connection has been created");
+                    wisply.harvest.history.log("The websocket connection has been created");
                     $("#connectionStatus").html("<span class='text-success'>WebSocket connection established</span>");
                 };
                 this.value.onclose = function () {
-                    wisply.repositories.history.logError("The webscoket connection is closed");
+                    wisply.harvest.history.logError("The webscoket connection is closed");
                     $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
-                    wisply.repositories.page.stop();
+                    wisply.harvest.page.stop();
                 };
                 this.value.onmessage = this.processor;
                 this.value.onerror = function () {
-                    wisply.repositories.history.logWarning("There was a an error with web scoket connection");
+                    wisply.harvest.history.logWarning("There was a an error with web scoket connection");
                 };
             },
             /**
@@ -184,7 +184,7 @@ var Repositories = function () {
         };
     /**
      * Saves the stages
-     * @memberof Repositories
+     * @memberof Harvest
      * @class StageManager
      * @classdesc It encapsulets the functionality for the sources
      * @param [Manager] repositoriesManager The reference to the repositories manager
@@ -224,7 +224,7 @@ var Repositories = function () {
                 var manager = stageManager.repo;
                 if (window.WebSocket) {
                     manager.connection = new Connection(function (data) {
-                        wisply.repositories.processMessage(data);
+                        wisply.harvest.processMessage(data);
                     });
                 } else {
                     this.complain();
@@ -377,7 +377,7 @@ var Repositories = function () {
         this.stage = {};
     };
     StageManager.prototype =
-        /** @lends Repositories.StageManager */
+        /** @lends Harvest.StageManager */
         {
             /**
              * It starts the manager. It calls the first stage
@@ -454,7 +454,7 @@ var Repositories = function () {
         };
     /**
      * The constructor creates the history, page and stage manager
-     * @memberof Repositories
+     * @memberof Harvest
      * @class Manager
      * @classdesc It contains references to the Page object, StageManager and History
      */
@@ -465,7 +465,7 @@ var Repositories = function () {
         this.stageManager = new StageManager(this);
     };
     Manager.prototype =
-        /** @lends Repositories.Manager */
+        /** @lends Harvest.Manager */
         {
             /**
              * It activates the listeners
@@ -536,7 +536,7 @@ var Repositories = function () {
         };
     /**
      *
-     * @memberof Repositories
+     * @memberof Harvest
      * @class Page
      * @classdesc It manages the GUI of the page
      */
@@ -545,7 +545,7 @@ var Repositories = function () {
         this.currentTab = "current";
     };
     Page.prototype =
-        /** @lends Repositories.Page */
+        /** @lends Harvest.Page */
         {
             /**
              * It activates the listeners
@@ -556,7 +556,7 @@ var Repositories = function () {
                     instance.showHistory();
                 });
                 $("#modifyButton").click(function () {
-                    wisply.repositories.restart(2);
+                    wisply.harvest.restart(2);
                 });
             },
             /**
@@ -577,7 +577,7 @@ var Repositories = function () {
              * It generates the HTML history and assigns it to the tab
              */
             refreshHistory: function () {
-                var html = wisply.repositories.history.getHTML();
+                var html = wisply.harvest.history.getHTML();
                 $("#history").html(html);
             },
             /**
@@ -599,14 +599,14 @@ var Repositories = function () {
              * It updates the number of events in history
              */
             updateHistoryNumber: function () {
-                var nr = wisply.repositories.history.data.length;
+                var nr = wisply.harvest.history.data.length;
                 $("#historyButton").find("#historyBadge").html(nr);
             },
             /**
              * It updates the list of current stages
              */
             updateStages: function () {
-                var manager = wisply.repositories.stageManager,
+                var manager = wisply.harvest.stageManager,
                     current = manager.current,
                     stages = manager.data,
                     stage, id, html = "",
@@ -640,7 +640,7 @@ var Repositories = function () {
              * It updates the general indicator. This shows the progress based on the number of finished stages
              */
             updateGeneralIndicator: function () {
-                var manager = wisply.repositories.stageManager,
+                var manager = wisply.harvest.stageManager,
                     current = manager.current,
                     total = manager.data.length,
                     percent = 0;
@@ -697,7 +697,7 @@ var Repositories = function () {
              * It updates the general status of the process
              */
             updateStatus: function () {
-                var status = wisply.repositories.stageManager.status,
+                var status = wisply.harvest.stageManager.status,
                     html = "Status: ";
                 switch (status) {
                 case "stopped":
@@ -725,7 +725,7 @@ var Repositories = function () {
 };
 $(document).ready(function () {
     "use strict";
-    var module = new Repositories();
-    wisply.repositories = new module.Manager();
-    wisply.repositories.init();
+    var module = new Harvest();
+    wisply.harvest = new module.Manager();
+    wisply.harvest.init();
 });

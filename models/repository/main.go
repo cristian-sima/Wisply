@@ -15,11 +15,11 @@ type Model struct {
 // GetAll returns an array of Repository with all repositories
 func (model *Model) GetAll() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description FROM repository"
+	sql := "SELECT id, name, url, description, status FROM repository"
 	rows, _ := database.Database.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status)
 		list = append(list, repository)
 	}
 
@@ -34,9 +34,9 @@ func (model *Model) NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, name, url, description FROM repository WHERE id = ?"
+	sql := "SELECT id, name, url, description, status FROM repository WHERE id = ?"
 	query, err := database.Database.Prepare(sql)
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description)
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}

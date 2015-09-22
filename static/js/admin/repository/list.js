@@ -1,40 +1,40 @@
 /* global $, wisply */
 
 /**
-* @file Encapsulates the functionality for managing the sources
+* @file Encapsulates the functionality for managing the repositories
 * @author Cristian Sima
 */
 
 
 /**
-* @namespace Sources
+* @namespace Repositories
 */
-var Sources = function () {
+var Repositories = function () {
   'use strict';
 
   /**
   * The constructor does nothing important
-  * @class Source
-  * @memberof Sources
-  * @classdesc It represents a source
-  * @param {number} id   The id of the source
-  * @param {string} name The name of the source
+  * @class Repository
+  * @memberof Repositories
+  * @classdesc It represents a repository
+  * @param {number} id   The id of the repository
+  * @param {string} name The name of the repository
   */
-  var Source = function Source(id, name) {
+  var Repository = function Repository(id, name) {
     this.id = id;
     this.name = name;
   };
 
   /**
   * The constructor activates the listeners
-  * @memberof Sources
+  * @memberof Repositories
   * @class Manager
-  * @classdesc It encapsulets the functionality for the sources
+  * @classdesc It encapsulets the functionality for the repositories
   */
   var Manager = function Manager() {
   };
   Manager.prototype =
-  /** @lends Sources.Manager */
+  /** @lends Repositories.Manager */
   {
     /**
     * It activates the listeners
@@ -43,27 +43,30 @@ var Sources = function () {
       this.activateListeners();
     },
     /**
-    * It activates the listener for deleting a source
-    * @fires SourcesManager#confirmDelete
+    * It activates the listener for deleting a repository
+    * @fires RepositoriesManager#confirmDelete
     */
     activateListeners: function () {
-      $(".deleteSourceButton").click(confirmDelete);
+      $(".deleteRepositoryButton").click(confirmDelete);
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
     },
     /**
-    * It is called when the user wants to delete a source. It asks for confirmation
-    * @param  {Source} source The reference to the source object
+    * It is called when the user wants to delete a repository. It asks for confirmation
+    * @param  {Repository} repository The reference to the repository object
     */
-    confirmDelete: function (source) {
-      var msg = this.getDialogMessage(source);
+    confirmDelete: function (repository) {
+      var msg = this.getDialogMessage(repository);
       wisply.message.dialog(msg);
     },
     /**
     * It returns the object which contain the arguments for the confirmation dialog
-    * @param  {Source} source The source object
+    * @param  {Repository} repository The repository object
     * @return {Object}        The arguements for dialog
     * @see http://bootboxjs.com/
     */
-    getDialogMessage: function (source) {
+    getDialogMessage: function (repository) {
       var buttons,
       cancelButton,
       msg,
@@ -80,7 +83,7 @@ var Sources = function () {
         label: "Delete",
         className: "btn-primary",
         callback: function () {
-          wisply.sourcesManager.delete(source);
+          wisply.repositoriesManager.delete(repository);
         }
       };
       buttons = {
@@ -89,26 +92,26 @@ var Sources = function () {
       };
       msg = {
         title: "Please confirm!",
-        message: "The source <b>" + source.name + "</b> will be permanently removed. Are you sure?",
+        message: "The repository <b>" + repository.name + "</b> will be permanently removed. Are you sure?",
         onEscape: true,
         buttons: buttons
       };
       return msg;
     },
     /**
-    * It delets a source
-    * @param  {Source} source The source object
+    * It delets a repository
+    * @param  {Repository} repository The repository object
     */
-    delete: function (source) {
+    delete: function (repository) {
       var request,
       successCallback,
       errorCallback;
 
       /**
-      * The callback called when the source has been deleted. It shows a message and reloads the page in 2 seconds
+      * The callback called when the repository has been deleted. It shows a message and reloads the page in 2 seconds
       */
       successCallback =  function () {
-        wisply.message.showSuccess("The source has been removed! Refreshing page...");
+        wisply.message.showSuccess("The repository has been removed! Refreshing page...");
         wisply.reloadPage(2000);
       };
 
@@ -120,7 +123,7 @@ var Sources = function () {
       };
 
       request = {
-        "url": '/admin/sources/delete/' + source.id,
+        "url": '/admin/repositories/delete/' + repository.id,
         "success": successCallback,
         "error": errorCallback
       };
@@ -129,8 +132,8 @@ var Sources = function () {
   };
 
   /**
-  * It is called when the user clicks the delete button. It creates the source button and asks for confirmation
-  * @fires SourcesManager#confirmDelete()
+  * It is called when the user clicks the delete button. It creates the repository button and asks for confirmation
+  * @fires RepositoriesManager#confirmDelete()
   * @param  {event} e The event generated
   */
   function confirmDelete(e) {
@@ -138,21 +141,21 @@ var Sources = function () {
     var instance,
     name,
     id,
-    source;
+    repository;
     instance = $(this);
     id = instance.data("id");
     name = instance.data("name");
-    source = new Source(id, name);
-    wisply.sourcesManager.confirmDelete(source);
+    repository = new Repository(id, name);
+    wisply.repositoriesManager.confirmDelete(repository);
   }
   return {
-    Source: Source,
+    Repository: Repository,
     Manager: Manager
   };
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Sources();
-  wisply.sourcesManager = new module.Manager();
-  wisply.sourcesManager.init();
+  var module = new Repositories();
+  wisply.repositoriesManager = new module.Manager();
+  wisply.repositoriesManager.init();
 });

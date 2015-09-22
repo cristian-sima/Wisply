@@ -7,11 +7,11 @@
       <div class="row">
         <div class="col-lg-4">
           <div class="list-group">
-            <a class="list-group-item" href="admin/accounts">
+            <a class="list-group-item" href="/admin/accounts">
               <span class="badge">{{ .numberOfAccounts}}</span>
               Accounts
             </a>
-            <a class="list-group-item" href="admin/repositories">
+            <a class="list-group-item" href="/admin/repositories">
               <span class="badge"> {{ .numberOfRepositories }}</span>
               Repositories
             </a>

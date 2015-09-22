@@ -202,6 +202,8 @@ func (controller *HarvestController) TestURL(address string) {
 
 	var isOk bool
 
+	isOk = true
+
 	request, err := http.Get(address)
 	fmt.Println(request)
 	if request == nil || err != nil {

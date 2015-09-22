@@ -161,7 +161,7 @@ var Harvest = function () {
                 };
                 this.value.onclose = function () {
                     wisply.harvest.history.logError("The webscoket connection is closed");
-                    $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
+                    $("#connectionStatus").html("<span class='text-danger'>WebSocket connection lost</span>");
                     wisply.harvest.stop();
                 };
                 this.value.onmessage = this.processor;
@@ -249,7 +249,7 @@ var Harvest = function () {
         }, {
             name: "Verify URL address",
             id: 2,
-            showBar: true,
+            showBar: false,
             /**
              * It tries to verify the address
              * @param  {Manager} stageManager The reference to the repositories manager
@@ -404,7 +404,7 @@ var Harvest = function () {
             performStage: function (id) {
                 var stage = this.data[id];
                 this.status = "running";
-                this.repo.history.log("Starting stage <b>" + this.name + "</b>...");
+                this.repo.history.log("Starting stage <b>" + stage.name + "</b>...");
                 this.repo.page.update();
                 this.stage = stage;
                 stage.perform(this);

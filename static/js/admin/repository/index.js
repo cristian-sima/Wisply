@@ -162,7 +162,7 @@ var Repositories = function() {
                 this.value.onclose = function() {
                     wisply.repositories.history.logError("The webscoket connection is closed");
                     $("#connectionStatus").html("<span class='text-danger'>No WebSocket connection</span>");
-                    wisply.repositories.page.errorOcurred();
+                    wisply.repositories.page.stop();
                 };
                 this.value.onmessage = this.processor;
                 this.value.onerror = function() {
@@ -190,6 +190,7 @@ var Repositories = function() {
      * @param [Manager] repositoriesManager The reference to the repositories manager
      */
     var StageManager = function StageManager(repositoriesManager) {
+        this.status = "stopped";
         this.repo = repositoriesManager;
         this.data = [{
             name: "Prepare resources",
@@ -239,9 +240,9 @@ var Repositories = function() {
                 instance.repo.connection.sendMessage("testURL", $("#Source-URL").val());
             },
             result: function(stageManager, content) {
-                  console.log(content);
                 if (content === "true") {
                     stageManager.repo.history.log("The URL is valid");
+                    this.end();
                     stageManager.firedStageFinished();
                 } else {
                     this.complain(stageManager);
@@ -253,7 +254,7 @@ var Repositories = function() {
             complain: function(stageManager) {
                 $('#current').html("The URL is not valid or the address can not be visited. Please correct it and click 'Modify'");
                 stageManager.repo.history.log("The URL is not valid!");
-                stageManager.repo.page.errorOcurred();
+                stageManager.repo.pause();
                 this.enableModifyURL();
             },
             disableModifyURL: function() {
@@ -263,6 +264,14 @@ var Repositories = function() {
             enableModifyURL: function() {
                $('#modifyButton').prop('disabled', false);
                $('#Source-URL').prop('disabled', false);
+            },
+            end: function() {
+
+                  $("#URL-input").toggle();
+                  $("#Name-Repository").toggle();
+
+
+                $("#modifyButton").hide();
             }
         }, {
             name: "Identify Source",
@@ -275,7 +284,6 @@ var Repositories = function() {
                 instance.repo.connection.sendMessage("identify", "something");
             },
             result: function(stageManager, indentifyInfo) {
-                  console.log(indentifyInfo);
                 if (indentifyInfo.state === true) {
                     this.paint(indentifyInfo.data.Identify);
                     stageManager.repo.history.log("The source has been identified");
@@ -338,12 +346,14 @@ var Repositories = function() {
             },
             performStage: function(id) {
                 var stage = this.data[id];
+                this.status = "running";
                 this.repo.page.update();
                 this.stage = stage;
                 stage.perform(this);
             },
             forceStop: function() {
                 this.current = "None";
+                this.state = "stopped";
                 if(this.stage.stop) {
                     this.stage.stop();
                   }
@@ -354,6 +364,7 @@ var Repositories = function() {
                 this.next();
             },
             firedEnd: function() {
+                this.status = "finish";
                 this.repo.page.update();
                 this.repo.history.log("The process has been finished!");
             },
@@ -361,6 +372,9 @@ var Repositories = function() {
               this.repo.history.log("Restarting from stage " + (number+1) + "...");
               this.current = number-1;
               this.next();
+            },
+            pause: function() {
+              this.status = "paused";
             }
         };
 
@@ -418,9 +432,15 @@ var Repositories = function() {
                         break;
                 }
             },
-            errorOcurred: function() {
-              this.stageManager.forceStop();
-              this.page.errorOcurred();
+            stop: function () {
+                this.stageManager.forceStop();
+                this.page.errorOcurred();
+                this.page.update();
+            },
+            pause: function() {
+              this.stageManager.pause();
+              this.page.warningOccured();
+              this.page.update();
             },
             restart: function(stageNumber) {
               this.stageManager.restart(stageNumber);
@@ -482,6 +502,7 @@ var Repositories = function() {
                 }
                 this.updateStages();
                 this.updateHistoryNumber();
+                this.updateStatus();
             },
             /**
              * It updates the number of events in history
@@ -500,7 +521,7 @@ var Repositories = function() {
                 for (id = 0; id < stages.length; id++) {
                     stage = stages[id];
                     if (id === current) {
-                        item = '<li class="list-group-item active">' + stage.name + ' <br />';
+                        item = '<li class="list-group-item active">' + stage.name + '  <br />';
                         if(stage.showBar) {
                             item += "<div class='progress'><div class='progress-bar progress-bar-success' style='width: 40%''></div></div>";
                         }
@@ -515,7 +536,7 @@ var Repositories = function() {
                     html += item;
                 }
                 if (current === stages.length) {
-                    html += '<div class="panel panel-success">  <div class="panel-heading">    <h3 class="panel-title">Great!</h3></div>  <div class="panel-body">    The process is over.  </div></div>';
+                    html += '<div class="panel panel-success">  <div class="panel-heading">    <h3 class="panel-title">Done!</h3></div>  <div class="panel-body">    The process is over.  </div></div>';
                     this.processFinished();
                 }
                 $("#stages").html(html);
@@ -546,16 +567,47 @@ var Repositories = function() {
                 general.removeClass("progress-striped");
                 general.find(".progress-bar").addClass("progress-bar-success");
             },
+            warningOccured: function() {
+                this.changeIndicator("warning");
+            },
             errorOcurred: function() {
+                this.changeIndicator("danger");
+            },
+            changeIndicator: function(type) {
                 var general = $("#generalIndicator");
                 general.removeClass("progress-striped");
-                general.find(".progress-bar").addClass("progress-bar-danger");
+                general.find(".progress-bar").addClass("progress-bar-" + type);
             },
             restart: function () {
                   var general = $("#generalIndicator");
                   general.addClass("progress-striped");
-                  general.find(".progress-bar").removeClass("progress-bar-danger");
+                  general.find(".progress-bar").removeClass("progress-bar-warning");
                   this.updateGeneralIndicator();
+            },
+            updateStatus: function() {
+              var status = wisply.repositories.stageManager.status,
+              html = "Status: ";
+
+
+              switch(status) {
+                case "stopped":
+                  html += '<span class="label label-warning">Stopped</span>';
+                break;
+                case "paused":
+                  html += '<span class="label label-warning">Paused</span>';
+                break;
+                case "finish":
+                  html += '<span class="label label-success">Finish</span>';
+                break;
+                case "running":
+                  html += wisply.getLoadingImage("small");
+                break;
+                default:
+                  html += "Problem";
+                  break;
+              }
+
+              $("#process-status").html(html);
             }
         };
     return {

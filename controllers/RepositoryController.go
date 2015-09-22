@@ -223,7 +223,7 @@ func (controller *RepositoryController) IdentifySource() {
 
 	fmt.Println("This is the test")
 	req := (&oai.Request{
-		BaseURL: "http://www.edshare.soton.ac.uk/cgi/oai2",
+		BaseURL: "http://eprints.aston.ac.uk/cgi/oai2",
 		Verb:    "Identify",
 	})
 

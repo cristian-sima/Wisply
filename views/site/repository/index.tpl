@@ -9,12 +9,17 @@
   <div class="panel-body">
     <div class="row">
         <div class="col-md-8">
-            <div class="input-group">
-              <input type="input" id="Source-URL" disabled value="http://www.edshare.soton.ac.uk/cgi/oai2"/>  <span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton" />
+            <div class="input-group" style="height:28px;" id="URL-input">
+              <input type="input" id="Source-URL" disabled value="http://eprisadasdnts.aston.ac.uk/cgi/oai2?verb=Identify"/><span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton"></span>
             </span>
           </div>
+          <div id="Name-Repository" style="display:none">
+              <strong>Aston Research Explorer</strong>
           </div>
-        <div class="col-md-4"><div id="connectionStatus">Please wait...</div></div>
+          </div>
+        <div class="col-md-4">
+          <div id="connectionStatus">Please wait...</div>
+        </div>
     </div>
     <br />
     <div id="generalIndicator" class="progress progress-striped active">
@@ -22,6 +27,7 @@
     </div>
     <div class="row" >
       <div class="col-lg-3 col-md-3 col-sm-3" >
+        <div id="process-status"></div>
           <div id="stages" class="list-group">
           </div>
       </div>
@@ -44,7 +50,7 @@
   <style>
     #Source-URL {
       width: 100%;
-border: 1px solid gainsboro;
+      border:none;
     }
   </style>
   <script>

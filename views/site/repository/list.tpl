@@ -35,19 +35,26 @@
           <tr>
             <td>{{ $element.Name |html }}</td>
             <td>
+              {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}
-              <span class="label label-warning">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Validate now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span>
+              <span class="label label-info">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span>
 
               {{ else if eq  $element.Status "ok" }}
               <span class="label label-success">Ok</span>
 
+              {{ else if eq  $element.Status "verified" }}
+              <span class="label label-success">Verified</span>
+
 
               {{ else if eq  $element.Status "verifying" }}
-              <span class="label label-info">Verifing</span>
+              <span class="label label-warning">Verifing</span>
 
 
               {{ else if eq  $element.Status "updating" }}
               <span class="label label-warning">Updating</span>
+
+              {{ else if eq  $element.Status "initializing" }}
+              <span class="label label-warning">Initializing</span>
 
 
               {{ else if eq  $element.Status "verification-failed" }}
@@ -55,8 +62,8 @@
               <a href='' data-toggle='tooltip' data-placement='top' title='' data-original-title='Try again'><span class='glyphicon glyphicon-refresh'  ></span></a>
 
 
-              {{ else if eq  $element.Status "problems-harvesting" }}
-              <span class="label label-danger">Problems harvesting</span>
+              {{ else if eq  $element.Status "problems" }}
+              <span class="label label-danger">Problems</span>
 
               {{ end }}
             </td>

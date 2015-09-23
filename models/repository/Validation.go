@@ -34,12 +34,13 @@ func hasValidModificationDetails(details map[string]interface{}) *validity.Valid
 func isValidStatus(status string) bool {
 	if status == "unverified" ||
 		status == "ok" ||
-		status == "unverified" ||
+		status == "verified" ||
 		status == "verification-failed" ||
-		status == "problems-harvesting" ||
+		status == "problems" ||
 		status == "verifying" ||
 		status == "updating" ||
-		status == "harvesting" {
+		status == "initializing" {
+
 		return true
 	}
 	return false

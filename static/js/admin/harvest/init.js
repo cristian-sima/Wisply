@@ -329,6 +329,7 @@ var Harvest = function () {
                     this.paint(indentifyInfo.data.Identify);
                     stageManager.repo.history.log("The source has been identified");
                     stageManager.firedStageFinished();
+                    this.end();
                 } else {
                     this.complain(stageManager);
                     this.enableModifyURL();

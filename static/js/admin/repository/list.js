@@ -17,12 +17,12 @@ var Repositories = function () {
   * @class Repository
   * @memberof Repositories
   * @classdesc It represents a repository
-  * @param {number} id   The id of the repository
-  * @param {string} name The name of the repository
+  * @param {object} info It contains the information regarding the repository (id, name and url)
   */
-  var Repository = function Repository(id, name) {
-    this.id = id;
-    this.name = name;
+  var Repository = function Repository(info) {
+    this.id = info.id;
+    this.name = info.name;
+    this.url = info.url;
   };
 
   /**
@@ -146,7 +146,10 @@ var Repositories = function () {
     instance = $(this);
     id = instance.data("id");
     name = instance.data("name");
-    repository = new Repository(id, name);
+    repository = new Repository({
+      id: id,
+      name: name
+    });
     wisply.repositoriesManager.confirmDelete(repository);
   }
 

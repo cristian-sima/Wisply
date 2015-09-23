@@ -37,6 +37,19 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	return problem, err
 }
 
+func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
+	name := repositoryDetails["name"].(string)
+	description := repositoryDetails["description"].(string)
+	id := strconv.Itoa(repository.ID)
+
+	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
+	repository.Name = name
+	repository.Description = description
+	query, _ := database.Database.Prepare(sql)
+	_, err := query.Exec(name, description, id)
+	return err
+}
+
 // ModifyURL changes the URL
 func (repository *Repository) ModifyURL(URL string) error {
 
@@ -45,6 +58,8 @@ func (repository *Repository) ModifyURL(URL string) error {
 		return errors.New("It does not have valid URL")
 	}
 	id := strconv.Itoa(repository.ID)
+
+	repository.URL = URL
 
 	sql := "UPDATE `repository` SET URL=? WHERE id=?"
 	query, _ := database.Database.Prepare(sql)
@@ -64,16 +79,8 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	sql := "UPDATE `repository` SET status=? WHERE id=?"
 	query, _ := database.Database.Prepare(sql)
 	_, err := query.Exec(newStatus, id)
-	return err
-}
 
-func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
-	name := repositoryDetails["name"].(string)
-	description := repositoryDetails["description"].(string)
-	id := strconv.Itoa(repository.ID)
+	repository.Status = newStatus
 
-	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
-	query, _ := database.Database.Prepare(sql)
-	_, err := query.Exec(name, description, id)
 	return err
 }

@@ -138,6 +138,9 @@ func (c *connection) chooseAction(msg Message) {
 	} else {
 
 		switch msg.Name {
+		case "changeRepositoryURL":
+			newURL := msg.Value.(string)
+			c.controller.ChangeRepositoryBaseURL(rep, newURL)
 		case "testURL":
 			{
 				c.controller.TestURL(rep)
@@ -216,6 +219,22 @@ func (controller *HarvestController) InitWebsocketConnection() {
 	c.readPump()
 }
 
+// ChangeRepositoryBaseURL verifies if an address can be reached
+func (controller *HarvestController) ChangeRepositoryBaseURL(repository *repository.Repository, newURL string) {
+
+	if newURL != repository.URL {
+		repository.ModifyURL(newURL)
+	}
+
+	msg := Message{
+		Name:       "RepositoryBaseURLChanged",
+		Repository: repository.ID,
+		Value:      newURL,
+	}
+
+	broadcastMessage(&msg)
+}
+
 // TestURL verifies if an address can be reached
 func (controller *HarvestController) TestURL(repository *repository.Repository) {
 
@@ -242,6 +261,7 @@ func (controller *HarvestController) TestURL(repository *repository.Repository) 
 		Value:      content,
 		Repository: repository.ID,
 	}
+
 	broadcastMessage(&msg)
 }
 
@@ -291,7 +311,7 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 				Repository: repository.ID,
 			}
 
-			repository.ModifyStatus("ok")
+			//	repository.ModifyStatus("ok")
 
 			fmt.Println("Identified")
 			broadcastMessage(&msg)

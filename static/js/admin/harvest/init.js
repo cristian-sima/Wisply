@@ -264,8 +264,8 @@ var Harvest = function () {
                 this.paint();
                 this.disableModifyURL();
                 var instance = stageManager;
-                instance.repo.history.log("Indentifing the source");
-                instance.repo.connection.sendMessage("testURL", $("#Source-URL").val());
+                instance.repo.history.log("Verify URL address");
+                instance.repo.connection.sendMessage("testURL", "");
             },
             /**
              * It checks if the server has verified the URL
@@ -528,21 +528,31 @@ var Harvest = function () {
                     }
                     return ", which does not has content";
                 }
-                this.history.log("I received the socket [<b>" + msg.name + "</b>]" + getContentMessage(msg.content));
-                this.chooseAction(msg.Name, msg.Value);
+                this.history.log("I received the socket [<b>" + msg.name + "</b>]" + getContentMessage(msg.content) + " for repository " + msg.Repository);
+                this.chooseAction(msg.Name, msg.Value, msg.Repository);
             },
             /**
              * It choose the action based on name
              * @param  {string} name    The name of the message
              * @param  {string} content The content of the message
+             * @param  {number} id The id of repository
              */
-            chooseAction: function (name, content) {
+            chooseAction: function (name, content, repository) {
+                if(repository === this.repository.id) {
                 switch (name) {
                 case "FinishIdentify":
                 case "FinishTestingURL":
                     this.stageManager.stage.result(this.stageManager, content);
                     break;
+                case "RepositoryBaseURLChanged":
+                    wisply.harvest.repository.url = content;
+                    wisply.harvest.restart(2);
+                  break;
                 }
+              } else {
+                this.history.log("This websocket is not for the current repository. Event name " + name);
+                console.log(content);
+              }
             },
             /**
              * It stops the entire process
@@ -591,7 +601,8 @@ var Harvest = function () {
                     instance.showHistory();
                 });
                 $("#modifyButton").click(function () {
-                    wisply.harvest.restart(2);
+                    wisply.harvest.connection.sendMessage("changeRepositoryURL",  $("#Source-URL").val());
+                    $('#modifyButton').prop('disabled', true);
                 });
             },
             /**
@@ -767,7 +778,7 @@ $(document).ready(function () {
     harvestModule = new Harvest();
     repositoryModule = new Repositories();
 
-    repository = new repositoryModule.Repository(data.id, data.name);
+    repository = new repositoryModule.Repository(data);
     wisply.harvest = new harvestModule.Manager(repository);
     wisply.harvest.init();
 });

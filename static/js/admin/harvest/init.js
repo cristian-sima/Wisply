@@ -1,4 +1,4 @@
-/* global $, wisply,window, host*/
+/* global $, wisply,window, data*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -142,9 +142,11 @@ var Harvest = function () {
      * @class Connection
      * @classdesc It represents a websocket connection
      * @param {function} processor A callback called when a message is received
+     * @param {Repository} repository A reference to the current repository
      */
-    var Connection = function Connection(processor) {
-        this.value = new WebSocket("ws://" + host + "/admin/harvest/init/ws");
+    var Connection = function Connection(processor, repository) {
+        this.repository = repository;
+        this.value = new WebSocket("ws://" + data.host + "/admin/harvest/init/ws");
         this.processor = processor;
         this.initListeners();
     };
@@ -175,9 +177,11 @@ var Harvest = function () {
              * @param  {object} value The value of the message
              */
             sendMessage: function (name, value) {
-                var msg = {
-                    name: name,
-                    value: value
+                var id= this.repository.id,
+                  msg = {
+                    Name: name,
+                    Value: value,
+                    Repository: id
                 };
                 this.value.send(JSON.stringify(msg));
             }
@@ -221,11 +225,13 @@ var Harvest = function () {
              * @param  {Manager} stageManager The reference to the repositories manager
              */
             perform: function (stageManager) {
-                var manager = stageManager.repo;
+                var manager = stageManager.repo,
+                repository = manager.repository;
+
                 if (window.WebSocket) {
                     manager.connection = new Connection(function (data) {
                         wisply.harvest.processMessage(data);
-                    });
+                    }, repository);
                 } else {
                     this.complain();
                     return;
@@ -266,13 +272,13 @@ var Harvest = function () {
              * @param  {Manager} stageManager The reference to the repositories manager
              * @param  {object} content      The content of the message from server
              */
-            result: function (stageManager, content) {
-                if (content === "true") {
+            result: function (stageManager, resultFromServer) {
+                if (resultFromServer.IsValid === true) {
                     stageManager.repo.history.log("The URL is valid");
-                    this.end();
                     stageManager.firedStageFinished();
                 } else {
                     this.complain(stageManager);
+                    this.enableModifyURL();
                 }
             },
             /**
@@ -289,7 +295,6 @@ var Harvest = function () {
                 $('#current').html("The URL is not valid or the address can not be visited. Please correct it and click 'Modify'");
                 stageManager.repo.history.log("The URL is not valid!");
                 stageManager.repo.pause();
-                this.enableModifyURL();
             },
             /**
              * It disables the possibility to modify the URL
@@ -304,14 +309,6 @@ var Harvest = function () {
             enableModifyURL: function () {
                 $('#modifyButton').prop('disabled', false);
                 $('#Source-URL').prop('disabled', false);
-            },
-            /**
-             * It hides the URL and button for modify and shows the name of the repository
-             */
-            end: function () {
-                $("#URL-input").toggle();
-                $("#Name-Repository").toggle();
-                $("#modifyButton").hide();
             }
         }, {
             name: "Identify Source",
@@ -322,6 +319,7 @@ var Harvest = function () {
              */
             perform: function (stageManager) {
                 var instance = stageManager;
+                this.disableModifyURL();
                 instance.repo.history.log("Indentifing the source");
                 instance.repo.connection.sendMessage("identify", "something");
             },
@@ -335,9 +333,18 @@ var Harvest = function () {
                     stageManager.repo.history.log("The source has been identified");
                     stageManager.firedStageFinished();
                 } else {
-                    stageManager.repo.history.log("There has error during identification!");
-                    stageManager.repo.errorOcurred();
+                    this.complain(stageManager);
+                    this.enableModifyURL();
                 }
+            },
+            /**
+             * It tells the user that the identification has not been done
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            complain: function (stageManager) {
+                $('#current').html("There were problems with the indentification");
+                stageManager.repo.history.log("There has error during identification!");
+                stageManager.repo.pause();
             },
             /**
              * It shows in the current table the details about the repository
@@ -371,6 +378,28 @@ var Harvest = function () {
                 }
                 var html = getHTML(data);
                 $("#current").html(html);
+            },
+            /**
+             * It hides the URL and button for modify and shows the name of the repository
+             */
+            end: function () {
+                $("#URL-input").toggle();
+                $("#Name-Repository").toggle();
+                $("#modifyButton").hide();
+            },
+            /**
+             * It disables the possibility to modify the URL
+             */
+            disableModifyURL: function () {
+                $('#modifyButton').prop('disabled', true);
+                $('#Source-URL').prop('disabled', true);
+            },
+            /**
+              * It enables the possibility to modify the URL
+             */
+            enableModifyURL: function () {
+                $('#modifyButton').prop('disabled', false);
+                $('#Source-URL').prop('disabled', false);
             }
         }];
         this.current = "None";
@@ -461,8 +490,10 @@ var Harvest = function () {
      * @memberof Harvest
      * @class Manager
      * @classdesc It contains references to the Page object, StageManager and History
+     * @param [Repository] repository A reference to the repository
      */
-    var Manager = function Manager() {
+    var Manager = function Manager(repository) {
+        this.repository = repository;
         this.history = new History();
         this.history.log("The manager has started.");
         this.page = new Page();
@@ -498,7 +529,7 @@ var Harvest = function () {
                     return ", which does not has content";
                 }
                 this.history.log("I received the socket [<b>" + msg.name + "</b>]" + getContentMessage(msg.content));
-                this.chooseAction(msg.name, msg.content);
+                this.chooseAction(msg.Name, msg.Value);
             },
             /**
              * It choose the action based on name
@@ -729,7 +760,14 @@ var Harvest = function () {
 };
 $(document).ready(function () {
     "use strict";
-    var module = new Harvest();
-    wisply.harvest = new module.Manager();
+    var harvestModule,
+      repositoryModule,
+      repository;
+
+    harvestModule = new Harvest();
+    repositoryModule = new Repositories();
+
+    repository = new repositoryModule.Repository(data.id, data.name);
+    wisply.harvest = new harvestModule.Manager(repository);
     wisply.harvest.init();
 });

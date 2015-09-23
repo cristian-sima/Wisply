@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	oai "github.com/cristian-sima/Wisply/models/oai"
+	repository "github.com/cristian-sima/Wisply/models/repository"
 	websocket "github.com/gorilla/websocket"
 )
 
@@ -84,6 +86,13 @@ type connection struct {
 	controller *HarvestController
 }
 
+// Message represents a message from client to server
+type Message struct {
+	Name       string      `json:"Name"`
+	Repository int         `json:"Repository"`
+	Value      interface{} `json:"Value"`
+}
+
 // readPump pumps messages from the websocket connection to the hub.
 func (c *connection) readPump() {
 	defer func() {
@@ -105,31 +114,47 @@ func (c *connection) readPump() {
 			if err != nil {
 				break
 			}
-			type Message struct {
-				Name  string `json:"name"`
-				Value string `json:"value"`
-			}
+
+			fmt.Println("I received the message: ")
+			fmt.Println(string(messageByte[:]))
 
 			var msg Message
 
 			json.Unmarshal(messageByte, &msg)
-			c.chooseAction(msg.Name, msg.Value)
+			c.chooseAction(msg)
 			fmt.Println(msg)
 		}
 	}
 }
 
-func (c *connection) chooseAction(name, value string) {
-	switch name {
-	case "testURL":
-		{
-			c.controller.TestURL(value)
-		}
-	case "identify":
-		{
-			c.controller.IdenfityRepository()
+func (c *connection) chooseAction(msg Message) {
+
+	model := repository.Model{}
+	rep, err := model.NewRepository(strconv.Itoa(msg.Repository))
+
+	if err != nil {
+		fmt.Println("Not a good id of rep from client!")
+		fmt.Println(err)
+	} else {
+
+		switch msg.Name {
+		case "testURL":
+			{
+				c.controller.TestURL(rep)
+			}
+		case "identify":
+			{
+				c.controller.IdenfityRepository(rep)
+			}
 		}
 	}
+}
+
+func broadcastMessage(msg *Message) {
+	jsonMsg, _ := json.Marshal(&msg)
+	s := string(jsonMsg[:])
+	fmt.Println(s)
+	h.broadcast <- jsonMsg
 }
 
 // writePump pumps messages from the hub to the websocket connection.
@@ -163,16 +188,10 @@ func (c *connection) write(opCode int, payload []byte) error {
 	return c.ws.WriteMessage(opCode, payload)
 }
 
-// JSONMessage represents a message sent from server to browser
-// It contains 2 fields: the name and the content
-type JSONMessage struct {
-	Name    string      `json:"name"`
-	Content interface{} `json:"content"`
-}
-
 // HarvestController It manages the operations for repository (list, delete, add)
 type HarvestController struct {
 	AdminController
+	Model repository.Model
 }
 
 var upgrader = websocket.Upgrader{
@@ -198,13 +217,13 @@ func (controller *HarvestController) InitWebsocketConnection() {
 }
 
 // TestURL verifies if an address can be reached
-func (controller *HarvestController) TestURL(address string) {
+func (controller *HarvestController) TestURL(repository *repository.Repository) {
 
 	var isOk bool
 
 	isOk = true
 
-	request, err := http.Get(address)
+	request, err := http.Get(repository.URL)
 	fmt.Println(request)
 	if request == nil || err != nil {
 		isOk = false
@@ -212,54 +231,88 @@ func (controller *HarvestController) TestURL(address string) {
 		isOk = false
 	}
 
-	// change in database
-
-	if !isOk {
-		h.broadcast <- []byte("{\"name\": \"FinishTestingURL\", \"content\" :\"false\"}")
-		fmt.Println("nu e bun")
-	} else {
-		h.broadcast <- []byte("{\"name\": \"FinishTestingURL\", \"content\":\"true\"}")
-		fmt.Println("e bun")
+	type Content struct {
+		State bool `json:"IsValid"`
 	}
-
+	content := Content{
+		State: isOk,
+	}
+	msg := Message{
+		Name:       "FinishTestingURL",
+		Value:      content,
+		Repository: repository.ID,
+	}
+	broadcastMessage(&msg)
 }
 
 // IdenfityRepository requests an identification
-func (controller *HarvestController) IdenfityRepository() {
+func (controller *HarvestController) IdenfityRepository(repository *repository.Repository) {
 
-	fmt.Println("This is the test")
-	req := (&oai.Request{
-		BaseURL: "http://eprints.aston.ac.uk/cgi/oai2",
-		Verb:    "Identify",
-	})
-
-	req.Harvest(func(record *oai.Response) {
-
-		type Content struct {
-			State bool          `json:"state"`
-			Data  *oai.Response `json:"data"`
+	defer func() {
+		// recover from any errro and tell them there was a problem
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
+			type Content struct {
+				State bool `json:"state"`
+			}
+			content := Content{
+				State: false,
+			}
+			msg := Message{
+				Name:       "FinishIdentify",
+				Value:      content,
+				Repository: repository.ID,
+			}
+			broadcastMessage(&msg)
 		}
+	}()
 
-		content := Content{
-			State: true,
-			Data:  record,
-		}
+	if repository.Status != "unverified" {
+		controller.DisplaySimpleError("The repository has already been verified")
+	} else {
+		request := (&oai.Request{
+			BaseURL: repository.URL,
+			Verb:    "Identify",
+		})
 
-		msg := JSONMessage{
-			Name:    "FinishIdentify",
-			Content: content,
-		}
-		jsonMsg, _ := json.Marshal(&msg)
-		fmt.Println("maica")
-		fmt.Println(jsonMsg)
-		s := string(jsonMsg[:])
-		fmt.Println(s)
-		h.broadcast <- jsonMsg
-	})
+		request.Harvest(func(record *oai.Response) {
+			type Content struct {
+				State bool          `json:"state"`
+				Data  *oai.Response `json:"data"`
+			}
+			content := Content{
+				State: true,
+				Data:  record,
+			}
+			msg := Message{
+				Name:       "FinishIdentify",
+				Value:      content,
+				Repository: repository.ID,
+			}
+
+			repository.ModifyStatus("ok")
+
+			fmt.Println("Identified")
+			broadcastMessage(&msg)
+		})
+	}
 }
 
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
+
+	ID := controller.Ctx.Input.Param(":id")
+
+	fmt.Println(ID)
+	repository, err := controller.Model.NewRepository(ID)
+
+	fmt.Println(repository)
+	if err != nil {
+		controller.Abort("databaseError")
+	}
+
+	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/harvest/init.tpl"
 	controller.Layout = "site/admin.tpl"

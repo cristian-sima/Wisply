@@ -12,11 +12,11 @@
     <div class="row">
         <div class="col-md-8">
             <div class="input-group" style="height:28px;" id="URL-input">
-              <input type="input" id="Source-URL" disabled value="http://eprisadasdnts.aston.ac.uk/cgi/oai2?verb=Identify"/><span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton"></span>
+              <input type="input" id="Source-URL" disabled value="{{ .repository.URL }}"/><span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton"></span>
             </span>
           </div>
           <div id="Name-Repository" style="display:none">
-              <strong>Aston Research Explorer</strong>
+              <strong>{{ .repository.Name }}</strong>
           </div>
           </div>
         <div class="col-md-4">
@@ -55,7 +55,11 @@
       border:none;
     }
   </style>
+  <script src="/static/js/admin/repository/list.js"></script>
   <script>
-  var host = {{ .host }};
+  var data = {};
+  data.id = {{ .repository.ID }}
+  data.name = {{ .repository.Name}}
+  data.host = {{ .host }};
   </script>
   <script src="/static/js/admin/harvest/init.js"></script>

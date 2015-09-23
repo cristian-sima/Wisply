@@ -31,6 +31,30 @@ func hasValidModificationDetails(details map[string]interface{}) *validity.Valid
 	return adapter.Validate(details, rules)
 }
 
+func isValidStatus(status string) bool {
+	if status == "unverified" ||
+		status == "ok" ||
+		status == "unverified" ||
+		status == "verification-failed" ||
+		status == "problems-harvesting" ||
+		status == "verifying" ||
+		status == "updating" ||
+		status == "harvesting" {
+		return true
+	}
+	return false
+
+}
+
+func isValidURL(URL string) *validity.ValidationResults {
+	data := make(map[string]interface{})
+	data["url"] = URL
+	rules := validity.ValidationRules{
+		"url": rules["url"],
+	}
+	return adapter.Validate(data, rules)
+}
+
 func isValidID(ID string) *validity.ValidationResults {
 	data := make(map[string]interface{})
 	data["id"] = ID

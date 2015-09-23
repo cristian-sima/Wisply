@@ -36,7 +36,7 @@
             <td>{{ $element.Name |html }}</td>
             <td>
               {{ if eq  $element.Status "unverified" }}
-              <span class="label label-warning">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Validate now!' class='repositories-init-harvest glyphicon glyphicon-circle-arrow-down hover' ></span>
+              <span class="label label-warning">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Validate now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span>
 
               {{ else if eq  $element.Status "ok" }}
               <span class="label label-success">Ok</span>

@@ -58,9 +58,9 @@
   <script src="/static/js/admin/repository/list.js"></script>
   <script>
   var data = {};
-  data.id = {{ .repository.ID }}
+  data.id =   {{ .repository.ID }}
   data.name = {{ .repository.Name}}
-  data.url = {{{ .repositoru.URL }}
+  data.url =  {{ .repositoru.URL }}
   data.host = {{ .host }};
   </script>
   <script src="/static/js/admin/harvest/init.js"></script>

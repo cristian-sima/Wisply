@@ -82,7 +82,6 @@ var Harvest = function () {
                     header = "<thead><tr><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
                     return header;
                 }
-
                 /**
                  * It creates the body of the table
                  * @param  {string} arrray The events
@@ -91,7 +90,6 @@ var Harvest = function () {
                 function getBody(arrray) {
                     var result = "<tbody>",
                         i, currentEvent;
-
                     /**
                      * It returns the type of HTML code
                      * @param  {string} type It can be "LOG", "ERROR" or "WARN"
@@ -177,12 +175,12 @@ var Harvest = function () {
              * @param  {object} value The value of the message
              */
             sendMessage: function (name, value) {
-                var id= this.repository.id,
-                  msg = {
-                    Name: name,
-                    Value: value,
-                    Repository: id
-                };
+                var id = this.repository.id,
+                    msg = {
+                        Name: name,
+                        Value: value,
+                        Repository: id
+                    };
                 this.value.send(JSON.stringify(msg));
             }
         };
@@ -226,8 +224,7 @@ var Harvest = function () {
              */
             perform: function (stageManager) {
                 var manager = stageManager.repo,
-                repository = manager.repository;
-
+                    repository = manager.repository;
                 if (window.WebSocket) {
                     manager.connection = new Connection(function (data) {
                         wisply.harvest.processMessage(data);
@@ -304,7 +301,7 @@ var Harvest = function () {
                 $('#Source-URL').prop('disabled', true);
             },
             /**
-              * It enables the possibility to modify the URL
+             * It enables the possibility to modify the URL
              */
             enableModifyURL: function () {
                 $('#modifyButton').prop('disabled', false);
@@ -395,7 +392,7 @@ var Harvest = function () {
                 $('#Source-URL').prop('disabled', true);
             },
             /**
-              * It enables the possibility to modify the URL
+             * It enables the possibility to modify the URL
              */
             enableModifyURL: function () {
                 $('#modifyButton').prop('disabled', false);
@@ -453,12 +450,12 @@ var Harvest = function () {
              * Called when a stage has finished. It updates the page and calls the next stage
              */
             firedStageFinished: function () {
-                if(this.state === "stopped" || this.state === "paused") {
-                this.repo.history.log("Imposible to continue!");
+                if (this.state === "stopped" || this.state === "paused") {
+                    this.repo.history.log("Imposible to continue!");
                 } else {
-                  this.repo.page.update();
-                  this.repo.history.log("Stage " + (this.current + 1) + " finished!");
-                  this.next();
+                    this.repo.page.update();
+                    this.repo.history.log("Stage " + (this.current + 1) + " finished!");
+                    this.next();
                 }
             },
             /**
@@ -516,7 +513,6 @@ var Harvest = function () {
              */
             processMessage: function (evt) {
                 var msg = JSON.parse(evt.data);
-
                 /**
                  * It returns a description of the content of the message
                  * @param  {object} content The content of the message
@@ -528,7 +524,20 @@ var Harvest = function () {
                     }
                     return ", which does not has content";
                 }
-                this.history.log("I received the socket [<b>" + msg.name + "</b>]" + getContentMessage(msg.content) + " for repository " + msg.Repository);
+
+                /**
+                 * It returns a human-readable message for the id of the repository
+                 * @param  {number} id The id of the repository
+                 * @return {string} Human readable message
+                 */
+                function getRepo(current, id) {
+                    if (current === id) {
+                      return "this repository";
+                    }
+                    return "the repository number " + id;
+                }
+
+                this.history.log("I received the socket [<b>" + msg.Name + "</b>]" + getContentMessage(msg.Content) + " for " + getRepo(this.repository.id, msg.Repository)+ ".");
                 this.chooseAction(msg.Name, msg.Value, msg.Repository);
             },
             /**
@@ -538,21 +547,23 @@ var Harvest = function () {
              * @param  {number} id The id of repository
              */
             chooseAction: function (name, content, repository) {
-                if(repository === this.repository.id) {
-                switch (name) {
-                case "FinishIdentify":
-                case "FinishTestingURL":
-                    this.stageManager.stage.result(this.stageManager, content);
-                    break;
-                case "RepositoryBaseURLChanged":
-                    wisply.harvest.repository.url = content;
-                    wisply.harvest.restart(2);
-                  break;
+                if (repository === this.repository.id) {
+                    switch (name) {
+                    case "FinishIdentify":
+                    case "FinishTestingURL":
+                        this.stageManager.stage.result(this.stageManager, content);
+                        break;
+                    case "RepositoryBaseURLChanged":
+                        wisply.harvest.repository.url = content;
+                        wisply.harvest.restart(2);
+                        break;
+                    default:
+                        this.history.log("This websocket is for the current repository, but it was ignored. Event name <strong>" + name + "</strong> with the content <strong>" + content + "</strong>.");
+                    }
+                } else {
+                    this.history.log("This websocket is not for the current repository. Event name " + name);
+                    console.log(content);
                 }
-              } else {
-                this.history.log("This websocket is not for the current repository. Event name " + name);
-                console.log(content);
-              }
             },
             /**
              * It stops the entire process
@@ -601,7 +612,7 @@ var Harvest = function () {
                     instance.showHistory();
                 });
                 $("#modifyButton").click(function () {
-                    wisply.harvest.connection.sendMessage("changeRepositoryURL",  $("#Source-URL").val());
+                    wisply.harvest.connection.sendMessage("changeRepositoryURL", $("#Source-URL").val());
                     $('#modifyButton').prop('disabled', true);
                 });
             },
@@ -772,12 +783,10 @@ var Harvest = function () {
 $(document).ready(function () {
     "use strict";
     var harvestModule,
-      repositoryModule,
-      repository;
-
+        repositoryModule,
+        repository;
     harvestModule = new Harvest();
     repositoryModule = new Repositories();
-
     repository = new repositoryModule.Repository(data);
     wisply.harvest = new harvestModule.Manager(repository);
     wisply.harvest.init();

@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="input-group" style="height:28px;" id="URL-input">
-              <input type="input" id="Source-URL" disabled value="{{ .repository.URL }}"/><span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton"></span>
+              <input type="input" id="Source-URL" placeholder="http://..." disabled value="{{ .repository.URL }}"/><span class="input-group-btn"><input disabled class="btn btn-primary btn-sm" value="Modifty" id="modifyButton"></span>
             </span>
           </div>
           <div id="Name-Repository" style="display:none">

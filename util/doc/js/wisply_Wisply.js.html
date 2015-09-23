@@ -184,6 +184,50 @@ var Wisply = function () {
     */
     init: function () {
       this.shortcutManager.init();
+      this.solveHashProblem();
+    },
+    /**
+     * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content
+     */
+    solveHashProblem: function () {
+
+      function preventNavOverlap() {
+        setTimeout(function() {scrollBy(0, -80);}, 10);
+      }
+      var hashTagActive = "";
+      $(".scroll").click(function (event) {
+          if(hashTagActive != this.hash) { //this will prevent if the user click several times the same link to freeze the scroll.
+              event.preventDefault();
+              //calculate destination place
+              var dest = 0;
+              if ($(this.hash).offset().top > $(document).height() - $(window).height()) {
+                  dest = $(document).height() - $(window).height();
+              } else {
+                  dest = $(this.hash).offset().top;
+              }
+              //go to destination
+              $('html,body').animate({
+                  scrollTop: dest-80
+              }, 500, 'swing');
+              hashTagActive = this.hash;
+              window.location.hash = this.hash;
+          } else {
+            preventNavOverlap();
+          }
+        });
+        if(window.location.hash) {
+            preventNavOverlap();
+        }
+        $(window).on('hashchange', function() {
+          preventNavOverlap();
+        });
+    },
+    /**
+     * It preloads the loading image in the background and stores it in the browser cache
+     */
+    preloadLoadingImage: function() {
+      var img = new Image();
+        img.src = "/static/img/wisply/load.gif";
     },
     /**
     * It executes a JQuery post request, adding to it the xsrf token value
@@ -196,12 +240,17 @@ var Wisply = function () {
       }
       args.dataType = "text";
       args.method = args.type = "POST";
+      args.data._xsrf = this.getXSRF();
+      $.ajax(args);
+    },
+    getXSRF : function() {
       var xsrf,
-      xsrflist;
+      xsrflist,
+      value;
       xsrf = $.cookie("_xsrf");
       xsrflist = xsrf.split("|");
-      args.data._xsrf = base64_decode(xsrflist[0]);
-      $.ajax(args);
+      value = base64_decode(xsrflist[0]);
+      return value;
     },
     /**
     * It refreshes the page
@@ -224,6 +273,16 @@ var Wisply = function () {
     * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
     */
     showLoading: function (idElement, size) {
+      var element = $(idElement), HTML;
+      HTML = this.getLoadingImage(size);
+      element.html(HTML);
+    },
+    /**
+        * It gets the HTML of the loading image
+        * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+        * @return {string} The HTML for Wisply loading image
+        */
+    getLoadingImage: function(size) {
       /**
       * It returns the dimension in pixels acording to string type
       * @param  {string} size The demension of the image. It can be small (for 20px), medium (for 55px) and large (for 110px)
@@ -231,38 +290,36 @@ var Wisply = function () {
       */
       function getDimension(size) {
         var px = 0;
-        switch (size) {
-          case "small":
-          px = 20;
-          break;
-          case "medium":
-          px = 55;
-          break;
-          case "big":
-          px = 110;
-          break;
-        }
-        return px;
+      switch (size) {
+        case "small":
+        px = 20;
+        break;
+        case "medium":
+        px = 55;
+        break;
+        case "big":
+        px = 110;
+        break;
       }
+      return px;
+    }
 
-      /**
-      * It returns the HTML code for the loading element
-      * @param  {number} dimension The size of the image in px
-      * @return {string}           The HTML code for loading element
-      */
-      function getHTML(dimension) {
-        return "&lt;img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
-      }
-      var HTML, dimension, element;
+    /**
+    * It returns the HTML code for the loading element
+    * @param  {number} dimension The size of the image in px
+    * @return {string}           The HTML code for loading element
+    */
+    function getHTML(dimension) {
+      return "&lt;img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
+    }
+    var dimension;
 
-      if (typeof size === 'undefined') {
-        size = "small";
-      }
-      element = $(idElement);
-      dimension = getDimension(size);
-      HTML = getHTML(dimension);
-      element.html(HTML);
-    },
+    if (typeof size === 'undefined') {
+      size = "small";
+    }
+    dimension = getDimension(size);
+    return getHTML(dimension);
+  },
     /**
     * It redirects the account to a certain page
     * @param  {string} address The address of the page
@@ -298,13 +355,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Sources.Manager.html">Manager</a></li><li><a href="Sources.Source.html">Source</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Sources.html">Sources</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.Connection.html">Connection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.Manager.html">Manager</a></li><li><a href="Harvest.Page.html">Page</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#complain">complain</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#result">result</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Sep 16 2015 15:40:10 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Sep 23 2015 13:40:22 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

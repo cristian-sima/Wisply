@@ -27,6 +27,14 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" id="menu-top-left">
+        <li><!--
+          <form class="navbar-form navbar-left" role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>
+            </form>
+          -->
+        </li>
         {{ if .accountDisconnected }}
         <li><a href="/auth/login">Login</a></li>
         <li><a href="/auth/register">Register</a></li>

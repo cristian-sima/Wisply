@@ -1,3 +1,4 @@
+// Package main starts Wisply
 package main
 
 import (

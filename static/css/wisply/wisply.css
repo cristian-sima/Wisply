@@ -12,6 +12,10 @@ Author     Cristian Sima
     padding-top: 0px;
 }
 
+.progress {
+  height:20px
+}
+
 #sidebar {
   height: 100%;
   padding-right: 0;
@@ -25,6 +29,9 @@ Author     Cristian Sima
   border-bottom-width:1px;
 }
 
+.hover {
+  cursor:pointer;
+}
 
 /* collapsed sidebar styles */
 @media screen and (max-width: 767px) {

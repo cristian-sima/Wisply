@@ -212,12 +212,17 @@ var Wisply = function () {
       }
       args.dataType = "text";
       args.method = args.type = "POST";
+      args.data._xsrf = this.getXSRF();
+      $.ajax(args);
+    },
+    getXSRF : function() {
       var xsrf,
-      xsrflist;
+      xsrflist,
+      value;
       xsrf = $.cookie("_xsrf");
       xsrflist = xsrf.split("|");
-      args.data._xsrf = base64_decode(xsrflist[0]);
-      $.ajax(args);
+      value = base64_decode(xsrflist[0]);
+      return value;
     },
     /**
     * It refreshes the page
@@ -240,6 +245,16 @@ var Wisply = function () {
     * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
     */
     showLoading: function (idElement, size) {
+      var element = $(idElement), HTML;
+      HTML = this.getLoadingImage(size);
+      element.html(HTML);
+    },
+    /**
+        * It gets the HTML of the loading image
+        * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+        * @return {string} The HTML for Wisply loading image
+        */
+    getLoadingImage: function(size) {
       /**
       * It returns the dimension in pixels acording to string type
       * @param  {string} size The demension of the image. It can be small (for 20px), medium (for 55px) and large (for 110px)
@@ -247,38 +262,36 @@ var Wisply = function () {
       */
       function getDimension(size) {
         var px = 0;
-        switch (size) {
-          case "small":
-          px = 20;
-          break;
-          case "medium":
-          px = 55;
-          break;
-          case "big":
-          px = 110;
-          break;
-        }
-        return px;
+      switch (size) {
+        case "small":
+        px = 20;
+        break;
+        case "medium":
+        px = 55;
+        break;
+        case "big":
+        px = 110;
+        break;
       }
+      return px;
+    }
 
-      /**
-      * It returns the HTML code for the loading element
-      * @param  {number} dimension The size of the image in px
-      * @return {string}           The HTML code for loading element
-      */
-      function getHTML(dimension) {
-        return "<img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
-      }
-      var HTML, dimension, element;
+    /**
+    * It returns the HTML code for the loading element
+    * @param  {number} dimension The size of the image in px
+    * @return {string}           The HTML code for loading element
+    */
+    function getHTML(dimension) {
+      return "<img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
+    }
+    var dimension;
 
-      if (typeof size === 'undefined') {
-        size = "small";
-      }
-      element = $(idElement);
-      dimension = getDimension(size);
-      HTML = getHTML(dimension);
-      element.html(HTML);
-    },
+    if (typeof size === 'undefined') {
+      size = "small";
+    }
+    dimension = getDimension(size);
+    return getHTML(dimension);
+  },
     /**
     * It redirects the account to a certain page
     * @param  {string} address The address of the page

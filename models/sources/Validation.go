@@ -1,4 +1,4 @@
-package sources
+package repository
 
 import (
 	adapter "github.com/cristian-sima/Wisply/models/adapter"

@@ -14,7 +14,7 @@ type AdminController struct {
 func (controller *AdminController) DisplayDashboard() {
 	dashboard := model.NewDashboard()
 	controller.Data["numberOfAccounts"] = dashboard.Accounts
-	controller.Data["numberOfSources"] = dashboard.Sources
+	controller.Data["numberOfRepositories"] = dashboard.Repositories
 	controller.Layout = "site/admin.tpl"
 	controller.TplNames = "site/admin/dashboard.tpl"
 }

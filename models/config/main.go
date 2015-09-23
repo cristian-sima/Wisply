@@ -1,3 +1,4 @@
+// Package config contains the functions for loading configuration files
 package config
 
 import (

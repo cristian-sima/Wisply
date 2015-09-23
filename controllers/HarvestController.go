@@ -115,8 +115,7 @@ func (c *connection) readPump() {
 				break
 			}
 
-			fmt.Println("I received the message: ")
-			fmt.Println(string(messageByte[:]))
+			fmt.Println("<-- I received the message: ")
 
 			var msg Message
 
@@ -154,9 +153,9 @@ func (c *connection) chooseAction(msg Message) {
 }
 
 func broadcastMessage(msg *Message) {
+	fmt.Println("--> I broadcast the message")
+	fmt.Println(msg)
 	jsonMsg, _ := json.Marshal(&msg)
-	s := string(jsonMsg[:])
-	fmt.Println(s)
 	h.broadcast <- jsonMsg
 }
 
@@ -238,12 +237,13 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 // TestURL verifies if an address can be reached
 func (controller *HarvestController) TestURL(repository *repository.Repository) {
 
+	controller.modifyRepositoryStatus(repository, "verifying")
+
 	var isOk bool
 
 	isOk = true
 
 	request, err := http.Get(repository.URL)
-	fmt.Println(request)
 	if request == nil || err != nil {
 		isOk = false
 	} else if http.StatusOK != request.StatusCode {
@@ -263,6 +263,10 @@ func (controller *HarvestController) TestURL(repository *repository.Repository) 
 	}
 
 	broadcastMessage(&msg)
+
+	if !isOk {
+		controller.modifyRepositoryStatus(repository, "verification-failed")
+	}
 }
 
 // IdenfityRepository requests an identification
@@ -272,7 +276,6 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 		// recover from any errro and tell them there was a problem
 		err := recover()
 		if err != nil {
-			fmt.Println(err)
 			type Content struct {
 				State bool `json:"state"`
 			}
@@ -285,11 +288,13 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 				Repository: repository.ID,
 			}
 			broadcastMessage(&msg)
+
+			controller.modifyRepositoryStatus(repository, "verification-failed")
 		}
 	}()
 
-	if repository.Status != "unverified" {
-		controller.DisplaySimpleError("The repository has already been verified")
+	if repository.Status != "verifying" {
+		fmt.Println("The repository should be in 'verifying' state")
 	} else {
 		request := (&oai.Request{
 			BaseURL: repository.URL,
@@ -297,6 +302,7 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 		})
 
 		request.Harvest(func(record *oai.Response) {
+
 			type Content struct {
 				State bool          `json:"state"`
 				Data  *oai.Response `json:"data"`
@@ -310,12 +316,30 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 				Value:      content,
 				Repository: repository.ID,
 			}
-
-			//	repository.ModifyStatus("ok")
-
-			fmt.Println("Identified")
+			controller.modifyRepositoryStatus(repository, "verified")
 			broadcastMessage(&msg)
 		})
+	}
+}
+
+func (controller *HarvestController) modifyRepositoryStatus(repository *repository.Repository, newStatus string) {
+	err := repository.ModifyStatus(newStatus)
+
+	if err == nil {
+		type Content struct {
+			NewStatus string `json:"NewStatus"`
+		}
+		content := Content{
+			NewStatus: repository.Status,
+		}
+		msg := Message{
+			Name:       "RepositoryChangedStatus",
+			Value:      content,
+			Repository: repository.ID,
+		}
+		broadcastMessage(&msg)
+	} else {
+		panic(err)
 	}
 }
 
@@ -324,10 +348,8 @@ func (controller *HarvestController) ShowPanel() {
 
 	ID := controller.Ctx.Input.Param(":id")
 
-	fmt.Println(ID)
 	repository, err := controller.Model.NewRepository(ID)
 
-	fmt.Println(repository)
 	if err != nil {
 		controller.Abort("databaseError")
 	}

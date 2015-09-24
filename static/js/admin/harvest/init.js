@@ -65,7 +65,7 @@ var Harvest = function () {
                     type: type
                 });
                 if (wisply.harvest) {
-                    wisply.harvest.page.update();
+                    wisply.harvest.page.updateHistory();
                 }
             },
             /**
@@ -399,7 +399,39 @@ var Harvest = function () {
                 $('#modifyButton').prop('disabled', false);
                 $('#Source-URL').prop('disabled', false);
             }
-        }];
+        },
+
+        {
+            name: "Receiving records...",
+            id: 4,
+            /**
+             * It tells the server to receive the records
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
+                var instance = stageManager;
+                instance.repo.history.log("Telling the server to start receiving records");
+                instance.repo.connection.sendMessage("getRecords", "");
+            },
+            /**
+             * It checks if the server has identified the repository
+             * @param  {object} indentifyInfo The value of the message from the server
+             */
+            result: function (stageManager, indentifyInfo) {
+                /*if (indentifyInfo.state === true) {
+                    this.paint(indentifyInfo.data.Identify);
+                    stageManager.repo.history.log("The source has been identified");
+                    stageManager.firedStageFinished();
+                    this.end();
+                } else {
+                    this.complain(stageManager);
+                    this.enableModifyURL();
+                }*/
+            }
+        },
+
+
+      ];
         this.current = "None";
         this.stage = {};
     };
@@ -625,6 +657,7 @@ var Harvest = function () {
              * It change the tab to the history
              */
             showHistory: function () {
+                $("#history").html(wisply.getLoadingImage("medium"));
                 this.changeTab("history");
             },
             /**
@@ -646,6 +679,21 @@ var Harvest = function () {
              * It updates the current view
              */
             update: function () {
+                this.updateStages();
+                this.updateProcessStatus();
+                this.updateRepositoryStatus();
+                this.updateHistory();
+                console.log("update")
+            },
+            /**
+             * It updates the history tag
+             * @return {[type]}
+             */
+            updateHistory: function () {
+                this.updateHistoryNumber();
+                this.updateCurrentTab();
+            },
+            updateCurrentTab: function() {
                 switch (this.currentTab) {
                 case "current":
                     break;
@@ -653,10 +701,6 @@ var Harvest = function () {
                     this.refreshHistory();
                     break;
                 }
-                this.updateStages();
-                this.updateHistoryNumber();
-                this.updateProcessStatus();
-                this.updateRepositoryStatus();
             },
             /**
              * It updates the number of events in history

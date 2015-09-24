@@ -27,6 +27,14 @@ const (
 	maxMessageSize = 512
 )
 
+// Holds
+type Statistics struct {
+	Records int
+}
+
+// Processes holds the current Statistics for a repository
+var Processes = make(map[int]Statistics)
+
 func init() {
 	go h.run()
 }
@@ -148,12 +156,16 @@ func (c *connection) chooseAction(msg Message) {
 			{
 				c.controller.IdenfityRepository(rep)
 			}
+		case "getRecords":
+			{
+				c.controller.GetRecords(rep)
+			}
 		}
 	}
 }
 
 func broadcastMessage(msg *Message) {
-	fmt.Println("--> I broadcast the message")
+	fmt.Println("--> I broadcast this message: ")
 	fmt.Println(msg)
 	jsonMsg, _ := json.Marshal(&msg)
 	h.broadcast <- jsonMsg
@@ -232,6 +244,61 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 	}
 
 	broadcastMessage(&msg)
+}
+
+// GetRecords gets all the records
+func (controller *HarvestController) GetRecords(repository *repository.Repository) {
+
+	defer func() {
+		// recover from any errro and tell them there was a problem
+		err := recover()
+		if err != nil {
+			type Content struct {
+				Info string `json:"info"`
+			}
+			content := Content{
+				Info: err.(string),
+			}
+			msg := Message{
+				Name:       "Record-Problems",
+				Value:      content,
+				Repository: repository.ID,
+			}
+			broadcastMessage(&msg)
+
+			controller.modifyRepositoryStatus(repository, "problems")
+		}
+	}()
+
+	if repository.Status != "verified" {
+		fmt.Println("The repository should be in 'verified' state")
+	} else {
+		request := (&oai.Request{
+			BaseURL:        repository.URL,
+			From:           "2012-02-09T18:12:54Z",
+			Until:          "2013-10-09T18:12:54Z",
+			MetadataPrefix: "oai_dc",
+		})
+
+		request.HarvestRecords(func(record *oai.Record) {
+			fmt.Println("--> I received a record.")
+			type Content struct {
+				Data *oai.Record `json:"data"`
+			}
+			content := Content{
+				Data: record,
+			}
+			msg := Message{
+				Name:       "Record",
+				Value:      content,
+				Repository: repository.ID,
+			}
+			controller.modifyRepositoryStatus(repository, "verified")
+			broadcastMessage(&msg)
+		}, func(response *oai.Response) {
+			fmt.Println("--> I have finished to list all the records.")
+		})
+	}
 }
 
 // TestURL verifies if an address can be reached
@@ -318,6 +385,7 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 			}
 			controller.modifyRepositoryStatus(repository, "verified")
 			broadcastMessage(&msg)
+		}, func(resp *oai.Response) {
 		})
 	}
 }

@@ -87,7 +87,7 @@ func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 	hasResumptionToken, resumptionToken := response.ObtainResumptionToken()
 
 	// Harvest further if there is a resumption token
-	if hasResumptionToken == true {
+	if hasResumptionToken {
 		request.Set = ""
 		request.MetadataPrefix = ""
 		request.From = ""

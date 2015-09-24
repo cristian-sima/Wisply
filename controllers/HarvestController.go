@@ -27,13 +27,13 @@ const (
 	maxMessageSize = 512
 )
 
-// Holds
+// Statistics holds the data regarding a current process
 type Statistics struct {
 	Records int
 }
 
-// Processes holds the current Statistics for a repository
-var Processes = make(map[int]Statistics)
+// CurrentProcesses holds the current Statistics for a repository
+var CurrentProcesses = make(map[int]*Statistics)
 
 func init() {
 	go h.run()
@@ -156,9 +156,9 @@ func (c *connection) chooseAction(msg Message) {
 			{
 				c.controller.IdenfityRepository(rep)
 			}
-		case "getRecords":
+		case "initialize":
 			{
-				c.controller.GetRecords(rep)
+				c.controller.InitializeRepository(rep)
 			}
 		}
 	}
@@ -246,8 +246,45 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 	broadcastMessage(&msg)
 }
 
+// InitializeRepository starts the initializing proccess
+func (controller *HarvestController) InitializeRepository(repository *repository.Repository) {
+	if repository.Status != "verified" {
+		fmt.Println("Can't start init, because the rep is not in 'verified' state. It is in:" + repository.Status)
+	} else {
+		controller.modifyRepositoryStatus(repository, "initializing")
+		controller.startInit(repository)
+	}
+}
+
+func (controller *HarvestController) startInit(repository *repository.Repository) {
+
+	ID := repository.ID
+
+	// delete any previous
+	delete(CurrentProcesses, ID)
+
+	// create a new empty one
+	st := &Statistics{
+		Records: 0,
+	}
+
+	CurrentProcesses[ID] = st
+
+	// get records
+	controller.getRecords(repository, func(response *oai.Response) {
+
+		msg := Message{
+			Name:       "FinishStage",
+			Repository: repository.ID,
+		}
+		broadcastMessage(&msg)
+
+		controller.modifyRepositoryStatus(repository, "ok")
+	})
+}
+
 // GetRecords gets all the records
-func (controller *HarvestController) GetRecords(repository *repository.Repository) {
+func (controller *HarvestController) getRecords(repository *repository.Repository, finishCallback func(*oai.Response)) {
 
 	defer func() {
 		// recover from any errro and tell them there was a problem
@@ -270,35 +307,37 @@ func (controller *HarvestController) GetRecords(repository *repository.Repositor
 		}
 	}()
 
-	if repository.Status != "verified" {
-		fmt.Println("The repository should be in 'verified' state")
-	} else {
-		request := (&oai.Request{
-			BaseURL:        repository.URL,
-			From:           "2012-02-09T18:12:54Z",
-			Until:          "2013-10-09T18:12:54Z",
-			MetadataPrefix: "oai_dc",
-		})
+	request := (&oai.Request{
+		BaseURL:        repository.URL,
+		From:           "2012-02-09T18:12:54Z",
+		Until:          "2013-10-09T18:12:54Z",
+		MetadataPrefix: "oai_dc",
+	})
 
-		request.HarvestRecords(func(record *oai.Record) {
-			fmt.Println("--> I received a record.")
-			type Content struct {
-				Data *oai.Record `json:"data"`
-			}
-			content := Content{
-				Data: record,
-			}
-			msg := Message{
-				Name:       "Record",
-				Value:      content,
-				Repository: repository.ID,
-			}
-			controller.modifyRepositoryStatus(repository, "verified")
-			broadcastMessage(&msg)
-		}, func(response *oai.Response) {
-			fmt.Println("--> I have finished to list all the records.")
-		})
-	}
+	request.HarvestRecords(func(record *oai.Record) {
+
+		ID := repository.ID
+		st := CurrentProcesses[ID]
+
+		st.Records++
+
+		fmt.Println("--> I received a record." + strconv.Itoa(st.Records))
+
+		type Content struct {
+			Data *Statistics `json:"Data"`
+		}
+		content := Content{
+			Data: st,
+		}
+		msg := Message{
+			Name:       "Statistics",
+			Value:      content,
+			Repository: repository.ID,
+		}
+
+		broadcastMessage(&msg)
+	}, finishCallback)
+
 }
 
 // TestURL verifies if an address can be reached

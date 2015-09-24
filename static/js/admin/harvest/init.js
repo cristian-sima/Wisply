@@ -353,7 +353,7 @@ var Harvest = function () {
                  * @param  {object} data The object
                  * @return {string} HTML table for the object's data
                  */
-                function getHTML(data) {
+                function getIdentification(data) {
                     var html = "";
                     html += '<ul class="list-group text-left">';
                     for (var property in data) {
@@ -362,7 +362,7 @@ var Harvest = function () {
                                 continue;
                             } else if (typeof data[property] === 'object') {
                                 html += '<li class="list-group-item"> ' + property;
-                                html += getHTML(data[property]);
+                                html += getIdentification(data[property]);
                                 html += '</li>';
                             } else {
                                 html += "  <li class='list-group-item'>";
@@ -374,7 +374,19 @@ var Harvest = function () {
                     html += "</ul>";
                     return html;
                 }
-                var html = getHTML(data);
+                function drawBadges() {
+                  var text = '<div class="row text-center" id="repository-elements" style="display:none"><table class="table"><tbody><tr>';
+                  var records = '<td><div class="text-center col-xs-3 col-md-3">' +
+                      'Records<br />' +
+                        '<span class="badge" id="repository-elements-records">0</span>' +
+                     '</div></td>';
+                     text += records;
+                     text += "</tr></tbody></table></div>";
+                  return text;
+                }
+                var html = "";
+                html += drawBadges();
+                html += getIdentification(data);
                 $("#current").html(html);
             },
             /**
@@ -400,9 +412,8 @@ var Harvest = function () {
                 $('#Source-URL').prop('disabled', false);
             }
         },
-
         {
-            name: "Receiving records...",
+            name: "Initialize",
             id: 4,
             /**
              * It tells the server to receive the records
@@ -410,23 +421,51 @@ var Harvest = function () {
              */
             perform: function (stageManager) {
                 var instance = stageManager;
-                instance.repo.history.log("Telling the server to start receiving records");
-                instance.repo.connection.sendMessage("getRecords", "");
+                instance.repo.history.log("Telling the server to start the init process...");
+                instance.repo.connection.sendMessage("initialize", "");
             },
             /**
              * It checks if the server has identified the repository
              * @param  {object} indentifyInfo The value of the message from the server
              */
-            result: function (stageManager, indentifyInfo) {
-                /*if (indentifyInfo.state === true) {
-                    this.paint(indentifyInfo.data.Identify);
-                    stageManager.repo.history.log("The source has been identified");
-                    stageManager.firedStageFinished();
-                    this.end();
-                } else {
-                    this.complain(stageManager);
-                    this.enableModifyURL();
-                }*/
+            result: function (stageManager, result) {
+                $("#repository-elements").slideUp();
+                stageManager.firedStageFinished();
+            }
+        },
+        {
+            name: "Receiving records...",
+            id: 5,
+            /**
+             * It tells the server to receive the records
+             * @param  {Manager} stageManager The reference to the repositories manager
+             */
+            perform: function (stageManager) {
+                var instance = stageManager;
+                this.element = $("#repository-elements-records");
+                this.start();
+                instance.repo.history.log("Prepare to receive records");
+            },
+            /**
+             * It checks if the server has identified the repository
+             * @param  {object} indentifyInfo The value of the message from the server
+             */
+            result: function (stageManager) {
+                stageManager.firedStageFinished();
+                this.end();
+            },
+            start: function () {
+              $("#repository-elements").slideDown();
+              this.element.addClass("progress-bar-warning");
+            },
+            end: function (stageManager) {
+              this.element.removeClass("progress-bar-warning");
+              this.element.addClass("progress-bar-success");
+              this.element = null;
+              stageManager.firedStageFinished();
+            },
+            update: function (newValue) {
+              this.element.html(newValue.Records);
             }
         },
 
@@ -593,7 +632,18 @@ var Harvest = function () {
                     case "RepositoryChangedStatus":
                         wisply.harvest.repository.status = content.NewStatus;
                         wisply.harvest.page.updateRepositoryStatus();
-                    break;
+                        switch(content.NewStatus) {
+                          case "initializing": {
+                              this.stageManager.stage.result(this.stageManager);
+                          }
+                        }
+                        break;
+                    case "Statistics":
+                        this.stageManager.stage.update(content.Data);
+                        break;
+                    case "FinishStage":
+                        this.stageManager.stage.end(this.stageManager);
+                        break;
                     default:
                         this.history.log("This websocket is for the current repository, but it was ignored. Event name <strong>" + name + "</strong> with the content <strong>" + content + "</strong>.");
                     }
@@ -683,7 +733,6 @@ var Harvest = function () {
                 this.updateProcessStatus();
                 this.updateRepositoryStatus();
                 this.updateHistory();
-                console.log("update")
             },
             /**
              * It updates the history tag

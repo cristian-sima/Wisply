@@ -22,7 +22,7 @@
 {{end}}
 {{ else }}
 <script>
-    window.cookieconsent_options = {"message":"Wisply uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":"/cookies","theme":"light-bottom"};
+    window.cookieconsent_options = {"message":"Wisply uses cookies to ensure you get the best experience","dismiss":"Got it!","learnMore":"More info","link":"/cookies","theme":"light-bottom"};
 </script>
 <script src="/static/3rd_party/others/js/cookieconsent.latest.min.js"></script>
 

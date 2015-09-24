@@ -27,13 +27,18 @@ const (
 	maxMessageSize = 512
 )
 
-// Statistics holds the data regarding a current process
-type Statistics struct {
-	Records int
+type Action struct {
+	Finished bool `json:"Finished"`
+	Number   int  `json:"Number"`
+}
+
+type Process struct {
+	Current string             `json:"CurrentAction"`
+	Actions map[string]*Action `json:"Actions"`
 }
 
 // CurrentProcesses holds the current Statistics for a repository
-var CurrentProcesses = make(map[int]*Statistics)
+var CurrentProcesses = make(map[int]*Process)
 
 func init() {
 	go h.run()
@@ -263,21 +268,33 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 	// delete any previous
 	delete(CurrentProcesses, ID)
 
+	actions := map[string]*Action{
+		"records": &Action{
+			Number:   0,
+			Finished: false,
+		},
+	}
+
 	// create a new empty one
-	st := &Statistics{
-		Records: 0,
+	st := &Process{
+		Current: "",
+		Actions: actions,
 	}
 
 	CurrentProcesses[ID] = st
 
 	// get records
 	controller.getRecords(repository, func(response *oai.Response) {
+		fmt.Println("am terminat")
 
 		msg := Message{
 			Name:       "FinishStage",
 			Repository: repository.ID,
 		}
 		broadcastMessage(&msg)
+
+		// delete init
+		delete(CurrentProcesses, ID)
 
 		controller.modifyRepositoryStatus(repository, "ok")
 	})
@@ -310,24 +327,24 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 	request := (&oai.Request{
 		BaseURL:        repository.URL,
 		From:           "2012-02-09T18:12:54Z",
-		Until:          "2013-10-09T18:12:54Z",
+		Until:          "2014-04-09T18:12:54Z",
 		MetadataPrefix: "oai_dc",
 	})
 
 	request.HarvestRecords(func(record *oai.Record) {
 
 		ID := repository.ID
-		st := CurrentProcesses[ID]
+		actions := CurrentProcesses[ID].Actions
+		recordsAction := actions["records"]
+		recordsAction.Number++
 
-		st.Records++
-
-		fmt.Println("--> I received a record." + strconv.Itoa(st.Records))
+		fmt.Println("--> I received a record." + strconv.Itoa(actions["records"].Number))
 
 		type Content struct {
-			Data *Statistics `json:"Data"`
+			Data *Action `json:"Data"`
 		}
 		content := Content{
-			Data: st,
+			Data: recordsAction,
 		}
 		msg := Message{
 			Name:       "Statistics",
@@ -453,6 +470,8 @@ func (controller *HarvestController) modifyRepositoryStatus(repository *reposito
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
 
+	var processDetails string
+
 	ID := controller.Ctx.Input.Param(":id")
 
 	repository, err := controller.Model.NewRepository(ID)
@@ -460,6 +479,17 @@ func (controller *HarvestController) ShowPanel() {
 	if err != nil {
 		controller.Abort("databaseError")
 	}
+
+	temp1, _ := strconv.Atoi(ID)
+	processObject, hasProcess := CurrentProcesses[temp1]
+
+	if hasProcess {
+		temp2, _ := json.Marshal(processObject)
+		processDetails = string(temp2)
+	}
+
+	controller.Data["hasProcess"] = hasProcess
+	controller.Data["currentProcesses"] = processDetails
 
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host

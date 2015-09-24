@@ -37,7 +37,7 @@
             <td>
               {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}
-              <span class="label label-info">Unverified</span> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span>
+              <span class="label label-info">Unverified</span><a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
 
               {{ else if eq  $element.Status "ok" }}
               <span class="label label-success">Ok</span>
@@ -55,6 +55,7 @@
 
               {{ else if eq  $element.Status "initializing" }}
               <span class="label label-warning">Initializing</span>
+              <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='See process' class='repositories-init-harvest glyphicon glyphicon-th-list hover' ></span>
 
 
               {{ else if eq  $element.Status "verification-failed" }}

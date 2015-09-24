@@ -1,4 +1,4 @@
-/* global $, wisply,window, data*/
+/* global $, wisply,window, data, server*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -194,6 +194,8 @@ var Harvest = function () {
     var StageManager = function StageManager(repositoriesManager) {
         this.status = "stopped";
         this.repo = repositoriesManager;
+        this.current = 0;
+        this.stage = {};
         // stages
         this.data = [{
             name: "Prepare resources",
@@ -465,24 +467,25 @@ var Harvest = function () {
               stageManager.firedStageFinished();
             },
             update: function (newValue) {
-              this.element.html(newValue.Records);
+              this.element.html(newValue.Number);
             }
         },
-
-
       ];
-        this.current = "None";
-        this.stage = {};
     };
     StageManager.prototype =
         /** @lends Harvest.StageManager */
         {
+            loadConfiguration: function(server) {
+              var process;
+                if(server.hasProcess) {
+                    process = server.currentProcesses;
+                }
+            },
             /**
              * It starts the manager. It calls the first stage
              */
             start: function () {
-                this.current = 0;
-                this.performStage(0);
+                this.performStage(this.current);
             },
             /**
              * It calls the next stage. If there are no stages, it calls firedEnd
@@ -574,8 +577,9 @@ var Harvest = function () {
             /**
              * It activates the listeners
              */
-            init: function () {
+            init: function (serverConfiguration) {
                 var instance = this;
+                instance.stageManager.loadConfiguration(serverConfiguration);
                 this.page.update();
                 instance.stageManager.start();
             },
@@ -919,5 +923,5 @@ $(document).ready(function () {
     repositoryModule = new Repositories();
     repository = new repositoryModule.Repository(data);
     wisply.harvest = new harvestModule.Manager(repository);
-    wisply.harvest.init();
+    wisply.harvest.init(server);
 });

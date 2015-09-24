@@ -58,11 +58,15 @@
   </style>
   <script src="/static/js/admin/repository/list.js"></script>
   <script>
-  var data = {};
+  var data = {}, server = {};
   data.id =   {{ .repository.ID }}
   data.name = {{ .repository.Name}}
   data.status = {{ .repository.Status}}
   data.url =  {{ .repositoru.URL }}
   data.host = {{ .host }};
+
+  server.hasProcess = {{ .hasProcess }};
+  server.process = {{ .currentProcesses }};
+
   </script>
   <script src="/static/js/admin/harvest/init.js"></script>

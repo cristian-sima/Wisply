@@ -29,6 +29,7 @@
     </div>
     <div class="row" >
       <div class="col-lg-3 col-md-3 col-sm-3" >
+        <div id="repository-status"></div>
         <div id="process-status"></div>
           <div id="stages" class="list-group">
           </div>
@@ -60,6 +61,7 @@
   var data = {};
   data.id =   {{ .repository.ID }}
   data.name = {{ .repository.Name}}
+  data.status = {{ .repository.Status}}
   data.url =  {{ .repositoru.URL }}
   data.host = {{ .host }};
   </script>

@@ -558,6 +558,10 @@ var Harvest = function () {
                         wisply.harvest.repository.url = content;
                         wisply.harvest.restart(2);
                         break;
+                    case "RepositoryChangedStatus":
+                        wisply.harvest.repository.status = content.NewStatus;
+                        wisply.harvest.page.updateRepositoryStatus();
+                    break;
                     default:
                         this.history.log("This websocket is for the current repository, but it was ignored. Event name <strong>" + name + "</strong> with the content <strong>" + content + "</strong>.");
                     }
@@ -651,7 +655,8 @@ var Harvest = function () {
                 }
                 this.updateStages();
                 this.updateHistoryNumber();
-                this.updateStatus();
+                this.updateProcessStatus();
+                this.updateRepositoryStatus();
             },
             /**
              * It updates the number of events in history
@@ -754,9 +759,9 @@ var Harvest = function () {
             /**
              * It updates the general status of the process
              */
-            updateStatus: function () {
+            updateProcessStatus: function () {
                 var status = wisply.harvest.stageManager.status,
-                    html = "Status: ";
+                    html = "Progress: ";
                 switch (status) {
                 case "stopped":
                     html += '<span class="label label-danger">Stopped</span>';
@@ -775,6 +780,37 @@ var Harvest = function () {
                     break;
                 }
                 $("#process-status").html(html);
+            },
+            /**
+             * It updates the general status of the process
+             */
+            updateRepositoryStatus: function () {
+                var status = wisply.harvest.repository.status,
+                    html = "Status: ",
+                    label = "";
+                switch (status) {
+                case "unverified":
+                  label = "info";
+                    break;
+                case "problems":
+                case "verification-failed":
+                  label = "danger";
+                    break;
+                case "upgrading":
+                case "verifying":
+                case "initializing":
+                  label = "warning";
+                    break;
+                case "ok":
+                case "verified":
+                  label = "success";
+                    break;
+                default:
+                  console.log("problem");
+                  break;
+                }
+                html += '<span class="label label-' + label + '">' + status + '</span>';
+                $("#repository-status").html(html);
             }
         };
     return {

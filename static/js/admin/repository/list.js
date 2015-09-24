@@ -17,12 +17,13 @@ var Repositories = function () {
   * @class Repository
   * @memberof Repositories
   * @classdesc It represents a repository
-  * @param {object} info It contains the information regarding the repository (id, name and url)
+  * @param {object} info It contains the information regarding the repository (id, name and url, status)
   */
   var Repository = function Repository(info) {
     this.id = info.id;
     this.name = info.name;
     this.url = info.url;
+    this.status = info.status;
   };
 
   /**

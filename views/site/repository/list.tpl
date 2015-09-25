@@ -86,4 +86,11 @@
     {{ end }}
   </div>
 </div>
+<script>
+var server = {};
+server.host = {{ .host }};
+</script>
+<script src="/static/js/ws/websockets.js"></script>
 <script src="/static/js/admin/repository/list.js"></script>
+<script src="/static/js/admin/harvest/harvest.js"></script>
+<script src="/static/js/admin/harvest/list.js"></script>

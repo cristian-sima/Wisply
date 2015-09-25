@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -24,8 +23,8 @@ type Action struct {
 
 // Process contians information about a process
 type Process struct {
-	Current string             `json:"CurrentAction"`
-	Actions map[string]*Action `json:"Actions"`
+	CurrentAction string             `json:"CurrentAction"`
+	Actions       map[string]*Action `json:"Actions"`
 }
 
 func init() {
@@ -42,14 +41,14 @@ type HarvestController struct {
 // InitWebsocketConnection Initiats the websocket connection
 func (controller *HarvestController) InitWebsocketConnection() {
 	controller.TplNames = "site/harvest/init.tpl"
-	connection := ws.CreateNewConnection(controller.Ctx.ResponseWriter, controller.Ctx.Request, controller)
+	connection := hub.CreateConnection(controller.Ctx.ResponseWriter, controller.Ctx.Request, controller)
 	hub.Register <- connection
 	go connection.WritePump()
 	connection.ReadPump()
 }
 
 // DecideAction decides a certain action for the incoming message
-func (controller *HarvestController) DecideAction(message *ws.Message) {
+func (controller *HarvestController) DecideAction(message *ws.Message, connection *ws.Connection) {
 
 	model := repository.Model{}
 	repository, err := model.NewRepository(strconv.Itoa(message.Repository))
@@ -73,6 +72,10 @@ func (controller *HarvestController) DecideAction(message *ws.Message) {
 		case "initialize":
 			{
 				controller.InitializeRepository(repository)
+			}
+		case "getCurrentProcess":
+			{
+				controller.GetCurrentProcess(repository)
 			}
 		}
 	}
@@ -120,8 +123,8 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 
 	// create a new empty one
 	st := &Process{
-		Current: "",
-		Actions: actions,
+		CurrentAction: "",
+		Actions:       actions,
 	}
 
 	CurrentProcesses[ID] = st
@@ -144,6 +147,18 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 	})
 }
 
+// GetCurrentProcess gets all the records
+func (controller *HarvestController) GetCurrentProcess(repository *repository.Repository) {
+
+	processObject, _ := CurrentProcesses[repository.ID]
+
+	hub.BroadcastMessage(&ws.Message{
+		Name:       "processOnServer",
+		Value:      &processObject,
+		Repository: repository.ID,
+	})
+}
+
 // GetRecords gets all the records
 func (controller *HarvestController) getRecords(repository *repository.Repository, finishCallback func(*oai.Response)) {
 
@@ -152,7 +167,7 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 		err := recover()
 		if err != nil {
 			type Content struct {
-				Info string `json:"info"`
+				Info string `json:"Info"`
 			}
 			content := Content{
 				Info: err.(string),
@@ -184,20 +199,21 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 		recordsAction.Number++
 
 		fmt.Println("--> I received a record." + strconv.Itoa(actions["records"].Number))
+		/*
+			type Content struct {
+				Data *Action `json:"Data"`
+			}
+			content := Content{
+				Data: recordsAction,
+			}
+			msg := ws.Message{
+				Name:       "Statistics",
+				Value:      content,
+				Repository: repository.ID,
+			}
 
-		type Content struct {
-			Data *Action `json:"Data"`
-		}
-		content := Content{
-			Data: recordsAction,
-		}
-		msg := ws.Message{
-			Name:       "Statistics",
-			Value:      content,
-			Repository: repository.ID,
-		}
-
-		hub.BroadcastMessage(&msg)
+			hub.BroadcastMessage(&msg)
+		*/
 	}, finishCallback)
 
 }
@@ -245,7 +261,7 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 		err := recover()
 		if err != nil {
 			type Content struct {
-				State bool `json:"state"`
+				State bool `json:"State"`
 			}
 			content := Content{
 				State: false,
@@ -272,8 +288,8 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 		request.Harvest(func(record *oai.Response) {
 
 			type Content struct {
-				State bool          `json:"state"`
-				Data  *oai.Response `json:"data"`
+				State bool          `json:"State"`
+				Data  *oai.Response `json:"Data"`
 			}
 			content := Content{
 				State: true,
@@ -315,8 +331,6 @@ func (controller *HarvestController) modifyRepositoryStatus(repository *reposito
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
 
-	var processDetails string
-
 	ID := controller.Ctx.Input.Param(":id")
 
 	repository, err := controller.Model.NewRepository(ID)
@@ -324,17 +338,6 @@ func (controller *HarvestController) ShowPanel() {
 	if err != nil {
 		controller.Abort("databaseError")
 	}
-
-	temp1, _ := strconv.Atoi(ID)
-	processObject, hasProcess := CurrentProcesses[temp1]
-
-	if hasProcess {
-		temp2, _ := json.Marshal(processObject)
-		processDetails = string(temp2)
-	}
-
-	controller.Data["hasProcess"] = hasProcess
-	controller.Data["currentProcesses"] = processDetails
 
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host

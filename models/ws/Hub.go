@@ -24,7 +24,7 @@ type Hub struct {
 }
 
 // CreateNewConnection creates a new ws connection
-func (hub *Hub) CreateNewConnection(response http.ResponseWriter, request *http.Request, controller WebController) *Connection {
+func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Request, controller WebController) *Connection {
 
 	ws, err := upgrader.Upgrade(response, request, nil)
 	if _, ok := err.(websocket.HandshakeError); ok {
@@ -58,7 +58,6 @@ func (hub *Hub) Run() {
 			hub.connections[connection] = true
 		case connection := <-hub.Unregister:
 			delete(hub.connections, connection)
-
 			close(connection.send)
 		case message := <-hub.broadcast:
 			for connection := range hub.connections {

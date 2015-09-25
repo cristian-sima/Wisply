@@ -23,6 +23,7 @@ func (controller *RepositoryController) ListRepositories() {
 
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
+	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/repository/list.tpl"
 	controller.Layout = "site/admin.tpl"
 }

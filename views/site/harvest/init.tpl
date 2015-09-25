@@ -57,13 +57,16 @@
     }
   </style>
   <script src="/static/js/admin/repository/list.js"></script>
+  <script src="/static/js/admin/harbest/harvest.js"></script>
+  <script src="/static/js/admin/harbest/list.js"></script>
   <script>
   var data = {}, server = {};
   data.id =   {{ .repository.ID }}
   data.name = {{ .repository.Name}}
   data.status = {{ .repository.Status}}
   data.url =  {{ .repositoru.URL }}
-  data.host = {{ .host }};
+
+  server.host = {{ .host }};
 
   server.hasProcess = {{ .hasProcess }};
   server.process = {{ .currentProcesses }};

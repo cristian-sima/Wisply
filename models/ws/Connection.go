@@ -16,7 +16,7 @@ var upgrader = websocket.Upgrader{
 
 // WebController defines a controller which can receive messages from the hub
 type WebController interface {
-	DecideAction(message *Message)
+	DecideAction(message *Message, connection *Connection)
 }
 
 // Connection is an middleman between the websocket connection and the hub.
@@ -32,7 +32,7 @@ type Connection struct {
 	controller WebController
 }
 
-// readPump pumps messages from the websocket connection to the hub.
+// ReadPump pumps messages from the websocket connection to the hub.
 func (connection *Connection) ReadPump() {
 	defer func() {
 		connection.hub.Unregister <- connection
@@ -59,13 +59,13 @@ func (connection *Connection) ReadPump() {
 			fmt.Println("<-- I received the message: ")
 			fmt.Println(msg)
 
-			connection.controller.DecideAction(&msg)
+			connection.controller.DecideAction(&msg, connection)
 
 		}
 	}
 }
 
-// writePump pumps messages from the hub to the websocket connection.
+// WritePump pumps messages from the hub to the websocket connection.
 func (connection *Connection) WritePump() {
 	ticker := time.NewTicker(PingInterval)
 	defer func() {

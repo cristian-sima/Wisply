@@ -3,208 +3,34 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
-	"time"
 
 	oai "github.com/cristian-sima/Wisply/models/oai"
 	repository "github.com/cristian-sima/Wisply/models/repository"
-	websocket "github.com/gorilla/websocket"
+	ws "github.com/cristian-sima/Wisply/models/ws"
 )
 
-const (
-	// Time allowed to write a message to the client.
-	writeWait = 10 * time.Second
+var hub *ws.Hub
 
-	// Time allowed to read the next message from the client.
-	readWait = 6000 * time.Second
+// CurrentProcesses holds the current Statistics for a repository
+var CurrentProcesses = make(map[int]*Process)
 
-	// Send pings to client with this period. Must be less than readWait.
-	pingPeriod = (readWait * 9) / 10
-
-	// Maximum message size allowed from client.
-	maxMessageSize = 512
-)
-
+// Action represents the state (finish) and the number
 type Action struct {
 	Finished bool `json:"Finished"`
 	Number   int  `json:"Number"`
 }
 
+// Process contians information about a process
 type Process struct {
 	Current string             `json:"CurrentAction"`
 	Actions map[string]*Action `json:"Actions"`
 }
 
-// CurrentProcesses holds the current Statistics for a repository
-var CurrentProcesses = make(map[int]*Process)
-
 func init() {
-	go h.run()
-}
-
-var h = &hub{
-	broadcast:   make(chan []byte, maxMessageSize),
-	register:    make(chan *connection, 1),
-	unregister:  make(chan *connection, 1),
-	connections: make(map[*connection]bool),
-}
-
-type hub struct {
-	// Registered connections.
-	connections map[*connection]bool
-
-	// Inbound messages from the connections.
-	broadcast chan []byte
-
-	// Register requests from the connections.
-	register chan *connection
-
-	// Unregister requests from connections.
-	unregister chan *connection
-}
-
-func (h *hub) run() {
-	for {
-		select {
-		case c := <-h.register:
-			h.connections[c] = true
-		case c := <-h.unregister:
-			delete(h.connections, c)
-			close(c.send)
-		case m := <-h.broadcast:
-			for c := range h.connections {
-				select {
-				case c.send <- m:
-				default:
-					close(c.send)
-					delete(h.connections, c)
-				}
-			}
-		}
-	}
-}
-
-// connection is an middleman between the websocket connection and the hub.
-type connection struct {
-	username string
-
-	// The websocket connection.
-	ws *websocket.Conn
-
-	// Buffered channel of outbound messages.
-	send chan []byte
-
-	controller *HarvestController
-}
-
-// Message represents a message from client to server
-type Message struct {
-	Name       string      `json:"Name"`
-	Repository int         `json:"Repository"`
-	Value      interface{} `json:"Value"`
-}
-
-// readPump pumps messages from the websocket connection to the hub.
-func (c *connection) readPump() {
-	defer func() {
-		h.unregister <- c
-		c.ws.Close()
-	}()
-	c.ws.SetReadLimit(maxMessageSize)
-	c.ws.SetReadDeadline(time.Now().Add(readWait))
-	for {
-		op, r, err := c.ws.NextReader()
-		if err != nil {
-			break
-		}
-		switch op {
-		case websocket.PongMessage:
-			c.ws.SetReadDeadline(time.Now().Add(readWait))
-		case websocket.TextMessage:
-			messageByte, err := ioutil.ReadAll(r)
-			if err != nil {
-				break
-			}
-
-			fmt.Println("<-- I received the message: ")
-
-			var msg Message
-
-			json.Unmarshal(messageByte, &msg)
-			c.chooseAction(msg)
-			fmt.Println(msg)
-		}
-	}
-}
-
-func (c *connection) chooseAction(msg Message) {
-
-	model := repository.Model{}
-	rep, err := model.NewRepository(strconv.Itoa(msg.Repository))
-
-	if err != nil {
-		fmt.Println("Not a good id of rep from client!")
-		fmt.Println(err)
-	} else {
-
-		switch msg.Name {
-		case "changeRepositoryURL":
-			newURL := msg.Value.(string)
-			c.controller.ChangeRepositoryBaseURL(rep, newURL)
-		case "testURL":
-			{
-				c.controller.TestURL(rep)
-			}
-		case "identify":
-			{
-				c.controller.IdenfityRepository(rep)
-			}
-		case "initialize":
-			{
-				c.controller.InitializeRepository(rep)
-			}
-		}
-	}
-}
-
-func broadcastMessage(msg *Message) {
-	fmt.Println("--> I broadcast this message: ")
-	fmt.Println(msg)
-	jsonMsg, _ := json.Marshal(&msg)
-	h.broadcast <- jsonMsg
-}
-
-// writePump pumps messages from the hub to the websocket connection.
-func (c *connection) writePump() {
-	ticker := time.NewTicker(pingPeriod)
-	defer func() {
-		ticker.Stop()
-		c.ws.Close()
-	}()
-	for {
-		select {
-		case message, ok := <-c.send:
-			if !ok {
-				c.write(websocket.CloseMessage, []byte{})
-				return
-			}
-			if err := c.write(websocket.TextMessage, message); err != nil {
-				return
-			}
-		case <-ticker.C:
-			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
-				return
-			}
-		}
-	}
-}
-
-// write writes a message with the given opCode and payload.
-func (c *connection) write(opCode int, payload []byte) error {
-	c.ws.SetWriteDeadline(time.Now().Add(writeWait))
-	return c.ws.WriteMessage(opCode, payload)
+	hub = ws.CreateHub()
+	go hub.Run()
 }
 
 // HarvestController It manages the operations for repository (list, delete, add)
@@ -213,26 +39,43 @@ type HarvestController struct {
 	Model repository.Model
 }
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
-
 // InitWebsocketConnection Initiats the websocket connection
 func (controller *HarvestController) InitWebsocketConnection() {
-	// Print the OAI Response object to stdout
+	controller.TplNames = "site/harvest/init.tpl"
+	connection := ws.CreateNewConnection(controller.Ctx.ResponseWriter, controller.Ctx.Request, controller)
+	hub.Register <- connection
+	go connection.WritePump()
+	connection.ReadPump()
+}
 
-	ws, err := upgrader.Upgrade(controller.Ctx.ResponseWriter, controller.Ctx.Request, nil)
-	if _, ok := err.(websocket.HandshakeError); ok {
-		http.Error(controller.Ctx.ResponseWriter, "Not a websocket handshake", 400)
-		return
-	} else if err != nil {
-		return
+// DecideAction decides a certain action for the incoming message
+func (controller *HarvestController) DecideAction(message *ws.Message) {
+
+	model := repository.Model{}
+	repository, err := model.NewRepository(strconv.Itoa(message.Repository))
+
+	if err != nil {
+		fmt.Println("Not a good id of rep from client!")
+		fmt.Println(err)
+	} else {
+		switch message.Name {
+		case "changeRepositoryURL":
+			newURL := message.Value.(string)
+			controller.ChangeRepositoryBaseURL(repository, newURL)
+		case "testURL":
+			{
+				controller.TestURL(repository)
+			}
+		case "identify":
+			{
+				controller.IdenfityRepository(repository)
+			}
+		case "initialize":
+			{
+				controller.InitializeRepository(repository)
+			}
+		}
 	}
-	c := &connection{send: make(chan []byte, 256), ws: ws, username: "lalalla", controller: controller}
-	h.register <- c
-	go c.writePump()
-	c.readPump()
 }
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
@@ -242,13 +85,13 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 		repository.ModifyURL(newURL)
 	}
 
-	msg := Message{
+	msg := ws.Message{
 		Name:       "RepositoryBaseURLChanged",
 		Repository: repository.ID,
 		Value:      newURL,
 	}
 
-	broadcastMessage(&msg)
+	hub.BroadcastMessage(&msg)
 }
 
 // InitializeRepository starts the initializing proccess
@@ -287,11 +130,12 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 	controller.getRecords(repository, func(response *oai.Response) {
 		fmt.Println("am terminat")
 
-		msg := Message{
+		msg := ws.Message{
 			Name:       "FinishStage",
 			Repository: repository.ID,
 		}
-		broadcastMessage(&msg)
+
+		hub.BroadcastMessage(&msg)
 
 		// delete init
 		delete(CurrentProcesses, ID)
@@ -313,12 +157,13 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 			content := Content{
 				Info: err.(string),
 			}
-			msg := Message{
+			msg := ws.Message{
 				Name:       "Record-Problems",
 				Value:      content,
 				Repository: repository.ID,
 			}
-			broadcastMessage(&msg)
+
+			hub.BroadcastMessage(&msg)
 
 			controller.modifyRepositoryStatus(repository, "problems")
 		}
@@ -327,7 +172,7 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 	request := (&oai.Request{
 		BaseURL:        repository.URL,
 		From:           "2012-02-09T18:12:54Z",
-		Until:          "2014-04-09T18:12:54Z",
+		Until:          "2012-05-09T18:12:54Z",
 		MetadataPrefix: "oai_dc",
 	})
 
@@ -346,13 +191,13 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 		content := Content{
 			Data: recordsAction,
 		}
-		msg := Message{
+		msg := ws.Message{
 			Name:       "Statistics",
 			Value:      content,
 			Repository: repository.ID,
 		}
 
-		broadcastMessage(&msg)
+		hub.BroadcastMessage(&msg)
 	}, finishCallback)
 
 }
@@ -379,13 +224,13 @@ func (controller *HarvestController) TestURL(repository *repository.Repository) 
 	content := Content{
 		State: isOk,
 	}
-	msg := Message{
+	msg := ws.Message{
 		Name:       "FinishTestingURL",
 		Value:      content,
 		Repository: repository.ID,
 	}
 
-	broadcastMessage(&msg)
+	hub.BroadcastMessage(&msg)
 
 	if !isOk {
 		controller.modifyRepositoryStatus(repository, "verification-failed")
@@ -405,12 +250,12 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 			content := Content{
 				State: false,
 			}
-			msg := Message{
+			msg := ws.Message{
 				Name:       "FinishIdentify",
 				Value:      content,
 				Repository: repository.ID,
 			}
-			broadcastMessage(&msg)
+			hub.BroadcastMessage(&msg)
 
 			controller.modifyRepositoryStatus(repository, "verification-failed")
 		}
@@ -434,13 +279,13 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 				State: true,
 				Data:  record,
 			}
-			msg := Message{
+			msg := ws.Message{
 				Name:       "FinishIdentify",
 				Value:      content,
 				Repository: repository.ID,
 			}
 			controller.modifyRepositoryStatus(repository, "verified")
-			broadcastMessage(&msg)
+			hub.BroadcastMessage(&msg)
 		}, func(resp *oai.Response) {
 		})
 	}
@@ -456,12 +301,12 @@ func (controller *HarvestController) modifyRepositoryStatus(repository *reposito
 		content := Content{
 			NewStatus: repository.Status,
 		}
-		msg := Message{
+		msg := ws.Message{
 			Name:       "RepositoryChangedStatus",
 			Value:      content,
 			Repository: repository.ID,
 		}
-		broadcastMessage(&msg)
+		hub.BroadcastMessage(&msg)
 	} else {
 		panic(err)
 	}

@@ -1,4 +1,4 @@
-/* global $, wisply,window, data, server*/
+/* global $, Harvest, Repositories*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -8,8 +8,6 @@
  */
 var HarvestList = function () {
     'use strict';
-
-
     var Stages = [{
           id: 0,
           perform: function(manager) {
@@ -46,14 +44,15 @@ var HarvestList = function () {
         {
             changeAllStatus: function (repositories) {
                 var repository, index;
-                for (index = 0; index <= repositories.length; i++) {
+                for (index = 0; index <= repositories.length; index++) {
                     repository = repositories[index];
                     this.changeStatus(repository);
                 }
             },
             changeStatus: function (repository) {
-                var htmlID = this.getHTMLID(repository.id);
-                this.list.find(htmlID).html(repository.status);
+                var htmlID = this.getHTMLID(repository.id),
+                  htmlSpan = Repositories.GUI.getStatusColor(repository.status);
+                this.list.find(htmlID).html(htmlSpan);
             },
             getHTMLID: function (id) {
                 return "rep-status-" + id;
@@ -80,5 +79,6 @@ $(document).ready(function () {
     stages = list.Stages;
     stage = new harvest.StageManager(stages);
     manager = new harvest.Manager(stage, decision);
+    wisply.manager = manager;
     manager.start();
 });

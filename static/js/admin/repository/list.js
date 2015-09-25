@@ -170,9 +170,46 @@ var Repositories = function () {
 
   }
 
+  /**
+  * The constructor activates the listeners
+  * @memberof Repositories
+  * @class Manager
+  * @classdesc It encapsulets the functionality for the repositories
+  */
+  var GUI = function GUI() {
+  };
+  GUI.getStatusColor = function (status) {
+    var html = "",
+        label = "";
+    switch (status) {
+    case "unverified":
+      label = "info";
+        break;
+    case "problems":
+    case "verification-failed":
+      label = "danger";
+        break;
+    case "upgrading":
+    case "verifying":
+    case "initializing":
+      label = "warning";
+        break;
+    case "ok":
+    case "verified":
+      label = "success";
+        break;
+    default:
+      console.log("problem");
+      break;
+    }
+    html += '<span class="label label-' + label + '">' + status + '</span>';
+    return html;
+  };
+
   return {
     Repository: Repository,
-    Manager: Manager
+    Manager: Manager,
+    GUI: GUI
   };
 };
 $(document).ready(function() {

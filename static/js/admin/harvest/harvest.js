@@ -1,4 +1,4 @@
-/* globals websockets, server*/
+/* globals $, Websockets, server*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -154,21 +154,24 @@ var Harvest = function () {
             var conn = instance;
             return function () {
               conn.manager.onOpen();
-              console.log('da');
             };
         })();
 
-        this.onOpen = open();
+        var error = (function () {
+            var conn = instance;
+            return function () {
+              conn.manager.onError();
+            };
+        })();
+
+        this.onOpen = open;
+        this.onClose = error;
+        this.OnError = error;
     };
     HarvestConnection.prototype =
         /** @lends Harvest.Manager */
         {
-            onClose: function () {
-                this.manager.onClose();
-            },
-            onError: function () {
-                this.manager.onError();
-            },
+
             onMessage: function (evt) {
                 var message = JSON.parse(evt.data),
                     description = "";
@@ -244,6 +247,8 @@ var Harvest = function () {
                 this.decissionManager.decide(message);
             }
         };
+
+
     /**
      * The constructor creates the history, page and stage manager
      * @memberof Harvest

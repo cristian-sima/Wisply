@@ -1,3 +1,4 @@
+/* Global $,wisply*/
 /**
  * @file Encapsulates the functionality for connecting using web sockets
  * @author Cristian Sima
@@ -15,10 +16,33 @@ var Websockets = function () {
      * @param {object} info
      */
     var Connection = function Connection(host, info) {
+        var copyInfo = info,
+        instance = this;
+        this.gui = new GUI();
         this.value = new WebSocket("ws://" + host);
-        this.value.onopen = info.onOpen;
-        this.value.onclose = info.onClose;
-        this.value.onerror = info.onError;
+
+        var open = (function () {
+            var conn = instance,
+              i = copyInfo;
+            return function () {
+              conn.gui.showSuccess();
+              i.onOpen();
+            };
+        })();
+
+        var error = (function () {
+          var conn = instance,
+            i = copyInfo;
+            return function () {
+              conn.gui.showError();
+              i.onError();
+            };
+        })();
+
+
+        this.value.onopen = open;
+        this.value.onclose = error;
+        this.value.onerror = error;
         this.status = "wait";
     };
     Connection.prototype =
@@ -28,6 +52,29 @@ var Websockets = function () {
             this.value.send(JSON.stringify(message));
         }
     };
+
+
+    var GUI = function GUI() {
+        this.element = $("#websocket-connection");
+        this.showWaiting();
+    };
+    GUI.prototype =
+        /** @lends ListHarvest.GUI */
+        {
+            showWaiting: function() {
+              this.setText(wisply.getLoadingImage("small"));
+            },
+            showError: function() {
+              this.setText("<span class='text-danger'>No live connection <span class='glyphicon glyphicon-adjust'></span></span>");
+            },
+            showSuccess: function() {
+              this.setText("<span class='text-success'>Live connection <span class='glyphicon glyphicon-adjust'></span></span>");
+            },
+            setText :function(text) {
+              this.element.html(text);
+            }
+        };
+
     return {
         Connection: Connection
     };

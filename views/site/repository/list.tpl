@@ -15,7 +15,14 @@
     </section>
     <br />
     <section>
-      <h4>Repositories</h4>
+      <div class="row">
+        <div class="col-md-1">
+          <h4>Repositories</h4>
+        </div>
+        <div class="col-md-11 text-right">
+          <div id="websocket-connection"></div>
+        </div>
+      </div>
     {{ if .anything }}
     <div class="table-responsive">
       <table class="table table-striped table-hover ">

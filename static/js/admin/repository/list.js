@@ -49,10 +49,7 @@ var Repositories = function () {
     */
     activateListeners: function () {
       $(".deleteRepositoryButton").click(confirmDelete);
-      $(".repositories-init-harvest").click(initRepository);
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
+      GUI.activateActionListeners();
     },
     /**
     * It is called when the user wants to delete a repository. It asks for confirmation
@@ -206,6 +203,14 @@ var Repositories = function () {
     return html;
   };
 
+    GUI.activateActionListeners = function() {
+      $(".repositories-init-harvest").click(initRepository);
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    };
+
+
   return {
     Repository: Repository,
     Manager: Manager,
@@ -215,6 +220,7 @@ var Repositories = function () {
 $(document).ready(function() {
   "use strict";
   var module = new Repositories();
+  wisply.repositoriesModule = module;
   wisply.repositoriesManager = new module.Manager();
   wisply.repositoriesManager.init();
 });

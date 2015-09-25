@@ -1,4 +1,4 @@
-/* global $, Harvest, Repositories*/
+/* global $, Harvest, wisply*/
 /**
  * @file Encapsulates the functionality for managing repositories
  * @author Cristian Sima
@@ -25,15 +25,22 @@ var HarvestList = function () {
             decide: function (message) {
                 switch (message.Name) {
                 case "ListRepositoriesStatus":
-                    this.GUI.changeAllStatus(message.Value);
+                    this.changeAllStatus(message);
                     break;
                 case "RepositoryChangedStatus":
-                    this.GUI.changeStatus({
-                        id: message.Repository,
-                        status: message.Content.NewStatus
-                    });
+                    this.changeSingleStatus(message);
                     break;
                 }
+            },
+            changeAllStatus: function (message) {
+                this.GUI.changeAllStatus(message.Value);
+            },
+            changeSingleStatus: function (message) {
+                this.GUI.changeStatus({
+                    id: message.Repository,
+                    status: message.Content.NewStatus
+                });
+                this.GUI.activateActionListeners();
             }
         };
     var GUI = function GUI() {
@@ -48,14 +55,31 @@ var HarvestList = function () {
                     repository = repositories[index];
                     this.changeStatus(repository);
                 }
+                this.GUI.activateActionListeners();
             },
             changeStatus: function (repository) {
                 var htmlID = this.getHTMLID(repository.id),
-                  htmlSpan = Repositories.GUI.getStatusColor(repository.status);
-                this.list.find(htmlID).html(htmlSpan);
+                  htmlSpan = this.getStatusColor(repository.status),
+                  action = this.getAction(repository);
+                this.list.find(htmlID).html(htmlSpan + action);
+            },
+            activateActionListeners: function () {
+                wisply.repositoriesModule.GUI.activateActionListeners();
+            },
+            getStatusColor: function (status) {
+              return wisply.repositoriesModule.GUI.getStatusColor(status);
+            },
+            getAction: function(repository) {
+              var action = "";
+                switch(repository.status) {
+                  case "unverified":
+                    action = "<span data-toggle='tooltip' data-ID=" + repository.id + " data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
+                  break;
+                }
+                return action;
             },
             getHTMLID: function (id) {
-                return "rep-status-" + id;
+                return "#rep-status-" + id;
             }
         };
     return {
@@ -74,7 +98,7 @@ $(document).ready(function () {
         stages;
     harvest = new Harvest();
     list = new HarvestList();
-    repository = new Repositories();
+    repository = wisply.repositriesModule;
     decision = new list.DecisionManager();
     stages = list.Stages;
     stage = new harvest.StageManager(stages);

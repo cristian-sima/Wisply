@@ -25,7 +25,7 @@
       </div>
     {{ if .anything }}
     <div class="table-responsive">
-      <table class="table table-striped table-hover ">
+      <table class="table table-striped table-hover " id="repositories-list">
         <thead>
           <tr>
             <th>Name</th>
@@ -41,7 +41,7 @@
           {{$safe := $element.Name|html}}
           <tr>
             <td>{{ $element.Name |html }}</td>
-            <td>
+            <td> <div  id="rep-status-{{ $element.ID }}">
               {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}
               <span class="label label-info">Unverified</span><a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
@@ -74,6 +74,7 @@
               <span class="label label-danger">Problems</span>
 
               {{ end }}
+            </div>
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>

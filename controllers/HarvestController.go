@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	TESTING     = 3
+	// TESTING is the id of testing stage
+	TESTING = 3
+	// IDENTIFYING is the id of identifying stage
 	IDENTIFYING = 4
 )
 
@@ -54,8 +56,6 @@ func (controller *HarvestController) InitWebsocketConnection() {
 
 // DecideAction decides a certain action for the incoming message
 func (controller *HarvestController) DecideAction(message *ws.Message, connection *ws.Connection) {
-
-	// just for one repository
 	if message.Repository != 0 {
 		controller.decideOneRepository(message, connection)
 	} else {
@@ -88,7 +88,6 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
-
 	switch message.Name {
 	case "getAllRepositoriesStatus":
 		{
@@ -99,11 +98,9 @@ func (controller *HarvestController) decideManyRepositories(message *ws.Message,
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) ChangeRepositoryBaseURL(repository *repository.Repository, newURL string) {
-
 	if newURL != repository.URL {
 		repository.ModifyURL(newURL)
 	}
-
 	msg := ws.Message{
 		Name:       "RepositoryBaseURLChanged",
 		Repository: repository.ID,
@@ -209,9 +206,7 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 
 // GetCurrentProcess gets all the records
 func (controller *HarvestController) GetCurrentProcess(repository *repository.Repository, connection *ws.Connection) {
-
 	processObject, _ := CurrentProcesses[repository.ID]
-
 	hub.SendMessage(&ws.Message{
 		Name:       "ProcessOnServer",
 		Value:      &processObject,
@@ -221,19 +216,16 @@ func (controller *HarvestController) GetCurrentProcess(repository *repository.Re
 
 // GetAllRepositoriesStatus gets all repositories' status only
 func (controller *HarvestController) GetAllRepositoriesStatus(connection *ws.Connection) {
-
 	list := controller.Model.GetAllStatus()
-
 	hub.SendMessage(&ws.Message{
 		Name:  "ListRepositoriesStatus",
 		Value: &list,
 	}, connection)
 }
 
+// NotifyProcessChanged tells the connection the current process
 func (controller *HarvestController) NotifyProcessChanged(repository *repository.Repository, connection *ws.Connection) {
-
 	processObject, _ := CurrentProcesses[repository.ID]
-
 	hub.SendMessage(&ws.Message{
 		Name:       "ProcessUpdated",
 		Value:      &processObject,
@@ -243,7 +235,6 @@ func (controller *HarvestController) NotifyProcessChanged(repository *repository
 
 // GetRecords gets all the records
 func (controller *HarvestController) getRecords(repository *repository.Repository, finishCallback func(*oai.Response)) {
-
 	defer func() {
 		// recover from any errro and tell them there was a problem
 		err := recover()
@@ -259,9 +250,7 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 				Value:      content,
 				Repository: repository.ID,
 			}
-
 			hub.BroadcastMessage(&msg)
-
 			controller.modifyRepositoryStatus(repository, "problems")
 		}
 	}()
@@ -356,7 +345,6 @@ func (controller *HarvestController) IdenfityRepository(repository *repository.R
 
 func (controller *HarvestController) modifyRepositoryStatus(repository *repository.Repository, newStatus string) {
 	err := repository.ModifyStatus(newStatus)
-
 	if err == nil {
 		type Content struct {
 			NewStatus string `json:"NewStatus"`
@@ -377,15 +365,11 @@ func (controller *HarvestController) modifyRepositoryStatus(repository *reposito
 
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
-
 	ID := controller.Ctx.Input.Param(":id")
-
 	repository, err := controller.Model.NewRepository(ID)
-
 	if err != nil {
 		controller.Abort("databaseError")
 	}
-
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/harvest/init.tpl"

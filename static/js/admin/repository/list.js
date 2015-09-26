@@ -17,12 +17,13 @@ var Repositories = function () {
   * @class Repository
   * @memberof Repositories
   * @classdesc It represents a repository
-  * @param {object} info It contains the information regarding the repository (id, name and url)
+  * @param {object} info It contains the information regarding the repository (id, name and url, status)
   */
   var Repository = function Repository(info) {
     this.id = info.id;
     this.name = info.name;
     this.url = info.url;
+    this.status = info.status;
   };
 
   /**
@@ -48,10 +49,7 @@ var Repositories = function () {
     */
     activateListeners: function () {
       $(".deleteRepositoryButton").click(confirmDelete);
-      $(".repositories-init-harvest").click(initRepository);
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
+      GUI.activateActionListeners();
     },
     /**
     * It is called when the user wants to delete a repository. It asks for confirmation
@@ -157,8 +155,7 @@ var Repositories = function () {
       e.preventDefault();
       var instance,
       id,
-      xsrf,
-      repository;
+      xsrf;
       instance = $(this);
       id = instance.data("id");
       xsrf = wisply.getXSRF();
@@ -169,14 +166,65 @@ var Repositories = function () {
 
   }
 
+  /**
+  * The constructor activates the listeners
+  * @memberof Repositories
+  * @class GUI
+  * @classdesc It encapsulets the GUI functionality
+  */
+  var GUI = function GUI() {
+  };
+  /**
+   * It returns the HTML span for a status
+   * @param  {string} status The status of the repository
+   * @return {string} The HTML code for the status
+   */
+  GUI.getStatusColor = function (status) {
+    var html = "",
+        label = "";
+    switch (status) {
+    case "unverified":
+      label = "info";
+        break;
+    case "problems":
+    case "verification-failed":
+      label = "danger";
+        break;
+    case "upgrading":
+    case "verifying":
+    case "initializing":
+      label = "warning";
+        break;
+    case "ok":
+    case "verified":
+      label = "success";
+        break;
+    default:
+      console.log("The status [" + status + "] is not a valid one");
+      break;
+    }
+    html += '<span class="label label-' + label + '">' + status + '</span>';
+    return html;
+  };
+  /**
+   * It activates all the listeners for the actions
+   */
+  GUI.activateActionListeners = function() {
+    $(".repositories-init-harvest").click(initRepository);
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  };
   return {
     Repository: Repository,
-    Manager: Manager
+    Manager: Manager,
+    GUI: GUI
   };
 };
 $(document).ready(function() {
   "use strict";
   var module = new Repositories();
+  wisply.repositoriesModule = module;
   wisply.repositoriesManager = new module.Manager();
   wisply.repositoriesManager.init();
 });

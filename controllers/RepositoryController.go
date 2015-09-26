@@ -14,15 +14,12 @@ type RepositoryController struct {
 
 // ListRepositories It shows all the repositories
 func (controller *RepositoryController) ListRepositories() {
-
 	var exists bool
-
 	list := controller.model.GetAll()
-
 	exists = (len(list) != 0)
-
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
+	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/repository/list.tpl"
 	controller.Layout = "site/admin.tpl"
 }

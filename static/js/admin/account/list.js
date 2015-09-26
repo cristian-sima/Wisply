@@ -32,7 +32,6 @@ var Accounts = function () {
   * @classdesc It encapsulets the functions for accounts.
   */
   var Manager = function Manager() {
-    this.activateListeners();
   };
   /**
   * @memberof Manager
@@ -44,7 +43,7 @@ var Accounts = function () {
     * It activates the listener for all delete buttons
     * @fires AccountsManager#confirmDelete
     */
-    activateListeners: function () {
+    init: function () {
       $(".deleteAccountButton").click(confirmDelete);
     },
     /**

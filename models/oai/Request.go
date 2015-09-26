@@ -2,6 +2,7 @@ package oai
 
 import (
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -28,19 +29,21 @@ func (request *Request) HarvestIdentifiers(callback func(*Header)) {
 		for _, header := range headers {
 			callback(&header)
 		}
+	}, func(resp *Response) {
+		fmt.Println(" I finished with all!")
 	})
 }
 
 // HarvestRecords harvest the identifiers of a complete OAI set
 // call the identifier callback function for each Header
-func (request *Request) HarvestRecords(callback func(*Record)) {
+func (request *Request) HarvestRecords(callbackRecord func(*Record), callbackFinish func(*Response)) {
 	request.Verb = "ListRecords"
 	request.Harvest(func(resp *Response) {
 		records := resp.ListRecords.Records
 		for _, record := range records {
-			callback(&record)
+			callbackRecord(&record)
 		}
-	})
+	}, callbackFinish)
 }
 
 // ChannelHarvestIdentifiers harvest the identifiers of a complete OAI set
@@ -60,18 +63,20 @@ func (request *Request) ChannelHarvestIdentifiers(channels []chan *Header) {
 
 		// If there is no more resumption token, send nil to all
 		// the channels to signal the harvest is done
-		hasResumptionToken, _ := resp.ResumptionToken()
+		hasResumptionToken, _ := resp.ObtainResumptionToken()
 		if !hasResumptionToken {
 			for _, channel := range channels {
 				channel <- nil
 			}
 		}
+	}, func(resp *Response) {
 	})
 }
 
 // Harvest perform a harvest of a complete OAI set, or simply one request
 // call the batchCallback function argument with the OAI responses
-func (request *Request) Harvest(batchCallback func(*Response)) {
+// The finish callback is called when there is no more things
+func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 	// Use Perform to get the OAI response
 	response := request.Perform()
 
@@ -79,15 +84,17 @@ func (request *Request) Harvest(batchCallback func(*Response)) {
 	batchCallback(response)
 
 	// Check for a resumptionToken
-	hasResumptionToken, resumptionToken := response.ResumptionToken()
+	hasResumptionToken, resumptionToken := response.ObtainResumptionToken()
 
 	// Harvest further if there is a resumption token
-	if hasResumptionToken == true {
+	if hasResumptionToken {
 		request.Set = ""
 		request.MetadataPrefix = ""
 		request.From = ""
 		request.ResumptionToken = resumptionToken
-		request.Harvest(batchCallback)
+		request.Harvest(batchCallback, finishCallback)
+	} else {
+		finishCallback(response)
 	}
 }
 
@@ -143,8 +150,8 @@ func (request *Request) GetFullURL() string {
 	return URL
 }
 
-// ResumptionToken determine the resumption token in this Response
-func (resp *Response) ResumptionToken() (hasResumptionToken bool, resumptionToken string) {
+// ObtainResumptionToken determine the resumption token in this Response
+func (resp *Response) ObtainResumptionToken() (hasResumptionToken bool, resumptionToken string) {
 	hasResumptionToken = false
 	resumptionToken = ""
 	if resp == nil {

@@ -45,4 +45,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/static/account/list.js"></script>
+<script src="/static/js/admin/account/list.js"></script>

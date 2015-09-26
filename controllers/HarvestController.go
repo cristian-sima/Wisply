@@ -55,12 +55,20 @@ func (controller *HarvestController) InitWebsocketConnection() {
 // DecideAction decides a certain action for the incoming message
 func (controller *HarvestController) DecideAction(message *ws.Message, connection *ws.Connection) {
 
+	// just for one repository
+	if message.Repository != 0 {
+		controller.decideOneRepository(message, connection)
+	} else {
+		controller.decideManyRepositories(message, connection)
+	}
+}
+
+// ChangeRepositoryBaseURL verifies if an address can be reached
+func (controller *HarvestController) decideOneRepository(message *ws.Message, connection *ws.Connection) {
 	model := repository.Model{}
 	repository, err := model.NewRepository(strconv.Itoa(message.Repository))
-
 	if err != nil {
-		fmt.Println("Not a good id of rep from client!")
-		fmt.Println(err)
+		fmt.Println("No repository with that id.")
 	} else {
 		switch message.Name {
 		case "changeRepositoryURL":
@@ -74,6 +82,17 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 			{
 				controller.GetCurrentProcess(repository, connection)
 			}
+		}
+	}
+}
+
+// ChangeRepositoryBaseURL verifies if an address can be reached
+func (controller *HarvestController) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
+
+	switch message.Name {
+	case "getAllRepositoriesStatus":
+		{
+			controller.GetAllRepositoriesStatus(connection)
 		}
 	}
 }
@@ -200,7 +219,17 @@ func (controller *HarvestController) GetCurrentProcess(repository *repository.Re
 	}, connection)
 }
 
-// GetCurrentProcess gets all the records
+// GetAllRepositoriesStatus gets all repositories' status only
+func (controller *HarvestController) GetAllRepositoriesStatus(connection *ws.Connection) {
+
+	list := controller.Model.GetAllStatus()
+
+	hub.SendMessage(&ws.Message{
+		Name:  "ListRepositoriesStatus",
+		Value: &list,
+	}, connection)
+}
+
 func (controller *HarvestController) NotifyProcessChanged(repository *repository.Repository, connection *ws.Connection) {
 
 	processObject, _ := CurrentProcesses[repository.ID]

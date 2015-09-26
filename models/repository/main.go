@@ -22,7 +22,22 @@ func (model *Model) GetAll() []Repository {
 		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status)
 		list = append(list, repository)
 	}
+	return list
+}
 
+// GetAllStatus returns an array of Repository with all repositories
+func (model *Model) GetAllStatus() map[string]string {
+	var (
+		list   = make(map[string]string)
+		id     string
+		status string
+	)
+	sql := "SELECT id, status FROM repository"
+	rows, _ := database.Database.Query(sql)
+	for rows.Next() {
+		rows.Scan(&id, &status)
+		list[id] = status
+	}
 	return list
 }
 

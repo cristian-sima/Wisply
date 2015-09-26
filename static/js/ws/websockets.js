@@ -43,7 +43,6 @@ var Websockets = function () {
         var message = (function () {
           var i = copyInfo;
             return function (evt) {
-              console.log('message received')
               i.onMessage(evt);
             };
         })();

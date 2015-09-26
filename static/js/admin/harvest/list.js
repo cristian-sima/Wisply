@@ -12,7 +12,7 @@ var HarvestList = function () {
           id: 0,
           perform: function(manager) {
               this.manager = manager;
-              console.log("Hi. It works :)");
+              this.manager.sendMessage("getAllRepositoriesStatus");
           }
     }];
 
@@ -38,7 +38,7 @@ var HarvestList = function () {
             changeSingleStatus: function (message) {
                 this.GUI.changeStatus({
                     id: message.Repository,
-                    status: message.Content.NewStatus
+                    status: message.Value.NewStatus
                 });
                 this.GUI.activateActionListeners();
             }
@@ -55,7 +55,7 @@ var HarvestList = function () {
                     repository = repositories[index];
                     this.changeStatus(repository);
                 }
-                this.GUI.activateActionListeners();
+                this.activateActionListeners();
             },
             changeStatus: function (repository) {
                 var htmlID = this.getHTMLID(repository.id),
@@ -73,8 +73,11 @@ var HarvestList = function () {
               var action = "";
                 switch(repository.status) {
                   case "unverified":
-                    action = "<span data-toggle='tooltip' data-ID=" + repository.id + " data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
+                    action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.id + "' data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
                   break;
+                  case "verification-failed":
+                  action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.id + "' data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>";
+
                 }
                 return action;
             },

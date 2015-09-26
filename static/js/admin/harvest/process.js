@@ -126,7 +126,7 @@ var HarvestProcess = function() {
 						case "VerificationFailed":
 							this.stage.GUI.showCurrent(message.Value.Explication);
 							this.stage.pause();
-							this.stage.currentStage.enableModifyURL();
+							this.stage.stages[3].enableModifyURL();
 							break;
 					}
 				}
@@ -153,7 +153,8 @@ var HarvestProcess = function() {
 				var instance = this;
 				$("#modifyButton").click(function () {
 						instance.manager.stages[3].changeURL($("#Source-URL").val());
-						instance.manager.performStage(2);
+						instance.manager.stages[3].disableModifyURL();
+						instance.manager.restart(2);
 				});
 			},
 			update: function() {
@@ -216,6 +217,9 @@ var HarvestProcess = function() {
 					html += span;
 
 					$("#repository-status").html(html);
+			},
+			restart : function () {
+					this.indicator.start();
 			},
 			pause : function () {
 					this.indicator.warning();

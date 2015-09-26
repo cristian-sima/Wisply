@@ -231,7 +231,7 @@ var Harvest = function () {
         this.connection = new HarvestConnection(this);
       },
       onOpen: function () {
-        console.log("start");
+        console.log("Start live :) ");
         this.stageManager.start();
       },
 			onClose: function () {
@@ -280,7 +280,7 @@ var Harvest = function () {
           Name: name,
           Value: value
         };
-        this.manager._send(msg);
+        this._send(msg);
       },
       /**
        * It sends a message to the server. YOU ARE NOT ALLOWED TO MODIFY
@@ -349,8 +349,11 @@ var Harvest = function () {
 			 */
 			restart: function (number) {
 				harvestHistory.log("Restarting from stage " + (number + 1) + "...");
-				this.current = number - 1;
-				this.next();
+
+				if(this.GUI) {
+					this.GUI.restart();
+				}
+				this.performStage(number);
 			},
 			/**
 			 * It pauses the manager

@@ -175,7 +175,7 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 	delete(CurrentProcesses, ID)
 
 	actions := map[string]*Action{
-		"records": &Action{
+		"records": {
 			Number:   0,
 			Finished: false,
 		},

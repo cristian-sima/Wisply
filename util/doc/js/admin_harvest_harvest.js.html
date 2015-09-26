@@ -34,9 +34,9 @@
 // It has a history
 var harvestHistory = {};
 /**
-* @namespace Harvest
-*/
-var Harvest = function () {
+ * @namespace Harvest
+ */
+var Harvest = function() {
 	'use strict';
 	/**
 	 * Creates an empty history
@@ -56,21 +56,21 @@ var Harvest = function () {
 			 * It logs an event
 			 * @param [string] content The content of the event
 			 */
-			log: function (content) {
+			log: function(content) {
 				this.add(content, "LOG");
 			},
 			/**
 			 * It adds an error message
 			 * @param [string] content The content of the message
 			 */
-			logError: function (content) {
+			logError: function(content) {
 				this.add(content, "ERROR");
 			},
 			/**
 			 * It adds a warning message
 			 * @param [string] content The content of the message
 			 */
-			logWarning: function (content) {
+			logWarning: function(content) {
 				this.add(content, "WARN");
 			},
 			/**
@@ -79,7 +79,7 @@ var Harvest = function () {
 			 * @param {string} content The content of the message
 			 * @param {string} type    The type of the message. It can be "LOG", "ERROR" or "WARN"
 			 */
-			add: function (content, type) {
+			add: function(content, type) {
 				var datetime;
 				/**
 				 * It returns the date in a human readable form
@@ -104,7 +104,7 @@ var Harvest = function () {
 			 * It returns the history in HTML format
 			 * @return [string] The history in HTML format
 			 */
-			getHTML: function () {
+			getHTML: function() {
 				/**
 				 * It creates the HTML header of the table
 				 * @return {string} The HTMl header of the table
@@ -131,18 +131,18 @@ var Harvest = function () {
 						var textClass = "",
 							content = "";
 						switch (type) {
-						case "LOG":
-							textClass = "";
-							content = "Event";
-							break;
-						case "ERROR":
-							textClass = "text-danger";
-							content = "Error";
-							break;
-						case "WARN":
-							textClass = "text-warning";
-							content = "Warning";
-							break;
+							case "LOG":
+								textClass = "";
+								content = "Event";
+								break;
+							case "ERROR":
+								textClass = "text-danger";
+								content = "Error";
+								break;
+							case "WARN":
+								textClass = "text-warning";
+								content = "Warning";
+								break;
 						}
 						return "&lt;span class='" + textClass + "'>" + content + "&lt;/span>";
 					}
@@ -179,15 +179,15 @@ var Harvest = function () {
 		var websockets = new Websockets(),
 			host = server.host + "/admin/harvest/init/ws";
 		this.connection = new websockets.Connection(host, this);
-		var open = (function () {
+		var open = (function() {
 			var conn = instance;
-			return function () {
+			return function() {
 				conn.manager.onOpen();
 			};
 		})();
-		var error = (function () {
+		var error = (function() {
 			var conn = instance;
-			return function () {
+			return function() {
 				conn.manager.onClose();
 			};
 		})();
@@ -202,7 +202,7 @@ var Harvest = function () {
 			 * It is called when a message arrived from server. It logs in the history and tells the manager
 			 * @param  {object} evt The web socket event
 			 */
-			onMessage: function (evt) {
+			onMessage: function(evt) {
 				var message = JSON.parse(evt.data),
 					description = "";
 				/**
@@ -242,7 +242,7 @@ var Harvest = function () {
 			 * It calls the websocket methdod to send the message
 			 * @param  {object} message An object which encapsulates the message
 			 */
-			send: function (message) {
+			send: function(message) {
 				this.connection.send(message);
 			},
 		};
@@ -268,34 +268,34 @@ var Harvest = function () {
 			/**
 			 * It creates the web socket connection
 			 */
-      start: function () {
-        this.connection = new HarvestConnection(this);
-      },
+			start: function() {
+				this.connection = new HarvestConnection(this);
+			},
 			/**
 			 * It is called when the connection has been established. It starts the stage manager.
 			 */
-      onOpen: function () {
-        console.log("Start live :) ");
-        this.stageManager.start();
-      },
+			onOpen: function() {
+				console.log("Start live :) ");
+				this.stageManager.start();
+			},
 			/**
 			 * It is called when the ws connection is closed. It stops the stage manager
 			 */
-			onClose: function () {
+			onClose: function() {
 				this.stageManager.stop();
 			},
 			/**
 			 * It is called when a messsage has arrived from the server. It calls the decision method of decisionManager object
 			 * @param  {object} message The message from the server
 			 */
-			onMessage: function (message) {
+			onMessage: function(message) {
 				this.decisionManager.decide(message);
 			},
 			/**
 			 * It sends a message to the server using web sockets
 			 * @param  {object} message The object which encapsulates the message
 			 */
-			send: function (msg) {
+			send: function(msg) {
 				this.connection.send(msg);
 			},
 		};
@@ -317,43 +317,43 @@ var Harvest = function () {
 		/** @lends Harvest.StageManager */
 		{
 			/**
-		 	* It sets a GUI for the manager. The GUI MUST implement theser methods: update, restart
-		 	* @param [object] GUI A reference to the GUI object
-		 	*/
-			setGUI: function (GUI) {
+			 * It sets a GUI for the manager. The GUI MUST implement theser methods: update, restart
+			 * @param [object] GUI A reference to the GUI object
+			 */
+			setGUI: function(GUI) {
 				this.GUI = GUI;
 			},
 			/**
 			 * It starts the manager. It calls the first stage
 			 */
-			start: function () {
+			start: function() {
 				this.performStage(this.startingStageId);
 			},
-      /**
-       * It sends a message to the server. It can be modified to send a custom message
-       * @param  {string} name  The name of the message
-       * @param  {object} value The value of the message
-       */
-      sendMessage: function(name, value) {
-        var msg = {
-          Name: name,
-          Value: value
-        };
-        this._send(msg);
-      },
-      /**
-       * It sends a message to the server. YOU ARE NOT ALLOWED TO MODIFY IT
-       * @private
-       * @param  {object} value The object of the message
-       */
-      _send: function(msg) {
-        this.manager.send(msg);
-      },
+			/**
+			 * It sends a message to the server. It can be modified to send a custom message
+			 * @param  {string} name  The name of the message
+			 * @param  {object} value The value of the message
+			 */
+			sendMessage: function(name, value) {
+				var msg = {
+					Name: name,
+					Value: value
+				};
+				this._send(msg);
+			},
+			/**
+			 * It sends a message to the server. YOU ARE NOT ALLOWED TO MODIFY IT
+			 * @private
+			 * @param  {object} value The object of the message
+			 */
+			_send: function(msg) {
+				this.manager.send(msg);
+			},
 			/**
 			 * It performs a stage. Updates teh GUI and set the status "running"
 			 * @param  {number} id The id of the stage
 			 */
-			performStage: function (ID) {
+			performStage: function(ID) {
 				var stage = this.stages[ID];
 				harvestHistory.log("Starting stage &lt;b>" + stage.name + "&lt;/b>...");
 				this.status = "running";
@@ -364,7 +364,7 @@ var Harvest = function () {
 			/**
 			 * It calls the next stage. If there are no stages, it calls firedEnd
 			 */
-			next: function () {
+			next: function() {
 				var nextStageID = this.currentStage.id + 1;
 				if (nextStageID >= this.stages.length) {
 					this.firedEnd();
@@ -375,7 +375,7 @@ var Harvest = function () {
 			/**
 			 * It forces the manager to stop. It forces the current stage to stop
 			 */
-			stop: function () {
+			stop: function() {
 				harvestHistory.log("The stage manager has been forced to stop.");
 				this.current = "Stopped";
 				this.status = "stopped";
@@ -387,7 +387,7 @@ var Harvest = function () {
 			/**
 			 * Called when a stage has finished. It updates the page and calls the next stage
 			 */
-			firedStageFinished: function () {
+			firedStageFinished: function() {
 				if (this.state === "stopped" || this.state === "paused") {
 					harvestHistory.log("Imposible to continue!");
 				} else {
@@ -398,7 +398,7 @@ var Harvest = function () {
 			/**
 			 * It is called when all the stages has been called. It updates the page
 			 */
-			firedEnd: function () {
+			firedEnd: function() {
 				this.status = "finish";
 				this.updateGUI();
 				harvestHistory.log("The process has been finished!");
@@ -407,9 +407,9 @@ var Harvest = function () {
 			 * It performs again a stage. If there is any GUI, it restarts it
 			 * @param  {number} number The id of the stage
 			 */
-			restart: function (number) {
+			restart: function(number) {
 				harvestHistory.log("Restarting from stage " + (number + 1) + "...");
-				if(this.GUI) {
+				if (this.GUI) {
 					this.GUI.restart();
 				}
 				this.performStage(number);
@@ -417,14 +417,14 @@ var Harvest = function () {
 			/**
 			 * It pauses the manager
 			 */
-			pause: function () {
+			pause: function() {
 				this.status = "paused";
 				this.updateGUI();
 			},
 			/**
 			 * It the manager has a GUI, it calls the method update of GUI
 			 */
-			updateGUI: function () {
+			updateGUI: function() {
 				if (this.GUI) {
 					this.GUI.update();
 				}
@@ -432,30 +432,29 @@ var Harvest = function () {
 			/**
 			 * It returns the id of current stage. If there is no current stage, it returns "NOT STARTED"
 			 */
-      getCurrentStageID: function() {
-          if(this.status ==="finished") {
-            return this.stages.length;
-          }
-          if(!this.currentStage) {
-            return "NOT STARTED";
-          }
-          return this.currentStage.id;
-      },
+			getCurrentStageID: function() {
+				if (this.status === "finished") {
+					return this.stages.length;
+				}
+				if (!this.currentStage) {
+					return "NOT STARTED";
+				}
+				return this.currentStage.id;
+			},
 			/**
 			 * It returns the percent of actions done
 			 * @return [number] The percent of actions done
 			 */
-			getCurrentProcent: function () {
+			getCurrentProcent: function() {
 				var current = this.getCurrentStageID(),
-        percent, total;
-
-        if(current === "NOT STARTED") {
-          percent = 0;
-        } else {
+					percent, total;
+				if (current === "NOT STARTED") {
+					percent = 0;
+				} else {
 					total = this.stages.length;
 					percent = 0;
-				percent = (current) / total * 100;
-      }
+					percent = (current) / total * 100;
+				}
 				return percent;
 			}
 		};
@@ -465,7 +464,7 @@ var Harvest = function () {
 		StageManager: StageManager,
 	};
 };
-$(document).ready(function () {
+$(document).ready(function() {
 	"use strict";
 	var module = new Harvest();
 	harvestHistory = new module.History();
@@ -480,13 +479,13 @@ $(document).ready(function () {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.Manager.html">Manager</a></li><li><a href="Harvest.Page.html">Page</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#complain">complain</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#result">result</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 14:59:30 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 15:39:32 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

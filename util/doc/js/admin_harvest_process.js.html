@@ -26,123 +26,158 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* global $, Harvest, wisply*/
+            <pre class="prettyprint source linenums"><code>/* global $, Harvest, wisply, server */
 /**
- * @file Encapsulates the functionality for managing repositories
+ * @file Encapsulates the functionality for the harvest process
  * @author Cristian Sima
  */
 /**
- * @namespace Harvest
+ * @namespace HarvestProcess
  */
 var HarvestProcess = function() {
 	'use strict';
-	var Stages = [
-		{
+	var Stages = [{
 		id: 0,
 		name: "Prepare...",
+		/**
+		 * It modifies the sendMessage method of stage manager and load the current repository
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
 		perform: function(manager) {
 			var repository = {};
-
 			// need to store once
 			this.manager = manager;
 			this.manager.GUI.start();
-
 			// modify stage manager send function
 			// this is to include everytime the id of the current repository
 			this.manager.sendMessage = function(name, value) {
-	        var msg = {
-	          Name: name,
-	          Value: value,
-						Repository: this.repository.id
-	        };
-	        this._send(msg);
+				var msg = {
+					Name: name,
+					Value: value,
+					Repository: this.repository.id
+				};
+				this._send(msg);
 			};
-
 			// load Repository
 			repository = new wisply.repositoriesModule.Repository(server.repository);
 			// load Repository
 			this.manager.repository = repository;
-
 			this.manager.GUI.updateRepositoryStatus();
-
 			setTimeout(function() {
 				manager.firedStageFinished();
 			}, 1000);
 		}
-	},
-	{
-	id: 1,
-	name: "Getting information...",
-	perform: function(manager) {
-		this.manager = manager;
-		manager.sendMessage("getCurrentProcess", "");
-	},
-	analyse: function(message){
-		if(message.Value !== null) {
+	}, {
+		id: 1,
+		name: "Getting information...",
+		/**
+		 * It tells the server to send the process' details regarding this repository
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
+		perform: function(manager) {
+			this.manager = manager;
+			manager.sendMessage("getCurrentProcess", "");
+		},
+		/**
+		 * It analyses the message from the server
+		 * @param  {object} message The message from the server
+		 */
+		analyse: function(message) {
+			if (message.Value !== null) {
 				this.initExistingProcess(message.Value);
-		} else {
-			this.initNewProcess();
+			} else {
+				this.initNewProcess();
+			}
+		},
+		/**
+		 * It is called when the process exists on the server. It sends on the current stage
+		 * @param  {object} contents The value of the message
+		 */
+		initExistingProcess: function(value) {
+			this.manager.performStage(value.CurrentAction);
+		},
+		/**
+		 * It is called when there is no process on the server. It calls the next stage
+		 */
+		initNewProcess: function() {
+			this.manager.firedStageFinished();
 		}
-	},
-	initExistingProcess : function(contents) {
-			this.manager.performStage(contents.CurrentAction);
-	},
-	initNewProcess: function () {
-		this.manager.firedStageFinished();
-	}
-},
-	{
+	}, {
 		id: 2,
 		name: "Start process...",
+		/**
+		 * It tells the server to start the init process
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
 		perform: function(manager) {
 			this.manager = manager;
 			this.paint();
 			this.manager.sendMessage("startInitializing", "");
 		},
+		/**
+		 * It shows the loading image
+		 */
 		paint: function() {
 			this.manager.GUI.showCurrent(wisply.getLoadingImage("big"));
 		}
-	},
-	{
+	}, {
 		id: 3,
 		name: "Validation...",
+		/**
+		 * It saves the reference of manager
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
 		perform: function(manager) {
 			this.manager = manager;
 		},
 		/**
 		 * It disables the possibility to modify the URL
 		 */
-		disableModifyURL: function () {
-				$('#modifyButton').prop('disabled', true);
-				$('#Source-URL').prop('disabled', true);
+		disableModifyURL: function() {
+			$('#modifyButton').prop('disabled', true);
+			$('#Source-URL').prop('disabled', true);
 		},
 		/**
 		 * It enables the possibility to modify the URL
 		 */
-		enableModifyURL: function () {
-				$('#modifyButton').prop('disabled', false);
-				$('#Source-URL').prop('disabled', false);
+		enableModifyURL: function() {
+			$('#modifyButton').prop('disabled', false);
+			$('#Source-URL').prop('disabled', false);
 		},
+		/**
+		 * It tells the server to change the base URL
+		 * @param  {string} newURL The new base URL for repository
+		 */
 		changeURL: function(newURL) {
-				this.manager.sendMessage("changeRepositoryURL", newURL);
+			this.manager.sendMessage("changeRepositoryURL", newURL);
 		}
-	},
-	{
+	}, {
 		id: 4,
 		name: "Collecting records...",
+		/**
+		 * It saves the reference of manager
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
 		perform: function(manager) {
 			this.manager = manager;
 		}
-	}
-];
+	}];
+	/**
+	 * The constructor does nothing
+	 * @memberof HarvestProcess
+	 * @class DecisionManager
+	 * @classdesc It decides what to do with the messages from the server
+	 */
 	var DecisionManager = function DecisionManager() {
-		// this.GUI = new GUI();
 	};
 	DecisionManager.prototype =
-		/** @lends Harvest.Manager */
+		/** @lends HarvestProcess.DecisionManager */
 		{
+			/**
+			 * It is called when a message has arrived from the server. It decides what to call
+			 * @param  {object} message The message from the server
+			 */
 			decide: function(message) {
-				console.log(message);
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
 						case "RepositoryChangedStatus":
@@ -163,10 +198,21 @@ var HarvestProcess = function() {
 					}
 				}
 			},
+			/**
+			 * It checks that a message is for this process. It is if it contains a "Repository" field and the "Repository" field is the same as the current repository ID
+			 * @param  {object} message The message from server
+			 */
 			isGoogMessage: function(message) {
 				return (message.Repository) &amp;&amp; (message.Repository === this.stage.repository.id);
 			}
 		};
+
+		/**
+		 * Gets the JQuery elements and creates the indicator
+		 * @memberof HarvestProcess
+		 * @class StageGUI
+		 * @classdesc It contains the functionality for GUI
+		 */
 	var StageGUI = function StageGUI(manager) {
 		this.manager = manager;
 		this.element = $("#stages");
@@ -174,64 +220,80 @@ var HarvestProcess = function() {
 		this.indicator = new Indicator();
 	};
 	StageGUI.prototype =
-		/** @lends ListHarvest.GUI */
+		/** @lends HarvestProcess.StageGUI */
 		{
-			start: function () {
+			/**
+			 * It shows the stage, calls update and load listeners
+			 */
+			start: function() {
 				this.element.slideDown();
 				this.update();
 				this.loadListeners();
 			},
-			loadListeners: function () {
+			/**
+			 * It activates the listeners
+			 */
+			loadListeners: function() {
 				var instance = this;
-				$("#modifyButton").click(function () {
-						instance.manager.stages[3].changeURL($("#Source-URL").val());
-						instance.manager.stages[3].disableModifyURL();
-						instance.manager.restart(2);
+				$("#modifyButton").click(function() {
+					instance.manager.stages[3].changeURL($("#Source-URL").val());
+					instance.manager.stages[3].disableModifyURL();
+					instance.manager.restart(2);
 				});
 			},
+			/**
+			 * It updates the list, the indicator and the process status
+			 */
 			update: function() {
 				this.updateList();
 				this.updateIndicator();
 				this.updateProcessStatus();
 			},
+			/**
+			 * It modify the HTML of current panel
+			 * @param [string] html The HTML code to be inserted
+			 */
 			showCurrent: function(html) {
-					this.current.html(html);
+				this.current.html(html);
 			},
 			/**
 			 * It updates the list of current stages
 			 */
-			updateList: function () {
-					var container = this.element.find("#stage-list"),
-							manager = this.manager,
-							current = manager.getCurrentStageID(),
-							stages = manager.stages,
-							stage, id, html = "",
-							item = "";
-					for (id = 0; id &lt; stages.length; id++) {
-							item = "";
-							stage = stages[id];
-							if (id === current) {
-									item += '&lt;li class="list-group-item active">';
-									item += stage.name;
-									item += "&lt;/li>";
-							} else {
-									if (id &lt; current) {
-											item = '&lt;li class="list-group-item text-muted">&lt;del>' + stage.name + '&lt;/del>&lt;/li>';
-									} else {
-											item = '&lt;li class="list-group-item">' + stage.name + "&lt;/li>";
-									}
-							}
-							html += item;
+			updateList: function() {
+				var container = this.element.find("#stage-list"),
+					manager = this.manager,
+					current = manager.getCurrentStageID(),
+					stages = manager.stages,
+					stage, id, html = "",
+					item = "";
+				for (id = 0; id &lt; stages.length; id++) {
+					item = "";
+					stage = stages[id];
+					if (id === current) {
+						item += '&lt;li class="list-group-item active">';
+						item += stage.name;
+						item += "&lt;/li>";
+					} else {
+						if (id &lt; current) {
+							item = '&lt;li class="list-group-item text-muted">&lt;del>' + stage.name + '&lt;/del>&lt;/li>';
+						} else {
+							item = '&lt;li class="list-group-item">' + stage.name + "&lt;/li>";
+						}
 					}
-					if (current === stages.length) {
-							html += '&lt;div class="panel panel-success">  &lt;div class="panel-heading">    &lt;h3 class="panel-title">Done!&lt;/h3>&lt;/div>  &lt;div class="panel-body">    The process is over.  &lt;/div>&lt;/div>';
-					}
-					container.html(html);
+					html += item;
+				}
+				if (current === stages.length) {
+					html += '&lt;div class="panel panel-success">  &lt;div class="panel-heading">    &lt;h3 class="panel-title">Done!&lt;/h3>&lt;/div>  &lt;div class="panel-body">    The process is over.  &lt;/div>&lt;/div>';
+				}
+				container.html(html);
 			},
+			/**
+			 * It updates the indicator
+			 */
 			updateIndicator: function() {
 				var procent;
 				if (this.manager.status === "finish") {
-						this.indicator.finished();
+					this.indicator.finished();
 				}
 				procent = this.manager.getCurrentProcent();
 				this.indicator.set(procent);
@@ -239,64 +301,81 @@ var HarvestProcess = function() {
 			/**
 			 * It updates the general status of the process
 			 */
-			updateRepositoryStatus: function () {
-					var status = this.manager.repository.status,
-							html = "Status: ",
-							span = "";
-
-					span = wisply.repositoriesModule.GUI.getStatusColor(status);
-
-					html += span;
-
-					$("#repository-status").html(html);
+			updateRepositoryStatus: function() {
+				var status = this.manager.repository.status,
+					html = "Status: ",
+					span = "";
+				span = wisply.repositoriesModule.GUI.getStatusColor(status);
+				html += span;
+				$("#repository-status").html(html);
 			},
-			restart : function () {
-					this.indicator.start();
+			/**
+			 * It tells the indicator to start
+			 */
+			restart: function() {
+				this.indicator.start();
 			},
-			pause : function () {
-					this.indicator.warning();
-					this.indicator.stop();
+			/**
+			 * It tells the indicator to change to yellow and stop it
+			 */
+			pause: function() {
+				this.indicator.warning();
+				this.indicator.stop();
 			},
-			stop : function () {
-					this.indicator.error();
-					this.indicator.stop();
+			/**
+			 * It tells the indicator to change to red and stop it
+			 */
+			stop: function() {
+				this.indicator.error();
+				this.indicator.stop();
 			},
 			/**
 			 * It updates the general status of the process
 			 */
-			updateProcessStatus: function () {
+			updateProcessStatus: function() {
 				var status = this.manager.status,
-						html = "Progress: ";
+					html = "Progress: ";
 				switch (status) {
-				case "stopped":
+					case "stopped":
 						html += '&lt;span class="label label-danger">Stopped&lt;/span>';
 						this.stop();
 						break;
-				case "paused":
+					case "paused":
 						html += '&lt;span class="label label-warning">Paused&lt;/span>';
 						this.pause();
 						break;
-				case "finish":
+					case "finish":
 						html += '&lt;span class="label label-success">Finish&lt;/span>';
 						break;
-				case "running":
+					case "running":
 						html += wisply.getLoadingImage("small");
 						break;
-				default:
+					default:
 						html += "Problem";
 						break;
 				}
 				$("#process-status").html(html);
 			}
 		};
+
+		/**
+		 * Gets the JQuery element
+		 * @memberof HarvestProcess
+		 * @class Indicator
+		 * @classdesc It represents a visual indicator for the current progress of the process
+		 */
 	var Indicator = function Indicator(gui) {
 		this.gui = gui;
 		this.element = $("#general-indicator");
 		this.animation = undefined;
 	};
 	Indicator.prototype =
-		/** @lends ListHarvest.GUI */
+		/** @lends HarvestProcess.Indicator */
 		{
+			/**
+			 * It sets the indicator to a percent
+			 * @param  {number} percent The percent to set
+			 */
 			set: function(percent) {
 				if (this.animation) {
 					this.animation.finish();
@@ -305,40 +384,49 @@ var HarvestProcess = function() {
 					"width": percent + "%"
 				}, 100);
 			},
-		 stop: function () {
-			 	 this.element.removeClass("progress-striped");
-		 },
-		 start: function () {
-				 this.element.find(".progress-bar").removeClass("progress-bar-warning");
-				 this.element.find(".progress-bar").addClass("progress-bar-default");
-			 	 this.element.addClass("progress-striped");
-		 },
-		finished: function () {
+			/**
+			 * It removes the stipes (it makes it static)
+			 */
+			stop: function() {
+				this.element.removeClass("progress-striped");
+			},
+			/**
+			 * It makes it default and adds the stipes
+			 */
+			start: function() {
+				this.element.find(".progress-bar").removeClass("progress-bar-warning");
+				this.element.find(".progress-bar").addClass("progress-bar-default");
+				this.element.addClass("progress-striped");
+			},
+			/**
+			 * It change the colour to green
+			 */
+			finished: function() {
 				this.changeIndicator("success");
-		},
-		/**
-		 * It changes the design of indicator for a warning situation
-		 */
-		warning: function () {
+			},
+			/**
+			 * It changes the design of indicator for a warning situation
+			 */
+			warning: function() {
 				this.changeIndicator("warning");
-		},
-		/**
-		 * It changes the design of indicator for an error situation
-		 */
-		error: function () {
+			},
+			/**
+			 * It changes the design of indicator for an error situation
+			 */
+			error: function() {
 				this.changeIndicator("danger");
-		},
-		/**
-		 * It changes the design of the indicator for a certain situation
-		 * @param  {string} type The situation. It can be "danger" or "warning" or "success"
-		 */
-	 changeIndicator: function (type) {
-			 var element = this.element.find(".progress-bar");
-			 element.removeClass();
-			 element.addClass("progress-bar-" + type);
-			 element.addClass("progress-bar");
-			 this.stop();
-	 },
+			},
+			/**
+			 * It changes the design of the indicator for a certain situation
+			 * @param  {string} type The situation. It can be "danger" or "warning" or "success"
+			 */
+			changeIndicator: function(type) {
+				var element = this.element.find(".progress-bar");
+				element.removeClass();
+				element.addClass("progress-bar-" + type);
+				element.addClass("progress-bar");
+				this.stop();
+			},
 		};
 	return {
 		DecisionManager: DecisionManager,
@@ -376,13 +464,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.Manager.html">Manager</a></li><li><a href="Harvest.Page.html">Page</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#complain">complain</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#result">result</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 14:59:30 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 15:39:32 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

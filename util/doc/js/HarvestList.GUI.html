@@ -137,6 +137,813 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".activateActionListeners"><span class="type-signature">(static) </span>activateActionListeners<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It activates the listeners for the status actions
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".changeAllStatus"><span class="type-signature">(static) </span>changeAllStatus<span class="signature">(repositories)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It changes the status of all the repositories
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>repositories</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The array with the repositories</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".changeStatus"><span class="type-signature">(static) </span>changeStatus<span class="signature">(repository)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It changes the status for a single repository and activates the listeners for actions
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>repository</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A reference to the object which contains the ID and the Status of the repository</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getAction"><span class="type-signature">(static) </span>getAction<span class="signature">(repository)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    It returns the HTML code for the actions, based on the status
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>repository</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The repository object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The HTML code for actions
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getHTMLID"><span class="type-signature">(static) </span>getHTMLID<span class="signature">(id)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    It returns the JQUERY ID of a repository
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The id of the repository</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The JQUERY ID of a repository
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getStatusColor"><span class="type-signature">(static) </span>getStatusColor<span class="signature">(status)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+<div class="description">
+    It gets the HTML span for a status
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The status of a repository</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_list.js.html">admin/harvest/list.js</a>, <a href="admin_harvest_list.js.html#line109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The HTML span for a status
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
 
     
 
@@ -151,13 +958,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.Manager.html">Manager</a></li><li><a href="Harvest.Page.html">Page</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#complain">complain</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#result">result</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 14:59:31 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 15:39:33 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -71,7 +71,7 @@ var HarvestList = function() {
 		this.list = $("#repositories-list");
 	};
 	GUI.prototype =
-		/** @lends ListHarvest.GUI */
+		/** @lends HarvestList.GUI */
 		{
 			/**
 			 * It changes the status of all the repositories

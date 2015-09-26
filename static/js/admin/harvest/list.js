@@ -13,7 +13,7 @@ var HarvestList = function() {
 		id: 0,
 		perform: function(manager) {
 			this.manager = manager;
-			this.manager.sendMessage("getAllRepositoriesStatus");
+			this.manager.sendMessage("get-all-status");
 		}
 	}];
 	/**
@@ -34,10 +34,10 @@ var HarvestList = function() {
 			 */
 			decide: function(message) {
 				switch (message.Name) {
-					case "ListRepositoriesStatus":
+					case "repositories-status-list":
 						this.changeAllStatus(message);
 						break;
-					case "RepositoryChangedStatus":
+					case "status-changed":
 						this.changeSingleStatus(message);
 						break;
 				}
@@ -56,7 +56,7 @@ var HarvestList = function() {
 			changeSingleStatus: function(message) {
 				this.GUI.changeStatus({
 					ID: message.Repository,
-					Status: message.Value.NewStatus
+					Status: message.Value
 				});
 				this.GUI.activateActionListeners();
 			}

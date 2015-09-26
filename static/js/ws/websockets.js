@@ -44,6 +44,7 @@ var Websockets = function () {
         var message = (function () {
           var i = copyInfo;
             return function (evt) {
+              console.log(evt.data)
               i.onMessage(evt);
             };
         })();

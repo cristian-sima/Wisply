@@ -48,13 +48,14 @@ var HarvestProcess = function() {
 		 */
 		perform: function(manager) {
 			this.manager = manager;
-			manager.sendMessage("getCurrentProcess", "");
+			manager.sendMessage("get-current-progress", "");
 		},
 		/**
 		 * It analyses the message from the server
 		 * @param  {object} message The message from the server
 		 */
 		analyse: function(message) {
+			console.log(message)
 			if (message.Value !== null) {
 				this.initExistingProcess(message.Value);
 			} else {
@@ -84,7 +85,7 @@ var HarvestProcess = function() {
 		perform: function(manager) {
 			this.manager = manager;
 			this.paint();
-			this.manager.sendMessage("startInitializing", "");
+			this.manager.sendMessage("start-progress", "");
 		},
 		/**
 		 * It shows the loading image
@@ -121,7 +122,7 @@ var HarvestProcess = function() {
 		 * @param  {string} newURL The new base URL for repository
 		 */
 		changeURL: function(newURL) {
-			this.manager.sendMessage("changeRepositoryURL", newURL);
+			this.manager.sendMessage("change-url", newURL);
 		}
 	}, {
 		id: 4,
@@ -152,20 +153,22 @@ var HarvestProcess = function() {
 			decide: function(message) {
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
-						case "RepositoryChangedStatus":
-							this.stage.repository.status = message.Value.NewStatus;
+						case "status-changed":
+							this.stage.repository.status = message.Value;
 							this.stage.GUI.updateRepositoryStatus();
-							if (message.Value.NewStatus === "verifying") {
+							if (message.Value === "verifying") {
 								this.stage.performStage(3);
 							}
 							break;
-						case "ProcessOnServer":
+						case "existing-process-on-server":
 							this.stage.currentStage.analyse(message);
 							break;
-						case "VerificationFailed":
-							this.stage.GUI.showCurrent(message.Value.Explication);
-							this.stage.pause();
-							this.stage.stages[3].enableModifyURL();
+						case "verification-finished":
+							if(message.Value === "failed") {
+								this.stage.GUI.showCurrent("The verification failed");
+								this.stage.pause();
+								this.stage.stages[3].enableModifyURL();
+							}
 							break;
 					}
 				}

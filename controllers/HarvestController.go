@@ -2,37 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
 	"strconv"
 
-	oai "github.com/cristian-sima/Wisply/models/oai"
+	remote "github.com/cristian-sima/Wisply/models/remote"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 	ws "github.com/cristian-sima/Wisply/models/ws"
 )
 
-const (
-	// TESTING is the id of testing stage
-	TESTING = 3
-	// IDENTIFYING is the id of identifying stage
-	IDENTIFYING = 4
-)
-
 var hub *ws.Hub
-
-// CurrentProcesses holds the current Statistics for a repository
-var CurrentProcesses = make(map[int]*Process)
-
-// Action represents the state (finish) and the number
-type Action struct {
-	Finished bool `json:"Finished"`
-	Number   int  `json:"Number"`
-}
-
-// Process contians information about a process
-type Process struct {
-	CurrentAction int                `json:"CurrentAction"`
-	Actions       map[string]*Action `json:"Actions"`
-}
 
 func init() {
 	hub = ws.CreateHub()
@@ -54,6 +31,34 @@ func (controller *HarvestController) InitWebsocketConnection() {
 	connection.ReadPump()
 }
 
+const (
+	// TESTING is the id of testing stage
+	TESTING = 3
+	// IDENTIFYING is the id of identifying stage
+	IDENTIFYING = 4
+)
+
+// CurrentProcesses holds the current Statistics for a repository
+var CurrentProcesses = make(map[int]*Process)
+
+// Action represents the state (finish) and the number
+type Action struct {
+	Finished bool `json:"Finished"`
+	Number   int  `json:"Number"`
+}
+
+// Process contians information about a process
+type Process struct {
+	CurrentAction int                `json:"CurrentAction"`
+	Actions       map[string]*Action `json:"Actions"`
+	Connections   []*ws.Connection   `json:"-"`
+	Remote        remote.Standard    `json:"-"`
+}
+
+func (process *Process) addConnection(connection *ws.Connection) {
+	process.Connections = append(process.Connections, connection)
+}
+
 // DecideAction decides a certain action for the incoming message
 func (controller *HarvestController) DecideAction(message *ws.Message, connection *ws.Connection) {
 	if message.Repository != 0 {
@@ -71,14 +76,14 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 		fmt.Println("No repository with that id.")
 	} else {
 		switch message.Name {
-		case "changeRepositoryURL":
+		case "change-url":
 			newURL := message.Value.(string)
 			controller.ChangeRepositoryBaseURL(repository, newURL)
-		case "startInitializing":
+		case "start-progress":
 			{
-				controller.InitializeRepository(repository, connection)
+				controller.StartProcess(repository, connection)
 			}
-		case "getCurrentProcess":
+		case "get-current-progress":
 			{
 				controller.GetCurrentProcess(repository, connection)
 			}
@@ -89,7 +94,7 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
-	case "getAllRepositoriesStatus":
+	case "get-all-status":
 		{
 			controller.GetAllRepositoriesStatus(connection)
 		}
@@ -102,7 +107,7 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 		repository.ModifyURL(newURL)
 	}
 	msg := ws.Message{
-		Name:       "RepositoryBaseURLChanged",
+		Name:       "url-changed",
 		Repository: repository.ID,
 		Value:      newURL,
 	}
@@ -110,63 +115,10 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 	hub.BroadcastMessage(&msg)
 }
 
-// InitializeRepository starts the initializing proccess
-func (controller *HarvestController) InitializeRepository(repository *repository.Repository, connection *ws.Connection) {
-	if repository.Status != "verified" {
-		controller.startVerifyRepository(repository, connection)
-	} else {
-		controller.modifyRepositoryStatus(repository, "initializing")
-		controller.startInit(repository)
-	}
-}
+// StartProcess starts the initializing proccess
+func (controller *HarvestController) StartProcess(local *repository.Repository, connection *ws.Connection) {
 
-func (controller *HarvestController) startVerifyRepository(repository *repository.Repository, connection *ws.Connection) {
-	controller.modifyRepositoryStatus(repository, "verifying")
-	isValidURL := controller.testURL(repository)
-
-	// tell the client the result
-
-	if isValidURL {
-	} else {
-		type Content struct {
-			Explication string `json:"Explication"`
-		}
-		content := Content{
-			Explication: "The URL can not be reached. Please modify it",
-		}
-		msg := ws.Message{
-			Name:       "VerificationFailed",
-			Value:      content,
-			Repository: repository.ID,
-		}
-
-		hub.SendMessage(&msg, connection)
-
-		delete(CurrentProcesses, repository.ID)
-
-		controller.modifyRepositoryStatus(repository, "verification-failed")
-	}
-}
-
-// TestURL verifies if an address can be reached
-func (controller *HarvestController) testURL(repository *repository.Repository) bool {
-
-	var isOk bool
-
-	isOk = true
-
-	request, err := http.Get(repository.URL)
-	if request == nil || err != nil {
-		isOk = false
-	} else if http.StatusOK != request.StatusCode {
-		isOk = false
-	}
-	return isOk
-}
-
-func (controller *HarvestController) startInit(repository *repository.Repository) {
-
-	ID := repository.ID
+	ID := local.ID
 
 	// delete any previous
 	delete(CurrentProcesses, ID)
@@ -178,37 +130,69 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 		},
 	}
 
+	remoteRepository := remote.NewOAIRepository(local)
+	remoteRepository.SetController(controller)
+
 	// create a new empty one
-	st := &Process{
+	process := &Process{
 		CurrentAction: TESTING,
 		Actions:       actions,
+		Remote:        remoteRepository,
 	}
 
-	CurrentProcesses[ID] = st
+	process.addConnection(connection)
 
-	// get records
-	controller.getRecords(repository, func(response *oai.Response) {
-		fmt.Println("am terminat")
+	CurrentProcesses[ID] = process
 
-		msg := ws.Message{
-			Name:       "FinishStage",
-			Repository: repository.ID,
+	remoteRepository.StartProcess()
+
+	/*if repository.Status != "verified" {
+		controller.startVerifyRepository(repository, connection)
+	} else {
+		controller.startInit(repository)
+	}*/
+}
+
+// Notify is called by a remote repository with a message
+func (controller *HarvestController) Notify(message *remote.Message) {
+	process, ok := CurrentProcesses[message.Repository]
+
+	fmt.Println("--> Harvest Controller: The controller has received this message:")
+	fmt.Println(message)
+	if ok {
+		switch message.Name {
+		case "status-changed":
+			{
+				process.Remote.GetLocalRepository().ModifyStatus(message.Value)
+				msg := ConvertToWebsocketMessage(message)
+				hub.BroadcastMessage(msg)
+			}
+		case "verification-finished":
+			if message.Value == "failed" {
+				msg := ConvertToWebsocketMessage(message)
+				hub.BroadcastMessage(msg)
+				delete(CurrentProcesses, message.Repository)
+			}
+			break
 		}
+	}
+}
 
-		hub.BroadcastMessage(&msg)
-
-		// delete init
-		delete(CurrentProcesses, ID)
-
-		controller.modifyRepositoryStatus(repository, "ok")
-	})
+// ConvertToWebsocketMessage converts a remote message to a websocket one
+func ConvertToWebsocketMessage(old *remote.Message) *ws.Message {
+	newMessage := &ws.Message{
+		Name:       old.Name,
+		Value:      old.Value,
+		Repository: old.Repository,
+	}
+	return newMessage
 }
 
 // GetCurrentProcess gets all the records
 func (controller *HarvestController) GetCurrentProcess(repository *repository.Repository, connection *ws.Connection) {
 	processObject, _ := CurrentProcesses[repository.ID]
 	hub.SendMessage(&ws.Message{
-		Name:       "ProcessOnServer",
+		Name:       "existing-process-on-server",
 		Value:      &processObject,
 		Repository: repository.ID,
 	}, connection)
@@ -218,7 +202,7 @@ func (controller *HarvestController) GetCurrentProcess(repository *repository.Re
 func (controller *HarvestController) GetAllRepositoriesStatus(connection *ws.Connection) {
 	list := controller.Model.GetAllStatus()
 	hub.SendMessage(&ws.Message{
-		Name:  "ListRepositoriesStatus",
+		Name:  "repositories-status-list",
 		Value: &list,
 	}, connection)
 }
@@ -231,136 +215,6 @@ func (controller *HarvestController) NotifyProcessChanged(repository *repository
 		Value:      &processObject,
 		Repository: repository.ID,
 	}, connection)
-}
-
-// GetRecords gets all the records
-func (controller *HarvestController) getRecords(repository *repository.Repository, finishCallback func(*oai.Response)) {
-	defer func() {
-		// recover from any errro and tell them there was a problem
-		err := recover()
-		if err != nil {
-			type Content struct {
-				Info string `json:"Info"`
-			}
-			content := Content{
-				Info: err.(string),
-			}
-			msg := ws.Message{
-				Name:       "Record-Problems",
-				Value:      content,
-				Repository: repository.ID,
-			}
-			hub.BroadcastMessage(&msg)
-			controller.modifyRepositoryStatus(repository, "problems")
-		}
-	}()
-
-	request := (&oai.Request{
-		BaseURL:        repository.URL,
-		From:           "2012-02-09T18:12:54Z",
-		Until:          "2012-05-09T18:12:54Z",
-		MetadataPrefix: "oai_dc",
-	})
-
-	request.HarvestRecords(func(record *oai.Record) {
-
-		ID := repository.ID
-		actions := CurrentProcesses[ID].Actions
-		recordsAction := actions["records"]
-		recordsAction.Number++
-
-		fmt.Println("--> I received a record." + strconv.Itoa(actions["records"].Number))
-		/*
-			type Content struct {
-				Data *Action `json:"Data"`
-			}
-			content := Content{
-				Data: recordsAction,
-			}
-			msg := ws.Message{
-				Name:       "Statistics",
-				Value:      content,
-				Repository: repository.ID,
-			}
-
-			hub.BroadcastMessage(&msg)
-		*/
-	}, finishCallback)
-
-}
-
-// IdenfityRepository requests an identification
-func (controller *HarvestController) IdenfityRepository(repository *repository.Repository) {
-
-	defer func() {
-		// recover from any errro and tell them there was a problem
-		err := recover()
-		if err != nil {
-			type Content struct {
-				State bool `json:"State"`
-			}
-			content := Content{
-				State: false,
-			}
-			msg := ws.Message{
-				Name:       "FinishIdentify",
-				Value:      content,
-				Repository: repository.ID,
-			}
-			hub.BroadcastMessage(&msg)
-
-			controller.modifyRepositoryStatus(repository, "verification-failed")
-		}
-	}()
-
-	if repository.Status != "verifying" {
-		fmt.Println("The repository should be in 'verifying' state")
-	} else {
-		request := (&oai.Request{
-			BaseURL: repository.URL,
-			Verb:    "Identify",
-		})
-
-		request.Harvest(func(record *oai.Response) {
-
-			type Content struct {
-				State bool          `json:"State"`
-				Data  *oai.Response `json:"Data"`
-			}
-			content := Content{
-				State: true,
-				Data:  record,
-			}
-			msg := ws.Message{
-				Name:       "FinishIdentify",
-				Value:      content,
-				Repository: repository.ID,
-			}
-			controller.modifyRepositoryStatus(repository, "verified")
-			hub.BroadcastMessage(&msg)
-		}, func(resp *oai.Response) {
-		})
-	}
-}
-
-func (controller *HarvestController) modifyRepositoryStatus(repository *repository.Repository, newStatus string) {
-	err := repository.ModifyStatus(newStatus)
-	if err == nil {
-		type Content struct {
-			NewStatus string `json:"NewStatus"`
-		}
-		content := Content{
-			NewStatus: repository.Status,
-		}
-		msg := ws.Message{
-			Name:       "RepositoryChangedStatus",
-			Value:      content,
-			Repository: repository.ID,
-		}
-		hub.BroadcastMessage(&msg)
-	} else {
-		panic(err)
-	}
 }
 
 // ShowPanel shows the panel to collect data from repository

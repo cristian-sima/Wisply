@@ -200,7 +200,7 @@ var Repositories = function () {
       label = "success";
         break;
     default:
-      console.log("problem");
+      console.log("The status [" + status + "] is not a valid one");
       break;
     }
     html += '<span class="label label-' + label + '">' + status + '</span>';

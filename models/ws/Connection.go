@@ -56,7 +56,7 @@ func (connection *Connection) ReadPump() {
 			var msg Message
 			json.Unmarshal(messageByte, &msg)
 
-			fmt.Println("<-- I received the message: ")
+			fmt.Println("<-- Hub: I received the message: ")
 			fmt.Println(msg)
 
 			connection.controller.DecideAction(&msg, connection)

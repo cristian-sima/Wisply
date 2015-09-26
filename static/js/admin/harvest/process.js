@@ -68,7 +68,11 @@ var HarvestProcess = function() {
 		name: "Start process...",
 		perform: function(manager) {
 			this.manager = manager;
+			this.paint();
 			this.manager.sendMessage("startInitializing", "");
+		},
+		paint: function() {
+			this.manager.GUI.showCurrent(wisply.getLoadingImage("big"));
 		}
 	},
 	{

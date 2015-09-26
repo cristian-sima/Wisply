@@ -37,8 +37,8 @@ var HarvestList = function () {
             },
             changeSingleStatus: function (message) {
                 this.GUI.changeStatus({
-                    id: message.Repository,
-                    status: message.Value.NewStatus
+                    ID: message.Repository,
+                    Status: message.Value.NewStatus
                 });
                 this.GUI.activateActionListeners();
             }
@@ -51,15 +51,16 @@ var HarvestList = function () {
         {
             changeAllStatus: function (repositories) {
                 var repository, index;
-                for (index = 0; index <= repositories.length; index++) {
+                console.log(repositories)
+                for (index = 0; index < repositories.length; index++) {
                     repository = repositories[index];
                     this.changeStatus(repository);
                 }
                 this.activateActionListeners();
             },
             changeStatus: function (repository) {
-                var htmlID = this.getHTMLID(repository.id),
-                  htmlSpan = this.getStatusColor(repository.status),
+                var htmlID = this.getHTMLID(repository.ID),
+                  htmlSpan = this.getStatusColor(repository.Status),
                   action = this.getAction(repository);
                 this.list.find(htmlID).html(htmlSpan + action);
             },
@@ -71,12 +72,12 @@ var HarvestList = function () {
             },
             getAction: function(repository) {
               var action = "";
-                switch(repository.status) {
+                switch(repository.Status) {
                   case "unverified":
-                    action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.id + "' data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
+                    action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
                   break;
                   case "verification-failed":
-                  action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.id + "' data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>";
+                  action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>";
 
                 }
                 return action;

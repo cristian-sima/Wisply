@@ -19,19 +19,19 @@
               <strong>{{ .repository.Name }}</strong>
           </div>
           </div>
-        <div class="col-md-4">
-          <div id="connectionStatus">Please wait...</div>
+        <div class="col-md-4 text-right">
+            <div id="websocket-connection"></div>
         </div>
     </div>
     <br />
-    <div id="generalIndicator" class="progress progress-striped active">
+    <div id="general-indicator" class="progress progress-striped active">
       <div class="progress-bar" style="width: 0%"></div>
     </div>
     <div class="row" >
-      <div class="col-lg-3 col-md-3 col-sm-3" >
+      <div class="col-lg-3 col-md-3 col-sm-3" id="stages" style="display:none">
         <div id="repository-status"></div>
         <div id="process-status"></div>
-          <div id="stages" class="list-group">
+          <div id="stage-list" class="list-group">
           </div>
       </div>
       <div class="col-lg-7 col-md-7 col-sm-7" >
@@ -56,15 +56,17 @@
       border:none;
     }
   </style>
-  <script src="/static/js/admin/repository/list.js"></script>
-  <script src="/static/js/admin/harbest/harvest.js"></script>
-  <script src="/static/js/admin/harbest/list.js"></script>
+
   <script>
-  var data = {}, server = {};
-  data.id =   {{ .repository.ID }}
-  data.name = {{ .repository.Name}}
-  data.status = {{ .repository.Status}}
-  data.url =  {{ .repositoru.URL }}
+  var server = {},
+  repository;
+  server.repository = {};
+  repository = server.repository;
+
+  repository.id =   {{ .repository.ID }}
+  repository.name = {{ .repository.Name}}
+  repository.status = {{ .repository.Status}}
+  repository.url =  {{ .repositoru.URL }}
 
   server.host = {{ .host }};
 
@@ -72,4 +74,7 @@
   server.process = {{ .currentProcesses }};
 
   </script>
-  <script src="/static/js/admin/harvest/init.js"></script>
+  <script src="/static/js/ws/websockets.js"></script>
+  <script src="/static/js/admin/repository/list.js"></script>
+  <script src="/static/js/admin/harvest/harvest.js"></script>
+  <script src="/static/js/admin/harvest/process.js"></script>

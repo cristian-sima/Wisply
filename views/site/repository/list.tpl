@@ -67,7 +67,7 @@
 
               {{ else if eq  $element.Status "verification-failed" }}
               <span class="label label-danger">Verification failed</span>
-              <a href='' data-toggle='tooltip' data-placement='top' title='' data-original-title='Try again'><span class='glyphicon glyphicon-refresh'  ></span></a>
+              <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>
 
 
               {{ else if eq  $element.Status "problems" }}

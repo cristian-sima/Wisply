@@ -10,6 +10,11 @@ import (
 	ws "github.com/cristian-sima/Wisply/models/ws"
 )
 
+const (
+	TESTING     = 3
+	IDENTIFYING = 4
+)
+
 var hub *ws.Hub
 
 // CurrentProcesses holds the current Statistics for a repository
@@ -23,7 +28,7 @@ type Action struct {
 
 // Process contians information about a process
 type Process struct {
-	CurrentAction string             `json:"CurrentAction"`
+	CurrentAction int                `json:"CurrentAction"`
 	Actions       map[string]*Action `json:"Actions"`
 }
 
@@ -61,21 +66,13 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 		case "changeRepositoryURL":
 			newURL := message.Value.(string)
 			controller.ChangeRepositoryBaseURL(repository, newURL)
-		case "testURL":
+		case "startInitializing":
 			{
-				controller.TestURL(repository)
-			}
-		case "identify":
-			{
-				controller.IdenfityRepository(repository)
-			}
-		case "initialize":
-			{
-				controller.InitializeRepository(repository)
+				controller.InitializeRepository(repository, connection)
 			}
 		case "getCurrentProcess":
 			{
-				controller.GetCurrentProcess(repository)
+				controller.GetCurrentProcess(repository, connection)
 			}
 		}
 	}
@@ -98,13 +95,57 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 }
 
 // InitializeRepository starts the initializing proccess
-func (controller *HarvestController) InitializeRepository(repository *repository.Repository) {
+func (controller *HarvestController) InitializeRepository(repository *repository.Repository, connection *ws.Connection) {
 	if repository.Status != "verified" {
-		fmt.Println("Can't start init, because the rep is not in 'verified' state. It is in:" + repository.Status)
+		controller.startVerifyRepository(repository, connection)
 	} else {
 		controller.modifyRepositoryStatus(repository, "initializing")
 		controller.startInit(repository)
 	}
+}
+
+func (controller *HarvestController) startVerifyRepository(repository *repository.Repository, connection *ws.Connection) {
+	controller.modifyRepositoryStatus(repository, "verifying")
+	isValidURL := controller.testURL(repository)
+
+	// tell the client the result
+
+	if isValidURL {
+	} else {
+		type Content struct {
+			Explication string `json:"Explication"`
+		}
+		content := Content{
+			Explication: "The URL can not be reached. Please modify it",
+		}
+		msg := ws.Message{
+			Name:       "VerificationFailed",
+			Value:      content,
+			Repository: repository.ID,
+		}
+
+		hub.SendMessage(&msg, connection)
+
+		delete(CurrentProcesses, repository.ID)
+
+		controller.modifyRepositoryStatus(repository, "verification-failed")
+	}
+}
+
+// TestURL verifies if an address can be reached
+func (controller *HarvestController) testURL(repository *repository.Repository) bool {
+
+	var isOk bool
+
+	isOk = true
+
+	request, err := http.Get(repository.URL)
+	if request == nil || err != nil {
+		isOk = false
+	} else if http.StatusOK != request.StatusCode {
+		isOk = false
+	}
+	return isOk
 }
 
 func (controller *HarvestController) startInit(repository *repository.Repository) {
@@ -123,7 +164,7 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 
 	// create a new empty one
 	st := &Process{
-		CurrentAction: "",
+		CurrentAction: TESTING,
 		Actions:       actions,
 	}
 
@@ -148,15 +189,27 @@ func (controller *HarvestController) startInit(repository *repository.Repository
 }
 
 // GetCurrentProcess gets all the records
-func (controller *HarvestController) GetCurrentProcess(repository *repository.Repository) {
+func (controller *HarvestController) GetCurrentProcess(repository *repository.Repository, connection *ws.Connection) {
 
 	processObject, _ := CurrentProcesses[repository.ID]
 
-	hub.BroadcastMessage(&ws.Message{
-		Name:       "processOnServer",
+	hub.SendMessage(&ws.Message{
+		Name:       "ProcessOnServer",
 		Value:      &processObject,
 		Repository: repository.ID,
-	})
+	}, connection)
+}
+
+// GetCurrentProcess gets all the records
+func (controller *HarvestController) NotifyProcessChanged(repository *repository.Repository, connection *ws.Connection) {
+
+	processObject, _ := CurrentProcesses[repository.ID]
+
+	hub.SendMessage(&ws.Message{
+		Name:       "ProcessUpdated",
+		Value:      &processObject,
+		Repository: repository.ID,
+	}, connection)
 }
 
 // GetRecords gets all the records
@@ -216,41 +269,6 @@ func (controller *HarvestController) getRecords(repository *repository.Repositor
 		*/
 	}, finishCallback)
 
-}
-
-// TestURL verifies if an address can be reached
-func (controller *HarvestController) TestURL(repository *repository.Repository) {
-
-	controller.modifyRepositoryStatus(repository, "verifying")
-
-	var isOk bool
-
-	isOk = true
-
-	request, err := http.Get(repository.URL)
-	if request == nil || err != nil {
-		isOk = false
-	} else if http.StatusOK != request.StatusCode {
-		isOk = false
-	}
-
-	type Content struct {
-		State bool `json:"IsValid"`
-	}
-	content := Content{
-		State: isOk,
-	}
-	msg := ws.Message{
-		Name:       "FinishTestingURL",
-		Value:      content,
-		Repository: repository.ID,
-	}
-
-	hub.BroadcastMessage(&msg)
-
-	if !isOk {
-		controller.modifyRepositoryStatus(repository, "verification-failed")
-	}
 }
 
 // IdenfityRepository requests an identification

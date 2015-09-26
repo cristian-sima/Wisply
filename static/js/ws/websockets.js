@@ -40,9 +40,18 @@ var Websockets = function () {
         })();
 
 
+        var message = (function () {
+          var i = copyInfo;
+            return function (evt) {
+              console.log('message received')
+              i.onMessage(evt);
+            };
+        })();
+
         this.value.onopen = open;
         this.value.onclose = error;
         this.value.onerror = error;
+        this.value.onmessage = message;
         this.status = "wait";
     };
     Connection.prototype =

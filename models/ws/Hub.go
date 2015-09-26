@@ -43,6 +43,18 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 	return connection
 }
 
+func (hub *Hub) SendMessage(message *Message, connection *Connection) {
+	fmt.Println("--> I send the next message to one connection: ")
+	fmt.Println(message)
+	jsonMsg, _ := json.Marshal(&message)
+	select {
+	case connection.send <- jsonMsg:
+	default:
+		close(connection.send)
+		delete(hub.connections, connection)
+	}
+}
+
 func (hub *Hub) BroadcastMessage(message *Message) {
 	fmt.Println("--> I broadcast this message: ")
 	fmt.Println(message)

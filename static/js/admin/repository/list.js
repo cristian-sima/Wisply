@@ -155,8 +155,7 @@ var Repositories = function () {
       e.preventDefault();
       var instance,
       id,
-      xsrf,
-      repository;
+      xsrf;
       instance = $(this);
       id = instance.data("id");
       xsrf = wisply.getXSRF();
@@ -170,11 +169,16 @@ var Repositories = function () {
   /**
   * The constructor activates the listeners
   * @memberof Repositories
-  * @class Manager
-  * @classdesc It encapsulets the functionality for the repositories
+  * @class GUI
+  * @classdesc It encapsulets the GUI functionality
   */
   var GUI = function GUI() {
   };
+  /**
+   * It returns the HTML span for a status
+   * @param  {string} status The status of the repository
+   * @return {string} The HTML code for the status
+   */
   GUI.getStatusColor = function (status) {
     var html = "",
         label = "";
@@ -202,15 +206,15 @@ var Repositories = function () {
     html += '<span class="label label-' + label + '">' + status + '</span>';
     return html;
   };
-
-    GUI.activateActionListeners = function() {
-      $(".repositories-init-harvest").click(initRepository);
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-    };
-
-
+  /**
+   * It activates all the listeners for the actions
+   */
+  GUI.activateActionListeners = function() {
+    $(".repositories-init-harvest").click(initRepository);
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  };
   return {
     Repository: Repository,
     Manager: Manager,

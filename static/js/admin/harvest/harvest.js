@@ -1,19 +1,21 @@
 /* globals $, Websockets, server*/
 /**
- * @file Encapsulates the functionality for managing repositories
+ * @file Encapsulates the functionality for harvest process.
  * @author Cristian Sima
  */
+// It has a history
+var harvestHistory = {};
 /**
  * @namespace Harvest
  */
-var harvestHistory = {};
-var Harvest = function () {
+var Harvest = function() {
 	'use strict';
 	/**
 	 * Creates an empty history
 	 * @memberof Harvest
 	 * @class History
 	 * @classdesc It holds a history of events
+	 * @param {function} The function which is called when an event is added to history
 	 */
 	var History = function History(callbackUpdate) {
 		this.data = [];
@@ -23,24 +25,24 @@ var Harvest = function () {
 		/** @lends Harvest.History */
 		{
 			/**
-			 * It adds a log message
+			 * It logs an event
 			 * @param [string] content The content of the event
 			 */
-			log: function (content) {
+			log: function(content) {
 				this.add(content, "LOG");
 			},
 			/**
 			 * It adds an error message
 			 * @param [string] content The content of the message
 			 */
-			logError: function (content) {
+			logError: function(content) {
 				this.add(content, "ERROR");
 			},
 			/**
 			 * It adds a warning message
 			 * @param [string] content The content of the message
 			 */
-			logWarning: function (content) {
+			logWarning: function(content) {
 				this.add(content, "WARN");
 			},
 			/**
@@ -49,7 +51,7 @@ var Harvest = function () {
 			 * @param {string} content The content of the message
 			 * @param {string} type    The type of the message. It can be "LOG", "ERROR" or "WARN"
 			 */
-			add: function (content, type) {
+			add: function(content, type) {
 				var datetime;
 				/**
 				 * It returns the date in a human readable form
@@ -74,7 +76,7 @@ var Harvest = function () {
 			 * It returns the history in HTML format
 			 * @return [string] The history in HTML format
 			 */
-			getHTML: function () {
+			getHTML: function() {
 				/**
 				 * It creates the HTML header of the table
 				 * @return {string} The HTMl header of the table
@@ -101,18 +103,18 @@ var Harvest = function () {
 						var textClass = "",
 							content = "";
 						switch (type) {
-						case "LOG":
-							textClass = "";
-							content = "Event";
-							break;
-						case "ERROR":
-							textClass = "text-danger";
-							content = "Error";
-							break;
-						case "WARN":
-							textClass = "text-warning";
-							content = "Warning";
-							break;
+							case "LOG":
+								textClass = "";
+								content = "Event";
+								break;
+							case "ERROR":
+								textClass = "text-danger";
+								content = "Error";
+								break;
+							case "WARN":
+								textClass = "text-warning";
+								content = "Warning";
+								break;
 						}
 						return "<span class='" + textClass + "'>" + content + "</span>";
 					}
@@ -137,11 +139,11 @@ var Harvest = function () {
 			}
 		};
 	/**
-	 * The constructor creates the history, page and stage manager
+	 * The constructor creates the connection
 	 * @memberof Harvest
-	 * @class Manager
-	 * @classdesc It contains references to the Page object, StageManager and History
-	 * @param [Repository] repository A reference to the repository
+	 * @class HarvestConnection
+	 * @classdesc It is a middleware between the harvest manager and the web sockets connection
+	 * @param [Repository] manager A reference to the harvest manager
 	 */
 	var HarvestConnection = function HarvestConnection(manager) {
 		var instance = this;
@@ -149,26 +151,30 @@ var Harvest = function () {
 		var websockets = new Websockets(),
 			host = server.host + "/admin/harvest/init/ws";
 		this.connection = new websockets.Connection(host, this);
-		var open = (function () {
+		var open = (function() {
 			var conn = instance;
-			return function () {
+			return function() {
 				conn.manager.onOpen();
 			};
 		})();
-		var error = (function () {
+		var error = (function() {
 			var conn = instance;
-			return function () {
-				conn.manager.onError();
+			return function() {
+				conn.manager.onClose();
 			};
 		})();
 		this.onOpen = open;
 		this.onClose = error;
-		this.OnError = error;
+		this.onError = error;
 	};
 	HarvestConnection.prototype =
-		/** @lends Harvest.Manager */
+		/** @lends Harvest.HarvestConnection */
 		{
-			onMessage: function (evt) {
+			/**
+			 * It is called when a message arrived from server. It logs in the history and tells the manager
+			 * @param  {object} evt The web socket event
+			 */
+			onMessage: function(evt) {
 				var message = JSON.parse(evt.data),
 					description = "";
 				/**
@@ -204,14 +210,18 @@ var Harvest = function () {
 				harvestHistory.log(description);
 				this.manager.onMessage(message);
 			},
-			send: function (msg) {
-				this.connection.send(msg);
+			/**
+			 * It calls the websocket methdod to send the message
+			 * @param  {object} message An object which encapsulates the message
+			 */
+			send: function(message) {
+				this.connection.send(message);
 			},
 		};
 	/**
-	 * The constructor creates the history, page and stage manager
+	 * It saves the references
 	 * @memberof Harvest
-	 * @class Manager
+	 * @class HarvestConnection
 	 * @classdesc It contains references to the Page object, StageManager and History
 	 * @param [Repository] repository A reference to the repository
 	 */
@@ -227,29 +237,46 @@ var Harvest = function () {
 	Manager.prototype =
 		/** @lends Harvest.Manager */
 		{
-      start: function () {
-        this.connection = new HarvestConnection(this);
-      },
-      onOpen: function () {
-        console.log("Start live :) ");
-        this.stageManager.start();
-      },
-			onClose: function () {
+			/**
+			 * It creates the web socket connection
+			 */
+			start: function() {
+				this.connection = new HarvestConnection(this);
+			},
+			/**
+			 * It is called when the connection has been established. It starts the stage manager.
+			 */
+			onOpen: function() {
+				console.log("Start live :) ");
+				this.stageManager.start();
+			},
+			/**
+			 * It is called when the ws connection is closed. It stops the stage manager
+			 */
+			onClose: function() {
 				this.stageManager.stop();
 			},
-			onMessage: function (message) {
+			/**
+			 * It is called when a messsage has arrived from the server. It calls the decision method of decisionManager object
+			 * @param  {object} message The message from the server
+			 */
+			onMessage: function(message) {
 				this.decisionManager.decide(message);
 			},
-			send: function (msg) {
+			/**
+			 * It sends a message to the server using web sockets
+			 * @param  {object} message The object which encapsulates the message
+			 */
+			send: function(msg) {
 				this.connection.send(msg);
 			},
 		};
 	/**
-	 * The constructor creates the history, page and stage manager
+	 * Saves the stages
 	 * @memberof Harvest
-	 * @class Manager
-	 * @classdesc It contains references to the Page object, StageManager and History
-	 * @param [Repository] repository A reference to the repository
+	 * @class StageManager
+	 * @classdesc The stage manager encapsulates the functionality for managing the stages of the client
+	 * @param [array] stages An array with the stages
 	 */
 	var StageManager = function StageManager(stages) {
 		this.status = "stopped";
@@ -259,42 +286,46 @@ var Harvest = function () {
 		// stages
 	};
 	StageManager.prototype =
-		/** @lends Harvest.Manager */
+		/** @lends Harvest.StageManager */
 		{
+			/**
+			 * It sets a GUI for the manager. The GUI MUST implement theser methods: update, restart
+			 * @param [object] GUI A reference to the GUI object
+			 */
+			setGUI: function(GUI) {
+				this.GUI = GUI;
+			},
 			/**
 			 * It starts the manager. It calls the first stage
 			 */
-			setGUI: function (GUI) {
-				this.GUI = GUI;
-			},
-			start: function () {
+			start: function() {
 				this.performStage(this.startingStageId);
 			},
-      /**
-       * It sends a message to the server. It can be modified to send a custom message
-       * @param  {string} name  The name of the message
-       * @param  {object} value The value of the message
-       */
-      sendMessage: function(name, value) {
-        var msg = {
-          Name: name,
-          Value: value
-        };
-        this._send(msg);
-      },
-      /**
-       * It sends a message to the server. YOU ARE NOT ALLOWED TO MODIFY
-       * @private
-       * @param  {object} value The object of the message
-       */
-      _send: function(msg) {
-        this.manager.send(msg);
-      },
 			/**
-			 * It performs a stage
+			 * It sends a message to the server. It can be modified to send a custom message
+			 * @param  {string} name  The name of the message
+			 * @param  {object} value The value of the message
+			 */
+			sendMessage: function(name, value) {
+				var msg = {
+					Name: name,
+					Value: value
+				};
+				this._send(msg);
+			},
+			/**
+			 * It sends a message to the server. YOU ARE NOT ALLOWED TO MODIFY IT
+			 * @private
+			 * @param  {object} value The object of the message
+			 */
+			_send: function(msg) {
+				this.manager.send(msg);
+			},
+			/**
+			 * It performs a stage. Updates teh GUI and set the status "running"
 			 * @param  {number} id The id of the stage
 			 */
-			performStage: function (ID) {
+			performStage: function(ID) {
 				var stage = this.stages[ID];
 				harvestHistory.log("Starting stage <b>" + stage.name + "</b>...");
 				this.status = "running";
@@ -305,7 +336,7 @@ var Harvest = function () {
 			/**
 			 * It calls the next stage. If there are no stages, it calls firedEnd
 			 */
-			next: function () {
+			next: function() {
 				var nextStageID = this.currentStage.id + 1;
 				if (nextStageID >= this.stages.length) {
 					this.firedEnd();
@@ -316,18 +347,19 @@ var Harvest = function () {
 			/**
 			 * It forces the manager to stop. It forces the current stage to stop
 			 */
-			forceStop: function () {
+			stop: function() {
 				harvestHistory.log("The stage manager has been forced to stop.");
 				this.current = "Stopped";
-				this.state = "stopped";
-				if (this.stage.stop) {
-					this.stage.stop();
+				this.status = "stopped";
+				if (this.currentStage.stop) {
+					this.currentStage.stop();
 				}
+				this.updateGUI();
 			},
 			/**
 			 * Called when a stage has finished. It updates the page and calls the next stage
 			 */
-			firedStageFinished: function () {
+			firedStageFinished: function() {
 				if (this.state === "stopped" || this.state === "paused") {
 					harvestHistory.log("Imposible to continue!");
 				} else {
@@ -338,19 +370,18 @@ var Harvest = function () {
 			/**
 			 * It is called when all the stages has been called. It updates the page
 			 */
-			firedEnd: function () {
+			firedEnd: function() {
 				this.status = "finish";
 				this.updateGUI();
 				harvestHistory.log("The process has been finished!");
 			},
 			/**
-			 * It performs again a stage
+			 * It performs again a stage. If there is any GUI, it restarts it
 			 * @param  {number} number The id of the stage
 			 */
-			restart: function (number) {
+			restart: function(number) {
 				harvestHistory.log("Restarting from stage " + (number + 1) + "...");
-
-				if(this.GUI) {
+				if (this.GUI) {
 					this.GUI.restart();
 				}
 				this.performStage(number);
@@ -358,35 +389,44 @@ var Harvest = function () {
 			/**
 			 * It pauses the manager
 			 */
-			pause: function () {
+			pause: function() {
 				this.status = "paused";
 				this.updateGUI();
 			},
-			updateGUI: function () {
+			/**
+			 * It the manager has a GUI, it calls the method update of GUI
+			 */
+			updateGUI: function() {
 				if (this.GUI) {
 					this.GUI.update();
 				}
 			},
-      getCurrentStageID: function() {
-          if(this.status ==="finished") {
-            return this.stages.length;
-          }
-          if(!this.currentStage) {
-            return "NOT STARTED";
-          }
-          return this.currentStage.id;
-      },
-			getCurrentProcent: function () {
+			/**
+			 * It returns the id of current stage. If there is no current stage, it returns "NOT STARTED"
+			 */
+			getCurrentStageID: function() {
+				if (this.status === "finished") {
+					return this.stages.length;
+				}
+				if (!this.currentStage) {
+					return "NOT STARTED";
+				}
+				return this.currentStage.id;
+			},
+			/**
+			 * It returns the percent of actions done
+			 * @return [number] The percent of actions done
+			 */
+			getCurrentProcent: function() {
 				var current = this.getCurrentStageID(),
-        percent, total;
-
-        if(current === "NOT STARTED") {
-          percent = 0;
-        } else {
+					percent, total;
+				if (current === "NOT STARTED") {
+					percent = 0;
+				} else {
 					total = this.stages.length;
 					percent = 0;
-				percent = (current) / total * 100;
-      }
+					percent = (current) / total * 100;
+				}
 				return percent;
 			}
 		};
@@ -396,7 +436,7 @@ var Harvest = function () {
 		StageManager: StageManager,
 	};
 };
-$(document).ready(function () {
+$(document).ready(function() {
 	"use strict";
 	var module = new Harvest();
 	harvestHistory = new module.History();

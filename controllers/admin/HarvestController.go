@@ -1,4 +1,4 @@
-package controllers
+package admin
 
 import (
 	"fmt"
@@ -16,13 +16,13 @@ func init() {
 	go hub.Run()
 }
 
-// HarvestController It manages the operations for repository (list, delete, add)
+// HarvestController manages the operations for repository (list, delete, add)
 type HarvestController struct {
-	AdminController
+	Controller
 	Model repository.Model
 }
 
-// InitWebsocketConnection Initiats the websocket connection
+// InitWebsocketConnection initiats the websocket connection
 func (controller *HarvestController) InitWebsocketConnection() {
 	controller.TplNames = "site/harvest/init.tpl"
 	connection := hub.CreateConnection(controller.Ctx.ResponseWriter, controller.Ctx.Request, controller)

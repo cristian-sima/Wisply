@@ -82,7 +82,7 @@ func (remote *OAIRepository) validate() {
 	request.Harvest(func(record *oai.Response) {
 		msg := Message{
 			Name:  "verification-finished",
-			Value: "failed",
+			Value: "succeeded",
 		}
 		remote.changeStatus("verified")
 		remote.notify(&msg)

@@ -1,5 +1,5 @@
-// Package controllers contains all the controllers of the application
-package controllers
+// Package admin contains all the controllers of the application
+package admin
 
 import (
 	"strings"
@@ -7,22 +7,22 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// AccountController It manages the operations with the accounts (such as delete, modify type, list all)
+// AccountController manages the operations with the accounts (such as delete, modify type, list all)
 // It inherits the AdminController, thus an administrator account is required
 type AccountController struct {
-	AdminController
+	Controller
 	model auth.Model
 }
 
-// ListAccounts It lists all the Wisply accounts
-func (controller *AccountController) ListAccounts() {
+// List lists all the Wisply accounts
+func (controller *AccountController) List() {
 	accounts := controller.model.GetAllAccounts()
 	controller.Data["accounts"] = accounts
 	controller.TplNames = "site/account/list.tpl"
 	controller.Layout = "site/admin.tpl"
 }
 
-// Modify It shows the form to modify the type of an account
+// Modify shows the form to modify the type of an account
 // There must be provided a paramater "id" which is the id of the account
 func (controller *AccountController) Modify() {
 	var id string
@@ -35,7 +35,7 @@ func (controller *AccountController) Modify() {
 	}
 }
 
-// Update It modifies the type of the account given by parameter id
+// Update modifies the type of the account given by parameter id
 func (controller *AccountController) Update() {
 	accountID := controller.Ctx.Input.Param(":id")
 	newType := strings.TrimSpace(controller.GetString("modify-administrator"))
@@ -52,7 +52,7 @@ func (controller *AccountController) Update() {
 	}
 }
 
-// Delete It deletes the account given by parameter id
+// Delete deletes the account given by parameter id
 func (controller *AccountController) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
@@ -69,7 +69,7 @@ func (controller *AccountController) Delete() {
 	}
 }
 
-// It shows the form to modify an account
+// showModifyForm shows the form to modify an account
 func (controller *AccountController) showModifyForm(account *auth.Account) {
 	controller.GenerateXSRF()
 	controller.Data["accountName"] = account.Name

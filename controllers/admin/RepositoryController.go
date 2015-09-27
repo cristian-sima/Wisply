@@ -1,4 +1,4 @@
-package controllers
+package admin
 
 import (
 	"strings"
@@ -6,14 +6,14 @@ import (
 	RepositoryModel "github.com/cristian-sima/Wisply/models/repository"
 )
 
-// RepositoryController It manages the operations for repositories (list, delete, add)
+// RepositoryController manages the operations for repositories (list, delete, add)
 type RepositoryController struct {
-	AdminController
+	Controller
 	model RepositoryModel.Model
 }
 
-// ListRepositories It shows all the repositories
-func (controller *RepositoryController) ListRepositories() {
+// List shows all the repositories
+func (controller *RepositoryController) List() {
 	var exists bool
 	list := controller.model.GetAll()
 	exists = (len(list) != 0)
@@ -24,13 +24,13 @@ func (controller *RepositoryController) ListRepositories() {
 	controller.Layout = "site/admin.tpl"
 }
 
-// AddNewRepository It shows the form to add a new repository
-func (controller *RepositoryController) AddNewRepository() {
+// Add shows the form to add a new repository
+func (controller *RepositoryController) Add() {
 	controller.showAddForm()
 }
 
-// InsertRepository It inserts a repository in the database
-func (controller *RepositoryController) InsertRepository() {
+// Insert inserts a repository in the database
+func (controller *RepositoryController) Insert() {
 
 	repositoryDetails := make(map[string]interface{})
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
@@ -45,7 +45,7 @@ func (controller *RepositoryController) InsertRepository() {
 	}
 }
 
-// Modify It shows the form to modify a repository's details
+// Modify shows the form to modify a repository's details
 func (controller *RepositoryController) Modify() {
 
 	var ID string
@@ -65,7 +65,7 @@ func (controller *RepositoryController) Modify() {
 	}
 }
 
-// Update It updates a repository in the database
+// Update updates a repository in the database
 func (controller *RepositoryController) Update() {
 
 	var ID string
@@ -89,7 +89,7 @@ func (controller *RepositoryController) Update() {
 	}
 }
 
-// Delete It deletes the repository specified by parameter id
+// Delete deletes the repository specified by parameter id
 func (controller *RepositoryController) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")

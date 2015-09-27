@@ -1,4 +1,4 @@
-package controllers
+package public
 
 import (
 	"strconv"
@@ -7,19 +7,19 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// AuthController It inherits the WisplyController
+// AuthController inherits the WisplyController
 // It manages the operations with the authentication
 type AuthController struct {
-	WisplyController
+	Controller
 	Model auth.Model
 }
 
-// Prepare It calls the WisplyController Prepare method
+// Prepare calls the WisplyController Prepare method
 func (controller *AuthController) Prepare() {
 	controller.WisplyController.Prepare()
 }
 
-// ShowLoginForm It shows the login form
+// ShowLoginForm shows the login form
 func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {
 		controller.Redirect("/", 302)
@@ -30,20 +30,20 @@ func (controller *AuthController) ShowLoginForm() {
 	}
 }
 
-// ShowRegisterForm It shows the form to register a new account
+// ShowRegisterForm shows the form to register a new account
 func (controller *AuthController) ShowRegisterForm() {
 	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
 }
 
-// It shows a form indicated by the parameter name. It can be "login" or "register"
+// showForm shows a form indicated by the parameter name. It can be "login" or "register"
 func (controller *AuthController) showForm(name string) {
 	controller.GenerateXSRF()
 	controller.TplNames = "site/auth/" + name + ".tpl"
 	controller.Layout = "site/layout.tpl"
 }
 
-// CreateNewAccount It checks if the password and the confirmation are the same
+// CreateNewAccount checks if the password and the confirmation are the same
 // If so it sends the details of the user to processRegisterRequest
 // The parameters should be: register-name, register-password, register-email and register-password-confirm
 func (controller *AuthController) CreateNewAccount() {
@@ -63,7 +63,6 @@ func (controller *AuthController) CreateNewAccount() {
 	}
 }
 
-// It
 func (controller *AuthController) processRegisterRequest(userDetails map[string]interface{}) {
 
 	register := auth.Register{}
@@ -76,7 +75,7 @@ func (controller *AuthController) processRegisterRequest(userDetails map[string]
 
 }
 
-// LoginAccount It checks if the details provided are good and it logins the account
+// LoginAccount checks if the details provided are good and it logins the account
 func (controller *AuthController) LoginAccount() {
 
 	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
@@ -99,34 +98,33 @@ func (controller *AuthController) LoginAccount() {
 	}
 }
 
-// connectAccount It creates a session for the account and redirects
+// connectAccount creates a session for the account and redirects
 func (controller *AuthController) connectAccount(account *auth.Account, sendMeAddress string) {
 	controller.saveLoginDetails(account)
 	controller.safeRedilectAccount(sendMeAddress)
 }
 
-// saveLoginDetails It creates a new session for the account
+// saveLoginDetails creates a new session for the account
 func (controller *AuthController) saveLoginDetails(account *auth.Account) {
 	accountID := strconv.Itoa(account.ID)
 	controller.SetSession("account-id", accountID)
 }
 
-// rememberConnection It remember the account by using a connection cookie
+// rememberConnection remembers the account by using a connection cookie
 func (controller *AuthController) rememberConnection(account *auth.Account) {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookie := account.GenerateConnectionCookie()
-	controller.deleteConnectionCookie()
+	controller.DeleteConnectionCookie()
 	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 
-// safeRedilectAccount It gets the safe address to redirect the account and redirects
+// safeRedilectAccount gets the safe address to redirect the account and redirects
 func (controller *AuthController) safeRedilectAccount(sendMe string) {
 	var safeAddress string
 	safeAddress = controller.getSafeURL(sendMe)
 	controller.Redirect(safeAddress, 302)
 }
 
-// getSafeURL It
 func (controller *AuthController) getSafeURL(urlToTest string) string {
 	var safeURL string
 	if urlToTest == "" || urlToTest == "/auth/login/" || urlToTest == "/auth/login" {
@@ -150,7 +148,7 @@ func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
 // Logout It logs out the account
 func (controller *AuthController) Logout() {
 	controller.distroySession()
-	controller.deleteConnectionCookie()
+	controller.DeleteConnectionCookie()
 	controller.Redirect("/", 200)
 }
 

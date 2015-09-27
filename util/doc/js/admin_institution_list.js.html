@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: admin/repository/list.js</title>
+    <title>JSDoc: Source: admin/institution/list.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: admin/repository/list.js</h1>
+    <h1 class="page-title">Source: admin/institution/list.js</h1>
 
     
 
@@ -29,41 +29,39 @@
             <pre class="prettyprint source linenums"><code>/* global $, wisply */
 
 /**
-* @file Encapsulates the functionality for managing the repositories
+* @file Encapsulates the functionality for managing the institutions
 * @author Cristian Sima
 */
 
-
 /**
-* @namespace Repositories
+* @namespace Institutions
 */
-var Repositories = function () {
+var Institutions = function () {
   'use strict';
 
   /**
   * The constructor does nothing important
-  * @class Repository
-  * @memberof Repositories
-  * @classdesc It represents a repository
-  * @param {object} info It contains the information regarding the repository (id, name and url, status)
+  * @class Institution
+  * @memberof Institutions
+  * @classdesc It represents a institution
+  * @param {object} info It contains the information regarding the institution (id, name and web address)
   */
-  var Repository = function Repository(info) {
+  var Institution = function Institution(info) {
     this.id = info.id;
     this.name = info.name;
     this.url = info.url;
-    this.status = info.status;
   };
 
   /**
   * The constructor activates the listeners
-  * @memberof Repositories
+  * @memberof Institutions
   * @class Manager
-  * @classdesc It encapsulets the functionality for the repositories
+  * @classdesc It encapsulets the functionality for the institutions
   */
   var Manager = function Manager() {
   };
   Manager.prototype =
-  /** @lends Repositories.Manager */
+  /** @lends Institutions.Manager */
   {
     /**
     * It activates the listeners
@@ -72,28 +70,28 @@ var Repositories = function () {
       this.activateListeners();
     },
     /**
-    * It activates the listener for deleting a repository
-    * @fires RepositoriesManager#confirmDelete
+    * It activates the listener for deleting a institution
+    * @fires InstitutionsManager#confirmDelete
     */
     activateListeners: function () {
-      $(".deleteRepositoryButton").click(confirmDelete);
+      $(".deleteInstitutionButton").click(confirmDelete);
       GUI.activateActionListeners();
     },
     /**
-    * It is called when the user wants to delete a repository. It asks for confirmation
-    * @param  {Repository} repository The reference to the repository object
+    * It is called when the user wants to delete a institution. It asks for confirmation
+    * @param  {Institution} institution The reference to the institution object
     */
-    confirmDelete: function (repository) {
-      var msg = this.getDialogMessage(repository);
+    confirmDelete: function (institution) {
+      var msg = this.getDialogMessage(institution);
       wisply.message.dialog(msg);
     },
     /**
     * It returns the object which contain the arguments for the confirmation dialog
-    * @param  {Repository} repository The repository object
+    * @param  {Institution} institution The institution object
     * @return {Object}        The arguements for dialog
     * @see http://bootboxjs.com/
     */
-    getDialogMessage: function (repository) {
+    getDialogMessage: function (institution) {
       var buttons,
       cancelButton,
       msg,
@@ -110,7 +108,7 @@ var Repositories = function () {
         label: "Delete",
         className: "btn-primary",
         callback: function () {
-          wisply.repositoriesManager.delete(repository);
+          wisply.institutionsManager.delete(institution);
         }
       };
       buttons = {
@@ -119,26 +117,26 @@ var Repositories = function () {
       };
       msg = {
         title: "Please confirm!",
-        message: "The repository &lt;b>" + repository.name + "&lt;/b> will be permanently removed. Are you sure?",
+        message: "The institution &lt;b>" + institution.name + "&lt;/b> will be permanently removed. Are you sure?",
         onEscape: true,
         buttons: buttons
       };
       return msg;
     },
     /**
-    * It delets a repository
-    * @param  {Repository} repository The repository object
+    * It delets a institution
+    * @param  {Institution} institution The institution object
     */
-    delete: function (repository) {
+    delete: function (institution) {
       var request,
       successCallback,
       errorCallback;
 
       /**
-      * The callback called when the repository has been deleted. It shows a message and reloads the page in 2 seconds
+      * The callback called when the institution has been deleted. It shows a message and reloads the page in 2 seconds
       */
       successCallback =  function () {
-        wisply.message.showSuccess("The repository has been removed! Refreshing page...");
+        wisply.message.showSuccess("The institution has been removed! Refreshing page...");
         wisply.reloadPage(2000);
       };
 
@@ -150,7 +148,7 @@ var Repositories = function () {
       };
 
       request = {
-        "url": '/admin/repositories/delete/' + repository.id,
+        "url": '/admin/institutions/delete/' + institution.id,
         "success": successCallback,
         "error": errorCallback
       };
@@ -159,8 +157,8 @@ var Repositories = function () {
   };
 
   /**
-  * It is called when the user clicks the delete button. It creates the repository button and asks for confirmation
-  * @fires RepositoriesManager#confirmDelete()
+  * It is called when the user clicks the delete button. It creates the institution button and asks for confirmation
+  * @fires InstitutionsManager#confirmDelete()
   * @param  {event} e The event generated
   */
   function confirmDelete(e) {
@@ -168,18 +166,18 @@ var Repositories = function () {
     var instance,
     name,
     id,
-    repository;
+    institution;
     instance = $(this);
     id = instance.data("id");
     name = instance.data("name");
-    repository = new Repository({
+    institution = new Institution({
       id: id,
       name: name
     });
-    wisply.repositoriesManager.confirmDelete(repository);
+    wisply.institutionsManager.confirmDelete(institution);
   }
 
-  function initRepository(e) {
+  function initInstitution(e) {
       e.preventDefault();
       var instance,
       id,
@@ -196,65 +194,33 @@ var Repositories = function () {
 
   /**
   * The constructor activates the listeners
-  * @memberof Repositories
+  * @memberof Institutions
   * @class GUI
   * @classdesc It encapsulets the GUI functionality
   */
   var GUI = function GUI() {
   };
   /**
-   * It returns the HTML span for a status
-   * @param  {string} status The status of the repository
-   * @return {string} The HTML code for the status
-   */
-  GUI.getStatusColor = function (status) {
-    var html = "",
-        label = "";
-    switch (status) {
-    case "unverified":
-      label = "info";
-        break;
-    case "problems":
-    case "verification-failed":
-      label = "danger";
-        break;
-    case "upgrading":
-    case "verifying":
-    case "initializing":
-      label = "warning";
-        break;
-    case "ok":
-    case "verified":
-      label = "success";
-        break;
-    default:
-      console.log("The status [" + status + "] is not a valid one");
-      break;
-    }
-    html += '&lt;span class="label label-' + label + '">' + status + '&lt;/span>';
-    return html;
-  };
-  /**
    * It activates all the listeners for the actions
    */
   GUI.activateActionListeners = function() {
-    $(".repositories-init-harvest").click(initRepository);
+    $(".institutions-init-harvest").click(initInstitution);
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });
   };
   return {
-    Repository: Repository,
+    Institution: Institution,
     Manager: Manager,
     GUI: GUI
   };
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Repositories();
-  wisply.repositoriesModule = module;
-  wisply.repositoriesManager = new module.Manager();
-  wisply.repositoriesManager.init();
+  var module = new Institutions();
+  wisply.institutionsModule = module;
+  wisply.institutionsManager = new module.Manager();
+  wisply.institutionsManager.init();
 });
 </code></pre>
         </article>

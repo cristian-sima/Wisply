@@ -24,7 +24,7 @@ type HarvestController struct {
 
 // InitWebsocketConnection initiats the websocket connection
 func (controller *HarvestController) InitWebsocketConnection() {
-	controller.TplNames = "site/harvest/init.tpl"
+	controller.TplNames = "site/admin/harvest/init.tpl"
 	connection := hub.CreateConnection(controller.Ctx.ResponseWriter, controller.Ctx.Request, controller)
 	hub.Register <- connection
 	go connection.WritePump()
@@ -226,6 +226,5 @@ func (controller *HarvestController) ShowPanel() {
 	}
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host
-	controller.TplNames = "site/harvest/init.tpl"
-	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/admin/harvest/init.tpl"
 }

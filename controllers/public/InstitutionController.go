@@ -1,10 +1,10 @@
-package admin
+package public
 
 import "strings"
 
 import InstitutionModel "github.com/cristian-sima/Wisply/models/institution"
 
-// InstitutionController manages the operations for institutions
+// InstitutionController managers the operations for displaying
 type InstitutionController struct {
 	Controller
 	model InstitutionModel.Model
@@ -18,7 +18,8 @@ func (controller *InstitutionController) List() {
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
-	controller.TplNames = "site/admin/institution/list.tpl"
+	controller.TplNames = "site/public/institution/list.tpl"
+	controller.Layout = "site/public-layout.tpl"
 }
 
 // Add shows the form to add an institution
@@ -121,5 +122,6 @@ func (controller *InstitutionController) showForm(action string, legend string) 
 	controller.Data["legend"] = legend
 	controller.Data["actionURL"] = ""
 	controller.Data["actionType"] = "POST"
-	controller.TplNames = "site/admin/institution/form.tpl"
+	controller.Layout = "site/public-layout.tpl"
+	controller.TplNames = "site/public/institution/form.tpl"
 }

@@ -60,8 +60,8 @@ func (controller *StaticController) ShowPrivacyPolicy() {
 	controller.IndicateLastModification(1442660323)
 }
 
-// ShowTermsPage shows the privacy policy of the website
-func (controller *StaticController) ShowTermsPage() {
+// ShowTerms shows the privacy policy of the website
+func (controller *StaticController) ShowTerms() {
 	pageName := "terms-and-conditions"
 	controller.showStaticPage(pageName)
 
@@ -79,12 +79,12 @@ func (controller *StaticController) ShowCookiesPolicy() {
 }
 
 func (controller *StaticController) showStaticPage(pageName string) {
-	controller.Layout = "site/layout.tpl"
-	controller.TplNames = "site/static/" + pageName + ".tpl"
+	controller.Layout = "site/public-layout.tpl"
+	controller.TplNames = "site/public/static/" + pageName + ".tpl"
 }
 
 // ShowSample shows the sample page. This contains visual elements.
 // It is used by developers
 func (controller *StaticController) ShowSample() {
-	controller.TplNames = "site/static/sample.tpl"
+	controller.TplNames = "site/public/static/sample.tpl"
 }

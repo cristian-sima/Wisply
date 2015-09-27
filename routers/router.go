@@ -14,11 +14,10 @@ func init() {
 	beego.Router("/webscience", &public.StaticController{}, "*:ShowWebscience")
 	beego.Router("/sample", &public.StaticController{}, "*:ShowSample")
 	beego.Router("/accessibility", &public.StaticController{}, "*:ShowAccessibility")
-
 	beego.Router("/help", &public.StaticController{}, "*:ShowHelp")
 	beego.Router("/privacy", &public.StaticController{}, "*:ShowPrivacyPolicy")
 	beego.Router("/cookies", &public.StaticController{}, "*:ShowCookiesPolicy")
-	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTermsPage")
+	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTerms")
 
 	// ----------------------------- Authentification --------------------------------------
 

@@ -20,8 +20,7 @@ func (controller *RepositoryController) List() {
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
-	controller.TplNames = "site/repository/list.tpl"
-	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/admin/repository/list.tpl"
 }
 
 // Add shows the form to add a new repository
@@ -124,6 +123,5 @@ func (controller *RepositoryController) showForm(action string, legend string) {
 	controller.Data["legend"] = legend
 	controller.Data["actionURL"] = ""
 	controller.Data["actionType"] = "POST"
-	controller.Layout = "site/admin.tpl"
-	controller.TplNames = "site/repository/form.tpl"
+	controller.TplNames = "site/admin/repository/form.tpl"
 }

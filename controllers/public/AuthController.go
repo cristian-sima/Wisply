@@ -39,8 +39,8 @@ func (controller *AuthController) ShowRegisterForm() {
 // showForm shows a form indicated by the parameter name. It can be "login" or "register"
 func (controller *AuthController) showForm(name string) {
 	controller.GenerateXSRF()
-	controller.TplNames = "site/auth/" + name + ".tpl"
-	controller.Layout = "site/layout.tpl"
+	controller.TplNames = "site/public/auth/" + name + ".tpl"
+	controller.Layout = "site/public-layout.tpl"
 }
 
 // CreateNewAccount checks if the password and the confirmation are the same

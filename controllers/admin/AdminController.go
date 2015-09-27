@@ -16,8 +16,7 @@ func (controller *Controller) DisplayDashboard() {
 	dashboard := model.NewDashboard()
 	controller.Data["numberOfAccounts"] = dashboard.Accounts
 	controller.Data["numberOfRepositories"] = dashboard.Repositories
-	controller.Layout = "site/admin.tpl"
-	controller.TplNames = "site/admin/dashboard.tpl"
+	controller.TplNames = "site/admin/admin/dashboard.tpl"
 }
 
 // Prepare redirects to a login page in case the account is not connected, else it loads the page
@@ -28,6 +27,11 @@ func (controller *Controller) Prepare() {
 	} else {
 		controller.initPage()
 	}
+	controller.loadLayout()
+}
+
+func (controller *Controller) loadLayout() {
+	controller.Layout = "site/admin-layout.tpl"
 }
 
 // initPage is called when an administrator is connected

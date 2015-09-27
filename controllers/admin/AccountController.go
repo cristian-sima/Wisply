@@ -18,8 +18,7 @@ type AccountController struct {
 func (controller *AccountController) List() {
 	accounts := controller.model.GetAllAccounts()
 	controller.Data["accounts"] = accounts
-	controller.TplNames = "site/account/list.tpl"
-	controller.Layout = "site/admin.tpl"
+	controller.TplNames = "site/admin/account/list.tpl"
 }
 
 // Modify shows the form to modify the type of an account
@@ -78,6 +77,5 @@ func (controller *AccountController) showModifyForm(account *auth.Account) {
 	} else {
 		controller.Data["isUser"] = true
 	}
-	controller.Layout = "site/admin.tpl"
-	controller.TplNames = "site/account/form.tpl"
+	controller.TplNames = "site/admin/account/form.tpl"
 }

@@ -22,8 +22,13 @@ func (controller *InstitutionController) List() {
 
 // ShowInstitution shows the details regarding an institution
 func (controller *InstitutionController) ShowInstitution() {
-	controller.Data["actionURL"] = ""
-	controller.Data["actionType"] = "POST"
-	controller.Layout = "site/public-layout.tpl"
-	controller.TplNames = "site/public/institution/form.tpl"
+	ID := controller.Ctx.Input.Param(":id")
+	institution, err := controller.model.NewInstitution(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["institution"] = institution
+		controller.Layout = "site/public-layout.tpl"
+		controller.TplNames = "site/public/institution/institution.tpl"
+	}
 }

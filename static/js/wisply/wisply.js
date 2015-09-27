@@ -215,6 +215,12 @@ var Wisply = function () {
       args.data._xsrf = this.getXSRF();
       $.ajax(args);
     },
+    /**
+     * It activates the bootstrap tooltips
+     */
+    activateTooltip: function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    },
     getXSRF : function() {
       var xsrf,
       xsrflist,

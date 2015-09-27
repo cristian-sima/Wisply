@@ -150,17 +150,17 @@ var Institutions = function () {
   }
 
   function initInstitution(e) {
-      e.preventDefault();
-      var instance,
-      id,
-      xsrf;
-      instance = $(this);
-      id = instance.data("id");
-      xsrf = wisply.getXSRF();
+    e.preventDefault();
+    var instance,
+    id,
+    xsrf;
+    instance = $(this);
+    id = instance.data("id");
+    xsrf = wisply.getXSRF();
 
-        $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
-          '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
-          '</form>').submit();
+    $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
+    '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
+    '</form>').submit();
 
   }
 
@@ -173,8 +173,8 @@ var Institutions = function () {
   var GUI = function GUI() {
   };
   /**
-   * It activates all the listeners for the actions
-   */
+  * It activates all the listeners for the actions
+  */
   GUI.activateActionListeners = function() {
     $(".institutions-init-harvest").click(initInstitution);
     $(function () {

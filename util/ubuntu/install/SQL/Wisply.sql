@@ -48,7 +48,7 @@ CREATE TABLE `account_token` (
   `timestamp` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=451 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=452 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,4 +132,4 @@ CREATE TABLE `repository_identifier` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-27 15:11:15
+-- Dump completed on 2015-09-27 16:02:58

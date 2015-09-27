@@ -15,11 +15,11 @@ type Model struct {
 // GetAll returns an array of Repository with all repositories
 func (model *Model) GetAll() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description, status FROM repository"
+	sql := "SELECT id, name, url, description, status, institution FROM repository"
 	rows, _ := database.Database.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution)
 		list = append(list, repository)
 	}
 	return list
@@ -47,9 +47,9 @@ func (model *Model) NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, name, url, description, status FROM repository WHERE id = ?"
+	sql := "SELECT id, name, url, description, status, institution FROM repository WHERE id = ?"
 	query, err := database.Database.Prepare(sql)
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status)
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}
@@ -70,9 +70,10 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)
 	url := repositoryDetails["url"].(string)
-	sql := "INSERT INTO `repository` (`name`, `description`, `url`) VALUES (?, ?, ?)"
+	institution := repositoryDetails["institution"].(string)
+	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`) VALUES (?, ?, ?, ?)"
 	query, err := database.Database.Prepare(sql)
-	query.Exec(name, description, url)
+	query.Exec(name, description, url, institution)
 	if err != nil {
 		problem.Message = "No repository like that"
 		return problem, errors.New("Error")

@@ -10,17 +10,33 @@
           </ul>
         </div>
         <div class="panel-body">
-          <section>
-              {{ .institution.URL }}
+          <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 text-center" >
+              <span class="glyphicon glyphicon-education institution-logo img-responsive "></span>
+              <div class="text-left">
+                <span class="text-muted">Address:</span> <a href="{{ .institution.URL }}">Web page</a>
+              </div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5" >
+              <div>
+                <h1>{{ .institution.Name }}</h2>
+                  <span class="text-muted">Institution</span>
+                </div>
+                <div>
+                  {{ .institution.Description}}
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4" >
+                  <!-- Repositories -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <style>
-  .institution-logo {
-    font-size: 5em;
-
-  }
-  </style>
-  <script src="/static/js/admin/institution/list.js"></script>
+    <style>
+    .institution-logo {
+      font-size: 13em;
+    }
+    </style>
+    <script src="/static/js/admin/institution/list.js"></script>

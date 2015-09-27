@@ -11,7 +11,7 @@ type InstitutionController struct {
 }
 
 // List shows all the institutions
-func (controller *InstitutionController) List() {
+func (controller InstitutionController) List() {
 	var exists bool
 	list := controller.model.GetAll()
 	exists = (len(list) != 0)

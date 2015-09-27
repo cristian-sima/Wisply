@@ -9,7 +9,8 @@ import (
 // RepositoryController manages the operations for repositories (list, delete, add)
 type RepositoryController struct {
 	Controller
-	model RepositoryModel.Model
+	model        RepositoryModel.Model
+	institutions InstitutionModel.Model
 }
 
 // List shows all the repositories
@@ -25,6 +26,7 @@ func (controller *RepositoryController) List() {
 
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
+	controller.Data["institutions"] = controller.institutions.GetAll()
 	controller.showAddForm()
 }
 
@@ -35,6 +37,7 @@ func (controller *RepositoryController) Insert() {
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
+	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
 
 	problems, err := controller.model.InsertNewRepository(repositoryDetails)
 	if err != nil {
@@ -74,6 +77,7 @@ func (controller *RepositoryController) Update() {
 
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
+	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
 
 	repository, err := controller.model.NewRepository(ID)
 	if err != nil {
@@ -110,6 +114,7 @@ func (controller *RepositoryController) showModifyForm(repository map[string]str
 	controller.Data["repositoryName"] = repository["Name"]
 	controller.Data["repositoryUrl"] = repository["Url"]
 	controller.Data["repositoryDescription"] = repository["Description"]
+	controller.Data["repositoryInstitution"] = repository["Institution"]
 	controller.showForm("Modify", "Modify this repository")
 }
 

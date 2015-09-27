@@ -9,10 +9,9 @@
           </ul>
         </div>
         <div class="panel-body">
-          <div class="well">
-            Wisply is proudly collection data from these prestigious institutions:<br />
-          </div>
-          <section>
+          <blockquote>
+            <p>Wisply is proudly collecting data from these prestigious institutions</p>
+          </blockquote>
             {{ if .anything }}
             <div class="row text-center">
               {{range $index, $institution := .institutions}}

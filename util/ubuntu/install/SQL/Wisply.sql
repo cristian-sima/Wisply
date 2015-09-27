@@ -48,7 +48,7 @@ CREATE TABLE `account_token` (
   `timestamp` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=447 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=451 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,6 +82,7 @@ CREATE TABLE `repository` (
   `description` varchar(255) NOT NULL,
   `url` varchar(2083) NOT NULL,
   `status` enum('unverified','verification-failed','ok','problems','verifying','updating','initializing','verified') NOT NULL,
+  `institution` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
@@ -131,4 +132,4 @@ CREATE TABLE `repository_identifier` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-27 13:31:59
+-- Dump completed on 2015-09-27 15:11:15

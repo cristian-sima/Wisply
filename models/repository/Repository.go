@@ -15,6 +15,7 @@ type Repository struct {
 	URL         string
 	Description string
 	Status      string
+	Institution int
 }
 
 // Delete removes the repository from database

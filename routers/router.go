@@ -73,7 +73,7 @@ func init() {
 	// ----------------------------- Institutions -------------------------------
 
 	adminInstitutionsNS := beego.NSNamespace("/institutions",
-		beego.NSRouter("", &admin.InstitutionController{}, "*:List"),
+		beego.NSRouter("", &admin.InstitutionController{}, "*:DisplayAll"),
 		beego.NSNamespace("/add",
 			beego.NSRouter("", &admin.InstitutionController{}, "GET:Add"),
 			beego.NSRouter("", &admin.InstitutionController{}, "POST:Insert"),

@@ -10,15 +10,15 @@ type InstitutionController struct {
 	model InstitutionModel.Model
 }
 
-// List shows all the institutions
-func (controller InstitutionController) List() {
+// DisplayAll shows all the institutions
+func (controller *InstitutionController) DisplayAll() {
 	var exists bool
 	list := controller.model.GetAll()
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
-	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/admin/institution/list.tpl"
+	controller.Layout = "site/admin-layout.tpl"
 }
 
 // Add shows the form to add an institution

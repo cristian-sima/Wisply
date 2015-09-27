@@ -6,6 +6,7 @@ import (
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
 	"github.com/cristian-sima/Wisply/models/database"
+	institution "github.com/cristian-sima/Wisply/models/institution"
 )
 
 // Model contains the main operations for repositories
@@ -61,6 +62,16 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 
 	problem := adapter.WisplyError{}
 
+	// check Institution
+
+	institutionModel := institution.Model{}
+	_, errInst := institutionModel.NewInstitution(repositoryDetails["institution"].(string))
+
+	if errInst != nil {
+		problem.Message = "This institution does not exist"
+		return problem, errors.New("Error")
+	}
+
 	result := hasValidInsertDetails(repositoryDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
@@ -70,10 +81,10 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)
 	url := repositoryDetails["url"].(string)
-	institution := repositoryDetails["institution"].(string)
+	institutionID := repositoryDetails["institution"].(string)
 	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`) VALUES (?, ?, ?, ?)"
 	query, err := database.Database.Prepare(sql)
-	query.Exec(name, description, url, institution)
+	query.Exec(name, description, url, institutionID)
 	if err != nil {
 		problem.Message = "No repository like that"
 		return problem, errors.New("Error")

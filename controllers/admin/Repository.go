@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"strings"
 
 	InstitutionModel "github.com/cristian-sima/Wisply/models/institution"
@@ -28,9 +27,7 @@ func (controller *RepositoryController) List() {
 
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
-	x := controller.institutions.GetAll()
-	fmt.Println(x)
-	controller.Data["institutions"] = x
+	controller.Data["institutions"] = controller.institutions.GetAll()
 	controller.showAddForm()
 }
 

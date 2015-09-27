@@ -23,7 +23,7 @@
                 <select class="form-control" name="repository-institution" id="repository-institution">
                     {{range $index, $institution := .institutions}}
                     {{$safe := $institution.Name|html}}
-                    <option id="{{ $institution.ID }}">{{ $safe }}</option>
+                    <option value="{{ $institution.ID }}">{{ $safe }}</option>
                     {{ end }}
                 </select>
               </div>
@@ -31,7 +31,7 @@
             <div class="form-group">
               <label for="repository-URL" class="col-lg-2 control-label">Base URL</label>
               <div class="col-lg-10">
-                <input type="url" value="{{.repositoryUrl}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="URL address" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+                <input type="url" value="{{.repositoryUrl}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
               </div>
             </div>
             {{ end }}

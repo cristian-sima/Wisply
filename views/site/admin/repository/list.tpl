@@ -9,8 +9,9 @@
   <div class="panel-body">
     <section>
       <h4>Options</h4>
-      <div class="btn-group">
+      <div class="btn-group-sm">
         <a href="/admin/repositories/add" class="btn btn-primary">Add repository</a>
+        <span id="harvest-history-button" class="btn btn-info hover">Live history</span>
       </div>
     </section>
     <br />
@@ -88,12 +89,34 @@
           {{end }}
         </tbody>
       </table>
+
+      <div id="harvest-history-container" class="modal fade">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">History</h4>
+                  </div>
+                  <div class="modal-body" id="harvest-history-element">
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
     </div>
     {{ else }}
     There are no repositories... :(
     {{ end }}
   </div>
 </div>
+
+
+
+
 <script>
 var server = {};
 server.host = {{ .host }};

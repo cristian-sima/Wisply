@@ -273,10 +273,26 @@ var Harvest = function() {
 					function getRepo(current, id) {
 						if (current === id) {
 							return "this repository";
+						} else if(id === 0) {
+								return "all repositories";
 						}
 						return "the repository number " + id;
 					}
-					return ("I received from server the socket <b>" + msg.Name + "</b>" + getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+
+					/**
+					 * It describes some actions
+					 * @param  {string} name The name of the message
+					 */
+					function getName(message) {
+						var toReturn = "";
+							toReturn += "<strong>" + message.Name + "</strong>";
+							if(message.Name === "status-changed") {
+							 	toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
+							}
+							return toReturn;
+					}
+
+					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);

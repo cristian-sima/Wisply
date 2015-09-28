@@ -2,7 +2,7 @@ package harvest
 
 // RemoteRepositoryInterface ... defines the method to be implemented by a standard (remote repository)
 type RemoteRepositoryInterface interface {
-	StartProcess()
+	Start()
 	SetManager(manager *Manager)
 }
 

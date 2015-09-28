@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,7 +15,7 @@ type Hub struct {
 	connections map[*Connection]bool
 
 	// Inbound messages from the connections.
-	broadcast chan []byte
+	broadcast chan *Message
 
 	// Register requests from the connections.
 	Register chan *Connection
@@ -23,7 +24,7 @@ type Hub struct {
 	Unregister chan *Connection
 }
 
-// CreateNewConnection creates a new ws connection
+// CreateConnection creates a new ws connection
 func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Request, controller WebController) *Connection {
 
 	ws, err := upgrader.Upgrade(response, request, nil)
@@ -43,23 +44,26 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 	return connection
 }
 
+// SendMessage sends a message to ONE connection
 func (hub *Hub) SendMessage(message *Message, connection *Connection) {
-	fmt.Println("--> Hub: I send the next message to one connection: ")
+	fmt.Println("--> Hub: I send to a single connection: ")
 	fmt.Println(message)
-	jsonMsg, _ := json.Marshal(&message)
-	select {
-	case connection.send <- jsonMsg:
-	default:
-		close(connection.send)
-		delete(hub.connections, connection)
-	}
+	hub.sendWebsocket(message, connection)
 }
 
+// BroadcastMessage sends a message to ALL the connection from the hub
 func (hub *Hub) BroadcastMessage(message *Message) {
-	fmt.Println("--> Hub: I broadcast this message: ")
+	fmt.Println("--> Hub: I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
 	fmt.Println(message)
-	jsonMsg, _ := json.Marshal(&message)
-	hub.broadcast <- jsonMsg
+	hub.broadcast <- message
+}
+
+// SendGroupMessage sends a message to a GROUP of connections
+func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
+	fmt.Println("--> Hub: I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
+	for _, connection := range group {
+		hub.sendWebsocket(message, connection)
+	}
 }
 
 // Run starts the hub
@@ -73,13 +77,19 @@ func (hub *Hub) Run() {
 			close(connection.send)
 		case message := <-hub.broadcast:
 			for connection := range hub.connections {
-				select {
-				case connection.send <- message:
-				default:
-					close(connection.send)
-					delete(hub.connections, connection)
-				}
+				hub.sendWebsocket(message, connection)
 			}
 		}
+	}
+}
+
+func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
+	ws, _ := json.Marshal(&message)
+	select {
+	case connection.send <- ws:
+		fmt.Println("go: websocket sent")
+	default:
+		close(connection.send)
+		delete(hub.connections, connection)
 	}
 }

@@ -13,7 +13,7 @@ type EPrintsRepository struct {
 }
 
 // StartProcess starts the process
-func (repository *EPrintsRepository) StartProcess() {
+func (repository *EPrintsRepository) Start() {
 	repository.notifyManager(&Message{
 		Value: "The process starts",
 	})
@@ -22,7 +22,7 @@ func (repository *EPrintsRepository) StartProcess() {
 
 // It receives local notifications
 func (repository *EPrintsRepository) notify(notification *Message) {
-	fmt.Println("<--> OAIRepository received notification ")
+	fmt.Println("<--> EPrintsRepository received notification ")
 	fmt.Println(notification)
 	switch notification.Name {
 	case "verification-finished":

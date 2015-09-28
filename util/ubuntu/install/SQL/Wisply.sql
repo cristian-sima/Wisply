@@ -48,7 +48,7 @@ CREATE TABLE `account_token` (
   `timestamp` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=452 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=461 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `institution` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,9 +83,10 @@ CREATE TABLE `repository` (
   `url` varchar(2083) NOT NULL,
   `status` enum('unverified','verification-failed','ok','problems','verifying','updating','initializing','verified') NOT NULL,
   `institution` int(11) NOT NULL,
+  `category` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,30 +98,30 @@ DROP TABLE IF EXISTS `repository_email`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `repository_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `address` varchar(25) NOT NULL,
+  `email` varchar(25) NOT NULL,
   `repository` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `repository_identifier`
+-- Table structure for table `repository_identification`
 --
 
-DROP TABLE IF EXISTS `repository_identifier`;
+DROP TABLE IF EXISTS `repository_identification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `repository_identifier` (
+CREATE TABLE `repository_identification` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `repository` int(11) NOT NULL,
   `protocol_version` varchar(10) NOT NULL,
-  `earliest_datestamp` int(30) NOT NULL,
+  `earliest_datestamp` varchar(30) NOT NULL,
   `delete_policy` enum('persistent','transient','no') NOT NULL,
   `granularity` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -132,4 +133,4 @@ CREATE TABLE `repository_identifier` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-27 16:02:58
+-- Dump completed on 2015-09-28 23:52:17

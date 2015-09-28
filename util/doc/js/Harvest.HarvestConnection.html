@@ -45,7 +45,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="HarvestConnection"><span class="type-signature"></span>new HarvestConnection<span class="signature">(Repository<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="HarvestConnection"><span class="type-signature"></span>new HarvestConnection<span class="signature">(string<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -90,7 +90,7 @@
 
         <tr>
             
-                <td class="name"><code>Repository</code></td>
+                <td class="name"><code>string</code></td>
             
 
             <td class="type">
@@ -111,7 +111,35 @@
 
             
 
-            <td class="description last">manager A reference to the harvest manager</td>
+            <td class="description last">id The id of the element where the history will be displayed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Harvest.History</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">history The reference to the gui</td>
         </tr>
 
     
@@ -152,7 +180,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line141">line 141</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -301,7 +329,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line177">line 177</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -432,7 +460,457 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line217">line 217</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line305">line 305</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="Harvest.html">Harvest</a>.</span>HarvestConnection</h2>
+        
+            <div class="class-description">It is a middleware between the harvest manager and the web sockets connection</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="HarvestConnection"><span class="type-signature"></span>new HarvestConnection<span class="signature">(Repository<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    The constructor creates the connection
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Repository</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">manager A reference to the harvest manager</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line213">line 213</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".onMessage"><span class="type-signature">(static) </span>onMessage<span class="signature">(evt)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It is called when a message arrived from server. It logs in the history and tells the manager
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>evt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The web socket event</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line249">line 249</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".send"><span class="type-signature">(static) </span>send<span class="signature">(message)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It calls the websocket methdod to send the message
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object which encapsulates the message</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -602,7 +1080,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line221">line 221</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line309">line 309</a>
     </li></ul></dd>
     
 
@@ -751,7 +1229,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line177">line 177</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -882,7 +1360,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line217">line 217</a>
+        <a href="admin_harvest_harvest.js.html">admin/harvest/harvest.js</a>, <a href="admin_harvest_harvest.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -930,7 +1408,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Sep 27 2015 16:02:55 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Sep 28 2015 23:52:15 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

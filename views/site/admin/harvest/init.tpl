@@ -5,7 +5,6 @@
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
       <li class="active">{{ .repository.Name }}</li>
-      <li class="active">Start</li>
     </ul>
   </div>
   <div class="panel-body">

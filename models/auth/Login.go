@@ -14,6 +14,8 @@ type Login struct {
 // Try It tries to log in the username
 func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyError, error) {
 
+	deleteOldTokens()
+
 	genericMessage := "There was a problem while login. We think the email or the password were not valid."
 
 	problem := adapter.WisplyError{}

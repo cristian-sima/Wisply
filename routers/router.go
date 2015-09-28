@@ -49,6 +49,13 @@ func init() {
 		beego.NSRouter("/:id", &public.InstitutionController{}, "GET:ShowInstitution"),
 	)
 
+	// public
+	// ----------------------------- Repositories -------------------------------
+
+	publicRepositoryNS := beego.NewNamespace("/repository",
+		beego.NSRouter("/:id", &public.RepositoryController{}, "GET:ShowRepository"),
+	)
+
 	// ----------------------------- ADMIN --------------------------------------
 
 	// admin
@@ -128,6 +135,7 @@ func init() {
 	// public
 	beego.AddNamespace(publicAuthNS)
 	beego.AddNamespace(publicInstitutionsNS)
+	beego.AddNamespace(publicRepositoryNS)
 
 	// admin
 	beego.AddNamespace(adminNS)

@@ -39,8 +39,9 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	return problem, err
 }
 
+// GetInstitution returns a reference to the institution which holds the repository
 func (repository *Repository) GetInstitution() *Institution {
-	institution, _ := NewInstitution(strconv.Itoa(repository.ID))
+	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))
 	return institution
 }
 
@@ -92,13 +93,14 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	return err
 }
 
-// AddResource adds a resource to the repository
-func (repository *Repository) AddResources(resource *Resource) error {
-	sql := "INSERT INTO `resource` (`name`) VALUES (?)"
-	query, err := database.Database.Prepare(sql)
-	query.Exec(resource.Name)
-	if err != nil {
-		return errors.New("Error")
-	}
-	return nil
+// GetIdentification returns the identification
+func (repository *Repository) GetIdentification() *Identification {
+
+	identification := &Identification{}
+
+	sql := "SELECT id, repository, protocol_version, earliest_datestamp, delete_policy, granularity FROM repository_identification WHERE repository = ?"
+	query, _ := database.Database.Prepare(sql)
+	query.QueryRow(repository.ID).Scan(&identification.ID, &identification.Repository, &identification.Protocol, &identification.EarliestDatestamp, &identification.RecordPolicy, &identification.Granularity)
+
+	return identification
 }

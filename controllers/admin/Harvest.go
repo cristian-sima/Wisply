@@ -136,7 +136,7 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 	fmt.Println(message)
 	if ok {
 		switch message.Name {
-		case "status-changed":
+		case "status-changed", "identification-details":
 			{
 				msg := ConvertToWebsocketMessage(message)
 				hub.BroadcastMessage(msg)
@@ -146,6 +146,10 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 			if message.Value == "failed" {
 				msg := ConvertToWebsocketMessage(message)
 				hub.SendGroupMessage(msg, process.Connections)
+				delete(CurrentProcesses, message.Repository)
+			}
+		case "delete-process":
+			{
 				delete(CurrentProcesses, message.Repository)
 			}
 			break
@@ -163,7 +167,7 @@ func ConvertToWebsocketMessage(old *harvest.Message) *ws.Message {
 	return newMessage
 }
 
-// GetCurrentProcess sends the current process on the server for a repository
+// GetProcess sends the current process on the server for a repository
 func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
 	processObject, _ := CurrentProcesses[message.Repository]
 	hub.SendMessage(&ws.Message{

@@ -55,7 +55,6 @@ var HarvestProcess = function() {
 		 * @param  {object} message The message from the server
 		 */
 		analyse: function(message) {
-			console.log(message)
 			if (message.Value !== null) {
 				this.initExistingProcess(message.Value);
 			} else {
@@ -126,13 +125,58 @@ var HarvestProcess = function() {
 		}
 	}, {
 		id: 4,
-		name: "Collecting records...",
+		name: "Identifying...",
 		/**
 		 * It saves the reference of manager
 		 * @param  {Harvest.StageManager} manager The reference to the stage manager
 		 */
 		perform: function(manager) {
 			this.manager = manager;
+		},
+		/**
+		 * It disables the possibility to modify the URL
+		 */
+		paint: function(data) {
+			/**
+			* It returns the HTML table for an object
+			* @param  {object} data The object
+			* @return {string} HTML table for the object's data
+			*/
+		 function getIdentification(data) {
+				 var html = "";
+				 html += '<ul class="list-group text-left">';
+				 for (var property in data) {
+						 if (data.hasOwnProperty(property)) {
+								 if (property === "Description") {
+										 continue;
+								 } else if (typeof data[property] === 'object') {
+										 html += '<li class="list-group-item"> ' + property;
+										 html += getIdentification(data[property]);
+										 html += '</li>';
+								 } else {
+										 html += "  <li class='list-group-item'>";
+										 html += property + ": <strong>" + data[property] + "</strong>";
+										 html += "</li>";
+								 }
+						 }
+				 }
+				 html += "</ul>";
+				 return html;
+		 }
+		 function drawBadges() {
+			 var text = '<div class="row text-center" id="repository-elements" style="display:none"><table class="table"><tbody><tr>';
+			 var records = '<td><div class="text-center col-xs-3 col-md-3">' +
+					 'Records<br />' +
+						 '<span class="badge" id="repository-elements-records">0</span>' +
+					'</div></td>';
+					text += records;
+					text += "</tr></tbody></table></div>";
+			 return text;
+		 }
+		 var html = "";
+		 html += drawBadges();
+		 html += getIdentification(data);
+		 this.manager.GUI.showCurrent(html);
 		}
 	}];
 	/**
@@ -158,6 +202,8 @@ var HarvestProcess = function() {
 							this.stage.GUI.updateRepositoryStatus();
 							if (message.Value === "verifying") {
 								this.stage.performStage(3);
+							} else if (message.Value === "initializing"){
+								this.stage.firedStageFinished();
 							}
 							break;
 						case "existing-process-on-server":
@@ -169,7 +215,13 @@ var HarvestProcess = function() {
 								this.stage.pause();
 								this.stage.stages[3].enableModifyURL();
 							}
+								this.stage.firedStageFinished();
+
 							break;
+						case "identification-details":
+								this.stage.stages[4].paint(message.Value);
+								this.stage.firedStageFinished();
+						break;
 					}
 				}
 			},
@@ -235,6 +287,7 @@ var HarvestProcess = function() {
 			 * It updates the list of current stages
 			 */
 			updateList: function() {
+				console.log("updae list")
 				var container = this.element.find("#stage-list"),
 					manager = this.manager,
 					current = manager.getCurrentStageID(),

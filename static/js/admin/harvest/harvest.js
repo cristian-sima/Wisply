@@ -405,7 +405,7 @@ var Harvest = function() {
 			 * It returns the id of current stage. If there is no current stage, it returns "NOT STARTED"
 			 */
 			getCurrentStageID: function() {
-				if (this.status === "finished") {
+				if (this.status === "finish") {
 					return this.stages.length;
 				}
 				if (!this.currentStage) {

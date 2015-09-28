@@ -35,23 +35,31 @@ func (manager *Manager) Notify(message *Message) {
 				manager.notifyController(message)
 			} else {
 				manager.log("The validation passed")
-				manager.log("I harvest the identification")
 				manager.changeLocalStatus("verified")
-				manager.changeLocalStatus("initializing")
-				manager.remote.HarvestIdentification()
+				manager.harvestIdentification()
 			}
 			break
 		}
 	}
 }
 
+func (manager *Manager) harvestIdentification() {
+	manager.log("I harvest the identification")
+	manager.changeLocalStatus("initializing")
+	manager.remote.HarvestIdentification()
+}
+
 // SaveIdentification receives the identification result and saves it in the local repository
 func (manager *Manager) SaveIdentification(result IdentificationResulter) {
 	manager.log("I received the identification.")
 	if !result.IsOk() {
-		manager.changeLocalStatus("problems")
+		manager.changeLocalStatus("verification-failed")
 		manager.log("Problems with identification")
 	} else {
+		manager.notifyController(&Message{
+			Name:  "identification-details",
+			Value: result.GetData(),
+		})
 		manager.log("The identification is ok")
 		manager.changeLocalStatus("ok")
 		manager.db.InsertIdentity(result.GetData())
@@ -62,6 +70,9 @@ func (manager *Manager) SaveIdentification(result IdentificationResulter) {
 // End receives the identification result and saves it in the local repository
 func (manager *Manager) End() {
 	manager.changeLocalStatus("unverified")
+	manager.notifyController(&Message{
+		Name: "delete-process",
+	})
 }
 
 func (manager *Manager) changeLocalStatus(newStatus string) {
@@ -76,6 +87,7 @@ func (manager *Manager) log(message string) {
 	fmt.Println("<-->  Harvest Manager: " + message)
 }
 
+// GetRepository returns the wisply repository
 func (manager *Manager) GetRepository() *repository.Repository {
 	return manager.local
 }

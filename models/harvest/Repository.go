@@ -16,7 +16,7 @@ type Controller interface {
 type Message struct {
 	Name       string
 	Content    string
-	Value      string
+	Value      interface{}
 	Repository int
 }
 

@@ -1,10 +1,6 @@
 package harvest
 
-import (
-	"fmt"
-
-	oai "github.com/cristian-sima/Wisply/models/oai"
-)
+import oai "github.com/cristian-sima/Wisply/models/oai"
 
 // EPrintsRepository encapsulates the functionality for a repository repository using OAI format
 type EPrintsRepository struct {
@@ -60,16 +56,16 @@ func (repository *EPrintsRepository) HarvestIdentification() {
 	})
 
 	request.Harvest(func(record *oai.Response) {
-		fmt.Println("The harvested record")
 		remoteIdentity := record.Identify
+
 		identify := OAIIdentification{
-			name:              remoteIdentity.RepositoryName,
-			url:               remoteIdentity.BaseURL,
-			protocol:          remoteIdentity.ProtocolVersion,
-			adminEmails:       remoteIdentity.AdminEmail,
-			earliestDatestamp: remoteIdentity.EarliestDatestamp,
-			recordPolicy:      remoteIdentity.DeletedRecord,
-			granularity:       remoteIdentity.Granularity,
+			Name:              remoteIdentity.RepositoryName,
+			URL:               remoteIdentity.BaseURL,
+			Protocol:          remoteIdentity.ProtocolVersion,
+			AdminEmails:       remoteIdentity.AdminEmail,
+			EarliestDatestamp: remoteIdentity.EarliestDatestamp,
+			RecordPolicy:      remoteIdentity.DeletedRecord,
+			Granularity:       remoteIdentity.Granularity,
 		}
 
 		result := OAIIdentificationResult{

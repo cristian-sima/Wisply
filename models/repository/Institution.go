@@ -1,4 +1,4 @@
-package institution
+package repository
 
 import (
 	"errors"
@@ -36,6 +36,19 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 	return problem, err
 }
 
+// GetRepositories returns the list of repositories
+func (institution *Institution) GetRepositories() []Repository {
+	var list []Repository
+	sql := "SELECT id, name, url, description, status, institution FROM repository WHERE institution = ?"
+	rows, _ := database.Database.Query(sql, institution.ID)
+	for rows.Next() {
+		repository := Repository{}
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution)
+		list = append(list, repository)
+	}
+	return list
+}
+
 func (institution *Institution) updateDatabase(institutionDetails map[string]interface{}) error {
 	name := institutionDetails["name"].(string)
 	description := institutionDetails["description"].(string)
@@ -46,22 +59,5 @@ func (institution *Institution) updateDatabase(institutionDetails map[string]int
 	institution.Description = description
 	query, _ := database.Database.Prepare(sql)
 	_, err := query.Exec(name, description, id)
-	return err
-}
-
-// ModifyURL changes the URL
-func (institution *Institution) ModifyURL(URL string) error {
-
-	result := isValidURL(URL)
-	if !result.IsValid {
-		return errors.New("It does not have valid URL")
-	}
-	id := strconv.Itoa(institution.ID)
-
-	institution.URL = URL
-
-	sql := "UPDATE `institution` SET URL=? WHERE id=?"
-	query, _ := database.Database.Prepare(sql)
-	_, err := query.Exec(URL, id)
 	return err
 }

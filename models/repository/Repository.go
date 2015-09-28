@@ -38,6 +38,11 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	return problem, err
 }
 
+func (repository *Repository) GetInstitution() *Institution {
+	institution, _ := NewInstitution(strconv.Itoa(repository.ID))
+	return institution
+}
+
 func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)

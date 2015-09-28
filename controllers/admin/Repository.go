@@ -3,21 +3,19 @@ package admin
 import (
 	"strings"
 
-	InstitutionModel "github.com/cristian-sima/Wisply/models/institution"
-	RepositoryModel "github.com/cristian-sima/Wisply/models/repository"
+	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
 // RepositoryController manages the operations for repositories (list, delete, add)
 type RepositoryController struct {
 	Controller
-	model        RepositoryModel.Model
-	institutions InstitutionModel.Model
+	model repository.Model
 }
 
 // List shows all the repositories
 func (controller *RepositoryController) List() {
 	var exists bool
-	list := controller.model.GetAll()
+	list := controller.model.GetAllRepositories()
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
@@ -27,7 +25,7 @@ func (controller *RepositoryController) List() {
 
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
-	controller.Data["institutions"] = controller.institutions.GetAll()
+	controller.Data["institutions"] = controller.model.GetAllInstitutions()
 	controller.showAddForm()
 }
 
@@ -55,7 +53,7 @@ func (controller *RepositoryController) Modify() {
 
 	ID = controller.Ctx.Input.Param(":id")
 
-	repository, err := controller.model.NewRepository(ID)
+	repository, err := repository.NewRepository(ID)
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -80,7 +78,7 @@ func (controller *RepositoryController) Update() {
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
 
-	repository, err := controller.model.NewRepository(ID)
+	repository, err := repository.NewRepository(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
@@ -97,8 +95,7 @@ func (controller *RepositoryController) Update() {
 func (controller *RepositoryController) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
-
-	repository, err := controller.model.NewRepository(ID)
+	repository, err := repository.NewRepository(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {

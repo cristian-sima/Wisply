@@ -70,8 +70,7 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) decideOneRepository(message *ws.Message, connection *ws.Connection) {
-	model := repository.Model{}
-	repository, err := model.NewRepository(strconv.Itoa(message.Repository))
+	repository, err := repository.NewRepository(strconv.Itoa(message.Repository))
 	if err != nil {
 		fmt.Println("No repository with that id.")
 	} else {
@@ -220,7 +219,7 @@ func (controller *HarvestController) NotifyProcessChanged(repository *repository
 // ShowPanel shows the panel to collect data from repository
 func (controller *HarvestController) ShowPanel() {
 	ID := controller.Ctx.Input.Param(":id")
-	repository, err := controller.Model.NewRepository(ID)
+	repository, err := repository.NewRepository(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	}

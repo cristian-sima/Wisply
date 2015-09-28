@@ -1,17 +1,17 @@
 package public
 
-import InstitutionModel "github.com/cristian-sima/Wisply/models/institution"
+import repository "github.com/cristian-sima/Wisply/models/repository"
 
 // InstitutionController managers the operations for displaying
 type InstitutionController struct {
 	Controller
-	model InstitutionModel.Model
+	model repository.Model
 }
 
 // List shows all the institutions
 func (controller *InstitutionController) List() {
 	var exists bool
-	list := controller.model.GetAll()
+	list := controller.model.GetAllInstitutions()
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
@@ -23,11 +23,12 @@ func (controller *InstitutionController) List() {
 // ShowInstitution shows the details regarding an institution
 func (controller *InstitutionController) ShowInstitution() {
 	ID := controller.Ctx.Input.Param(":id")
-	institution, err := controller.model.NewInstitution(ID)
+	institution, err := repository.NewInstitution(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
 		controller.Data["institution"] = institution
+		controller.Data["repositories"] = institution.GetRepositories()
 		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/institution/institution.tpl"
 	}

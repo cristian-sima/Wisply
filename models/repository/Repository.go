@@ -16,6 +16,7 @@ type Repository struct {
 	Description string
 	Status      string
 	Institution int
+	Category    string
 }
 
 // Delete removes the repository from database
@@ -89,4 +90,15 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	repository.Status = newStatus
 
 	return err
+}
+
+// AddResource adds a resource to the repository
+func (repository *Repository) AddResources(resource *Resource) error {
+	sql := "INSERT INTO `resource` (`name`) VALUES (?)"
+	query, err := database.Database.Prepare(sql)
+	query.Exec(resource.Name)
+	if err != nil {
+		return errors.New("Error")
+	}
+	return nil
 }

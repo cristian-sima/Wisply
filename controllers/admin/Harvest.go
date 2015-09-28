@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	remote "github.com/cristian-sima/Wisply/models/remote"
+	harvest "github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 	ws "github.com/cristian-sima/Wisply/models/ws"
 )
@@ -31,28 +31,13 @@ func (controller *HarvestController) InitWebsocketConnection() {
 	connection.ReadPump()
 }
 
-const (
-	// TESTING is the id of testing stage
-	TESTING = 3
-	// IDENTIFYING is the id of identifying stage
-	IDENTIFYING = 4
-)
-
 // CurrentProcesses holds the current Statistics for a repository
 var CurrentProcesses = make(map[int]*Process)
 
-// Action represents the state (finish) and the number
-type Action struct {
-	Finished bool `json:"Finished"`
-	Number   int  `json:"Number"`
-}
-
 // Process contians information about a process
 type Process struct {
-	CurrentAction int                `json:"CurrentAction"`
-	Actions       map[string]*Action `json:"Actions"`
-	Connections   []*ws.Connection   `json:"-"`
-	Remote        remote.Standard    `json:"-"`
+	Connections []*ws.Connection `json:"-"`
+	Manager     *harvest.Manager `json:"-"`
 }
 
 func (process *Process) addConnection(connection *ws.Connection) {
@@ -118,32 +103,21 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(repository *reposit
 func (controller *HarvestController) StartProcess(local *repository.Repository, connection *ws.Connection) {
 
 	ID := local.ID
-
 	// delete any previous
 	delete(CurrentProcesses, ID)
 
-	actions := map[string]*Action{
-		"records": {
-			Number:   0,
-			Finished: false,
-		},
-	}
-
-	remoteRepository := remote.NewOAIRepository(local)
-	remoteRepository.SetController(controller)
+	harvestManager := harvest.NewManager(strconv.Itoa(ID), controller)
 
 	// create a new empty one
 	process := &Process{
-		CurrentAction: TESTING,
-		Actions:       actions,
-		Remote:        remoteRepository,
+		Manager: harvestManager,
 	}
 
 	process.addConnection(connection)
 
 	CurrentProcesses[ID] = process
 
-	remoteRepository.StartProcess()
+	harvestManager.StartProcess()
 
 	/*if repository.Status != "verified" {
 		controller.startVerifyRepository(repository, connection)
@@ -152,9 +126,9 @@ func (controller *HarvestController) StartProcess(local *repository.Repository, 
 	}*/
 }
 
-// Notify is called by a remote repository with a message
-func (controller *HarvestController) Notify(message *remote.Message) {
-	process, ok := CurrentProcesses[message.Repository]
+// Notify is called by a harvest repository with a message
+func (controller *HarvestController) Notify(message *harvest.Message) {
+	_, ok := CurrentProcesses[message.Repository]
 
 	fmt.Println("--> Harvest Controller: The controller has received this message:")
 	fmt.Println(message)
@@ -162,7 +136,6 @@ func (controller *HarvestController) Notify(message *remote.Message) {
 		switch message.Name {
 		case "status-changed":
 			{
-				process.Remote.GetLocalRepository().ModifyStatus(message.Value)
 				msg := ConvertToWebsocketMessage(message)
 				hub.BroadcastMessage(msg)
 			}
@@ -177,8 +150,8 @@ func (controller *HarvestController) Notify(message *remote.Message) {
 	}
 }
 
-// ConvertToWebsocketMessage converts a remote message to a websocket one
-func ConvertToWebsocketMessage(old *remote.Message) *ws.Message {
+// ConvertToWebsocketMessage converts a harvest message to a websocket one
+func ConvertToWebsocketMessage(old *harvest.Message) *ws.Message {
 	newMessage := &ws.Message{
 		Name:       old.Name,
 		Value:      old.Value,

@@ -1,6 +1,10 @@
 package harvest
 
-import oai "github.com/cristian-sima/Wisply/models/oai"
+import (
+	"fmt"
+
+	oai "github.com/cristian-sima/Wisply/models/oai"
+)
 
 // EPrintsRepository encapsulates the functionality for a repository repository using OAI format
 type EPrintsRepository struct {
@@ -12,6 +16,8 @@ type EPrintsRepository struct {
 func (repository *EPrintsRepository) Validate() {
 	defer func() {
 		err := recover()
+		fmt.Println("Probleeeeeeeeeeeeeeeeeeeeeeeeeeem")
+		fmt.Println(err)
 		if err != nil {
 			msg := Message{
 				Name:  "verification-finished",

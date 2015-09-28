@@ -113,8 +113,10 @@ var HarvestProcess = function() {
 		 * It enables the possibility to modify the URL
 		 */
 		enableModifyURL: function() {
+			var field = $('#Source-URL');
 			$('#modifyButton').prop('disabled', false);
-			$('#Source-URL').prop('disabled', false);
+			field.prop('disabled', false);
+			field.focus();
 		},
 		/**
 		 * It tells the server to change the base URL
@@ -132,7 +134,13 @@ var HarvestProcess = function() {
 		 */
 		perform: function(manager) {
 			this.manager = manager;
+			this.init();
 		},
+    init: function () {
+        $("#URL-input").toggle();
+        $("#Name-Repository").toggle();
+        $("#modifyButton").hide();
+    },
 		/**
 		 * It disables the possibility to modify the URL
 		 */
@@ -214,9 +222,9 @@ var HarvestProcess = function() {
 								this.stage.GUI.showCurrent("The verification failed");
 								this.stage.pause();
 								this.stage.stages[3].enableModifyURL();
-							}
+							} else {
 								this.stage.firedStageFinished();
-
+							}
 							break;
 						case "identification-details":
 								this.stage.stages[4].paint(message.Value);
@@ -267,6 +275,13 @@ var HarvestProcess = function() {
 					instance.manager.stages[3].disableModifyURL();
 					instance.manager.restart(2);
 				});
+				harvestHistory.setGUI("#history");
+				$("#historyButton").click(function() {
+						harvestHistory.gui.activate();
+				});
+				$("#currentButton").click(function() {
+						harvestHistory.gui.disable();
+				});
 			},
 			/**
 			 * It updates the list, the indicator and the process status
@@ -287,7 +302,6 @@ var HarvestProcess = function() {
 			 * It updates the list of current stages
 			 */
 			updateList: function() {
-				console.log("updae list")
 				var container = this.element.find("#stage-list"),
 					manager = this.manager,
 					current = manager.getCurrentStageID(),

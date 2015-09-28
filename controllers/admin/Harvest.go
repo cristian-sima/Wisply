@@ -69,14 +69,16 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 func (controller *HarvestController) decideOneRepository(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
 	case "change-url":
-		controller.ChangeRepositoryBaseURL(message)
+		{
+			controller.ChangeRepositoryBaseURL(message)
+		}
 	case "start-progress":
 		{
 			controller.StartProcess(message, connection)
 		}
 	case "get-current-progress":
 		{
-			controller.GetCurrentProcess(message, connection)
+			controller.GetProcess(message, connection)
 		}
 	}
 }
@@ -109,21 +111,26 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(message *ws.Message
 
 // StartProcess starts the initializing proccess
 func (controller *HarvestController) StartProcess(message *ws.Message, connection *ws.Connection) {
-	ID := message.Repository
-	delete(CurrentProcesses, ID)
 
-	harvestManager := harvest.NewManager(strconv.Itoa(ID), controller)
-	process := &Process{
-		Manager: harvestManager,
+	_, processExists := CurrentProcesses[message.Repository]
+
+	if !processExists {
+		ID := message.Repository
+		delete(CurrentProcesses, ID)
+
+		harvestManager := harvest.NewManager(strconv.Itoa(ID), controller)
+		process := &Process{
+			Manager: harvestManager,
+		}
+		process.addConnection(connection)
+		CurrentProcesses[ID] = process
+		harvestManager.StartProcess()
 	}
-	process.addConnection(connection)
-	CurrentProcesses[ID] = process
-	harvestManager.StartProcess()
 }
 
 // Notify is called by a harvest repository with a message
 func (controller *HarvestController) Notify(message *harvest.Message) {
-	_, ok := CurrentProcesses[message.Repository]
+	process, ok := CurrentProcesses[message.Repository]
 
 	fmt.Println("<-->  Harvest Controller: The controller has received this message:")
 	fmt.Println(message)
@@ -138,7 +145,7 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 		case "verification-finished":
 			if message.Value == "failed" {
 				msg := ConvertToWebsocketMessage(message)
-				hub.BroadcastMessage(msg)
+				hub.SendGroupMessage(msg, process.Connections)
 				delete(CurrentProcesses, message.Repository)
 			}
 			break
@@ -157,7 +164,7 @@ func ConvertToWebsocketMessage(old *harvest.Message) *ws.Message {
 }
 
 // GetCurrentProcess sends the current process on the server for a repository
-func (controller *HarvestController) GetCurrentProcess(message *ws.Message, connection *ws.Connection) {
+func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
 	processObject, _ := CurrentProcesses[message.Repository]
 	hub.SendMessage(&ws.Message{
 		Name:       "existing-process-on-server",
@@ -172,15 +179,5 @@ func (controller *HarvestController) SendAllRepositoriesStatus(connection *ws.Co
 	hub.SendMessage(&ws.Message{
 		Name:  "repositories-status-list",
 		Value: &list,
-	}, connection)
-}
-
-// NotifyProcessChanged tells the connection the current process
-func (controller *HarvestController) NotifyProcessChanged(message *ws.Message, connection *ws.Connection) {
-	processObject, _ := CurrentProcesses[message.Repository]
-	hub.SendMessage(&ws.Message{
-		Name:       "ProcessUpdated",
-		Value:      &processObject,
-		Repository: message.Repository,
 	}, connection)
 }

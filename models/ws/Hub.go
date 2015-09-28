@@ -40,27 +40,27 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 		hub:        hub,
 		controller: controller,
 	}
-
 	return connection
 }
 
 // SendMessage sends a message to ONE connection
 func (hub *Hub) SendMessage(message *Message, connection *Connection) {
-	fmt.Println("--> Hub: I send to a single connection: ")
+	hub.log("--> Hub: I send to a single connection the message: ")
 	fmt.Println(message)
 	hub.sendWebsocket(message, connection)
 }
 
 // BroadcastMessage sends a message to ALL the connection from the hub
 func (hub *Hub) BroadcastMessage(message *Message) {
-	fmt.Println("--> Hub: I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
+	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
 	fmt.Println(message)
 	hub.broadcast <- message
 }
 
 // SendGroupMessage sends a message to a GROUP of connections
 func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
-	fmt.Println("--> Hub: I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
+	hub.log("I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
+	fmt.Println(message)
 	for _, connection := range group {
 		hub.sendWebsocket(message, connection)
 	}
@@ -81,6 +81,10 @@ func (hub *Hub) Run() {
 			}
 		}
 	}
+}
+
+func (hub *Hub) log(message string) {
+	fmt.Println("--> Hub: " + message)
 }
 
 func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {

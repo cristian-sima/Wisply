@@ -8,34 +8,50 @@
 
 <url>
   <loc>http://wisply.me/</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/about</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/webscience</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/contact</loc>
-  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/institutions</loc>
 </url>
 <url>
   <loc>http://wisply.me/auth/login</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/auth/register</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/help</loc>
-  <changefreq>daily</changefreq>
 </url>
 <url>
   <loc>http://wisply.me/accessibility</loc>
-  <changefreq>daily</changefreq>
+</url>
+<url>
+  <loc>http://wisply.me/privacy</loc>
+</url>
+<url>
+  <loc>http://wisply.me/institutions/2</loc>
+</url>
+<url>
+  <loc>http://wisply.me/institutions/3</loc>
+</url>
+<url>
+  <loc>http://wisply.me/cookies</loc>
+</url>
+<url>
+  <loc>http://wisply.me/terms-and-conditions</loc>
+</url>
+<url>
+  <loc>http://wisply.me/repository/12</loc>
+</url>
+<url>
+  <loc>http://wisply.me/repository/15</loc>
 </url>
 </urlset>

@@ -25,6 +25,9 @@
         <li>
           <a href="/contact">Contact</a>
         </li>
+        <li>
+          <a href="/institutions">Institutions</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" id="menu-top-left">
         <li><!--

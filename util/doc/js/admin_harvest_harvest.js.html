@@ -43,15 +43,23 @@ var Harvest = function() {
 	 * @memberof Harvest
 	 * @class History
 	 * @classdesc It holds a history of events
-	 * @param {function} The function which is called when an event is added to history
 	 */
-	var History = function History(callbackUpdate) {
+	var History = function History() {
 		this.data = [];
-		this.callbackUpdate = callbackUpdate;
+		this.start = 0;
+		this.eventsOnPage = 10;
+		this.see = this.eventsOnPage;
 	};
 	History.prototype =
 		/** @lends Harvest.History */
 		{
+			/**
+			 * It logs an event
+			 * @param [Harvest.HistoryGUI] gui The reference to the gui
+			 */
+			setGUI: function(id) {
+				this.gui = new HistoryGUI(id, this);
+			},
 			/**
 			 * It logs an event
 			 * @param [string] content The content of the event
@@ -96,8 +104,8 @@ var Harvest = function() {
 					content: content,
 					type: type
 				});
-				if (this.callbackUpdate) {
-					this.callbackUpdate();
+				if (this.gui) {
+					this.gui.refresh();
 				}
 			},
 			/**
@@ -111,17 +119,13 @@ var Harvest = function() {
 				 */
 				function getHeader() {
 					var header = "";
-					header = "&lt;thead>&lt;tr>&lt;th class='text-center'>Date&lt;/th>&lt;th class='text-center'>Category&lt;/th>&lt;th class='text-center'>Content&lt;/th>&lt;/tr>&lt;/thead>";
+					header = "&lt;thead>&lt;tr>&lt;th class='text-center'>Number&lt;/th>&lt;th class='text-center'>Date&lt;/th>&lt;th class='text-center'>Category&lt;/th>&lt;th class='text-center'>Content&lt;/th>&lt;/tr>&lt;/thead>";
 					return header;
 				}
-				/**
-				 * It creates the body of the table
-				 * @param  {string} arrray The events
-				 * @return {string}        The HTML body of the table
-				 */
-				function getBody(arrray) {
-					var result = "&lt;tbody>",
-						i, currentEvent;
+
+					var events = "&lt;tbody>",
+					moreButton = "",
+						index, currentEvent;
 					/**
 					 * It returns the type of HTML code
 					 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
@@ -146,26 +150,94 @@ var Harvest = function() {
 						}
 						return "&lt;span class='" + textClass + "'>" + content + "&lt;/span>";
 					}
-					for (i = 0; i &lt; arrray.length; i++) {
-						currentEvent = arrray[i];
-						result += "&lt;tr>";
-						result += "&lt;td>" + currentEvent.date + "&lt;/td>";
-						result += "&lt;td>" + getType(currentEvent.type) + "&lt;/td>";
-						result += "&lt;td>" + currentEvent.content + "&lt;/td>";
-						result += "&lt;/tr>";
+
+					var dif = this.data.length - this.see,
+					see = 0;
+					if(dif &lt;= 0) {
+						see = this.data.length - 1;
+					} else {
+						see = this.see;
+						moreButton = "You have seen " + this.see + " events. There are " + dif + " events more &lt;br />&lt;div class='text-center'>&lt;button id='harvest-history-see-more' class='btn btn-info'>See more&lt;/button>&lt;/div>";
 					}
-					result += "&lt;/tbody>";
-					return result;
-				}
-				var html = "&lt;table class='table table=condensed table-hover ''>",
-					events = "";
+
+					for (index = this.start; index &lt;= see; index++) {
+						currentEvent = this.data[index];
+						events += "&lt;tr>";
+						events += "&lt;td>" + (this.data.length - index) + "&lt;/td>";
+						events += "&lt;td>" + currentEvent.date + "&lt;/td>";
+						events += "&lt;td>" + getType(currentEvent.type) + "&lt;/td>";
+						events += "&lt;td>" + currentEvent.content + "&lt;/td>";
+						events += "&lt;/tr>";
+					}
+					events += "&lt;/tbody>";
+
+
+				var html = "&lt;table class='table table=condensed table-hover ''>";
+
 				html += getHeader();
-				events = getBody(this.data);
 				html += events;
 				html += "&lt;/table>";
+
+				html += moreButton;
 				return html;
+			},
+			/**
+			 * It allows the user to see more events
+			 */
+			seeMore: function() {
+				this.see = this.see + this.eventsOnPage;
+				this.gui.refresh();
+			},
+			/**
+			 * It sets the start and end to the default values
+			 */
+			reset: function() {
+				this.see = this.eventsOnPage;
+				this.start = 0;
 			}
 		};
+		/**
+		 * The constructor creates the connection
+		 * @memberof Harvest
+		 * @class HarvestConnection
+		 * @classdesc It is a middleware between the harvest manager and the web sockets connection
+		 * @param [string] id The id of the element where the history will be displayed
+		 * @param [Harvest.History] history The reference to the gui
+		 */
+		var HistoryGUI = function HistoryGUI(id, history) {
+			this.activ = false;
+			this.element = $(id);
+			this.history = history;
+		};
+		HistoryGUI.prototype =
+			/** @lends Harvest.HistoryGUI */
+			{
+				/**
+				 * It updates the gui
+				 */
+				refresh: function () {
+						if(this.activ) {
+								this.element.html(this.history.getHTML());
+								$("#harvest-history-see-more").click(function() {
+										harvestHistory.seeMore();
+								});
+						}
+				},
+				/**
+				 * It activates the update of gui
+				 */
+				activate: function () {
+					this.history.reset();
+					this.activ = true;
+					this.refresh();
+				},
+				/**
+				 * It disables the gui
+				 */
+				disable: function () {
+					this.activ = false;
+				}
+			};
 	/**
 	 * The constructor creates the connection
 	 * @memberof Harvest
@@ -229,10 +301,26 @@ var Harvest = function() {
 					function getRepo(current, id) {
 						if (current === id) {
 							return "this repository";
+						} else if(id === 0) {
+								return "all repositories";
 						}
 						return "the repository number " + id;
 					}
-					return ("I received from server the socket &lt;b>" + msg.Name + "&lt;/b>" + getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+
+					/**
+					 * It describes some actions
+					 * @param  {string} name The name of the message
+					 */
+					function getName(message) {
+						var toReturn = "";
+							toReturn += "&lt;strong>" + message.Name + "&lt;/strong>";
+							if(message.Name === "status-changed") {
+							 	toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
+							}
+							return toReturn;
+					}
+
+					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);
@@ -391,7 +479,7 @@ var Harvest = function() {
 				if (this.state === "stopped" || this.state === "paused") {
 					harvestHistory.log("Imposible to continue!");
 				} else {
-					harvestHistory.log("Stage " + (this.current + 1) + " finished!");
+					harvestHistory.log("Stage &lt;b>" + this.currentStage.name + "&lt;/b> finished!");
 					this.next();
 				}
 			},
@@ -433,7 +521,7 @@ var Harvest = function() {
 			 * It returns the id of current stage. If there is no current stage, it returns "NOT STARTED"
 			 */
 			getCurrentStageID: function() {
-				if (this.status === "finished") {
+				if (this.status === "finish") {
 					return this.stages.length;
 				}
 				if (!this.currentStage) {
@@ -479,13 +567,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Sep 26 2015 15:39:32 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Sep 28 2015 23:52:14 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

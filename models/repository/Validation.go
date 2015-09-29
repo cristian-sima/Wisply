@@ -11,6 +11,7 @@ var (
 		"url":         {"String", "url", "between_inclusive:3,2083"},
 		"description": {"String", "max:255"},
 		"id":          {"Int"},
+		"institution": {"Int"},
 	}
 )
 
@@ -19,6 +20,7 @@ func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationR
 		"name":        rules["name"],
 		"url":         rules["url"],
 		"description": rules["description"],
+		"institution": rules["institution"],
 	}
 	return adapter.Validate(details, rules)
 }

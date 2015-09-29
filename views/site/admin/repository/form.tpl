@@ -18,9 +18,20 @@
             </div>
             {{ if eq .action "Add" }}
             <div class="form-group">
+              <label for="institution-URL" class="col-lg-2 control-label">Institution <a href="/admin/institutions/add" target="_blank"><span data-toggle="tooltip" data-placement="top" title="Create institution" class="glyphicon glyphicon-plus-sign text-success"> </span></a></label>
+                <div class="col-lg-10">
+                <select class="form-control" name="repository-institution" id="repository-institution">
+                    {{range $index, $institution := .institutions}}
+                    {{$safe := $institution.Name|html}}
+                    <option value="{{ $institution.ID }}">{{ $safe }}</option>
+                    {{ end }}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
               <label for="repository-URL" class="col-lg-2 control-label">Base URL</label>
               <div class="col-lg-10">
-                <input type="url" value="{{.repositoryUrl}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="URL address" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+                <input type="url" value="{{.repositoryUrl}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
               </div>
             </div>
             {{ end }}
@@ -43,5 +54,6 @@
   <script>
   $(document).ready(function() {
     $("#repository-name").focus();
+    wisply.activateTooltip();
   });
   </script>

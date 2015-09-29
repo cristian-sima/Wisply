@@ -6,6 +6,9 @@
     </header>
       <ul class="nav">
         <li ><a href="/admin">Dashboard</a></li>
+        <li >
+          <a href="/admin/institutions" >Institutions </a>
+        </li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/repositories" aria-expanded="true">
             Repository <span class="caret"></span>

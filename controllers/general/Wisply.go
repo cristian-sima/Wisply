@@ -1,4 +1,4 @@
-package controllers
+package general
 
 import (
 	"html/template"
@@ -8,7 +8,7 @@ import (
 	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// WisplyController It inherits the MessageController
+// WisplyController inherits the MessageController
 // Its role is to maintain the connection of the account
 type WisplyController struct {
 	MessageController
@@ -17,13 +17,13 @@ type WisplyController struct {
 	Model            wisply.Model
 }
 
-// GenerateXSRF It generates and sends to template the XSRF code
+// GenerateXSRF generates and sends to template the XSRF code
 func (controller *WisplyController) GenerateXSRF() {
 	code := controller.XsrfFormHtml()
 	controller.Data["xsrf_input"] = template.HTML(code)
 }
 
-// Prepare It checks the state of connection and inits the database
+// Prepare checks the state of connection and inits the database
 func (controller *WisplyController) Prepare() {
 	controller.initState()
 }
@@ -46,7 +46,7 @@ func (controller *WisplyController) checkConnectionCookie() {
 		if err == nil {
 			controller.initConnectedState(idUser)
 		} else {
-			controller.deleteConnectionCookie()
+			controller.DeleteConnectionCookie()
 			controller.initDisconnectedState()
 		}
 	} else {
@@ -54,7 +54,8 @@ func (controller *WisplyController) checkConnectionCookie() {
 	}
 }
 
-func (controller *WisplyController) deleteConnectionCookie() {
+// DeleteConnectionCookie deletes the cookies
+func (controller *WisplyController) DeleteConnectionCookie() {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookiePath := auth.Settings["cookiePath"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
@@ -84,7 +85,7 @@ func (controller *WisplyController) IndicateLastModification(timestamp int64) {
 	controller.Data["lastModification"] = formatedString
 }
 
-// SetTitle sets a custom title for the page. In case the function is not called, it sets the title "Wisply"
+// SetCustomTitle sets a custom title for the page. In case the function is not called, it sets the title "Wisply"
 func (controller *WisplyController) SetCustomTitle(title string) {
 	controller.Data["customTitle"] = title
 }

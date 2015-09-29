@@ -11,9 +11,24 @@ var HarvestList = function() {
 	'use strict';
 	var Stages = [{
 		id: 0,
+		name: "Get info from server",
 		perform: function(manager) {
+			this.init();
 			this.manager = manager;
 			this.manager.sendMessage("get-all-status");
+			this.manager.firedStageFinished();
+			harvestHistory.log("Listening for changes...");
+		},
+		init: function() {
+			harvestHistory.setGUI("#harvest-history-element");
+			$("#harvest-history-button").click(function() {
+				$("#harvest-history-container").modal('show');
+					harvestHistory.gui.activate();
+			});
+			$("#harvest-history-container").on('hidden.bs.modal', function () {
+				console.log("inchis");
+					harvestHistory.gui.disable();
+			});
 		}
 	}];
 	/**

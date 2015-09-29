@@ -15,6 +15,8 @@ type Repository struct {
 	URL         string
 	Description string
 	Status      string
+	Institution int
+	Category    string
 }
 
 // Delete removes the repository from database
@@ -35,6 +37,12 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	}
 	err := repository.updateDatabase(repositoryDetails)
 	return problem, err
+}
+
+// GetInstitution returns a reference to the institution which holds the repository
+func (repository *Repository) GetInstitution() *Institution {
+	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))
+	return institution
 }
 
 func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
@@ -83,4 +91,16 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	repository.Status = newStatus
 
 	return err
+}
+
+// GetIdentification returns the identification
+func (repository *Repository) GetIdentification() *Identification {
+
+	identification := &Identification{}
+
+	sql := "SELECT id, repository, protocol_version, earliest_datestamp, delete_policy, granularity FROM repository_identification WHERE repository = ?"
+	query, _ := database.Database.Prepare(sql)
+	query.QueryRow(repository.ID).Scan(&identification.ID, &identification.Repository, &identification.Protocol, &identification.EarliestDatestamp, &identification.RecordPolicy, &identification.Granularity)
+
+	return identification
 }

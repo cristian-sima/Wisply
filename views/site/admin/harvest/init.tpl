@@ -5,7 +5,6 @@
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
       <li class="active">{{ .repository.Name }}</li>
-      <li class="active">Start</li>
     </ul>
   </div>
   <div class="panel-body">
@@ -34,10 +33,10 @@
           <div id="stage-list" class="list-group">
           </div>
       </div>
-      <div class="col-lg-7 col-md-7 col-sm-7" >
+      <div class="col-lg-9 col-md-9 col-sm-9" >
         <ul class="nav nav-tabs">
           <li class="active"  id="currentButton"><a href="#current" data-toggle="tab" aria-expanded="true">Current</a></li>
-          <li class="" id="historyButton"><a href="#history" data-toggle="tab" aria-expanded="false">History <span id="historyBadge" class="badge">0</span></a>  </li>
+          <li class="" id="historyButton"><a href="#history" data-toggle="tab" aria-expanded="false">History</a>  </li>
         </ul>
         <div id="myTabContent" class="tab-content" >
           <div class="tab-pane fade active in text-center" id="current">

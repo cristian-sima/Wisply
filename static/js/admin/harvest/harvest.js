@@ -15,15 +15,23 @@ var Harvest = function() {
 	 * @memberof Harvest
 	 * @class History
 	 * @classdesc It holds a history of events
-	 * @param {function} The function which is called when an event is added to history
 	 */
-	var History = function History(callbackUpdate) {
+	var History = function History() {
 		this.data = [];
-		this.callbackUpdate = callbackUpdate;
+		this.start = 0;
+		this.eventsOnPage = 10;
+		this.see = this.eventsOnPage;
 	};
 	History.prototype =
 		/** @lends Harvest.History */
 		{
+			/**
+			 * It logs an event
+			 * @param [Harvest.HistoryGUI] gui The reference to the gui
+			 */
+			setGUI: function(id) {
+				this.gui = new HistoryGUI(id, this);
+			},
 			/**
 			 * It logs an event
 			 * @param [string] content The content of the event
@@ -68,8 +76,8 @@ var Harvest = function() {
 					content: content,
 					type: type
 				});
-				if (this.callbackUpdate) {
-					this.callbackUpdate();
+				if (this.gui) {
+					this.gui.refresh();
 				}
 			},
 			/**
@@ -83,17 +91,13 @@ var Harvest = function() {
 				 */
 				function getHeader() {
 					var header = "";
-					header = "<thead><tr><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
+					header = "<thead><tr><th class='text-center'>Number</th><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
 					return header;
 				}
-				/**
-				 * It creates the body of the table
-				 * @param  {string} arrray The events
-				 * @return {string}        The HTML body of the table
-				 */
-				function getBody(arrray) {
-					var result = "<tbody>",
-						i, currentEvent;
+
+					var events = "<tbody>",
+					moreButton = "",
+						index, currentEvent;
 					/**
 					 * It returns the type of HTML code
 					 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
@@ -118,26 +122,94 @@ var Harvest = function() {
 						}
 						return "<span class='" + textClass + "'>" + content + "</span>";
 					}
-					for (i = 0; i < arrray.length; i++) {
-						currentEvent = arrray[i];
-						result += "<tr>";
-						result += "<td>" + currentEvent.date + "</td>";
-						result += "<td>" + getType(currentEvent.type) + "</td>";
-						result += "<td>" + currentEvent.content + "</td>";
-						result += "</tr>";
+
+					var dif = this.data.length - this.see,
+					see = 0;
+					if(dif <= 0) {
+						see = this.data.length - 1;
+					} else {
+						see = this.see;
+						moreButton = "You have seen " + this.see + " events. There are " + dif + " events more <br /><div class='text-center'><button id='harvest-history-see-more' class='btn btn-info'>See more</button></div>";
 					}
-					result += "</tbody>";
-					return result;
-				}
-				var html = "<table class='table table=condensed table-hover ''>",
-					events = "";
+
+					for (index = this.start; index <= see; index++) {
+						currentEvent = this.data[index];
+						events += "<tr>";
+						events += "<td>" + (this.data.length - index) + "</td>";
+						events += "<td>" + currentEvent.date + "</td>";
+						events += "<td>" + getType(currentEvent.type) + "</td>";
+						events += "<td>" + currentEvent.content + "</td>";
+						events += "</tr>";
+					}
+					events += "</tbody>";
+
+
+				var html = "<table class='table table=condensed table-hover ''>";
+
 				html += getHeader();
-				events = getBody(this.data);
 				html += events;
 				html += "</table>";
+
+				html += moreButton;
 				return html;
+			},
+			/**
+			 * It allows the user to see more events
+			 */
+			seeMore: function() {
+				this.see = this.see + this.eventsOnPage;
+				this.gui.refresh();
+			},
+			/**
+			 * It sets the start and end to the default values
+			 */
+			reset: function() {
+				this.see = this.eventsOnPage;
+				this.start = 0;
 			}
 		};
+		/**
+		 * The constructor creates the connection
+		 * @memberof Harvest
+		 * @class HarvestConnection
+		 * @classdesc It is a middleware between the harvest manager and the web sockets connection
+		 * @param [string] id The id of the element where the history will be displayed
+		 * @param [Harvest.History] history The reference to the gui
+		 */
+		var HistoryGUI = function HistoryGUI(id, history) {
+			this.activ = false;
+			this.element = $(id);
+			this.history = history;
+		};
+		HistoryGUI.prototype =
+			/** @lends Harvest.HistoryGUI */
+			{
+				/**
+				 * It updates the gui
+				 */
+				refresh: function () {
+						if(this.activ) {
+								this.element.html(this.history.getHTML());
+								$("#harvest-history-see-more").click(function() {
+										harvestHistory.seeMore();
+								});
+						}
+				},
+				/**
+				 * It activates the update of gui
+				 */
+				activate: function () {
+					this.history.reset();
+					this.activ = true;
+					this.refresh();
+				},
+				/**
+				 * It disables the gui
+				 */
+				disable: function () {
+					this.activ = false;
+				}
+			};
 	/**
 	 * The constructor creates the connection
 	 * @memberof Harvest
@@ -201,10 +273,26 @@ var Harvest = function() {
 					function getRepo(current, id) {
 						if (current === id) {
 							return "this repository";
+						} else if(id === 0) {
+								return "all repositories";
 						}
 						return "the repository number " + id;
 					}
-					return ("I received from server the socket <b>" + msg.Name + "</b>" + getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+
+					/**
+					 * It describes some actions
+					 * @param  {string} name The name of the message
+					 */
+					function getName(message) {
+						var toReturn = "";
+							toReturn += "<strong>" + message.Name + "</strong>";
+							if(message.Name === "status-changed") {
+							 	toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
+							}
+							return toReturn;
+					}
+
+					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);
@@ -363,7 +451,7 @@ var Harvest = function() {
 				if (this.state === "stopped" || this.state === "paused") {
 					harvestHistory.log("Imposible to continue!");
 				} else {
-					harvestHistory.log("Stage " + (this.current + 1) + " finished!");
+					harvestHistory.log("Stage <b>" + this.currentStage.name + "</b> finished!");
 					this.next();
 				}
 			},
@@ -405,7 +493,7 @@ var Harvest = function() {
 			 * It returns the id of current stage. If there is no current stage, it returns "NOT STARTED"
 			 */
 			getCurrentStageID: function() {
-				if (this.status === "finished") {
+				if (this.status === "finish") {
 					return this.stages.length;
 				}
 				if (!this.currentStage) {

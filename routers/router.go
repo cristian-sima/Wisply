@@ -2,83 +2,142 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/cristian-sima/Wisply/controllers"
+	admin "github.com/cristian-sima/Wisply/controllers/admin"
+	public "github.com/cristian-sima/Wisply/controllers/public"
 )
 
 func init() {
 
-	beego.Router("/", &controllers.StaticController{}, "*:ShowIndex")
-	beego.Router("/about", &controllers.StaticController{}, "*:ShowAbout")
-	beego.Router("/contact", &controllers.StaticController{}, "*:ShowContact")
-	beego.Router("/webscience", &controllers.StaticController{}, "*:ShowWebscience")
-	beego.Router("/sample", &controllers.StaticController{}, "*:ShowSample")
-	beego.Router("/accessibility", &controllers.StaticController{}, "*:ShowAccessibility")
+	// ----------------------------- PUBLIC  --------------------------------------
 
-	beego.Router("/help", &controllers.StaticController{}, "*:ShowHelp")
-	beego.Router("/privacy", &controllers.StaticController{}, "*:ShowPrivacyPolicy")
-	beego.Router("/cookies", &controllers.StaticController{}, "*:ShowCookiesPolicy")
-	beego.Router("/terms-and-conditions", &controllers.StaticController{}, "*:ShowTermsPage")
+	// Note: I can not group these into namespace because they share "/" path
+	// Note: The public namespace should be created (NewNamespace)
 
+	beego.Router("/", &public.StaticController{}, "*:ShowIndex")
+	beego.Router("/about", &public.StaticController{}, "*:ShowAbout")
+	beego.Router("/contact", &public.StaticController{}, "*:ShowContact")
+	beego.Router("/webscience", &public.StaticController{}, "*:ShowWebscience")
+	beego.Router("/sample", &public.StaticController{}, "*:ShowSample")
+	beego.Router("/accessibility", &public.StaticController{}, "*:ShowAccessibility")
+	beego.Router("/help", &public.StaticController{}, "*:ShowHelp")
+	beego.Router("/privacy", &public.StaticController{}, "*:ShowPrivacyPolicy")
+	beego.Router("/cookies", &public.StaticController{}, "*:ShowCookiesPolicy")
+	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTerms")
+
+	// public
 	// ----------------------------- Authentification --------------------------------------
 
-	authNamespace := beego.NewNamespace("/auth",
+	publicAuthNS := beego.NewNamespace("auth",
 		beego.NSNamespace("/login",
-			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowLoginForm"),
-			beego.NSRouter("", &controllers.AuthController{}, "POST:LoginAccount"),
+			beego.NSRouter("", &public.AuthController{}, "GET:ShowLoginForm"),
+			beego.NSRouter("", &public.AuthController{}, "POST:LoginAccount"),
 		),
 		beego.NSNamespace("/register",
-			beego.NSRouter("", &controllers.AuthController{}, "GET:ShowRegisterForm"),
-			beego.NSRouter("", &controllers.AuthController{}, "POST:CreateNewAccount"),
+			beego.NSRouter("", &public.AuthController{}, "GET:ShowRegisterForm"),
+			beego.NSRouter("", &public.AuthController{}, "POST:CreateNewAccount"),
 		),
 		beego.NSNamespace("/logout",
-			beego.NSRouter("", &controllers.AuthController{}, "POST:Logout"),
+			beego.NSRouter("", &public.AuthController{}, "POST:Logout"),
 		),
 	)
 
-	// ----------------------------- Admin --------------------------------------
+	// public
+	// ----------------------------- Institutions -------------------------------
 
-	repositoryNamespace := beego.NSNamespace("/repositories",
-		beego.NSRouter("", &controllers.RepositoryController{}, "*:ListRepositories"),
+	publicInstitutionsNS := beego.NewNamespace("/institutions",
+		beego.NSRouter("", &public.InstitutionController{}, "*:List"),
+		beego.NSRouter("/:id", &public.InstitutionController{}, "GET:ShowInstitution"),
+	)
+
+	// public
+	// ----------------------------- Repositories -------------------------------
+
+	publicRepositoryNS := beego.NewNamespace("/repository",
+		beego.NSRouter("/:id", &public.RepositoryController{}, "GET:ShowRepository"),
+	)
+
+	// ----------------------------- ADMIN --------------------------------------
+
+	// admin
+	// ----------------------------- Repositories -------------------------------
+
+	adminRepositoryNS := beego.NSNamespace("/repositories",
+		beego.NSRouter("", &admin.RepositoryController{}, "*:List"),
 		beego.NSNamespace("/add",
-			beego.NSRouter("", &controllers.RepositoryController{}, "GET:AddNewRepository"),
-			beego.NSRouter("", &controllers.RepositoryController{}, "POST:InsertRepository"),
+			beego.NSRouter("", &admin.RepositoryController{}, "GET:Add"),
+			beego.NSRouter("", &admin.RepositoryController{}, "POST:Insert"),
 		),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &controllers.RepositoryController{}, "GET:Modify"),
-			beego.NSRouter(":id", &controllers.RepositoryController{}, "POST:Update"),
+			beego.NSRouter(":id", &admin.RepositoryController{}, "GET:Modify"),
+			beego.NSRouter(":id", &admin.RepositoryController{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &controllers.RepositoryController{}, "POST:Delete"),
+			beego.NSRouter(":id", &admin.RepositoryController{}, "POST:Delete"),
 		),
 	)
-	harvestNamespace := beego.NSNamespace("/harvest",
+
+	// admin
+	// ----------------------------- Institutions -------------------------------
+
+	adminInstitutionsNS := beego.NSNamespace("/institutions",
+		beego.NSRouter("", &admin.InstitutionController{}, "*:DisplayAll"),
+		beego.NSNamespace("/add",
+			beego.NSRouter("", &admin.InstitutionController{}, "GET:Add"),
+			beego.NSRouter("", &admin.InstitutionController{}, "POST:Insert"),
+		),
+		beego.NSNamespace("/modify",
+			beego.NSRouter(":id", &admin.InstitutionController{}, "GET:Modify"),
+			beego.NSRouter(":id", &admin.InstitutionController{}, "POST:Update"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter(":id", &admin.InstitutionController{}, "POST:Delete"),
+		),
+	)
+
+	// admin
+	// ----------------------------- Harvest -----------------------------------
+
+	adminHarvestNS := beego.NSNamespace("/harvest",
 		beego.NSNamespace("/init",
-			beego.NSRouter(":id", &controllers.HarvestController{}, "POST:ShowPanel"),
-			beego.NSRouter("/ws", &controllers.HarvestController{}, "GET:InitWebsocketConnection"),
+			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
+			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
 	)
 
-	accountsNamespace := beego.NSNamespace("/accounts",
-		beego.NSRouter("", &controllers.AccountController{}, "*:ListAccounts"),
+	// admin
+	// ----------------------------- Accounts ----------------------------------
+
+	adminAccountsNS := beego.NSNamespace("/accounts",
+		beego.NSRouter("", &admin.AccountController{}, "*:List"),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &controllers.AccountController{}, "GET:Modify"),
-			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Update"),
+			beego.NSRouter(":id", &admin.AccountController{}, "GET:Modify"),
+			beego.NSRouter(":id", &admin.AccountController{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &controllers.AccountController{}, "POST:Delete"),
+			beego.NSRouter(":id", &admin.AccountController{}, "POST:Delete"),
 		),
 	)
 
-	adminNamespace :=
+	// admin
+	// ----------------------------- Admin -------------------------------
+
+	adminNS :=
 		beego.NewNamespace("/admin",
-			beego.NSRouter("", &controllers.AdminController{}, "*:DisplayDashboard"),
-			accountsNamespace,
-			repositoryNamespace,
-			harvestNamespace,
+			beego.NSRouter("", &admin.Controller{}, "*:DisplayDashboard"),
+			adminAccountsNS,
+			adminRepositoryNS,
+			adminInstitutionsNS,
+			adminHarvestNS,
 		)
 
-	// register namespace
-	beego.AddNamespace(authNamespace)
-	beego.AddNamespace(adminNamespace)
+	// -------------------------------- REGISTER -----------------------------
+
+	// public
+	beego.AddNamespace(publicAuthNS)
+	beego.AddNamespace(publicInstitutionsNS)
+	beego.AddNamespace(publicRepositoryNS)
+
+	// admin
+	beego.AddNamespace(adminNS)
 
 }

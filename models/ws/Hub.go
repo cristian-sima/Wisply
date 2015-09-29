@@ -29,9 +29,10 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 
 	ws, err := upgrader.Upgrade(response, request, nil)
 	if _, ok := err.(websocket.HandshakeError); ok {
-		fmt.Println("I have a problem")
+		fmt.Println("I have a problem with handshaking")
+		fmt.Println(err)
 	} else if err != nil {
-		fmt.Println("I have a problem")
+		fmt.Println("I have a different problem")
 		fmt.Println(err)
 	}
 	connection := &Connection{

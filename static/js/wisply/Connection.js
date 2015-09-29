@@ -11,6 +11,7 @@
 var Connection = function () {
   'use strict';
 
+
   /**
   * The constructor calls the init function
   * @class Connection

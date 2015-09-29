@@ -23,7 +23,6 @@ func (db *databaseManager) InsertIdentity(identification *Identificationer) {
 	db.clearIdentification()
 	db.insertIdentificationDetails(identification)
 	db.insertEmails(identification)
-	db.log("Identity inserted for " + ID)
 }
 
 func (db *databaseManager) clearIdentification() {
@@ -51,15 +50,13 @@ func (db *databaseManager) insertIdentificationDetails(identification *Identific
 	query.Exec(ID, (*identification).GetProtocol(), (*identification).GetEarliestDatestamp(), (*identification).GetDeletedRecord(), (*identification).GetGranularity())
 
 	if err != nil {
-		fmt.Println("Hmmm problems when inserting details identification")
+		db.log("Hmmm problems when inserting details identification")
 	}
 }
 
 func (db *databaseManager) insertEmails(identification *Identificationer) {
 
 	ID := strconv.Itoa(db.manager.GetRepository().ID)
-
-	db.log("I insert the emails for repository " + ID + " in database ... ")
 
 	emails := (*identification).GetAdminEmails()
 
@@ -69,15 +66,74 @@ func (db *databaseManager) insertEmails(identification *Identificationer) {
 		sqlValues := "(?, ?)"
 		sql := "INSERT INTO `repository_email` " + sqlColumns + " VALUES " + sqlValues
 
-		fmt.Println(sql)
 		query, err := database.Database.Prepare(sql)
 		query.Exec(ID, email)
 
 		if err != nil {
-			fmt.Println("Hmmm problems when inserting emails identification")
+			db.log("Hmmm problems when inserting emails identification")
 		}
 	}
 
+}
+
+// InsertFormats inserts the formats in the database
+func (db databaseManager) InsertFormats(formats []Formater) {
+	db.clearFormats()
+	db.insertFormats(formats)
+}
+
+func (db databaseManager) insertFormats(formats []Formater) {
+	var sql string
+	ID := strconv.Itoa(db.manager.GetRepository().ID)
+	for _, format := range formats {
+		sqlColumns := "(`repository`, `md_schema`, `namespace`, `prefix`)"
+		sqlValues := "(?, ?, ?, ?)"
+		sql = "INSERT INTO `repository_format` " + sqlColumns + " VALUES " + sqlValues
+
+		query, err := database.Database.Prepare(sql)
+		query.Exec(ID, format.GetSchema(), format.GetNamespace(), format.GetPrefix())
+
+		if err != nil {
+			db.log("Hmmm problems when inserting formats")
+		}
+	}
+}
+
+func (db *databaseManager) clearFormats() {
+	var sql string
+	sql = "DELETE from `repository_format` WHERE repository=?"
+	query, _ := database.Database.Prepare(sql)
+	query.Exec(strconv.Itoa(db.manager.GetRepository().ID))
+}
+
+// InsertCollections inserts the collections in the database
+func (db databaseManager) InsertCollections(collections []Collection) {
+	db.clearCollections()
+	db.insertCollections(collections)
+}
+
+func (db databaseManager) insertCollections(collections []Collection) {
+	var sql string
+	ID := strconv.Itoa(db.manager.GetRepository().ID)
+	for _, collection := range collections {
+		sqlColumns := "(`repository`, `name`, `spec`)"
+		sqlValues := "(?, ?, ?)"
+		sql = "INSERT INTO `repository_collection` " + sqlColumns + " VALUES " + sqlValues
+
+		query, err := database.Database.Prepare(sql)
+		query.Exec(ID, collection.GetName(), collection.GetSpec())
+
+		if err != nil {
+			db.log("Hmmm problems when inserting collections")
+		}
+	}
+}
+
+func (db *databaseManager) clearCollections() {
+	var sql string
+	sql = "DELETE from `repository_collection` WHERE repository=?"
+	query, _ := database.Database.Prepare(sql)
+	query.Exec(strconv.Itoa(db.manager.GetRepository().ID))
 }
 
 func (db *databaseManager) SetManager(manager *Manager) {

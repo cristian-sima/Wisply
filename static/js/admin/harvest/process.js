@@ -201,12 +201,12 @@ var HarvestProcess = function() {
 					 id: "formats",
 				 },
 				 {
-					 name: "Identifiers",
-					 id: "identifiers",
+					 name: "Collections",
+					 id: "collections",
 				 },
 				 {
-					 name: "Sets",
-					 id: "sets",
+					 name: "Identifiers",
+					 id: "identifiers",
 				 },
 				 {
 					 name: "Records",
@@ -241,8 +241,8 @@ var HarvestProcess = function() {
 		 */
 		init: function () {
 				this.addCounter("formats");
+				this.addCounter("collections");
 				this.setCurrentCounter("formats");
-				this.currentCounter.start(100);
 		},
 		/**
 		 * It sets the current counter
@@ -346,7 +346,7 @@ var HarvestProcess = function() {
 					  prefix : '',
 					  suffix : ''
 					};
-						this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, 4, options);
+						this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, 3, options);
 						this.object.start(function() {
 							instance._finish();
 						});
@@ -357,6 +357,7 @@ var HarvestProcess = function() {
 				 */
 				_finish: function() {
 					if(this.stopped) {
+							console.log("da");
 							this.element.removeClass("label-warning");
 							this.element.addClass("label-success");
 					}
@@ -425,7 +426,7 @@ var HarvestProcess = function() {
 									this.getCounter().showError();
 									this.stage.stop();
 								} else {
-									this.stages.currentStage.analyse(result);
+									this.stage.currentStage.analyse(result);
 								}
 								break;
 						case "identification-details":

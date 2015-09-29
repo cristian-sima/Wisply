@@ -17,7 +17,7 @@ var CurrentProcesses = make(map[int]*Process)
 // Process contians information about a process
 type Process struct {
 	Connections []*ws.Connection `json:"-"`
-	Manager     *harvest.Manager `json:"-"`
+	Manager     *harvest.Manager `json:"Manager"`
 }
 
 func (process *Process) addConnection(connection *ws.Connection) {
@@ -148,6 +148,10 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 				hub.SendGroupMessage(msg, process.Connections)
 				delete(CurrentProcesses, message.Repository)
 			}
+		case "harvesting":
+			msg := ConvertToWebsocketMessage(message)
+			hub.SendGroupMessage(msg, process.Connections)
+			break
 		case "delete-process":
 			{
 				delete(CurrentProcesses, message.Repository)

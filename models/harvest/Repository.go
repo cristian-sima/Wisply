@@ -4,6 +4,8 @@ package harvest
 type RemoteRepositoryInterface interface {
 	Validate()
 	HarvestIdentification()
+	HarvestFormats()
+	HarvestCollections()
 	SetManager(manager *Manager)
 }
 

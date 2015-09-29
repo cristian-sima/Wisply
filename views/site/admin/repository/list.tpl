@@ -76,6 +76,9 @@
 
               {{ end }}
             </div>
+
+                          <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
+
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>

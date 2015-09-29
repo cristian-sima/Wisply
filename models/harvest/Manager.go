@@ -20,6 +20,7 @@ type Manager struct {
 func (manager *Manager) StartProcess() {
 	manager.log("I start the process for repository at " + manager.local.URL + "... ")
 	manager.changeLocalStatus("verifying")
+	manager.setCurrentAction("verifying")
 	manager.remote.Validate()
 }
 
@@ -46,6 +47,7 @@ func (manager *Manager) Notify(message *Message) {
 func (manager *Manager) harvestIdentification() {
 	manager.log("I harvest the identification")
 	manager.changeLocalStatus("initializing")
+	manager.setCurrentAction("initializing")
 	manager.remote.HarvestIdentification()
 }
 
@@ -63,8 +65,96 @@ func (manager *Manager) SaveIdentification(result IdentificationResulter) {
 		manager.log("The identification is ok")
 		manager.changeLocalStatus("ok")
 		manager.db.InsertIdentity(result.GetData())
-		manager.End()
+		manager.harvestFormarts()
 	}
+}
+
+func (manager *Manager) harvestFormarts() {
+	fmt.Println("started")
+
+	manager.setCurrentAction("harvesting")
+	manager.createAction("formats")
+	manager.remote.HarvestFormats()
+
+}
+
+// SaveFormats retrives a format and saves it
+func (manager *Manager) SaveFormats(result FormatResulter) {
+	formats := result.GetData()
+	manager.log("Format received")
+	manager.updateAction(len(formats), "formats")
+	manager.db.InsertFormats(formats)
+}
+
+// EndFormats it notifies the client the formats are finished
+func (manager *Manager) EndFormats() {
+	manager.endAction("formats")
+	manager.harvestCollections()
+}
+
+func (manager *Manager) harvestCollections() {
+	manager.log("I am harvasting collections")
+	manager.setCurrentAction("harvesting")
+	manager.createAction("collections")
+	manager.remote.HarvestCollections()
+
+}
+
+// SaveCollections retrives the collections and stores them
+func (manager *Manager) SaveCollections(result CollectionResult) {
+	collections := result.GetData()
+	manager.log("Collections received")
+	manager.updateAction(len(collections), "collections")
+	fmt.Println("insert")
+	manager.db.InsertCollections(collections)
+}
+
+// EndCollections it notifies the client the collections are finished
+func (manager *Manager) EndCollections() {
+	manager.endAction("collections")
+	manager.End()
+}
+
+func (manager *Manager) endAction(name string) {
+	manager.Actions[name].Finish()
+	manager.notifyAction(manager.Actions[name], "finish")
+}
+
+func (manager *Manager) setCurrentAction(actionName string) {
+	manager.CurrentAction = Actions[actionName]
+}
+
+func (manager *Manager) createAction(name string) {
+	manager.Actions[name] = &Action{
+		Type: name,
+	}
+	manager.notifyAction(manager.Actions[name], "start")
+}
+
+func (manager *Manager) updateAction(newCount int, name string) {
+	action := manager.Actions[name]
+	action.Count = newCount
+	manager.notifyAction(action, "update")
+}
+
+func (manager *Manager) notifyAction(action *Action, operation string) {
+
+	type Content struct {
+		Operation string `json:"Operation"`
+		Type      string `json:"Type"`
+		Count     int    `json:"Count"`
+	}
+
+	content := Content{
+		Operation: operation,
+		Type:      action.Type,
+		Count:     action.Count,
+	}
+
+	manager.notifyController(&Message{
+		Name:  "harvesting",
+		Value: content,
+	})
 }
 
 // End receives the identification result and saves it in the local repository
@@ -117,6 +207,7 @@ func NewManager(ID string, controller Controller) *Manager {
 		remote:     remote,
 		Controller: controller,
 		db:         db,
+		Actions:    make(map[string]*Action),
 	}
 	db.SetManager(manager)
 	remote.SetManager(manager)

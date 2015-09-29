@@ -54,6 +54,14 @@
       width: 100%;
       border:none;
     }
+    .big-number {
+      font-size: 22px;
+      color:#dfdfdf;
+    }
+    .counter-name {
+      font-size: 16px;
+
+    }
   </style>
 
   <script>
@@ -77,3 +85,4 @@
   <script src="/static/js/admin/repository/list.js"></script>
   <script src="/static/js/admin/harvest/harvest.js"></script>
   <script src="/static/js/admin/harvest/process.js"></script>
+  <script src="/static/3rd_party/others/js/countUp.min.js"></script>

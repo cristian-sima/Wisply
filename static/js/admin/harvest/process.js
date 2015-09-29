@@ -172,12 +172,50 @@ var HarvestProcess = function() {
 				 return html;
 		 }
 		 function drawBadges() {
-			 var text = '<div class="row text-center" id="repository-elements" style="display:none"><table class="table"><tbody><tr>';
-			 var records = '<td><div class="text-center col-xs-3 col-md-3">' +
-					 'Records<br />' +
-						 '<span class="badge" id="repository-elements-records">0</span>' +
-					'</div></td>';
-					text += records;
+			 var text = '<div class="row text-center" id="repository-elements" style="display:block"><table class="table"><tbody><tr>';
+
+			 function getCounters(counters) {
+				 function getCounter(conter){
+					 return '<td><div id="repository-counter-container-' + counter.id + '" class="text-center text-muted col-md-3">' +
+							"<div class='counter-name'>" + counter.name +  '</div>' +
+								 '<span class="label label-as-badge big-number text-muted" id="repository-counter-' + counter.id + '">0</span>' +
+							'</div></td>';
+				 }
+				 var html = "",
+				 counter = {},
+				 counterHTML="",
+				 i;
+
+				 for (i=0; i<counters.length; i++) {
+					 counter = counters[i];
+							 counterHTML = getCounter(counter);
+							 html += counterHTML;
+
+					 }
+				 return html;
+			 }
+
+			 var countersObject = [
+				 {
+					 name: "Formats",
+					 id: "formats",
+				 },
+				 {
+					 name: "Identifiers",
+					 id: "identifiers",
+				 },
+				 {
+					 name: "Sets",
+					 id: "sets",
+				 },
+				 {
+					 name: "Records",
+					 id: "records",
+				 }
+			 ];
+			 var countersHTML = "";
+			 	countersHTML = getCounters(countersObject);
+					text += countersHTML;
 					text += "</tr></tbody></table></div>";
 			 return text;
 		 }
@@ -186,7 +224,162 @@ var HarvestProcess = function() {
 		 html += getIdentification(data);
 		 this.manager.GUI.showCurrent(html);
 		}
+	}, {
+		id: 5,
+		name: "Harvesting...",
+		/**
+		 * It saves the reference of manager
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
+		perform: function(manager) {
+			this.manager = manager;
+			this.counters = {};
+			this.init();
+		},
+		/**
+		 * It adds the counters
+		 */
+		init: function () {
+				this.addCounter("formats");
+				this.setCurrentCounter("formats");
+				this.currentCounter.start(100);
+		},
+		/**
+		 * It sets the current counter
+		 * @param  {string} type The name of the counter
+		 */
+		setCurrentCounter: function(type) {
+				this.currentCounter = this.counters[type];
+		},
+		/**
+		 * It analyse the result from the server and decides which counter to update
+		 * @param  {object} result The message from the server
+		 */
+		analyse: function(result) {
+			switch (result.Operation) {
+				case "start":
+						harvestHistory.log("Harvesting " + result.Type + " started!");
+						this.setCurrentCounter(result.Type);
+						this.currentCounter.start(result.Count);
+				break;
+				case "update":
+						harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
+						this.currentCounter.update(result.Count);
+				break;
+				case "finish":
+						harvestHistory.log("Harvesting " + result.Type +  " finished!");
+						this.currentCounter.finish();
+					break;
+				case "harvesting-done":
+					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
+					delete this.counters;
+					this.manager.firedStageFinished();
+					break;
+			}
+		},
+		/**
+		 * It adds a new counter.
+		 * @param {string} type The type of counter. It can be "formats"
+		 */
+		addCounter: function (type) {
+				this.counters[type] = new WisplyCounter(type);
+		},
+		/**
+		 * It updates the counter
+		 * @param  {string} type  The type of counter
+		 */
+		getCounter: function(type) {
+			return this.counters[type];
+		},
+		/**
+		 * It is called by stage manager. In case there is a current counter, it tells it to show the error
+		 */
+		stop: function() {
+			if(this.currentCounter) {
+				this.currentCounter.showError();
+			}
+		}
 	}];
+	/**
+	 * The constructor does nothing
+	 * @memberof HarvestProcess
+	 * @class WisplyCounter
+	 * @classdesc It decides what to do with the messages from the server
+	 */
+	var WisplyCounter = function WisplyCounter(type) {
+			this.type = type;
+			this.object = undefined;
+			this.stopped = false;
+			this.container = $("#repository-counter-container-" + type);
+			this.element = $("#repository-counter-" + type);
+	};
+	WisplyCounter.prototype =
+		/** @lends HarvestProcess.WisplyCounter */
+		{
+				/**
+			 * It updates the counter
+			 */
+				update: function(value) {
+						this.object.update(value);
+				},
+				/**
+				 * It sets the counter yellow and starts it
+				 */
+				start: function (value) {
+						this.container.removeClass("text-muted");
+						this.element.addClass("label-warning");
+						this.element.css({"color": "#ffffff"});
+						this._start(value);
+				},
+				/**
+				 * @private
+				 * It creates the counter and starts the counter
+				 * @param [number] value The value to go to
+				 */
+				_start: function(value) {
+					var instance = this,
+						options = {
+					  useEasing : true,
+					  useGrouping : true,
+					  separator : ',',
+					  decimal : '.',
+					  prefix : '',
+					  suffix : ''
+					};
+						this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, 4, options);
+						this.object.start(function() {
+							instance._finish();
+						});
+				},
+				/**
+				 * It is called when the counter has finished
+				 * @private
+				 */
+				_finish: function() {
+					if(this.stopped) {
+							this.element.removeClass("label-warning");
+							this.element.addClass("label-success");
+					}
+				},
+				/**
+				 * It sets the stopped value to true. In case the counter has finished, it calls _finish
+				 * @return {[type]}
+				 */
+				finish: function() {
+						this.stopped = true;
+						if(this.object.remaining <= 0 ) {
+							this._finish();
+						}
+				},
+				/**
+				 * It makes the counter red
+				 */
+				showError: function(type) {
+						this.container.removeClass("text-muted text-warning text-success");
+						this.container.addClass("text-danger");
+				}
+		};
+
 	/**
 	 * The constructor does nothing
 	 * @memberof HarvestProcess
@@ -226,6 +419,15 @@ var HarvestProcess = function() {
 								this.stage.firedStageFinished();
 							}
 							break;
+						case "harvesting":
+								var result = message.Value;
+								if(result.IsOk === false) {
+									this.getCounter().showError();
+									this.stage.stop();
+								} else {
+									this.stages.currentStage.analyse(result);
+								}
+								break;
 						case "identification-details":
 								this.stage.stages[4].paint(message.Value);
 								this.stage.firedStageFinished();

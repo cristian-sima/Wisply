@@ -132,7 +132,7 @@ func (controller *HarvestController) StartProcess(message *ws.Message, connectio
 func (controller *HarvestController) Notify(message *harvest.Message) {
 	process, ok := CurrentProcesses[message.Repository]
 
-	fmt.Println("<-->  Harvest Controller: The controller has received this message:")
+	controller.log("The controller has received this message:")
 	fmt.Println(message)
 	if ok {
 		switch message.Name {
@@ -173,12 +173,26 @@ func ConvertToWebsocketMessage(old *harvest.Message) *ws.Message {
 
 // GetProcess sends the current process on the server for a repository
 func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
-	processObject, _ := CurrentProcesses[message.Repository]
+	controller.log("Yes it goes")
+	process, processExists := CurrentProcesses[message.Repository]
+	if !processExists {
+		controller.log("I do not have any process for " + strconv.Itoa(message.Repository))
+	} else {
+		controller.log("I have a process for the repository " + strconv.Itoa(message.Repository))
+		controller.log("I add a new connection for the repository " + strconv.Itoa(message.Repository) + " process")
+		process.addConnection(connection)
+		fmt.Println(process)
+	}
 	hub.SendMessage(&ws.Message{
 		Name:       "existing-process-on-server",
-		Value:      &processObject,
+		Value:      &process,
 		Repository: message.Repository,
 	}, connection)
+
+}
+
+func (controller *HarvestController) log(message string) {
+	fmt.Println("<-->  Harvest Controller: " + message)
 }
 
 // SendAllRepositoriesStatus gets all repositories' status only and sends them to a connection

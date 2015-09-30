@@ -17,6 +17,8 @@ func (repository *EPrintsRepository) Validate() {
 	defer func() {
 		err := recover()
 		if err != nil {
+			repository.log("I encoured a problem with validation:")
+			fmt.Println(err)
 			msg := Message{
 				Name:  "verification-finished",
 				Value: "failed",
@@ -44,10 +46,9 @@ func (repository *EPrintsRepository) Validate() {
 func (repository *EPrintsRepository) HarvestIdentification() {
 
 	defer func() {
-		fmt.Println("Defer identification")
 		err := recover()
 		if err != nil {
-			fmt.Println("Identification problem")
+			repository.log("I encoured a problem with identification request:")
 			fmt.Println(err)
 			msg := Message{
 				Name:  "identification-harvested-finished",
@@ -88,27 +89,24 @@ func (repository *EPrintsRepository) HarvestIdentification() {
 // HarvestFormats receives the formats
 func (repository *EPrintsRepository) HarvestFormats() {
 	defer func() {
-		fmt.Println("Defer formats")
 		err := recover()
 		if err != nil {
-			fmt.Println("Formats problem")
+			repository.log("I encoured a problem with the harvest formats request:")
+			fmt.Println(err)
 			msg := Message{
 				Name:  "harvesting-failed",
 				Value: "failed",
 			}
-			fmt.Println("failed")
 			repository.notifyManager(&msg)
 		}
 	}()
 
-	fmt.Println("Trimit pentru formats")
 	formatRequest := (&oai.Request{
 		BaseURL: repository.URL,
 		Verb:    "ListMetadataFormats",
 	})
 
 	formatRequest.Harvest(func(record *oai.Response) {
-		fmt.Println("le-am luat")
 
 		var formats []Formater
 
@@ -137,10 +135,9 @@ func (repository *EPrintsRepository) HarvestFormats() {
 // HarvestCollections receives the sets alias collections
 func (repository *EPrintsRepository) HarvestCollections() {
 	defer func() {
-		fmt.Println("Defer collections")
 		err := recover()
 		if err != nil {
-			fmt.Println("!!!! collections problem")
+			repository.log("I encoured a problem with the harvest collections request:")
 			fmt.Println(err)
 			msg := Message{
 				Name:  "harvesting-failed",
@@ -150,22 +147,17 @@ func (repository *EPrintsRepository) HarvestCollections() {
 		}
 	}()
 
-	fmt.Println("Trimit pentru collections")
 	formatRequest := (&oai.Request{
 		BaseURL: repository.URL,
 		Verb:    "ListSets",
 	})
 
 	formatRequest.Harvest(func(response *oai.Response) {
-		fmt.Println("le-am luat collections")
 
 		var collections []Collection
 
-		fmt.Println("in fata")
 		remoteCollections := response.ListSets.Set
 
-		fmt.Println(remoteCollections)
-		fmt.Println("dupa")
 		for _, collection := range remoteCollections {
 			collection := &OAICollection{
 				Name: collection.SetName,
@@ -185,6 +177,56 @@ func (repository *EPrintsRepository) HarvestCollections() {
 	})
 }
 
+// HarvestRecords receives records
+func (repository *EPrintsRepository) HarvestRecords() {
+	defer func() {
+		err := recover()
+		if err != nil {
+			repository.log("I encoured a problem with the harvest records request:")
+			fmt.Println(err)
+			msg := Message{
+				Name:  "harvesting-failed",
+				Value: "failed",
+			}
+			repository.notifyManager(&msg)
+		}
+	}()
+
+	formatRequest := (&oai.Request{
+		BaseURL:        repository.URL,
+		Verb:           "ListRecords",
+		MetadataPrefix: "oai_dc",
+	})
+
+	formatRequest.Harvest(func(response *oai.Response) {
+
+		var records []Record
+
+		remoteRecords := response.ListRecords.Records
+
+		for _, record := range remoteRecords {
+			record := &OAIRecord{
+				Identifier: record.Header.Identifier,
+				Datestamp:  record.Header.DateStamp,
+			}
+			records = append(records, record)
+		}
+
+		result := OAIRecordsResult{
+			isOk: true,
+			data: records,
+		}
+
+		repository.Manager.SaveRecords(&result)
+	}, func(resp *oai.Response) {
+		repository.Manager.EndCollections()
+	})
+}
+
 func (repository *EPrintsRepository) notifyManager(message *Message) {
 	repository.Manager.Notify(message)
+}
+
+func (repository *EPrintsRepository) log(message interface{}) {
+	fmt.Println("<-->  EPrints: " + message.(string))
 }

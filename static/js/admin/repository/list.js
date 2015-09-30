@@ -190,7 +190,7 @@ var Repositories = function () {
     case "verification-failed":
       label = "danger";
         break;
-    case "upgrading":
+    case "updating":
     case "verifying":
     case "initializing":
       label = "warning";

@@ -29,10 +29,10 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 
 	ws, err := upgrader.Upgrade(response, request, nil)
 	if _, ok := err.(websocket.HandshakeError); ok {
-		fmt.Println("I have a problem with handshaking")
+		hub.log("I have a problem with handshaking")
 		fmt.Println(err)
 	} else if err != nil {
-		fmt.Println("I have a different problem")
+		hub.log("I have a different problem")
 		fmt.Println(err)
 	}
 	connection := &Connection{
@@ -89,10 +89,14 @@ func (hub *Hub) log(message string) {
 }
 
 func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
-	ws, _ := json.Marshal(&message)
+	ws, err := json.Marshal(&message)
+	if err != nil {
+		hub.log("I got an error when I tried to compress the websocket message into json at sendWebsocket[:91]. Here is the error:")
+		fmt.Println(err)
+	}
 	select {
 	case connection.send <- ws:
-		fmt.Println("go: websocket sent")
+		hub.log("Websocket sent")
 	default:
 		close(connection.send)
 		delete(hub.connections, connection)

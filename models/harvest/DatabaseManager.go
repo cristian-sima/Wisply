@@ -14,6 +14,8 @@ type databaseManager struct {
 	manager *Manager
 }
 
+// IDENTITY
+
 // StartProcess starts the process
 func (db *databaseManager) InsertIdentity(identification *Identificationer) {
 
@@ -76,6 +78,8 @@ func (db *databaseManager) insertEmails(identification *Identificationer) {
 
 }
 
+//  FORMATS
+
 // InsertFormats inserts the formats in the database
 func (db databaseManager) InsertFormats(formats []Formater) {
 	db.clearFormats()
@@ -106,13 +110,9 @@ func (db *databaseManager) clearFormats() {
 	query.Exec(strconv.Itoa(db.manager.GetRepository().ID))
 }
 
-// InsertCollections inserts the collections in the database
-func (db databaseManager) InsertCollections(collections []Collection) {
-	db.clearCollections()
-	db.insertCollections(collections)
-}
+// COLLECTIONS
 
-func (db databaseManager) insertCollections(collections []Collection) {
+func (db databaseManager) InsertCollections(collections []Collection) {
 	var sql string
 	ID := strconv.Itoa(db.manager.GetRepository().ID)
 	for _, collection := range collections {
@@ -129,12 +129,40 @@ func (db databaseManager) insertCollections(collections []Collection) {
 	}
 }
 
-func (db *databaseManager) clearCollections() {
+func (db *databaseManager) ClearCollections() {
 	var sql string
 	sql = "DELETE from `repository_collection` WHERE repository=?"
 	query, _ := database.Database.Prepare(sql)
 	query.Exec(strconv.Itoa(db.manager.GetRepository().ID))
 }
+
+// Records
+
+func (db databaseManager) InsertRecords(records []Record) {
+	var sql string
+	ID := strconv.Itoa(db.manager.GetRepository().ID)
+	for _, record := range records {
+		sqlColumns := "(`repository`, `identifier`, `datestamp`)"
+		sqlValues := "(?, ?, ?)"
+		sql = "INSERT INTO `repository_resource` " + sqlColumns + " VALUES " + sqlValues
+
+		query, err := database.Database.Prepare(sql)
+		query.Exec(ID, record.GetIdentifier(), record.GetDatestamp())
+
+		if err != nil {
+			db.log("Hmmm problems when inserting records")
+		}
+	}
+}
+
+func (db *databaseManager) ClearRecords() {
+	var sql string
+	sql = "DELETE from `repository_resource` WHERE repository=?"
+	query, _ := database.Database.Prepare(sql)
+	query.Exec(strconv.Itoa(db.manager.GetRepository().ID))
+}
+
+// ---
 
 func (db *databaseManager) SetManager(manager *Manager) {
 	db.manager = manager

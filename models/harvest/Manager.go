@@ -8,12 +8,13 @@ import (
 
 // Manager is a link between controller and repository
 type Manager struct {
-	remote        RemoteRepositoryInterface
-	local         *repository.Repository
-	db            *databaseManager
-	CurrentAction int                `json:"CurrentAction"`
-	Actions       map[string]*Action `json:"Actions"`
-	Controller    Controller
+	remote         RemoteRepositoryInterface
+	local          *repository.Repository
+	db             *databaseManager
+	CurrentAction  int                `json:"CurrentAction"`
+	Actions        map[string]*Action `json:"Actions"`
+	Controller     Controller         `json:"-"`
+	Identification *Identificationer  `json:"Identification"`
 }
 
 // StartProcess starts the process
@@ -65,13 +66,13 @@ func (manager *Manager) SaveIdentification(result IdentificationResulter) {
 		manager.log("The identification is ok")
 		manager.changeLocalStatus("ok")
 		manager.db.InsertIdentity(result.GetData())
+		manager.Identification = result.GetData()
 		manager.harvestFormarts()
 	}
 }
 
 func (manager *Manager) harvestFormarts() {
-	fmt.Println("started")
-
+	manager.changeLocalStatus("updating")
 	manager.setCurrentAction("harvesting")
 	manager.createAction("formats")
 	manager.remote.HarvestFormats()
@@ -92,10 +93,13 @@ func (manager *Manager) EndFormats() {
 	manager.harvestCollections()
 }
 
+// COLLECTIONS
+
 func (manager *Manager) harvestCollections() {
 	manager.log("I am harvasting collections")
 	manager.setCurrentAction("harvesting")
 	manager.createAction("collections")
+	manager.db.ClearCollections()
 	manager.remote.HarvestCollections()
 
 }
@@ -112,8 +116,35 @@ func (manager *Manager) SaveCollections(result CollectionResult) {
 // EndCollections it notifies the client the collections are finished
 func (manager *Manager) EndCollections() {
 	manager.endAction("collections")
+	manager.harvestRecords()
+}
+
+// Records
+
+func (manager *Manager) harvestRecords() {
+	manager.log("I am harvasting records")
+	manager.setCurrentAction("harvesting")
+	manager.createAction("records")
+	manager.db.ClearRecords()
+	manager.remote.HarvestRecords()
+
+}
+
+// SaveRecords retrives the records and stores them
+func (manager *Manager) SaveRecords(result RecordResult) {
+	records := result.GetData()
+	manager.log("Records received")
+	manager.updateAction(len(records), "records")
+	manager.db.InsertRecords(records)
+}
+
+// EndRecords it notifies the client the records are finished
+func (manager *Manager) EndRecords() {
+	manager.endAction("records")
 	manager.End()
 }
+
+// ---
 
 func (manager *Manager) endAction(name string) {
 	manager.Actions[name].Finish()
@@ -126,14 +157,15 @@ func (manager *Manager) setCurrentAction(actionName string) {
 
 func (manager *Manager) createAction(name string) {
 	manager.Actions[name] = &Action{
-		Type: name,
+		Type:      name,
+		IsCurrent: true,
 	}
 	manager.notifyAction(manager.Actions[name], "start")
 }
 
 func (manager *Manager) updateAction(newCount int, name string) {
 	action := manager.Actions[name]
-	action.Count = newCount
+	action.Update(newCount)
 	manager.notifyAction(action, "update")
 }
 

@@ -9,9 +9,10 @@ var Actions = map[string]int{
 
 // Action represents the state (finish) and the number
 type Action struct {
-	Finished bool   `json:"Finished"`
-	Type     string `json:"Type"`
-	Count    int    `json:"Number"`
+	Finished  bool   `json:"Finished"`
+	Type      string `json:"Type"`
+	Count     int    `json:"Number"`
+	IsCurrent bool   `json:"IsCurrent"`
 }
 
 // Update changes the count of action
@@ -22,4 +23,5 @@ func (action *Action) Update(newValue int) {
 // Finish marks the action as finished
 func (action *Action) Finish() {
 	action.Finished = true
+	action.IsCurrent = false
 }

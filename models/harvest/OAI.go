@@ -104,7 +104,7 @@ func (repository *OAIFormat) GetNamespace() string {
 
 // COLLECTIONS
 
-// OAIFormatResult is a result of identification for OAI protocol
+// OAICollectionResult is a result which contains collections
 type OAICollectionResult struct {
 	isOk bool
 	data []Collection
@@ -134,4 +134,38 @@ func (repository *OAICollection) GetName() string {
 // GetSpec returns the id of the collection
 func (repository *OAICollection) GetSpec() string {
 	return repository.Spec
+}
+
+// RESOURCES
+
+// OAIRecordsResult is a result which contains records
+type OAIRecordsResult struct {
+	isOk bool
+	data []Record
+}
+
+// IsOk returns if the result has succeeded
+func (result *OAIRecordsResult) IsOk() bool {
+	return result.isOk
+}
+
+// GetData returns the data
+func (result *OAIRecordsResult) GetData() []Record {
+	return result.data
+}
+
+// OAIRecord represents an OAI record
+type OAIRecord struct {
+	Datestamp  string
+	Identifier string
+}
+
+// GetDatestamp returns the datastamp of the record
+func (record *OAIRecord) GetDatestamp() string {
+	return record.Datestamp
+}
+
+// GetIdentifier returns the identifier of the record
+func (record *OAIRecord) GetIdentifier() string {
+	return record.Identifier
 }

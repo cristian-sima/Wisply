@@ -292,7 +292,7 @@ var Harvest = function() {
 							return toReturn;
 					}
 
-					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Value) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);

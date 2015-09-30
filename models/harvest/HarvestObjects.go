@@ -30,6 +30,8 @@ type Formater interface {
 	GetSchema() string
 }
 
+// COLLECTIONS
+
 // CollectionResult ... is a result from the remote repository
 type CollectionResult interface {
 	IsOk() bool
@@ -40,4 +42,18 @@ type CollectionResult interface {
 type Collection interface {
 	GetName() string
 	GetSpec() string
+}
+
+// RESOURCES
+
+// RecordResult ... is a result from the remote repository
+type RecordResult interface {
+	IsOk() bool
+	GetData() []Record
+}
+
+// Record ... must be implemented by a repository
+type Record interface {
+	GetIdentifier() string
+	GetDatestamp() string
 }

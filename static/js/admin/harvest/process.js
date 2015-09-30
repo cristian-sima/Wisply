@@ -56,8 +56,10 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				this.initExistingProcess(message.Value);
+				harvestHistory.log("There is already a process on server.");
+				this.initExistingProcess(message.Value.Manager);
 			} else {
+				harvestHistory.log("We start a new process");
 				this.initNewProcess();
 			}
 		},
@@ -65,8 +67,11 @@ var HarvestProcess = function() {
 		 * It is called when the process exists on the server. It sends on the current stage
 		 * @param  {object} contents The value of the message
 		 */
-		initExistingProcess: function(value) {
-			this.manager.performStage(value.CurrentAction);
+		initExistingProcess: function(serverManager) {
+			harvestHistory.log("Load process from stage <b>" + this.manager.stages[serverManager.CurrentAction].name + "</b>.");
+			this.manager.repository.Identification = serverManager.Identification;
+			this.manager.existingProcessActions = serverManager.Actions;
+			this.manager.performStage(serverManager.CurrentAction);
 		},
 		/**
 		 * It is called when there is no process on the server. It calls the next stage
@@ -136,93 +141,53 @@ var HarvestProcess = function() {
 			this.manager = manager;
 			this.init();
 		},
-    init: function () {
-        $("#URL-input").toggle();
-        $("#Name-Repository").toggle();
-        $("#modifyButton").hide();
-    },
+		init: function() {
+			$("#URL-input").toggle();
+			$("#Name-Repository").toggle();
+			$("#modifyButton").hide();
+		},
+		/**
+		 * It remembers the identification details, paints them and go to the next stage
+		 * @param  {object} indentification The object which holds all the identification details
+		 */
+		analyse: function(identification) {
+			this.manager.repository.Identification = identification;
+			this.paintIdentificationDetails(identification);
+			this.manager.firedStageFinished();
+		},
 		/**
 		 * It disables the possibility to modify the URL
 		 */
-		paint: function(data) {
+		paintIdentificationDetails: function(data) {
 			/**
-			* It returns the HTML table for an object
-			* @param  {object} data The object
-			* @return {string} HTML table for the object's data
-			*/
-		 function getIdentification(data) {
-				 var html = "";
-				 html += '<ul class="list-group text-left">';
-				 for (var property in data) {
-						 if (data.hasOwnProperty(property)) {
-								 if (property === "Description") {
-										 continue;
-								 } else if (typeof data[property] === 'object') {
-										 html += '<li class="list-group-item"> ' + property;
-										 html += getIdentification(data[property]);
-										 html += '</li>';
-								 } else {
-										 html += "  <li class='list-group-item'>";
-										 html += property + ": <strong>" + data[property] + "</strong>";
-										 html += "</li>";
-								 }
-						 }
-				 }
-				 html += "</ul>";
-				 return html;
-		 }
-		 function drawBadges() {
-			 var text = '<div class="row text-center" id="repository-elements" style="display:block"><table class="table"><tbody><tr>';
-
-			 function getCounters(counters) {
-				 function getCounter(conter){
-					 return '<td><div id="repository-counter-container-' + counter.id + '" class="text-center text-muted col-md-3">' +
-							"<div class='counter-name'>" + counter.name +  '</div>' +
-								 '<span class="label label-as-badge big-number text-muted" id="repository-counter-' + counter.id + '">0</span>' +
-							'</div></td>';
-				 }
-				 var html = "",
-				 counter = {},
-				 counterHTML="",
-				 i;
-
-				 for (i=0; i<counters.length; i++) {
-					 counter = counters[i];
-							 counterHTML = getCounter(counter);
-							 html += counterHTML;
-
-					 }
-				 return html;
-			 }
-
-			 var countersObject = [
-				 {
-					 name: "Formats",
-					 id: "formats",
-				 },
-				 {
-					 name: "Collections",
-					 id: "collections",
-				 },
-				 {
-					 name: "Identifiers",
-					 id: "identifiers",
-				 },
-				 {
-					 name: "Records",
-					 id: "records",
-				 }
-			 ];
-			 var countersHTML = "";
-			 	countersHTML = getCounters(countersObject);
-					text += countersHTML;
-					text += "</tr></tbody></table></div>";
-			 return text;
-		 }
-		 var html = "";
-		 html += drawBadges();
-		 html += getIdentification(data);
-		 this.manager.GUI.showCurrent(html);
+			 * It returns the HTML table for an object
+			 * @param  {object} data The object
+			 * @return {string} HTML table for the object's data
+			 */
+			function paint(data) {
+				var html = '<div id="harvesting-counters"></div>';
+				html += '<ul class="list-group text-left">';
+				for (var property in data) {
+					if (data.hasOwnProperty(property)) {
+						if (property === "Description") {
+							continue;
+						} else if (typeof data[property] === 'object') {
+							html += '<li class="list-group-item"> ' + property;
+							html += paint(data[property]);
+							html += '</li>';
+						} else {
+							html += "  <li class='list-group-item'>";
+							html += property + ": <strong>" + data[property] + "</strong>";
+							html += "</li>";
+						}
+					}
+				}
+				html += "</ul>";
+				return html;
+			}
+			var html = "";
+			html += paint(data);
+			this.manager.GUI.showCurrent(html);
 		}
 	}, {
 		id: 5,
@@ -239,17 +204,62 @@ var HarvestProcess = function() {
 		/**
 		 * It adds the counters
 		 */
-		init: function () {
-				this.addCounter("formats");
-				this.addCounter("collections");
-				this.setCurrentCounter("formats");
+		init: function() {
+			if (this.manager.existingProcessActions) {
+				this.manager.stages[4].perform(this.manager);
+				this.manager.stages[4].paintIdentificationDetails(this.manager.repository.Identification);
+			}
+			this.showCounters();
+			if (this.manager.existingProcessActions) {
+				this.loadServerCounters();
+			}
+
+		},
+		loadServerCounters: function() {
+			var serverCounter, serverType, clientCounter;
+			for (serverType in this.manager.existingProcessActions) {
+				if (this.manager.existingProcessActions.hasOwnProperty(serverType)) {
+					serverCounter = this.manager.existingProcessActions[serverType];
+					clientCounter = this.getCounter(serverCounter.Type);
+					clientCounter.start(serverCounter.Number);
+					if (serverCounter.Finished) {
+						clientCounter.finish();
+					}
+					if (serverCounter.IsCurrent) {
+						this.setCurrentCounter(serverCounter.Type);
+					}
+				}
+			}
+			delete this.manager.existingProcessActions;
+		},
+		showCounters: function() {
+			this.counters = [
+				new WisplyCounter({
+					name: "Formats",
+					type: "formats",
+				}),
+				new WisplyCounter({
+					name: "Collections",
+					type: "collections",
+				}),
+				new WisplyCounter({
+					name: "Records",
+					type: "records",
+				}),
+				new WisplyCounter({
+					name: "Identifiers",
+					type: "identifiers",
+				}),
+			];
+			this.setCurrentCounter("formats");
+			this.manager.GUI.drawCounters(this.counters, "harvesting-counters");
 		},
 		/**
 		 * It sets the current counter
 		 * @param  {string} type The name of the counter
 		 */
 		setCurrentCounter: function(type) {
-				this.currentCounter = this.counters[type];
+			this.currentCounter = this.getCounter(type);
 		},
 		/**
 		 * It analyse the result from the server and decides which counter to update
@@ -258,17 +268,17 @@ var HarvestProcess = function() {
 		analyse: function(result) {
 			switch (result.Operation) {
 				case "start":
-						harvestHistory.log("Harvesting " + result.Type + " started!");
-						this.setCurrentCounter(result.Type);
-						this.currentCounter.start(result.Count);
-				break;
+					harvestHistory.log("Harvesting " + result.Type + " started!");
+					this.setCurrentCounter(result.Type);
+					this.currentCounter.start(result.Count);
+					break;
 				case "update":
-						harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
-						this.currentCounter.update(result.Count);
-				break;
+					harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
+					this.currentCounter.update(result.Count);
+					break;
 				case "finish":
-						harvestHistory.log("Harvesting " + result.Type +  " finished!");
-						this.currentCounter.finish();
+					harvestHistory.log("Harvesting " + result.Type + " finished!");
+					this.currentCounter.finish();
 					break;
 				case "harvesting-done":
 					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
@@ -278,24 +288,24 @@ var HarvestProcess = function() {
 			}
 		},
 		/**
-		 * It adds a new counter.
-		 * @param {string} type The type of counter. It can be "formats"
-		 */
-		addCounter: function (type) {
-				this.counters[type] = new WisplyCounter(type);
-		},
-		/**
 		 * It updates the counter
-		 * @param  {string} type  The type of counter
+		 * @param  {string} requested  The type of counter
 		 */
-		getCounter: function(type) {
-			return this.counters[type];
+		getCounter: function(requested) {
+			var i, counter;
+			for (i = 0; i < this.counters.length; i++) {
+				counter = this.counters[i];
+				if (counter.type === requested) {
+					return counter;
+				}
+			}
+			throw new Exception("There is no counter with the name " + requested);
 		},
 		/**
 		 * It is called by stage manager. In case there is a current counter, it tells it to show the error
 		 */
 		stop: function() {
-			if(this.currentCounter) {
+			if (this.currentCounter) {
 				this.currentCounter.showError();
 			}
 		}
@@ -306,89 +316,98 @@ var HarvestProcess = function() {
 	 * @class WisplyCounter
 	 * @classdesc It decides what to do with the messages from the server
 	 */
-	var WisplyCounter = function WisplyCounter(type) {
-			this.type = type;
-			this.object = undefined;
-			this.stopped = false;
-			this.container = $("#repository-counter-container-" + type);
-			this.element = $("#repository-counter-" + type);
+	var WisplyCounter = function WisplyCounter(info) {
+		this.type = info.type;
+		this.name = info.name;
+		this.object = undefined;
+		this.stopped = false;
 	};
 	WisplyCounter.prototype =
 		/** @lends HarvestProcess.WisplyCounter */
 		{
-				/**
+			/**
 			 * It updates the counter
 			 */
-				update: function(value) {
-						this.object.update(value);
-				},
-				/**
-				 * It sets the counter yellow and starts it
-				 */
-				start: function (value) {
-						this.container.removeClass("text-muted");
-						this.element.addClass("label-warning");
-						this.element.css({"color": "#ffffff"});
-						this._start(value);
-				},
-				/**
-				 * @private
-				 * It creates the counter and starts the counter
-				 * @param [number] value The value to go to
-				 */
-				_start: function(value) {
-					var instance = this,
-						options = {
-					  useEasing : true,
-					  useGrouping : true,
-					  separator : ',',
-					  decimal : '.',
-					  prefix : '',
-					  suffix : ''
+			update: function(value) {
+				this.object.update(value);
+			},
+			/**
+			 * It sets the counter yellow and starts it
+			 */
+			start: function(value) {
+				this._getElements();
+				this.container.removeClass("text-muted");
+				this.element.addClass("label-warning");
+				this.element.css({
+					"color": "#ffffff"
+				});
+				this._start(value);
+			},
+			/**
+			 * It gets the JQuery elements
+			 */
+			_getElements: function () {
+					this.container = $("#repository-counter-container-" + this.type);
+					this.element = $("#repository-counter-" + this.type);
+			},
+			/**
+			 * @private
+			 * It creates the counter and starts the counter
+			 * @param [number] value The value to go to
+			 */
+			_start: function(value) {
+				var instance = this,
+					options = {  
+						useEasing: false,
+						  useGrouping: true,
+						  separator: ',',
+						  decimal: '.',
+						  prefix: '',
+						  suffix: ''
 					};
-						this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, 3, options);
-						this.object.start(function() {
-							instance._finish();
-						});
-				},
-				/**
-				 * It is called when the counter has finished
-				 * @private
-				 */
-				_finish: function() {
-					if(this.stopped) {
-							console.log("da");
-							this.element.removeClass("label-warning");
-							this.element.addClass("label-success");
-					}
-				},
-				/**
-				 * It sets the stopped value to true. In case the counter has finished, it calls _finish
-				 * @return {[type]}
-				 */
-				finish: function() {
-						this.stopped = true;
-						if(this.object.remaining <= 0 ) {
-							this._finish();
-						}
-				},
-				/**
-				 * It makes the counter red
-				 */
-				showError: function(type) {
-						this.container.removeClass("text-muted text-warning text-success");
-						this.container.addClass("text-danger");
+				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, (value / 80), options);
+				this.object.start(function() {
+					instance._finish();
+				});
+			},
+			/**
+			 * It is called when the counter has finished
+			 * @private
+			 */
+			_finish: function() {
+				if (this.stopped) {
+					this.element.removeClass("label-warning");
+					this.element.addClass("label-success");
 				}
+			},
+			/**
+			 * It sets the stopped value to true. In case the counter has finished, it calls _finish
+			 * @return {[type]}
+			 */
+			finish: function() {
+				this.stopped = true;
+				if (this.object.remaining <= 0) {
+					this._finish();
+				}
+			},
+			/**
+			 * It makes the counter red
+			 */
+			showError: function(type) {
+				this.element.removeClass("text-muted label-warning label-success");
+				this.element.addClass("label-danger");
+			},
+			getHTML: function() {
+				return '<div id="repository-counter-container-' + this.type + '" class="text-center text-muted col-md-3">' + "<div class='counter-name'>" + this.name + '</div>' + '<span class="label label-as-badge big-number text-muted" id="repository-counter-' + this.type + '">0</span>' + '</div>';
+			}
 		};
-
 	/**
 	 * The constructor does nothing
 	 * @memberof HarvestProcess
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
-	var DecisionManager = function DecisionManager() {
-	};
+	var DecisionManager = function DecisionManager() {};
 	DecisionManager.prototype =
 		/** @lends HarvestProcess.DecisionManager */
 		{
@@ -404,7 +423,7 @@ var HarvestProcess = function() {
 							this.stage.GUI.updateRepositoryStatus();
 							if (message.Value === "verifying") {
 								this.stage.performStage(3);
-							} else if (message.Value === "initializing"){
+							} else if (message.Value === "initializing") {
 								this.stage.firedStageFinished();
 							}
 							break;
@@ -412,7 +431,7 @@ var HarvestProcess = function() {
 							this.stage.currentStage.analyse(message);
 							break;
 						case "verification-finished":
-							if(message.Value === "failed") {
+							if (message.Value === "failed") {
 								this.stage.GUI.showCurrent("The verification failed");
 								this.stage.pause();
 								this.stage.stages[3].enableModifyURL();
@@ -421,18 +440,17 @@ var HarvestProcess = function() {
 							}
 							break;
 						case "harvesting":
-								var result = message.Value;
-								if(result.IsOk === false) {
-									this.getCounter().showError();
-									this.stage.stop();
-								} else {
-									this.stage.currentStage.analyse(result);
-								}
-								break;
+							var result = message.Value;
+							if (result.IsOk === false) {
+								this.getCounter().showError();
+								this.stage.stop();
+							} else {
+								this.stage.currentStage.analyse(result);
+							}
+							break;
 						case "identification-details":
-								this.stage.stages[4].paint(message.Value);
-								this.stage.firedStageFinished();
-						break;
+							this.stage.stages[4].analyse(message.Value);
+							break;
 					}
 				}
 			},
@@ -444,13 +462,12 @@ var HarvestProcess = function() {
 				return (message.Repository) && (message.Repository === this.stage.repository.id);
 			}
 		};
-
-		/**
-		 * Gets the JQuery elements and creates the indicator
-		 * @memberof HarvestProcess
-		 * @class StageGUI
-		 * @classdesc It contains the functionality for GUI
-		 */
+	/**
+	 * Gets the JQuery elements and creates the indicator
+	 * @memberof HarvestProcess
+	 * @class StageGUI
+	 * @classdesc It contains the functionality for GUI
+	 */
 	var StageGUI = function StageGUI(manager) {
 		this.manager = manager;
 		this.element = $("#stages");
@@ -480,10 +497,10 @@ var HarvestProcess = function() {
 				});
 				harvestHistory.setGUI("#history");
 				$("#historyButton").click(function() {
-						harvestHistory.gui.activate();
+					harvestHistory.gui.activate();
 				});
 				$("#currentButton").click(function() {
-						harvestHistory.gui.disable();
+					harvestHistory.gui.disable();
 				});
 			},
 			/**
@@ -575,6 +592,25 @@ var HarvestProcess = function() {
 				this.indicator.stop();
 			},
 			/**
+			 * It draws the Wisply counters in the element
+			 * @param  {array} counters An array with WisplyCounters
+			 * @param  {string} id       The id of the html element
+			 */
+			drawCounters: function(counters, id) {
+				var text = "",
+				 	html = "",
+					counter = {},
+					i;
+				for (i = 0; i < counters.length; i++) {
+					counter = counters[i];
+					html += counter.getHTML();
+				}
+				text += '<div class="row text-center" id="repository-elements" style="display:block">';
+				text += html;
+				text += "</div>";
+				$("#" + id).html(text);
+			},
+			/**
 			 * It updates the general status of the process
 			 */
 			updateProcessStatus: function() {
@@ -602,13 +638,12 @@ var HarvestProcess = function() {
 				$("#process-status").html(html);
 			}
 		};
-
-		/**
-		 * Gets the JQuery element
-		 * @memberof HarvestProcess
-		 * @class Indicator
-		 * @classdesc It represents a visual indicator for the current progress of the process
-		 */
+	/**
+	 * Gets the JQuery element
+	 * @memberof HarvestProcess
+	 * @class Indicator
+	 * @classdesc It represents a visual indicator for the current progress of the process
+	 */
 	var Indicator = function Indicator(gui) {
 		this.gui = gui;
 		this.element = $("#general-indicator");

@@ -6,6 +6,7 @@ type RemoteRepositoryInterface interface {
 	HarvestIdentification()
 	HarvestFormats()
 	HarvestCollections()
+	HarvestRecords()
 	SetManager(manager *Manager)
 }
 

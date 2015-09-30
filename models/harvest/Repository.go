@@ -7,12 +7,7 @@ type RemoteRepositoryInterface interface {
 	HarvestFormats()
 	HarvestCollections()
 	HarvestRecords()
-	SetManager(manager *Manager)
-}
-
-// Controller represents a controller
-type Controller interface {
-	Notify(*Message)
+	SetManager(manager *Process)
 }
 
 // Message encapsulates the message to communicate with controller
@@ -25,10 +20,10 @@ type Message struct {
 
 // RemoteRepository represents a remote repository
 type RemoteRepository struct {
-	Manager *Manager
+	Manager *Process
 }
 
 // SetManager sets the manager of a current repository
-func (repository *RemoteRepository) SetManager(manager *Manager) {
+func (repository *RemoteRepository) SetManager(manager *Process) {
 	repository.Manager = manager
 }

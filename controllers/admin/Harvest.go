@@ -17,7 +17,7 @@ var CurrentProcesses = make(map[int]*Process)
 // Process contians information about a process
 type Process struct {
 	Connections []*ws.Connection `json:"-"`
-	Manager     *harvest.Manager `json:"Manager"`
+	Manager     *harvest.Process `json:"Manager"`
 }
 
 func (process *Process) addConnection(connection *ws.Connection) {
@@ -118,7 +118,7 @@ func (controller *HarvestController) StartProcess(message *ws.Message, connectio
 		ID := message.Repository
 		delete(CurrentProcesses, ID)
 
-		harvestManager := harvest.NewManager(strconv.Itoa(ID), controller)
+		harvestManager := harvest.NewProcess(strconv.Itoa(ID), controller)
 		process := &Process{
 			Manager: harvestManager,
 		}

@@ -11,7 +11,7 @@ import (
 
 // Manager is a link between controller and repository
 type databaseManager struct {
-	manager *Manager
+	manager *Process
 }
 
 // IDENTITY
@@ -164,7 +164,7 @@ func (db *databaseManager) ClearRecords() {
 
 // ---
 
-func (db *databaseManager) SetManager(manager *Manager) {
+func (db *databaseManager) SetManager(manager *Process) {
 	db.manager = manager
 }
 

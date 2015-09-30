@@ -53,21 +53,14 @@ func (register *Register) createNewAccount(details map[string]interface{}) error
 func (register *Register) getHashedPassword(plainPassword string) string {
 	passwordArray := []byte(plainPassword)
 	// Hashing the password with the cost of 10
-	hashedPassword, err := bcrypt.GenerateFromPassword(passwordArray, 10)
-	if err != nil {
-		panic(err)
-	}
-	// concat the slice to string
+	hashedPassword, _ := bcrypt.GenerateFromPassword(passwordArray, 10)
 	return string(hashedPassword[:])
 }
 
 func (register *Register) checkEmailExists(email string) bool {
 	var exists bool
 	sql := "SELECT id FROM account WHERE email = ?"
-	query, err := wisply.Database.Prepare(sql)
-	if err != nil {
-		panic(err)
-	}
+	query, _ := wisply.Database.Prepare(sql)
 	query.QueryRow(email).Scan(&email)
 	return exists
 }

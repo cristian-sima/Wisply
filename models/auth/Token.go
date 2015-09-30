@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"strconv"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
@@ -34,7 +33,6 @@ func (token *Token) IsValid() bool {
 	var isValid bool
 	now, _ := strconv.Atoi(getCurrentTimestamp())
 	duration := Settings["duration"].(int)
-	fmt.Println(strconv.Itoa(now - duration - token.Timestamp))
 	if token.Timestamp+duration >= now {
 		isValid = true
 	}
@@ -51,11 +49,9 @@ func newTokenFromCookie(cookie *LoginCookie) (*Token, error) {
 }
 
 func generateToken(account *Account) *Token {
-
 	randomNumber, _ := uuid.NewV4()
 	plainValue := randomNumber.String()
 	timestamp := getCurrentTimestamp()
-
 	intTimestamp, _ := strconv.Atoi(timestamp)
 	token := Token{
 		Value:     plainValue,

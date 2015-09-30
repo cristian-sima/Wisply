@@ -72,6 +72,14 @@ func hasGoodFormat(plainCookie string) bool {
 	if len(elements) != 2 {
 		return false
 	}
+	ID := elements[0]
+	token := elements[1]
+	if len(ID) == 0 || len(token) == 0 {
+		return false
+	}
+	if _, err := strconv.Atoi(ID); err != nil {
+		return false
+	}
 	return true
 }
 

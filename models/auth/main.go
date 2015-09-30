@@ -83,9 +83,7 @@ func getCurrentTimestamp() string {
 
 // GetAccountByEmail It searches and returns the account with that email
 func GetAccountByEmail(email string) (*Account, error) {
-
 	account := Account{}
-
 	id := isValidEmail(email)
 	if !id.IsValid {
 		return &account, errors.New("The id is not valid")
@@ -122,6 +120,7 @@ func NewAccount(ID string) (*Account, error) {
 	return account, nil
 }
 
+// Returns the SHA1 of a string in a string format
 func getSHA1Digest(plainToken string) string {
 	array := []byte(plainToken)
 	hasher := sha1.New()

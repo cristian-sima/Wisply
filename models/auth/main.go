@@ -59,7 +59,7 @@ func isTokenValid(ID, hashedToken string) bool {
 
 	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
 	query, err := wisply.Database.Prepare(sql)
-	query.QueryRow(ID, hashedToken).Scan(&token)
+	query.QueryRow(ID, hashedToken).Scan(&token.Value, &token.Timestamp)
 
 	if err != nil {
 		return false

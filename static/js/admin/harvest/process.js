@@ -364,8 +364,13 @@ var HarvestProcess = function() {
 						  decimal: '.',
 						  prefix: '',
 						  suffix: ''
-					};
-				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, (value / 80), options);
+					},
+					time = (value / 80);
+
+				if(time > 10) {
+					time = 10;
+				}				
+				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, time, options);
 				this.object.start(function() {
 					instance._finish();
 				});

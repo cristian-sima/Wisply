@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Hub manages the connections
+// Hub represents the object which managers the message. It sends messages to the connections and it notifies the controller if there are new messages
 type Hub struct {
 	// Registered connections.
 	connections map[*Connection]bool
@@ -44,30 +44,27 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 	return connection
 }
 
-// SendMessage sends a message to ONE connection
+// SendMessage sends only one message to a single connection
 func (hub *Hub) SendMessage(message *Message, connection *Connection) {
 	hub.log("--> Hub: I send to a single connection the message: ")
-	fmt.Println(message)
 	hub.sendWebsocket(message, connection)
-}
-
-// BroadcastMessage sends a message to ALL the connection from the hub
-func (hub *Hub) BroadcastMessage(message *Message) {
-	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
-	fmt.Println(message)
-	hub.broadcast <- message
 }
 
 // SendGroupMessage sends a message to a GROUP of connections
 func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
 	hub.log("I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
-	fmt.Println(message)
 	for _, connection := range group {
 		hub.sendWebsocket(message, connection)
 	}
 }
 
-// Run starts the hub
+// BroadcastMessage sends a message to ALL the connection from the hub
+func (hub *Hub) BroadcastMessage(message *Message) {
+	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
+	hub.broadcast <- message
+}
+
+// Run starts the main chanel. It registers, unregisters and broadcasts messages
 func (hub *Hub) Run() {
 	for {
 		select {
@@ -84,14 +81,17 @@ func (hub *Hub) Run() {
 	}
 }
 
+// log prints a message in a nice format
 func (hub *Hub) log(message string) {
 	fmt.Println("--> Hub: " + message)
 }
 
+// sendWebsocket converts the message to a websocket and sends it to the connection
 func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
+	fmt.Println(message)
 	ws, err := json.Marshal(&message)
 	if err != nil {
-		hub.log("I got an error when I tried to compress the websocket message into json at sendWebsocket[:91]. Here is the error:")
+		hub.log("I got an error when I tried to compress the websocket message into json at sendWebsocket[ at line 94]. Here is the error:")
 		fmt.Println(err)
 	}
 	select {

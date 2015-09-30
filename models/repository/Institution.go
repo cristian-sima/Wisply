@@ -32,7 +32,7 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 		problem.Data = result.Errors
 		return problem, errors.New("It does not have valid details")
 	}
-	err := institution.updateDatabase(institutionDetails)
+	err := institution.updateInstitutionInDatabase(institutionDetails)
 	return problem, err
 }
 
@@ -49,7 +49,7 @@ func (institution *Institution) GetRepositories() []Repository {
 	return list
 }
 
-func (institution *Institution) updateDatabase(institutionDetails map[string]interface{}) error {
+func (institution *Institution) updateInstitutionInDatabase(institutionDetails map[string]interface{}) error {
 	name := institutionDetails["name"].(string)
 	description := institutionDetails["description"].(string)
 	id := strconv.Itoa(institution.ID)

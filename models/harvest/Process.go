@@ -16,11 +16,19 @@ type Process struct {
 	Actions        map[string]*Action `json:"Actions"`
 	Controller     WisplyController   `json:"-"`
 	Identification *Identificationer  `json:"Identification"`
+	managers       []*WisplyManager
+	currentManager *WisplyManager
+}
+
+// ManagerFinished is fired when a manager has finished the work
+func (process *Process) ManagerFinished() {
+
 }
 
 // Start starts the process
 func (process *Process) Start() {
-	process.log("I start the process for repository at " + process.local.URL + "... ")
+	process.log("I start the harvesting process")
+
 	process.changeLocalStatus("verifying")
 	process.setCurrentAction("verifying")
 	process.remote.Validate()

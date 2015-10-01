@@ -205,9 +205,11 @@ func (repository *EPrintsRepository) HarvestRecords() {
 		remoteRecords := response.ListRecords.Records
 
 		for _, record := range remoteRecords {
+
 			record := &OAIRecord{
 				Identifier: record.Header.Identifier,
 				Datestamp:  record.Header.DateStamp,
+				Keys:       repository.getKeys(record.Metadata.Body),
 			}
 			records = append(records, record)
 		}

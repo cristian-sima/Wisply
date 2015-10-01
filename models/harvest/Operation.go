@@ -10,6 +10,7 @@ type WisplyController interface {
 // WisplyProcessInterface ... defines the methods which must be implemented by a process
 type WisplyProcessInterface interface {
 	Start()
+	ManagerFinished()
 }
 
 // Log manages the operations for displaying information
@@ -50,4 +51,14 @@ type ManagerInterface interface {
 	Start()
 	End()
 	Save()
+}
+
+// WisplyManager represents a general manager
+type WisplyManager struct {
+	process *WisplyProcess
+}
+
+// GetProcess returns the proces of the manager
+func (manager *WisplyManager) GetProcess() *WisplyProcess {
+	return manager.process
 }

@@ -118,6 +118,7 @@ func (request *Request) Perform() (response *Response) {
 	// Unmarshall all the data
 	err = xml.Unmarshal(body, &response)
 	if err != nil {
+		fmt.Println("Problem xml")
 		panic(err)
 	}
 

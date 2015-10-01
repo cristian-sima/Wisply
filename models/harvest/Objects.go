@@ -56,4 +56,7 @@ type RecordResult interface {
 type Record interface {
 	GetIdentifier() string
 	GetDatestamp() string
+	GetKeys() *Keys
+	GetID() int64
+	SetID(ID int64)
 }

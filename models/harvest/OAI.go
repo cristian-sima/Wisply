@@ -158,6 +158,8 @@ func (result *OAIRecordsResult) GetData() []Record {
 type OAIRecord struct {
 	Datestamp  string
 	Identifier string
+	Keys       *Keys
+	ID         int64
 }
 
 // GetDatestamp returns the datastamp of the record
@@ -168,4 +170,19 @@ func (record *OAIRecord) GetDatestamp() string {
 // GetIdentifier returns the identifier of the record
 func (record *OAIRecord) GetIdentifier() string {
 	return record.Identifier
+}
+
+// GetKeys returns the keys of the record
+func (record *OAIRecord) GetKeys() *Keys {
+	return record.Keys
+}
+
+// GetKeys returns the keys of the record
+func (record *OAIRecord) GetID() int64 {
+	return record.ID
+}
+
+// SetID returns the keys of the record
+func (record *OAIRecord) SetID(ID int64) {
+	record.ID = ID
 }

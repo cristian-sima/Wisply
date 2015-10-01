@@ -221,7 +221,7 @@ func (repository *EPrintsRepository) HarvestRecords() {
 
 		repository.Manager.SaveRecords(&result)
 	}, func(resp *oai.Response) {
-		repository.Manager.EndCollections()
+		repository.Manager.EndRecords()
 	})
 }
 

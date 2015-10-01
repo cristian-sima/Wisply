@@ -139,25 +139,23 @@ func (db *databaseManager) ClearCollections() {
 // Records
 
 func (db databaseManager) InsertRecords(records []Record) {
+
+}
+
+func (db *databaseManager) InsertRecord(record Record) {
 	var sql string
 	ID := strconv.Itoa(db.manager.GetRepository().ID)
-	for _, record := range records {
+	sqlColumns := "(`repository`, `identifier`, `datestamp`)"
+	sqlValues := "(?, ?, ?)"
+	sql = "INSERT INTO `repository_resource` " + sqlColumns + " VALUES " + sqlValues
 
-		sqlColumns := "(`repository`, `identifier`, `datestamp`)"
-		sqlValues := "(?, ?, ?)"
-		sql = "INSERT INTO `repository_resource` " + sqlColumns + " VALUES " + sqlValues
+	query, err := database.Database.Prepare(sql)
+	query.Exec(ID, record.GetIdentifier(), record.GetDatestamp())
 
-		query, err := database.Database.Prepare(sql)
-		exec, err := query.Exec(ID, record.GetIdentifier(), record.GetDatestamp())
-
-		if err != nil {
-			db.log("Hmmm problems when inserting records")
-		}
-		ID, _ := exec.LastInsertId()
-		record.SetID(ID)
-
-		db.saveKeys(&record)
+	if err != nil {
+		db.log("Hmmm problems when inserting records")
 	}
+	db.saveKeys(&record)
 }
 
 func (db *databaseManager) saveKeys(record *Record) {
@@ -194,7 +192,7 @@ func (db *databaseManager) insertKeys(record *Record, keys []string, name string
 		sql = "INSERT INTO `resource_key` " + sqlColumns + " VALUES " + sqlValues
 
 		query, err := database.Database.Prepare(sql)
-		query.Exec(ID, (*record).GetID(), value, name)
+		query.Exec(ID, (*record).GetIdentifier(), value, name)
 
 		if err != nil {
 			db.log("Hmmm problems when inserting records")

@@ -45,7 +45,7 @@ func (process *WisplyProcess) SetName(name string) {
 	process.name = name
 }
 
-// ManagerInterface ... define the set of methods which must be implemented by a harvest manager
+// ManagerInterface ... defines the set of methods which must be implemented by a harvest manager
 type ManagerInterface interface {
 	Start()
 	End()

@@ -14,7 +14,7 @@ type Process struct {
 	db             *databaseManager
 	CurrentAction  int                `json:"CurrentAction"`
 	Actions        map[string]*Action `json:"Actions"`
-	Controller     Controller         `json:"-"`
+	Controller     WisplyController   `json:"-"`
 	Identification *Identificationer  `json:"Identification"`
 }
 
@@ -217,7 +217,7 @@ func (process *Process) notifyController(message *Message) {
 }
 
 // NewProcess creates a new harvest process
-func NewProcess(ID string, controller Controller) *Process {
+func NewProcess(ID string, controller WisplyController) *Process {
 	var remote RemoteRepositoryInterface
 	local, _ := repository.NewRepository(ID)
 

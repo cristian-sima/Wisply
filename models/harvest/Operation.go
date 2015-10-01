@@ -2,8 +2,8 @@ package harvest
 
 import "fmt"
 
-// Controller represents a controller
-type Controller interface {
+// WisplyController represents a controller
+type WisplyController interface {
 	Notify(*Message)
 }
 
@@ -16,7 +16,7 @@ type WisplyProcessInterface interface {
 type Log struct {
 }
 
-func (logger *Log) show(message string) {
+func show(message string) {
 	fmt.Println("<-->  " + message)
 }
 
@@ -24,15 +24,15 @@ func (logger *Log) show(message string) {
 type WisplyProcess struct {
 	Log
 	name       string
-	controller *Controller
+	controller *WisplyController
 }
 
 func (process *WisplyProcess) log(message string) {
-	process.Log.show(process.getType() + " " + process.name + ": " + message)
+	show(process.getType() + " " + process.name + ": " + message)
 }
 
 // GetController returns the reference to the controller which manages the process
-func (process *WisplyProcess) GetController() *Controller {
+func (process *WisplyProcess) GetController() *WisplyController {
 	return process.controller
 }
 

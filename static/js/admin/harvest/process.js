@@ -282,8 +282,7 @@ var HarvestProcess = function() {
 					break;
 				case "harvesting-done":
 					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
-					delete this.counters;
-					this.manager.firedStageFinished();
+					this.end();
 					break;
 			}
 		},
@@ -308,6 +307,15 @@ var HarvestProcess = function() {
 			if (this.currentCounter) {
 				this.currentCounter.showError();
 			}
+		},
+		/**
+		 * It is called when the stage has finished. It deletes the counters, the current counter and goes to the next stage
+		 * @return {[type]}
+		 */
+		end: function () {
+			delete this.currentCounter;
+			delete this.counters;
+			this.manager.firedStageFinished();
 		}
 	}];
 	/**
@@ -369,7 +377,7 @@ var HarvestProcess = function() {
 
 				if(time > 10) {
 					time = 10;
-				}				
+				}
 				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, time, options);
 				this.object.start(function() {
 					instance._finish();

@@ -78,7 +78,7 @@ func (request *Request) ChannelHarvestIdentifiers(channels []chan *Header) {
 // The finish callback is called when there is no more things
 func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 
-	fmt.Println("---------------------------")
+	fmt.Println("------------Starting---------------")
 	fmt.Println("<--> OAI: Start harvesting request...")
 
 	// Use Perform to get the OAI response
@@ -100,13 +100,16 @@ func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 		request.MetadataPrefix = ""
 		request.From = ""
 		request.ResumptionToken = resumptionToken
+
+		fmt.Println("------------Finished---------------")
+
 		request.Harvest(batchCallback, finishCallback)
 	} else {
 		fmt.Println(" <--> OAI: Request: Does not have resumption!")
+		fmt.Println("<--> OAI: Finished request")
+		fmt.Println("-------------Finished--------------")
 		finishCallback(response)
 	}
-	fmt.Println("<--> OAI: Finished request")
-	fmt.Println("---------------------------")
 }
 
 // Perform an HTTP GET request using the OAI Requests fields
@@ -135,6 +138,7 @@ func (request *Request) Perform() (response *Response) {
 	err = xml.Unmarshal(body, &response)
 	if err != nil {
 		fmt.Println(" <--> Problem when unmarshal XML")
+		fmt.Println(err)
 		panic(err)
 	}
 

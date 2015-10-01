@@ -118,7 +118,6 @@ func (process *Process) SaveCollections(result CollectionResult) {
 	collections := result.GetData()
 	process.log("Collections received")
 	process.updateAction(len(collections), "collections")
-	fmt.Println("insert")
 	process.db.InsertCollections(collections)
 }
 

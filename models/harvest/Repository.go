@@ -59,8 +59,9 @@ func (repository *RemoteRepository) getKeys(plainText []byte) *Keys {
 	// Unmarshall all the data
 	err := xml.Unmarshal(plainText, &keys)
 	if err != nil {
-		fmt.Println("Problem xml")
-		panic(err)
+		fmt.Println("I got a problem while parsing the Dublin Core format")
+		fmt.Println("This is the plain format: <<" + string(plainText) + ">>")
+		return &keys
 	}
 
 	return &keys

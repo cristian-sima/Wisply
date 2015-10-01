@@ -18,8 +18,8 @@ type Process struct {
 	Identification *Identificationer  `json:"Identification"`
 }
 
-// StartProcess starts the process
-func (process *Process) StartProcess() {
+// Start starts the process
+func (process *Process) Start() {
 	process.log("I start the process for repository at " + process.local.URL + "... ")
 	process.changeLocalStatus("verifying")
 	process.setCurrentAction("verifying")

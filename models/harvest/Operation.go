@@ -2,6 +2,11 @@ package harvest
 
 import "fmt"
 
+import (
+	history "github.com/cristian-sima/Wisply/models/history"
+	"github.com/cristian-sima/Wisply/models/repository"
+)
+
 // WisplyController represents a controller
 type WisplyController interface {
 	Notify(*Message)
@@ -13,23 +18,32 @@ type WisplyProcessInterface interface {
 	ManagerFinished()
 }
 
-// Log manages the operations for displaying information
-type Log struct {
+// Operation represents the basic operation
+type operation struct {
+	history       *history.Manager
+	operationName string
+	operationType string
+	local         *repository.Repository
 }
 
-func show(message string) {
-	fmt.Println("<-->  " + message)
+func (operation *operation) record(message string, repository int) {
+	event := history.Event{
+		Content:       message,
+		Repository:    repository,
+		OperationType: operation.operationType,
+		OperationName: operation.operationName,
+	}
+	operation.history.Record(&event)
 }
 
 // WisplyProcess is a basic process. A process does a series of actions using managers
 type WisplyProcess struct {
-	Log
-	name       string
+	operation
 	controller *WisplyController
 }
 
 func (process *WisplyProcess) log(message string) {
-	show(process.getType() + " " + process.name + ": " + message)
+	fmt.Println(process.operation.operationType + " " + process.operation.operationName + ": " + message)
 }
 
 // GetController returns the reference to the controller which manages the process
@@ -37,13 +51,10 @@ func (process *WisplyProcess) GetController() *WisplyController {
 	return process.controller
 }
 
-func (process *WisplyProcess) getType() string {
-	return "Process"
-}
-
 // SetName sets the name of a process
 func (process *WisplyProcess) SetName(name string) {
-	process.name = name
+	process.operationType = "Process"
+	process.operationName = name
 }
 
 // ManagerInterface ... defines the set of methods which must be implemented by a harvest manager

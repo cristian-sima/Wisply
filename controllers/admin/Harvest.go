@@ -142,13 +142,7 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 				hub.BroadcastMessage(msg)
 			}
 			break
-		case "verification-finished":
-			if message.Value == "failed" {
-				msg := ConvertToWebsocketMessage(message)
-				hub.SendGroupMessage(msg, process.Connections)
-				delete(CurrentProcesses, message.Repository)
-			}
-		case "harvesting":
+		case "harvesting", "verification-finished":
 			msg := ConvertToWebsocketMessage(message)
 			hub.SendGroupMessage(msg, process.Connections)
 			break

@@ -14,15 +14,16 @@ type Process struct {
 	Identification *Identificationer  `json:"Identification"`
 	managers       []*WisplyManager
 	currentManager *WisplyManager
-	history        *HistoryManager
 }
 
 // Start starts the process
 func (process *Process) Start() {
-	process.recordMessage(&Message{
-		Content: "I start the harvesting process",
-	})
+	process.record("The process has started")
+	process.startVerification()
+}
 
+func (process *Process) startVerification() {
+	process.record("I start the harvesting process")
 	process.changeLocalStatus("verifying")
 	process.setCurrentAction("verifying")
 	process.remote.Validate()
@@ -34,13 +35,12 @@ func (process *Process) Notify(message *Message) {
 	case "verification-finished":
 		{
 			if message.Value == "failed" {
-				process.recordMessage(&Message{
-					Content: "I start the harvesting process",
-				})
+				process.record("The verification failed")
 				process.changeLocalStatus("verification-failed")
 				process.notifyController(message)
+				process.End()
 			} else {
-				process.log("The validation passed")
+				process.record("The validation passed")
 				process.changeLocalStatus("verified")
 				process.harvestIdentification()
 			}
@@ -194,7 +194,7 @@ func (process *Process) notifyAction(action *Action, operation string) {
 
 // End receives the identification result and saves it in the local repository
 func (process *Process) End() {
-	process.changeLocalStatus("unverified")
+	process.record("The process is stopped")
 	process.notifyController(&Message{
 		Name: "delete-process",
 	})
@@ -215,13 +215,11 @@ func (process *Process) GetRepository() *repository.Repository {
 
 func (process *Process) notifyController(message *Message) {
 	message.Repository = process.local.ID
-	process.recordMessage(message)
 	process.Controller.Notify(message)
 }
 
-func (process *Process) recordMessage(message *Message) {
-	message.Repository = process.local.ID
-	process.history.Record(message)
+func (process *Process) record(message string) {
+	process.operation.record(message, process.local.ID)
 }
 
 // NewProcess creates a new harvest process

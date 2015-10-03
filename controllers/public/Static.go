@@ -74,7 +74,7 @@ func (controller *StaticController) ShowCookiesPolicy() {
 	pageName := "cookies"
 	controller.showStaticPage(pageName)
 
-	controller.SetCustomTitle("Wisply Cookie Policy")
+	controller.SetCustomTitle("Wisply Cookies Policy")
 	controller.IndicateLastModification(1442660323)
 }
 

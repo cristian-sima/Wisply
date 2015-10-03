@@ -2,6 +2,7 @@ describe('Testing static pages', function() {
 
   it('loads the home page', function(done) {
       browser
+          .windowHandleMaximize()
           .url('/')
           .getTitle(function(err, title) {
               expect(err).toBe(undefined);
@@ -41,6 +42,16 @@ describe('Testing static pages', function() {
           .call(done);
   });
 
+  it('loads the accessibility page', function(done) {
+      browser
+          .url('/accessibility')
+          .getTitle(function(err, title) {
+              expect(err).toBe(undefined);
+              expect(title).toBe('Accessibility');
+          })
+          .call(done);
+  });
+
   // Help
   describe('Auth system', function() {
     it('loads the help page', function(done) {
@@ -52,7 +63,7 @@ describe('Testing static pages', function() {
             })
             .call(done);
     });
-    // Legal documents
+
     describe('Legal documents', function() {
       it('loads the privacy policy page', function(done) {
           browser
@@ -60,6 +71,24 @@ describe('Testing static pages', function() {
               .getTitle(function(err, title) {
                   expect(err).toBe(undefined);
                   expect(title).toBe('Wisply Privacy Policy');
+              })
+              .call(done);
+      });
+      it('loads the cookies policy', function(done) {
+          browser
+              .url('/cookies')
+              .getTitle(function(err, title) {
+                  expect(err).toBe(undefined);
+                  expect(title).toBe('Wisply Cookies Policy');
+              })
+              .call(done);
+      });
+      it('loads the terms and conditions page', function(done) {
+          browser
+              .url('/terms-and-conditions')
+              .getTitle(function(err, title) {
+                  expect(err).toBe(undefined);
+                  expect(title).toBe('Wisply Terms and Conditions');
               })
               .call(done);
       });
@@ -86,5 +115,4 @@ describe('Testing static pages', function() {
             .call(done);
     });
   });
-
 });

@@ -56,7 +56,7 @@ func (controller *StaticController) ShowPrivacyPolicy() {
 	pageName := "privacy"
 	controller.showStaticPage(pageName)
 
-	controller.SetCustomTitle("Wisply Privicy Policy")
+	controller.SetCustomTitle("Wisply Privacy Policy")
 	controller.IndicateLastModification(1442660323)
 }
 

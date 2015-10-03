@@ -1,6 +1,10 @@
 package harvest
 
-import repository "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"strconv"
+
+	repository "github.com/cristian-sima/Wisply/models/repository"
+)
 
 // Process is a link between controller and repository
 type Process struct {
@@ -42,15 +46,15 @@ func (process *Process) Notify(message *Message) {
 			} else {
 				process.record("The validation passed")
 				process.changeLocalStatus("verified")
-				process.harvestIdentification()
+				process.startIdentification()
 			}
 			break
 		}
 	}
 }
 
-func (process *Process) harvestIdentification() {
-	process.log("I harvest the identification")
+func (process *Process) startIdentification() {
+	process.record("I harvest the identification")
 	process.changeLocalStatus("initializing")
 	process.setCurrentAction("initializing")
 	process.remote.HarvestIdentification()
@@ -58,16 +62,16 @@ func (process *Process) harvestIdentification() {
 
 // SaveIdentification receives the identification result and saves it in the local repository
 func (process *Process) SaveIdentification(result IdentificationResulter) {
-	process.log("I received the identification.")
+	process.record("I received the identification.")
 	if !result.IsOk() {
 		process.changeLocalStatus("verification-failed")
-		process.log("Problems with identification")
+		process.record("Problems with identification")
 	} else {
 		process.notifyController(&Message{
 			Name:  "identification-details",
 			Value: result.GetData(),
 		})
-		process.log("The identification is ok")
+		process.record("The identification is ok")
 		process.changeLocalStatus("ok")
 		process.db.InsertIdentity(result.GetData())
 		process.Identification = result.GetData()
@@ -86,7 +90,7 @@ func (process *Process) harvestFormarts() {
 // SaveFormats retrives a format and saves it
 func (process *Process) SaveFormats(result FormatResulter) {
 	formats := result.GetData()
-	process.log("Format received")
+	process.record("Format received")
 	process.updateAction(len(formats), "formats")
 	process.db.InsertFormats(formats)
 }
@@ -94,13 +98,13 @@ func (process *Process) SaveFormats(result FormatResulter) {
 // EndFormats it notifies the client the formats are finished
 func (process *Process) EndFormats() {
 	process.endAction("formats")
-	process.harvestCollections()
+	process.startHarvestingCollections()
 }
 
 // COLLECTIONS
 
-func (process *Process) harvestCollections() {
-	process.log("I am harvasting collections")
+func (process *Process) startHarvestingCollections() {
+	process.record("I am harvasting collections")
 	process.setCurrentAction("harvesting")
 	process.createAction("collections")
 	process.db.ClearCollections()
@@ -111,13 +115,15 @@ func (process *Process) harvestCollections() {
 // SaveCollections retrives the collections and stores them
 func (process *Process) SaveCollections(result CollectionResult) {
 	collections := result.GetData()
-	process.log("Collections received")
-	process.updateAction(len(collections), "collections")
+	numberOfCollections := len(collections)
+	process.record(strconv.Itoa(numberOfCollections) + " collections received")
+	process.updateAction(numberOfCollections, "collections")
 	process.db.InsertCollections(collections)
 }
 
 // EndCollections it notifies the client the collections are finished
 func (process *Process) EndCollections() {
+	process.record("The collections harvesting is finished")
 	process.endAction("collections")
 	process.harvestRecords()
 }
@@ -125,7 +131,7 @@ func (process *Process) EndCollections() {
 // Records
 
 func (process *Process) harvestRecords() {
-	process.log("I am harvasting records")
+	process.record("I am harvasting records")
 	process.setCurrentAction("harvesting")
 	process.createAction("records")
 	process.db.ClearRecords()
@@ -136,13 +142,15 @@ func (process *Process) harvestRecords() {
 // SaveRecords retrives the records and stores them
 func (process *Process) SaveRecords(result RecordResult) {
 	records := result.GetData()
-	process.log("Records received")
-	process.updateAction(len(records), "records")
+	numberOfRecords := len(records)
+	process.record(strconv.Itoa(numberOfRecords) + " records received. From [" + records[0].GetIdentifier() + "] until [" + records[numberOfRecords-1].GetIdentifier() + "].")
+	process.updateAction(numberOfRecords, "records")
 	process.db.InsertRecords(records)
 }
 
 // EndRecords it notifies the client the records are finished
 func (process *Process) EndRecords() {
+	process.record("The record harvesting is finished")
 	process.endAction("records")
 	process.End()
 }
@@ -219,6 +227,10 @@ func (process *Process) notifyController(message *Message) {
 }
 
 func (process *Process) record(message string) {
+	process.notifyController(&Message{
+		Value: message,
+		Name:  "event-notice",
+	})
 	process.operation.record(message, process.local.ID)
 }
 

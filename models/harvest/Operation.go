@@ -73,3 +73,8 @@ type WisplyManager struct {
 func (manager *WisplyManager) GetProcess() *WisplyProcess {
 	return manager.process
 }
+
+// SetProcess sets the process
+func (manager *WisplyManager) SetProcess(process *WisplyProcess) {
+	manager.process = process
+}

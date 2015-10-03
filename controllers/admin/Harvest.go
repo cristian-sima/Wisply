@@ -136,7 +136,7 @@ func (controller *HarvestController) Notify(message *harvest.Message) {
 	fmt.Println(message)
 	if ok {
 		switch message.Name {
-		case "status-changed", "identification-details":
+		case "status-changed", "identification-details", "event-notice":
 			{
 				msg := ConvertToWebsocketMessage(message)
 				hub.BroadcastMessage(msg)

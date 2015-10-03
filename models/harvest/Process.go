@@ -1,10 +1,6 @@
 package harvest
 
-import (
-	"fmt"
-
-	repository "github.com/cristian-sima/Wisply/models/repository"
-)
+import repository "github.com/cristian-sima/Wisply/models/repository"
 
 // Process is a link between controller and repository
 type Process struct {
@@ -18,16 +14,14 @@ type Process struct {
 	Identification *Identificationer  `json:"Identification"`
 	managers       []*WisplyManager
 	currentManager *WisplyManager
-}
-
-// ManagerFinished is fired when a manager has finished the work
-func (process *Process) ManagerFinished() {
-
+	history        *HistoryManager
 }
 
 // Start starts the process
 func (process *Process) Start() {
-	process.log("I start the harvesting process")
+	process.recordMessage(&Message{
+		Content: "I start the harvesting process",
+	})
 
 	process.changeLocalStatus("verifying")
 	process.setCurrentAction("verifying")
@@ -36,12 +30,13 @@ func (process *Process) Start() {
 
 // Notify is called by a harvest repository with a message
 func (process *Process) Notify(message *Message) {
-	process.log("The manager has received this message:")
-	fmt.Println(message)
 	switch message.Name {
 	case "verification-finished":
 		{
 			if message.Value == "failed" {
+				process.recordMessage(&Message{
+					Content: "I start the harvesting process",
+				})
 				process.changeLocalStatus("verification-failed")
 				process.notifyController(message)
 			} else {
@@ -220,7 +215,13 @@ func (process *Process) GetRepository() *repository.Repository {
 
 func (process *Process) notifyController(message *Message) {
 	message.Repository = process.local.ID
+	process.recordMessage(message)
 	process.Controller.Notify(message)
+}
+
+func (process *Process) recordMessage(message *Message) {
+	message.Repository = process.local.ID
+	process.history.Record(message)
 }
 
 // NewProcess creates a new harvest process

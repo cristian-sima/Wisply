@@ -7,7 +7,7 @@
   </div>
   <div class="panel-body">
     <div class="table-responsive">
-      <table class="table table-striped table-hover ">
+      <table id="list-accounts" class="table table-striped table-hover ">
         <thead>
           <tr>
             <th class="hidden-xs">Id</th>
@@ -36,7 +36,7 @@
               <a href="/admin/accounts/modify/{{$element.ID}}">Modify</a>
             </td>
             <td>
-              <a class="deleteAccountButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
+              <a class="deleteAccountButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="#">Delete</a>
             </td>
           </tr>
           {{end }}

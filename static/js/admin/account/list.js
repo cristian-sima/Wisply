@@ -128,9 +128,10 @@ var Accounts = function () {
 
   /**
   * It is called when the user clicks the delete button. It requests the user to confirm
+  * @param [event] event The event which is generated
   * @event AccountsManager#confirmDelete
   */
-  function confirmDelete() {
+  function confirmDelete(event) {
     event.preventDefault();
     var instance,
     name,

@@ -17,6 +17,7 @@ func (controller *Controller) DisplayDashboard() {
 	controller.Data["numberOfAccounts"] = dashboard.Accounts
 	controller.Data["numberOfRepositories"] = dashboard.Repositories
 	controller.TplNames = "site/admin/admin/dashboard.tpl"
+	controller.SetCustomTitle("Admin - Dashboard")
 }
 
 // Prepare redirects to a login page in case the account is not connected, else it loads the page

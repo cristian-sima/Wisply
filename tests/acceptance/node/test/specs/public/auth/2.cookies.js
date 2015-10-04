@@ -66,23 +66,12 @@ browser.addCommand("isLongConnection", function() {
 // creates an ccount
 describe('Cookies', function() {
 
-    describe('Short connection', function() {
-      it('disconnects any account', function(done) {
-        browser
-        .pause(1500)
-        .url("/")
-        .isExisting('#menu-logout-button').then(function(isExisting){
-          console.log("Exista butonul");
-            if(isExisting) {
-                this.pause(1000);
-                this.click("#menu-logout-button");
-                this.pause(3500);
-            }
-        })
-        .call(done);
-      });
       it('connects and disconnects', function(done) {
         browser
+        .url("/auth/login")
+        .deleteCookie("session")
+        .deleteCookie("connection")
+        .pause(1000)
         .url("/auth/login")
         .pause(1500)
         .setValue('#login-email', user.email)
@@ -91,7 +80,6 @@ describe('Cookies', function() {
         .isShortConnection(function(err, result){
           expect(result).toBe(true);
         })
-        .click('#menu-logout-button')
         .pause(3000)
         .call(done);
       });
@@ -283,4 +271,3 @@ describe('Cookies', function() {
           });
         });
     });
-});

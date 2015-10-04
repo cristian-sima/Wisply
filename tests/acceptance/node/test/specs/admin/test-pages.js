@@ -7,14 +7,44 @@ accountsPage = {
 
 describe('Admin - Test pages', function() {
   admin.init(browser);
-  it('navigate to institutions', function(done) {
-      browser
-      .element("#sidebar")
-      .click("a=Institutions")
-      .getTitle(function(err, title) {
-          expect(err).toBe(undefined);
-          expect(title).toBe(accountsPage.title);
-      })
-      .call(done);
+  describe("institutions", function() {
+    it('list institutions', function(done) {
+        browser
+        .url('/admin/institutions')
+        .getTitle(function(err, title) {
+            expect(err).toBe(undefined);
+            expect(title).toBe("Admin - Institutions");
+        })
+        .call(done);
+    });
+    it('add', function(done) {
+        browser
+        .url('/admin/institutions/add')
+        .getTitle(function(err, title) {
+            expect(err).toBe(undefined);
+            expect(title).toBe("Add Institution");
+        })
+        .call(done);
+    });
+  });
+  describe("repositories", function() {
+    it('list repositories', function(done) {
+        browser
+        .url('/admin/repositories')
+        .getTitle(function(err, title) {
+            expect(err).toBe(undefined);
+            expect(title).toBe("Admin - Repositories");
+        })
+        .call(done);
+    });
+    it('add', function(done) {
+        browser
+        .url('/admin/repositories/add')
+        .getTitle(function(err, title) {
+            expect(err).toBe(undefined);
+            expect(title).toBe("Add Repository");
+        })
+        .call(done);
+    });
   });
 });

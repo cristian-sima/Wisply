@@ -17,12 +17,14 @@ func (controller *InstitutionController) DisplayAll() {
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
+	controller.SetCustomTitle("Admin - Institutions")
 	controller.TplNames = "site/admin/institution/list.tpl"
 	controller.Layout = "site/admin-layout.tpl"
 }
 
 // Add shows the form to add an institution
 func (controller *InstitutionController) Add() {
+	controller.SetCustomTitle("Add Institution")
 	controller.showAddForm()
 }
 

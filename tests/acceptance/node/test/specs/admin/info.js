@@ -18,6 +18,7 @@ exports.init = function (browser) {
     browser
         .windowHandleMaximize()
         .url("/")
+        .pause(1000)
         .isExisting('#menu-logout-button').then(function(isExisting){
             if(isExisting) {
                 this.click("#menu-logout-button");

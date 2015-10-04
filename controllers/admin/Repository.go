@@ -20,12 +20,14 @@ func (controller *RepositoryController) List() {
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
+	controller.SetCustomTitle("Admin - Repositories")
 	controller.TplNames = "site/admin/repository/list.tpl"
 }
 
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
+	controller.SetCustomTitle("Add Repository")
 	controller.showAddForm()
 }
 

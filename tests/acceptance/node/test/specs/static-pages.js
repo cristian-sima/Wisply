@@ -1,4 +1,4 @@
-describe('Testing static pages', function() {
+describe('Static pages', function() {
 
   it('loads the home page', function(done) {
       browser

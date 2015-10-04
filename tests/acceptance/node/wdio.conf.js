@@ -14,9 +14,9 @@ exports.config = {
     ],
     // Patterns to exclude.
     exclude: [
-        './test/specs/static-pages.js',
+    //    './test/specs/static-pages.js',
     //    './test/specs/help-page.js',
-
+    //    './test/specs/auth/login.js',
     ],
 
 

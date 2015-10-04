@@ -67,10 +67,24 @@ browser.addCommand("isLongConnection", function() {
 describe('Cookies', function() {
 
     describe('Short connection', function() {
+      it('disconnects any account', function(done) {
+        browser
+        .pause(1500)
+        .url("/")
+        .isExisting('#menu-logout-button').then(function(isExisting){
+          console.log("Exista butonul");
+            if(isExisting) {
+                this.pause(1000);
+                this.click("#menu-logout-button");
+                this.pause(3500);
+            }
+        })
+        .call(done);
+      });
       it('connects and disconnects', function(done) {
         browser
         .url("/auth/login")
-        .pause(1000)
+        .pause(1500)
         .setValue('#login-email', user.email)
         .setValue('#login-password', user.password)
         .submitForm("#login-form")

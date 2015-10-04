@@ -29,6 +29,7 @@ exports.init = function (browser) {
   });
   it('connects as Administrator', function (done) {
     browser
+        .pause(1000)
         .url("/auth/login?sendMe=/admin")
         .setValue('#login-email', account.email)
         .setValue('#login-password', account.password)

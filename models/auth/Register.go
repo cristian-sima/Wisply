@@ -58,9 +58,17 @@ func (register *Register) getHashedPassword(plainPassword string) string {
 }
 
 func (register *Register) checkEmailExists(email string) bool {
-	var exists bool
+	var (
+		exists bool
+		id     int
+	)
 	sql := "SELECT id FROM account WHERE email = ?"
 	query, _ := wisply.Database.Prepare(sql)
-	query.QueryRow(email).Scan(&email)
+	query.QueryRow(email).Scan(&id)
+
+	if id != 0 {
+		exists = true
+	}
+
 	return exists
 }

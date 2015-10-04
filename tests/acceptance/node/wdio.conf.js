@@ -17,6 +17,7 @@ exports.config = {
     //    './test/specs/static-pages.js',
     //    './test/specs/help-page.js',
     //    './test/specs/auth/login.js',
+    //    './test/specs/auth/register.js',
     ],
 
 
@@ -127,7 +128,7 @@ exports.config = {
     //
     // Gets executed before all workers get launched.
     onPrepare: function() {
-        console.log("Testing accesibility using Selenium + Node.js + Jasmine");
+        console.log("Testing functionality with Selenium + Node.js + WebdriverIO + Jasmine");
         console.log("Enjoy a cup of coffee and wait...");
     },
     //

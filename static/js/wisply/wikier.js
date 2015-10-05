@@ -67,6 +67,9 @@ var WikierModule = function() {
 							callback(error);
 						}
 					},
+          error: function(){
+            callback(error);
+          }
 				});
 			},
 			/**
@@ -91,14 +94,19 @@ var WikierModule = function() {
 						var page,
 							extract,
 							query = response.query,
-							pages;
+							pages,
+              errorExtract = "This is a redirect from a single Unicode character to an article or Wikipedia project page that names the character and describes its usage. For a multiple-character long title with diacritics, use template {{R from diacritics}} instead. For more information follow the category link.\nThis is a redirect from a symbol to the meaning of the symbol or to a related topic. For more information follow the category link.";
 						if (query) {
 							pages = query.pages;
 							for (page in pages) {
 								if (pages.hasOwnProperty(page)) {
 									extract = pages[page].extract;
 									if (extract) {
-										callback(success, extract);
+                    if(extract === errorExtract) {
+                      callback(error);
+                    } else {
+										  callback(success, extract);
+                    }
 									} else {
 										callback(error);
 									}
@@ -108,6 +116,9 @@ var WikierModule = function() {
 							callback(error);
 						}
 					},
+          error: function(){
+            callback(error);
+          },
 				});
 			}
 		};

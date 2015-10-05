@@ -23,6 +23,7 @@ var FunctionalityInstitution = function () {
       instance.fired_nameChanged();
     });
     this.wikier = new wisply.wikierModule.Wikier();
+    this.description = "";
   };
   Manager.prototype =
   /** @lends FunctionalityInstitution.Manager */
@@ -32,15 +33,29 @@ var FunctionalityInstitution = function () {
     */
     init: function () {
       this.activateListeners();
+      wisply.activateTooltip();
+      $("#institution-name").focus();
     },
     /**
     * It activates the listener for deleting a institution
     * @fires InstitutionsManager#confirmDelete
     */
     activateListeners: function () {
-      $("#institution-name").focus();
+      var instance = this,
+      description = $("#institution-description");
       $("#show-wiki-source").click(this.showWikiSource);
-      $("#institution-description").elastic();
+      description.elastic();
+      description.on("change keyup paste", function() {
+        if(instance.description !== $("#institution-description").val()) {
+          instance.fired_descriptionModified();
+        } else {
+          $("#description-modified").hide("fast");
+        }
+      });
+      $("#discard-description-changes").click(function(){
+          $("#description-modified").hide("fast");
+          instance.fired_nameChanged();
+      });
     },
     /**
      * It shows the field for wiki source and hides the link
@@ -57,6 +72,7 @@ var FunctionalityInstitution = function () {
         var instance = this,
           newName = $("#institution-name").val(),
           html = "",
+          descriptionElement = $("#institution-description"),
           callbackPicture;
         this.wikier.changeSubject(newName);
         $("#institution-logo").html(wisply.getLoadingImage("medium"));
@@ -67,10 +83,14 @@ var FunctionalityInstitution = function () {
             instance.changeLogo(picture);
           }
         });
+        descriptionElement.html("Please wait");
+        descriptionElement.prop( "disabled", true );
         this.wikier.getDescription(function(err, description){
+          var text = "";
             if(!err) {
-              instance.changeDescription(description);
+              text = description;
             }
+            instance.changeDescription(text);
         });
     },
     setDefaultLogo: function() {
@@ -86,7 +106,8 @@ var FunctionalityInstitution = function () {
      */
     changeDescription: function(newDescription) {
         var description = $("#institution-description"),
-           limit = 1000;
+           limit = 1000,
+           text = "";
         function cutDescription(text) {
           var start = 0,
           endOfParagraph = 0;
@@ -96,10 +117,16 @@ var FunctionalityInstitution = function () {
           }
           return text;
         }
-        if(description.val() === "") {
-          description.val(cutDescription(newDescription));
+
+          text = cutDescription(newDescription);
+          description.val(text);
           description.elastic();
-        }
+          this.description = text;
+
+        $(description).prop( "disabled", false );
+    },
+    fired_descriptionModified: function() {
+        $("#description-modified").show("slow");
     },
     changeLogo: function(picture) {
       var instance = this,

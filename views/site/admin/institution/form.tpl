@@ -30,7 +30,7 @@
 
               <div class="col-lg-10">
                 <textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000" >{{ .institutionDescription}}</textarea>
-                <span class="help-block">This field may contain notes about the intitution. <a id='show-wiki-source' href="#">Modify source</a></span>
+                <span class="help-block"><span class="hideMe" id="description-modified"><span class="text-warning"> <span class="glyphicon glyphicon-warning-sign"></span> Description modified</span> <span class="text-danger"><span id="discard-description-changes" data-toggle="tooltip" data-placement="top" title="Discard changes" class="hover glyphicon glyphicon-remove"></span></span></span><br /> This field may contain notes about the intitution. <a id='show-wiki-source' href="#">Modify source</a></span>
               </div>
             </div>
             <div class="hideMe" id="wiki-source-div">

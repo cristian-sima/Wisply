@@ -27,9 +27,9 @@
             <div class="form-group text-center" style="min-height:80px">
 
               <label for="institution-description" class="col-lg-2 control-label text-center" id="institution-logo" ><span  class="institution-logo glyphicon glyphicon-education institution-logo"></span></label>
-        
+
               <div class="col-lg-10">
-                <textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="255" >{{ .institutionDescription}}</textarea>
+                <textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000" >{{ .institutionDescription}}</textarea>
                 <span class="help-block">This field may contain notes about the intitution. <a id='show-wiki-source' href="#">Modify source</a></span>
               </div>
             </div>

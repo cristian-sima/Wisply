@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: admin/harvest/list.js</title>
+    <title>JSDoc: Source: admin/harvest/history.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: admin/harvest/list.js</h1>
+    <h1 class="page-title">Source: admin/harvest/history.js</h1>
 
     
 
@@ -35,8 +35,89 @@
  * @namespace HarvestList
  * It holds the functionality to see a live list of repositories
  */
-var HarvestList = function() {
+var HistoryEvent = function() {
 	'use strict';
+
+	var TimeDifference = {
+		seconds: 0,
+		minutes: 0,
+		hours: 0,
+		days: 0,
+	};
+
+	var EventHistory = function EventHistory() {
+
+	};
+
+	/**
+	 * It creates a new date from a string
+	 * @param {string} The date in a string
+	 * @return {Date} The date in a Date object
+	 * @see http://stackoverflow.com/questions/3075577/convert-mysql-datetime-stamp-into-javascripts-date-format
+	 */
+	function newDateFromString() {
+		var t = "2010-06-09 13:12:01".split(/[- :]/);
+
+		return new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+	}
+
+	/**
+	 * Calculates the time difference between 2 Javascript date objects
+	 * @param  {Date} start The start date
+	 * @param  {Date} end  The end date
+	 * @return {HistoryEvent.TimeDifference} An object which contains the time difference
+	 */
+	function getDifference(start, end)
+	{
+			var total, difference,
+				MILISECOND = 1,
+				SECOND = 1000 * MILISECOND,
+				MINUTE = 60 * SECOND,
+				HOUR = MINUTE * 60,
+				DAY = HOUR * 24;
+			/**
+			 * It returns the number of days given the number of milliseconds
+			 * @param  {number} seconds The number of milliseconds
+			 * @return {number} The number of days
+			 */
+			function getDays(seconds) {
+				return Math.floor(total / DAY);
+			}
+
+			/**
+			 * It returns the number of hours given the number of milliseconds
+			 * @param  {number} seconds The number of milliseconds
+			 * @return {number} The number of hours
+			 */
+			function getHours(seconds) {
+				return Math.floor(total / HOUR);
+			}
+
+			/**
+			 * It returns the number of minutes given the number of milliseconds
+			 * @param  {number} seconds The number of milliseconds
+			 * @return {number} The number of minutes
+			 */
+			function getMinutes(seconds) {
+				return Math.floor(total / MINUTE);
+			}
+
+			/**
+			 * It returns the number of minutes given the number of milliseconds
+			 * @param  {number} seconds The number of milliseconds
+			 * @return {number} The number of seconds
+			 */
+			function getSeconds(seconds) {
+				return Math.floor(total / SECOND);
+			}
+      total = end.getTime() - start.getTime();
+     	difference = new TimeDifference();
+			difference.seconds = getSeconds(seconds);
+			difference.minutes = getSeconds(minutes);
+			difference.hours = getSeconds(hours);
+			difference.days = getSeconds(days);
+	}
+
 	var Stages = [{
 		id: 0,
 		name: "Get info from server",

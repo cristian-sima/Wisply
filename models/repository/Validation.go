@@ -9,7 +9,7 @@ var (
 	rules = map[string][]string{
 		"name":        {"String", "between_inclusive:3,255"},
 		"url":         {"String", "url", "between_inclusive:3,2083"},
-		"description": {"String", "max:255"},
+		"description": {"String", "max:1000"},
 		"id":          {"Int"},
 		"institution": {"Int"},
 	}

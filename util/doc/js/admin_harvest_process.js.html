@@ -84,8 +84,10 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				this.initExistingProcess(message.Value);
+				harvestHistory.log("There is already a process on server.");
+				this.initExistingProcess(message.Value.Manager);
 			} else {
+				harvestHistory.log("We start a new process");
 				this.initNewProcess();
 			}
 		},
@@ -93,8 +95,11 @@ var HarvestProcess = function() {
 		 * It is called when the process exists on the server. It sends on the current stage
 		 * @param  {object} contents The value of the message
 		 */
-		initExistingProcess: function(value) {
-			this.manager.performStage(value.CurrentAction);
+		initExistingProcess: function(serverManager) {
+			harvestHistory.log("Load process from stage &lt;b>" + this.manager.stages[serverManager.CurrentAction].name + "&lt;/b>.");
+			this.manager.repository.Identification = serverManager.Identification;
+			this.manager.existingProcessActions = serverManager.Actions;
+			this.manager.performStage(serverManager.CurrentAction);
 		},
 		/**
 		 * It is called when there is no process on the server. It calls the next stage
@@ -164,65 +169,286 @@ var HarvestProcess = function() {
 			this.manager = manager;
 			this.init();
 		},
-    init: function () {
-        $("#URL-input").toggle();
-        $("#Name-Repository").toggle();
-        $("#modifyButton").hide();
-    },
+		init: function() {
+			$("#URL-input").toggle();
+			$("#Name-Repository").toggle();
+			$("#modifyButton").hide();
+		},
+		/**
+		 * It remembers the identification details, paints them and go to the next stage
+		 * @param  {object} indentification The object which holds all the identification details
+		 */
+		analyse: function(identification) {
+			this.manager.repository.Identification = identification;
+			this.paintIdentificationDetails(identification);
+			this.manager.firedStageFinished();
+		},
 		/**
 		 * It disables the possibility to modify the URL
 		 */
-		paint: function(data) {
+		paintIdentificationDetails: function(data) {
 			/**
-			* It returns the HTML table for an object
-			* @param  {object} data The object
-			* @return {string} HTML table for the object's data
-			*/
-		 function getIdentification(data) {
-				 var html = "";
-				 html += '&lt;ul class="list-group text-left">';
-				 for (var property in data) {
-						 if (data.hasOwnProperty(property)) {
-								 if (property === "Description") {
-										 continue;
-								 } else if (typeof data[property] === 'object') {
-										 html += '&lt;li class="list-group-item"> ' + property;
-										 html += getIdentification(data[property]);
-										 html += '&lt;/li>';
-								 } else {
-										 html += "  &lt;li class='list-group-item'>";
-										 html += property + ": &lt;strong>" + data[property] + "&lt;/strong>";
-										 html += "&lt;/li>";
-								 }
-						 }
-				 }
-				 html += "&lt;/ul>";
-				 return html;
-		 }
-		 function drawBadges() {
-			 var text = '&lt;div class="row text-center" id="repository-elements" style="display:none">&lt;table class="table">&lt;tbody>&lt;tr>';
-			 var records = '&lt;td>&lt;div class="text-center col-xs-3 col-md-3">' +
-					 'Records&lt;br />' +
-						 '&lt;span class="badge" id="repository-elements-records">0&lt;/span>' +
-					'&lt;/div>&lt;/td>';
-					text += records;
-					text += "&lt;/tr>&lt;/tbody>&lt;/table>&lt;/div>";
-			 return text;
-		 }
-		 var html = "";
-		 html += drawBadges();
-		 html += getIdentification(data);
-		 this.manager.GUI.showCurrent(html);
+			 * It returns the HTML table for an object
+			 * @param  {object} data The object
+			 * @return {string} HTML table for the object's data
+			 */
+			function paint(data) {
+				var html = '&lt;div id="harvesting-counters">&lt;/div>';
+				html += '&lt;ul class="list-group text-left">';
+				for (var property in data) {
+					if (data.hasOwnProperty(property)) {
+						if (property === "Description") {
+							continue;
+						} else if (typeof data[property] === 'object') {
+							html += '&lt;li class="list-group-item"> ' + property;
+							html += paint(data[property]);
+							html += '&lt;/li>';
+						} else {
+							html += "  &lt;li class='list-group-item'>";
+							html += property + ": &lt;strong>" + data[property] + "&lt;/strong>";
+							html += "&lt;/li>";
+						}
+					}
+				}
+				html += "&lt;/ul>";
+				return html;
+			}
+			var html = "";
+			html += paint(data);
+			this.manager.GUI.showCurrent(html);
+		}
+	}, {
+		id: 5,
+		name: "Harvesting...",
+		/**
+		 * It saves the reference of manager
+		 * @param  {Harvest.StageManager} manager The reference to the stage manager
+		 */
+		perform: function(manager) {
+			this.manager = manager;
+			this.counters = {};
+			this.init();
+		},
+		/**
+		 * It adds the counters
+		 */
+		init: function() {
+			if (this.manager.existingProcessActions) {
+				this.manager.stages[4].perform(this.manager);
+				this.manager.stages[4].paintIdentificationDetails(this.manager.repository.Identification);
+			}
+			this.showCounters();
+			if (this.manager.existingProcessActions) {
+				this.loadServerCounters();
+			}
+
+		},
+		loadServerCounters: function() {
+			var serverCounter, serverType, clientCounter;
+			for (serverType in this.manager.existingProcessActions) {
+				if (this.manager.existingProcessActions.hasOwnProperty(serverType)) {
+					serverCounter = this.manager.existingProcessActions[serverType];
+					clientCounter = this.getCounter(serverCounter.Type);
+					clientCounter.start(serverCounter.Number);
+					if (serverCounter.Finished) {
+						clientCounter.finish();
+					}
+					if (serverCounter.IsCurrent) {
+						this.setCurrentCounter(serverCounter.Type);
+					}
+				}
+			}
+			delete this.manager.existingProcessActions;
+		},
+		showCounters: function() {
+			this.counters = [
+				new WisplyCounter({
+					name: "Formats",
+					type: "formats",
+				}),
+				new WisplyCounter({
+					name: "Collections",
+					type: "collections",
+				}),
+				new WisplyCounter({
+					name: "Records",
+					type: "records",
+				}),
+				new WisplyCounter({
+					name: "Identifiers",
+					type: "identifiers",
+				}),
+			];
+			this.setCurrentCounter("formats");
+			this.manager.GUI.drawCounters(this.counters, "harvesting-counters");
+		},
+		/**
+		 * It sets the current counter
+		 * @param  {string} type The name of the counter
+		 */
+		setCurrentCounter: function(type) {
+			this.currentCounter = this.getCounter(type);
+		},
+		/**
+		 * It analyse the result from the server and decides which counter to update
+		 * @param  {object} result The message from the server
+		 */
+		analyse: function(result) {
+			switch (result.Operation) {
+				case "start":
+					harvestHistory.log("Harvesting " + result.Type + " started!");
+					this.setCurrentCounter(result.Type);
+					this.currentCounter.start(result.Count);
+					break;
+				case "update":
+					harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
+					this.currentCounter.update(result.Count);
+					break;
+				case "finish":
+					harvestHistory.log("Harvesting " + result.Type + " finished!");
+					this.currentCounter.finish();
+					break;
+				case "harvesting-done":
+					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
+					this.end();
+					break;
+			}
+		},
+		/**
+		 * It updates the counter
+		 * @param  {string} requested  The type of counter
+		 */
+		getCounter: function(requested) {
+			var i, counter;
+			for (i = 0; i &lt; this.counters.length; i++) {
+				counter = this.counters[i];
+				if (counter.type === requested) {
+					return counter;
+				}
+			}
+			throw new Exception("There is no counter with the name " + requested);
+		},
+		/**
+		 * It is called by stage manager. In case there is a current counter, it tells it to show the error
+		 */
+		stop: function() {
+			if (this.currentCounter) {
+				this.currentCounter.showError();
+			}
+		},
+		/**
+		 * It is called when the stage has finished. It deletes the counters, the current counter and goes to the next stage
+		 * @return {[type]}
+		 */
+		end: function () {
+			delete this.currentCounter;
+			delete this.counters;
+			this.manager.firedStageFinished();
 		}
 	}];
+	/**
+	 * The constructor does nothing
+	 * @memberof HarvestProcess
+	 * @class WisplyCounter
+	 * @classdesc It decides what to do with the messages from the server
+	 */
+	var WisplyCounter = function WisplyCounter(info) {
+		this.type = info.type;
+		this.name = info.name;
+		this.object = undefined;
+		this.stopped = false;
+	};
+	WisplyCounter.prototype =
+		/** @lends HarvestProcess.WisplyCounter */
+		{
+			/**
+			 * It updates the counter
+			 */
+			update: function(value) {
+				this.object.update(value);
+			},
+			/**
+			 * It sets the counter yellow and starts it
+			 */
+			start: function(value) {
+				this._getElements();
+				this.container.removeClass("text-muted");
+				this.element.addClass("label-warning");
+				this.element.css({
+					"color": "#ffffff"
+				});
+				this._start(value);
+			},
+			/**
+			 * It gets the JQuery elements
+			 */
+			_getElements: function () {
+					this.container = $("#repository-counter-container-" + this.type);
+					this.element = $("#repository-counter-" + this.type);
+			},
+			/**
+			 * @private
+			 * It creates the counter and starts the counter
+			 * @param [number] value The value to go to
+			 */
+			_start: function(value) {
+				var instance = this,
+					options = {  
+						useEasing: false,
+						  useGrouping: true,
+						  separator: ',',
+						  decimal: '.',
+						  prefix: '',
+						  suffix: ''
+					},
+					time = (value / 80);
+
+				if(time > 10) {
+					time = 10;
+				}
+				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, time, options);
+				this.object.start(function() {
+					instance._finish();
+				});
+			},
+			/**
+			 * It is called when the counter has finished
+			 * @private
+			 */
+			_finish: function() {
+				if (this.stopped) {
+					this.element.removeClass("label-warning");
+					this.element.addClass("label-success");
+				}
+			},
+			/**
+			 * It sets the stopped value to true. In case the counter has finished, it calls _finish
+			 * @return {[type]}
+			 */
+			finish: function() {
+				this.stopped = true;
+				if (this.object.remaining &lt;= 0) {
+					this._finish();
+				}
+			},
+			/**
+			 * It makes the counter red
+			 */
+			showError: function(type) {
+				this.element.removeClass("text-muted label-warning label-success");
+				this.element.addClass("label-danger");
+			},
+			getHTML: function() {
+				return '&lt;div id="repository-counter-container-' + this.type + '" class="text-center text-muted col-md-3">' + "&lt;div class='counter-name'>" + this.name + '&lt;/div>' + '&lt;span class="label label-as-badge big-number text-muted" id="repository-counter-' + this.type + '">0&lt;/span>' + '&lt;/div>';
+			}
+		};
 	/**
 	 * The constructor does nothing
 	 * @memberof HarvestProcess
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
-	var DecisionManager = function DecisionManager() {
-	};
+	var DecisionManager = function DecisionManager() {};
 	DecisionManager.prototype =
 		/** @lends HarvestProcess.DecisionManager */
 		{
@@ -238,7 +464,7 @@ var HarvestProcess = function() {
 							this.stage.GUI.updateRepositoryStatus();
 							if (message.Value === "verifying") {
 								this.stage.performStage(3);
-							} else if (message.Value === "initializing"){
+							} else if (message.Value === "initializing") {
 								this.stage.firedStageFinished();
 							}
 							break;
@@ -246,7 +472,7 @@ var HarvestProcess = function() {
 							this.stage.currentStage.analyse(message);
 							break;
 						case "verification-finished":
-							if(message.Value === "failed") {
+							if (message.Value === "failed") {
 								this.stage.GUI.showCurrent("The verification failed");
 								this.stage.pause();
 								this.stage.stages[3].enableModifyURL();
@@ -254,10 +480,18 @@ var HarvestProcess = function() {
 								this.stage.firedStageFinished();
 							}
 							break;
+						case "harvesting":
+							var result = message.Value;
+							if (result.IsOk === false) {
+								this.getCounter().showError();
+								this.stage.stop();
+							} else {
+								this.stage.currentStage.analyse(result);
+							}
+							break;
 						case "identification-details":
-								this.stage.stages[4].paint(message.Value);
-								this.stage.firedStageFinished();
-						break;
+							this.stage.stages[4].analyse(message.Value);
+							break;
 					}
 				}
 			},
@@ -269,13 +503,12 @@ var HarvestProcess = function() {
 				return (message.Repository) &amp;&amp; (message.Repository === this.stage.repository.id);
 			}
 		};
-
-		/**
-		 * Gets the JQuery elements and creates the indicator
-		 * @memberof HarvestProcess
-		 * @class StageGUI
-		 * @classdesc It contains the functionality for GUI
-		 */
+	/**
+	 * Gets the JQuery elements and creates the indicator
+	 * @memberof HarvestProcess
+	 * @class StageGUI
+	 * @classdesc It contains the functionality for GUI
+	 */
 	var StageGUI = function StageGUI(manager) {
 		this.manager = manager;
 		this.element = $("#stages");
@@ -305,10 +538,10 @@ var HarvestProcess = function() {
 				});
 				harvestHistory.setGUI("#history");
 				$("#historyButton").click(function() {
-						harvestHistory.gui.activate();
+					harvestHistory.gui.activate();
 				});
 				$("#currentButton").click(function() {
-						harvestHistory.gui.disable();
+					harvestHistory.gui.disable();
 				});
 			},
 			/**
@@ -400,6 +633,25 @@ var HarvestProcess = function() {
 				this.indicator.stop();
 			},
 			/**
+			 * It draws the Wisply counters in the element
+			 * @param  {array} counters An array with WisplyCounters
+			 * @param  {string} id       The id of the html element
+			 */
+			drawCounters: function(counters, id) {
+				var text = "",
+				 	html = "",
+					counter = {},
+					i;
+				for (i = 0; i &lt; counters.length; i++) {
+					counter = counters[i];
+					html += counter.getHTML();
+				}
+				text += '&lt;div class="row text-center" id="repository-elements" style="display:block">';
+				text += html;
+				text += "&lt;/div>";
+				$("#" + id).html(text);
+			},
+			/**
 			 * It updates the general status of the process
 			 */
 			updateProcessStatus: function() {
@@ -427,13 +679,12 @@ var HarvestProcess = function() {
 				$("#process-status").html(html);
 			}
 		};
-
-		/**
-		 * Gets the JQuery element
-		 * @memberof HarvestProcess
-		 * @class Indicator
-		 * @classdesc It represents a visual indicator for the current progress of the process
-		 */
+	/**
+	 * Gets the JQuery element
+	 * @memberof HarvestProcess
+	 * @class Indicator
+	 * @classdesc It represents a visual indicator for the current progress of the process
+	 */
 	var Indicator = function Indicator(gui) {
 		this.gui = gui;
 		this.element = $("#general-indicator");
@@ -534,13 +785,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#paintIdentificationDetails">paintIdentificationDetails</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Tue Sep 29 2015 11:42:23 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Oct 05 2015 19:07:46 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

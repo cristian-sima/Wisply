@@ -13,7 +13,7 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 text-center" >
-              <span class="glyphicon glyphicon-book institution-logo img-responsive "></span>
+              <span class="glyphicon glyphicon-equalizer institution-logo img-responsive "></span>
               <div class="text-left">
               </div>
             </div>
@@ -23,11 +23,12 @@
                   <span class="text-muted">Repostory</span>
                 </div>
                 <div>
+                  {{ .repository.Description }}
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
-                  <!-- Records -->
-
+                  <div>Is part of: <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
+                  <div>Type: {{ .repository.Category }}</div>
               </div>
             </div>
           </div>

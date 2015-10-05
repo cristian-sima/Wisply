@@ -34,7 +34,7 @@
             </div>
         </div>
         <br /><br />
-        {{ if  eq  .repository.Status "unverified" }}
+        {{ if  or (eq  .repository.Status "unverified") (eq  .repository.Status "verification-failed") }}
         There is no identification available for the repository.
         {{ else }}
         <div class="row" >
@@ -85,7 +85,14 @@
               </table>
             </div>
             <div class="col-md-6">
-
+                <p class="text-muted">{{ .repository.Description }}</p>
+                <h6>Contact</h6>
+                <div class="list-group">
+                  {{range $index, $email := .identification.AdminEmails}}
+                  <a href="mailto:{{ $email }}" class="list-group-item">{{ $email }}
+                  </a>
+                  {{ end }}
+                </div>
             </div>
         </div>
         {{ end }}

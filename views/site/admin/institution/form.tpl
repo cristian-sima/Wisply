@@ -25,10 +25,16 @@
             </div>
             {{ end }}
             <div class="form-group">
-              <label for="institution-description" class="col-lg-2 control-label">Description</label>
+              <label for="institution-description" class="col-lg-2 control-label"><span class="institution-logo glyphicon glyphicon-education institution-logo"></span></label>
               <div class="col-lg-10">
                 <textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="255" >{{ .institutionDescription}}</textarea>
-                <span class="help-block">This field may contain notes about the intitution.</span>
+                <span class="help-block">This field may contain notes about the intitution. <a id='show-wiki-source' href="#">Modify source</a></span>
+              </div>
+            </div>
+            <div class="form-group hideMe" id="wiki-source-div">
+              <label for="institution-description" class="col-lg-2 control-label">Wiki URL</label>
+              <div class="col-lg-10">
+              <input type="url" value="" class="form-control" name="institution-wikiURL" id="institution-wikiURL" placeholder="Wiki address" required pattern=".{3,2083}" title="The wiki URL has 3 up to 2083 characters!">
               </div>
             </div>
             <div class="form-group">
@@ -40,8 +46,9 @@
         </form>
     </div>
   </div>
-  <script>
-  $(document).ready(function() {
-    $("#institution-name").focus();
-  });
-  </script>
+  <style>
+  .institution-logo {
+    font-size: 5em;
+  }
+  </style>
+  <script src="/static/js/admin/institution/add.js"></script>

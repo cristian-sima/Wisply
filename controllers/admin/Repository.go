@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"strconv"
 	"strings"
 
 	repository "github.com/cristian-sima/Wisply/models/repository"
@@ -88,7 +89,7 @@ func (controller *RepositoryController) Update() {
 		if err != nil {
 			controller.DisplayError(problems)
 		} else {
-			controller.DisplaySuccessMessage("The account has been modified!", "/admin/repositories/")
+			controller.DisplaySuccessMessage("The account has been modified!", "/admin/repositories/repository/"+strconv.Itoa(repository.ID))
 		}
 	}
 }
@@ -142,5 +143,19 @@ func (controller *RepositoryController) ShowRepository() {
 		controller.Data["institution"] = repository.GetInstitution()
 		controller.Data["identification"] = repository.GetIdentification()
 		controller.TplNames = "site/admin/repository/repository.tpl"
+	}
+}
+
+// ShowAdvanceOptions displays the page with further options such as modify or delete
+func (controller *RepositoryController) ShowAdvanceOptions() {
+	ID := controller.Ctx.Input.Param(":id")
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["repository"] = repository
+		controller.Data["institution"] = repository.GetInstitution()
+		controller.Data["identification"] = repository.GetIdentification()
+		controller.TplNames = "site/admin/repository/advance-options.tpl"
 	}
 }

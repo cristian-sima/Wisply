@@ -31,6 +31,10 @@
                 <div>Public link: <a href="/repository/{{ .repository.ID }}">here</a></div>
                 <div>Is part of: <a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
                 <div>Type: {{ .repository.Category }}</div>
+                <hr />
+                <div>
+                    <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
+                </div>
             </div>
         </div>
         <br /><br />

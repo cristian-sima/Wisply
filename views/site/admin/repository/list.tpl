@@ -34,8 +34,6 @@
             <th>Current status</th>
             <th>Base URL</th>
             <th>Description</th>
-            <th>Modify</th>
-            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -83,12 +81,6 @@
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>
-            <td>
-              <a href="/admin/repositories/modify/{{$element.ID}}">Modify</a>
-            </td>
-            <td>
-              <a class="deleteRepositoryButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
-            </td>
           </tr>
           {{end }}
         </tbody>
@@ -110,17 +102,12 @@
           </div>
       </div>
 
-
     </div>
     {{ else }}
     There are no repositories... :(
     {{ end }}
   </div>
 </div>
-
-
-
-
 <script>
 var server = {};
 server.host = {{ .host }};

@@ -110,6 +110,18 @@ func (controller *RepositoryController) Delete() {
 	}
 }
 
+// ShowRepository shows the administrative information regarding a repository
+func (controller *RepositoryController) ShowRepository() {
+	ID := controller.Ctx.Input.Param(":id")
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["repository"] = repository
+		controller.TplNames = "site/admin/repository/repository.tpl"
+	}
+}
+
 func (controller *RepositoryController) showModifyForm(repository map[string]string) {
 	controller.Data["repositoryName"] = repository["Name"]
 	controller.Data["repositoryUrl"] = repository["Url"]

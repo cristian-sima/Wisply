@@ -29,8 +29,8 @@ func (history *Manager) Record(event *Event) {
 // GetLastEvents returns a list with the last events
 func (history *Manager) GetLastEvents() []GUIEvent {
 	var list []GUIEvent
-	fieldList := "event.id, event.timestamp, repository.name, event.content, event.operation_name, event.operation_type, event.duration"
-	sql := "SELECT " + fieldList + " FROM `history_event` as event JOIN `repository` as repository ON event.repository = repository.id ORDER by `id` DESC"
+	fieldList := "event.id as eventID, event.timestamp, repository.name, event.content, event.operation_name, event.operation_type, event.duration, repository.id"
+	sql := "SELECT " + fieldList + " FROM `history_event` as `event` JOIN `repository` as `repository` ON event.repository = repository.id ORDER by eventID DESC"
 	fmt.Println(sql)
 	rows, err := wisply.Database.Query(sql)
 	if err != nil {
@@ -39,10 +39,10 @@ func (history *Manager) GetLastEvents() []GUIEvent {
 	for rows.Next() {
 		var (
 			repository, timestamp, content, operationName, operationType string
-			id                                                           int
+			id, repositoryID                                             int
 			duration                                                     float32
 		)
-		rows.Scan(&id, &timestamp, &repository, &content, &operationName, &operationType, &duration)
+		rows.Scan(&id, &timestamp, &repository, &content, &operationName, &operationType, &duration, &repositoryID)
 		list = append(list, GUIEvent{
 			Event: Event{
 				ID:            id,
@@ -51,8 +51,9 @@ func (history *Manager) GetLastEvents() []GUIEvent {
 				OperationName: operationName,
 				OperationType: operationType,
 				Duration:      duration,
+				Repository:    repositoryID,
 			},
-			Repository: repository,
+			RepositoryName: repository,
 		})
 	}
 	return list

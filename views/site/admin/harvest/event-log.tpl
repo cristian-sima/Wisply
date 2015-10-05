@@ -25,7 +25,7 @@
             <td class="col-md-2">{{ $element.Timestamp |html }}</td>
             <td class="col-md-1">{{ $element.Duration }}</td>
             <td class="col-md-1">
-                  {{ $element.Repository }}
+                  <a href="/admin/repositories/repository/{{ $element.Repository }}">{{ $element.RepositoryName }}</a>
             </td>
             <td class="col-md-7">
                   {{ $element.Content }}

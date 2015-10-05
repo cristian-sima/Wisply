@@ -14,5 +14,5 @@ type Event struct {
 // GUIEvent represents an event displayed by gui.
 type GUIEvent struct {
 	Event
-	Repository string
+	RepositoryName string
 }

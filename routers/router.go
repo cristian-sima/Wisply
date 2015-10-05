@@ -74,6 +74,9 @@ func init() {
 		beego.NSNamespace("/delete",
 			beego.NSRouter(":id", &admin.RepositoryController{}, "POST:Delete"),
 		),
+		beego.NSNamespace("/repository",
+			beego.NSRouter("/:id", &admin.RepositoryController{}, "GET:ShowRepository"),
+		),
 	)
 
 	// admin

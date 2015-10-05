@@ -42,7 +42,7 @@
           {{range $index, $element := .repositories}}
           {{$safe := $element.Name|html}}
           <tr>
-            <td>{{ $element.Name |html }}</td>
+            <td><a href="/admin/repositories/repository/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
             <td> <div  id="rep-status-{{ $element.ID }}">
               {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}

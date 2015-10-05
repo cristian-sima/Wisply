@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	event "github.com/cristian-sima/Wisply/models/event"
 	harvest "github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 	ws "github.com/cristian-sima/Wisply/models/ws"
@@ -32,7 +33,8 @@ func init() {
 // HarvestController manages the operations for repository (list, delete, add)
 type HarvestController struct {
 	Controller
-	Model repository.Model
+	Model        repository.Model
+	EventManager event.Manager
 }
 
 // InitWebsocketConnection initiats the websocket connection
@@ -196,4 +198,11 @@ func (controller *HarvestController) SendAllRepositoriesStatus(connection *ws.Co
 		Name:  "repositories-status-list",
 		Value: &list,
 	}, connection)
+}
+
+// ShowEventLog displays the last events for harvesting
+func (controller *HarvestController) ShowEventLog() {
+	controller.Data["events"] = controller.EventManager.GetLastEvents()
+	controller.SetCustomTitle("Admin - Event Log")
+	controller.TplNames = "site/admin/harvest/event-log.tpl"
 }

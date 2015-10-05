@@ -102,6 +102,10 @@ func init() {
 			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
 			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
+		beego.NSNamespace("/event-log",
+			beego.NSRouter("", &admin.HarvestController{}, "Get:ShowEventLog"),
+			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
+		),
 	)
 
 	// admin

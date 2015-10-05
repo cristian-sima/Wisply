@@ -3,7 +3,7 @@ package harvest
 import "fmt"
 
 import (
-	history "github.com/cristian-sima/Wisply/models/history"
+	history "github.com/cristian-sima/Wisply/models/event"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 

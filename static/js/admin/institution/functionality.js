@@ -40,6 +40,7 @@ var FunctionalityInstitution = function () {
     activateListeners: function () {
       $("#institution-name").focus();
       $("#show-wiki-source").click(this.showWikiSource);
+      $("#institution-description").elastic();
     },
     /**
      * It shows the field for wiki source and hides the link
@@ -67,10 +68,8 @@ var FunctionalityInstitution = function () {
           }
         });
         this.wikier.getDescription(function(err, description){
-            if(err) {
-              console.log("error");
-            } else {
-              console.log(description);
+            if(!err) {
+              instance.changeDescription(description);
             }
         });
     },
@@ -80,6 +79,27 @@ var FunctionalityInstitution = function () {
     },
     _setLogo: function(logo) {
         $("#institution-logo").html(logo);
+    },
+    /**
+     * It checks if the description is empty. If so it populates it with the description.
+     * @param  {string} newDescription The new description
+     */
+    changeDescription: function(newDescription) {
+        var description = $("#institution-description"),
+           limit = 1000;
+        function cutDescription(text) {
+          var start = 0,
+          endOfParagraph = 0;
+          if(text.length > limit) {
+          endOfParagraph = newDescription.lastIndexOf("\n", limit);
+          text = text.substring(0, endOfParagraph);
+          }
+          return text;
+        }
+        if(description.val() === "") {
+          description.val(cutDescription(newDescription));
+          description.elastic();
+        }
     },
     changeLogo: function(picture) {
       var instance = this,

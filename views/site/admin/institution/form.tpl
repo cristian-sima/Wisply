@@ -55,6 +55,7 @@
     font-size: 5em;
   }
   </style>
+  <script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
   <script src="/static/js/wisply/typer.js"></script>
   <script src="/static/js/wisply/wikier.js"></script>
   <script src="/static/js/admin/institution/functionality.js"></script>

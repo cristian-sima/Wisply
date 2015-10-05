@@ -49,18 +49,19 @@ var FunctionalityInstitution = function () {
         if(instance.description !== $("#institution-description").val()) {
           instance.fired_descriptionModified();
         } else {
-          $("#description-modified").hide("fast");
+          $(".description-modified").hide("fast");
         }
       });
       $("#discard-description-changes").click(function(){
-          $("#description-modified").hide("fast");
-          instance.fired_nameChanged();
+          $(".description-modified").hide("fast");
+          instance.update();
       });
     },
     /**
      * It shows the field for wiki source and hides the link
      */
-    showWikiSource: function(){
+    showWikiSource: function(event){
+      event.preventDefault();
       $("#wiki-source-div").show("fast");
       $("#show-wiki-source").hide("fast");
       $("#institution-wikiURL").focus();
@@ -69,29 +70,37 @@ var FunctionalityInstitution = function () {
      * It is called when the name of the institution is changed.
      */
     fired_nameChanged: function () {
-        var instance = this,
-          newName = $("#institution-name").val(),
-          html = "",
-          descriptionElement = $("#institution-description"),
-          callbackPicture;
-        this.wikier.changeSubject(newName);
-        $("#institution-logo").html(wisply.getLoadingImage("medium"));
-        this.wikier.getPicture(function(err, picture){
-          if(err) {
-            instance.setDefaultLogo();
-          } else {
-            instance.changeLogo(picture);
+        this.update();
+    },
+    get: function () {
+        // get wiki id and description by name
+
+    },
+    update: function() {
+      var instance = this,
+        newName = $("#institution-name").val(),
+        html = "",
+        descriptionElement = $("#institution-description"),
+        callbackPicture;
+      this.wikier.changeSubject(newName);
+      $("#institution-logo").html(wisply.getLoadingImage("medium"));
+      this.wikier.getPicture(function(err, page){
+        if(err) {
+          instance.setDefaultLogo();
+        } else {
+          var picture = page.thumbnail;
+          instance.changeLogo(picture);
+        }
+      });
+      descriptionElement.html("Please wait");
+      descriptionElement.prop( "disabled", true );
+      this.wikier.getDescription(function(err, description){
+        var text = "";
+          if(!err) {
+            text = description;
           }
-        });
-        descriptionElement.html("Please wait");
-        descriptionElement.prop( "disabled", true );
-        this.wikier.getDescription(function(err, description){
-          var text = "";
-            if(!err) {
-              text = description;
-            }
-            instance.changeDescription(text);
-        });
+          instance.changeDescription(text);
+      });
     },
     setDefaultLogo: function() {
         var html = '<span class="institution-logo glyphicon glyphicon-education institution-logo"></span>';
@@ -126,7 +135,7 @@ var FunctionalityInstitution = function () {
         $(description).prop( "disabled", false );
     },
     fired_descriptionModified: function() {
-        $("#description-modified").show("slow");
+        $(".description-modified").show("slow");
     },
     changeLogo: function(picture) {
       var instance = this,

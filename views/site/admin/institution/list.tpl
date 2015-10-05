@@ -30,7 +30,6 @@
           <tr>
             <th>Name</th>
             <th>Web adddress</th>
-            <th>Description</th>
             <th>Modify</th>
             <th>Delete</th>
           </tr>
@@ -41,7 +40,6 @@
           <tr>
             <td>{{ $element.Name |html }}</td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
-            <td>{{ $element.Description |html }}</td>
             <td>
               <a href="/admin/institutions/modify/{{$element.ID}}">Modify</a>
             </td>

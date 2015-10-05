@@ -20,15 +20,18 @@
             <div class="col-lg-5 col-md-5 col-sm-5" >
               <div>
                 <h1>{{ .repository.Name }}</h2>
-                  <span class="text-muted">Repostory</span>
+                  <span class="text-muted">Repository</span>
                 </div>
                 <div>
                   {{ .repository.Description }}
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
-                  <div>Is part of: <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
-                  <div>Type: {{ .repository.Category }}</div>
+                  {{ if .currentAccount.IsAdministrator  }}
+                  <div><a href="/admin/repositories/repository/{{ .repository.ID }}"><span class="label label-default">Admin this</span></a></div>
+                  {{ end }}
+                  <div>Is part of <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
+                  <div>{{ .repository.Category }}</div>
               </div>
             </div>
           </div>

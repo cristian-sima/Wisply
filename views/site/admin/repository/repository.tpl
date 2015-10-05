@@ -28,13 +28,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div>Public link: <a href="/repository/{{ .repository.ID }}">here</a></div>
-                <div>Is part of: <a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
-                <div>Type: {{ .repository.Category }}</div>
-                <hr />
-                <div>
-                    <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
-                </div>
+                <div>{{ .repository.Category }} repository. See: <a href="/repository/{{ .repository.ID }}">here</a></div>
+                <div>Is part of <a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
             </div>
         </div>
         <br /><br />
@@ -100,6 +95,10 @@
             </div>
         </div>
         {{ end }}
+        <hr />
+        <div>
+            <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
+        </div>
     </div>
   </div>
   <style>

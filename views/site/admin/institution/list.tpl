@@ -30,6 +30,7 @@
           <tr>
             <th>Name</th>
             <th>Web adddress</th>
+            <th>Auto Wiki</th>
             <th>Modify</th>
             <th>Delete</th>
           </tr>
@@ -40,6 +41,13 @@
           <tr>
             <td>{{ $element.Name |html }}</td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
+            <td>
+            {{ if eq $element.WikiID "NULL" }}
+            <span class="label label-danger">Disabled</label>
+            {{ else }}
+            <span class="label label-success">Enabled</label>
+            {{ end }}
+            </td>
             <td>
               <a href="/admin/institutions/modify/{{$element.ID}}">Modify</a>
             </td>

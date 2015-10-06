@@ -9,7 +9,8 @@
         <li >
           <a href="/admin/institutions" >Institutions </a>
         </li>
-        <li class="dropdown">
+        <li><a href="/admin/repositories/">Repositories</a></li>
+        <!-- <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="/admin/repositories" aria-expanded="true">
             Repository <span class="caret"></span>
           </a>
@@ -17,7 +18,7 @@
             <li><a href="/admin/repositories/add">Add</a></li>
             <li><a href="/admin/repositories/">Manage</a></li>
           </ul>
-        </li>
+        </li> -->
         <li >
           <a href="/admin/accounts" > Accounts </a>
         </li>

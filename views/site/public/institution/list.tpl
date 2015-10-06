@@ -18,7 +18,12 @@
               {{$safe := $institution.Name|html}}
               <div class="text-center col-xs-3 col-md-3">
                 <a title="{{ $safe }}" href="/institutions/{{ $institution.ID }}" class="thumbnail">
-                  <span class="glyphicon glyphicon-education institution-logo"></span><br />
+                  {{ if eq $institution.LogoURL "" }}
+                  <span class="glyphicon glyphicon-education institution-logo"></span>
+                  {{ else }}
+                  <img src="{{ $institution.LogoURL }}" />
+                  {{ end }}
+                  <br />
                   {{ $safe }}
                 </a>
               </div>

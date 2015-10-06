@@ -12,7 +12,13 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3 text-center" >
-              <span class="glyphicon glyphicon-education institution-logo img-responsive "></span>
+              {{ if eq .institution.LogoURL "" }}
+              <span class="glyphicon glyphicon-education institution-logo"></span>
+              {{ else }}
+              <img src="{{ .institution.LogoURL }}" />
+              {{ end }}
+              <br /><br /><br />
+              <hr />
               <div class="text-left">
                 <span class="text-muted">Address:</span> <a href="{{ .institution.URL }}">Web page</a>
               </div>

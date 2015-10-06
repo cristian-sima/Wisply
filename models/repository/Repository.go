@@ -43,6 +43,7 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 // GetInstitution returns a reference to the institution which holds the repository
 func (repository *Repository) GetInstitution() *Institution {
 	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))
+	fmt.Println(institution)
 	return institution
 }
 

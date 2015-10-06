@@ -35,6 +35,9 @@ func (controller *InstitutionController) Insert() {
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
 	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
 	institutionDetails["url"] = strings.TrimSpace(controller.GetString("institution-URL"))
+	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
+	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
+	institutionDetails["wikiID"] = strings.TrimSpace(controller.GetString("institution-wikiID"))
 
 	problems, err := controller.model.InsertNewInstitution(institutionDetails)
 	if err != nil {
@@ -56,11 +59,8 @@ func (controller *InstitutionController) Modify() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		institutionDetails := map[string]string{
-			"Name":        institution.Name,
-			"Description": institution.Description,
-		}
-		controller.showModifyForm(institutionDetails)
+		controller.Data["institution"] = institution
+		controller.showModifyForm()
 	}
 }
 
@@ -74,6 +74,9 @@ func (controller *InstitutionController) Update() {
 
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
 	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
+	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
+	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
+	institutionDetails["wikiID"] = strings.TrimSpace(controller.GetString("institution-wikiID"))
 
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
@@ -106,10 +109,7 @@ func (controller *InstitutionController) Delete() {
 	}
 }
 
-func (controller *InstitutionController) showModifyForm(institution map[string]string) {
-	controller.Data["institutionName"] = institution["Name"]
-	controller.Data["institutionUrl"] = institution["Url"]
-	controller.Data["institutionDescription"] = institution["Description"]
+func (controller *InstitutionController) showModifyForm() {
 	controller.showForm("Modify", "Modify this institution")
 }
 

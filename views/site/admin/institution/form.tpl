@@ -8,12 +8,25 @@
 	</div>
 	<div class="panel-body">
 		<form method="{{.actionType}}" class="form-horizontal"> {{ .xsrf_input }} {{ $safeDescription := .institutionDescription|html}}
+		{{ $wikiID := "" }}
+		{{ $wikiReceive := "" }}
+		{{ if .institution.WikiID }}
+				{{ $wikiID := .repository.WikiID }}
+				{{ if eq .institution.WikiID "NULL" }}
+						{{ $wikiReceive := false }}
+				{{ else }}
+						{{ $wikiReceive := true }}
+				{{ end }}
+		{{ else }}
+				{{ $wikiID := "NULL" }}
+				{{ $wikiReceive := false }}
+		{{ end }}
 			<fieldset>
-				<input type="hidden" name="institution-wikiID" id="institution-wikiID" value="NULL" />
+				<input type="hidden" name="institution-wikiID" id="institution-wikiID" value="{{ $wikiID }}" />
 				<div class="form-group">
 					<label for="institution-name" class="col-lg-2 control-label">Name</label>
 					<div class="col-lg-10">
-						<input type="text" value="{{.institutionName}}" class="form-control" name="institution-name" id="institution-name" placeholder="Name" required pattern=".{3,255}" title="The name has 3 up to 255 characters!">
+						<input type="text" value="{{.institution.Name }}" class="form-control" name="institution-name" id="institution-name" placeholder="Name" required pattern=".{3,255}" title="The name has 3 up to 255 characters!">
 					</div>
 				</div>
         <div id="wiki-disabled"><span class="text-success"></span></div>
@@ -22,7 +35,7 @@
 						<span class="institution-logo glyphicon glyphicon-education institution-logo"></span>
           </label>
 					<div class="col-lg-10">
-						<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{ .institutionDescription}}</textarea> <span class="help-block">
+						<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{ .institution.Description }}</textarea> <span class="help-block">
               <span class="description-modified hideMe">
 								<span class="text-warning">
 									<span class="glyphicon glyphicon-warning-sign"></span> Auto receiving from Wikipedia off
@@ -86,6 +99,15 @@
 		</form>
 	</div>
 </div>
+<script>
+	var server = {};
+
+	server.original = {
+		description : {{ .institution.Description }},
+		wikiReceive : {{ $wikiReceive }},
+		logoURL: {{ .institution.LogoURL }}
+	};
+</script>
 <style>
 	.institution-logo {
 		font-size: 5em;

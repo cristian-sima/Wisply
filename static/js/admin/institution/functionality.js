@@ -1,4 +1,4 @@
-/* global $, wisply */
+/* global $, wisply, server */
 
 /**
 * @file Encapsulates the functionality for institutions
@@ -23,12 +23,7 @@ var FunctionalityInstitution = function () {
       instance.getWikiByName();
     });
     this.wikier = new wisply.wikierModule.Wikier();
-    this.original = {
-      description: "",
-      logoURL: "",
-      wikiID: "NULL",
-    };
-    this.wikiReceive = false;
+    this.original = server.original;
   };
   Manager.prototype =
   /** @lends FunctionalityInstitution.Manager */
@@ -63,7 +58,7 @@ var FunctionalityInstitution = function () {
       });
       $("#button-get-wiki-by-address").click(function() {
           var url = $("#institution-logoURL").val();
-          this.wikiReceive = false;
+          this.original.wikiReceive = false;
           instance.changeLogo(url);
       });
       $("#button-institution-wikiURL").click(function(){
@@ -72,7 +67,7 @@ var FunctionalityInstitution = function () {
     },
     checkForChanges: function(){
         var wikiID = "";
-        if(this.wikiReceive &&
+        if(this.original.wikiReceive &&
           this.original.description !== $("#institution-description").val() ||
           this.original.logoURL !== $("#institution-logoURL").val()) {
           wikiID = "NULL";
@@ -95,7 +90,7 @@ var FunctionalityInstitution = function () {
       $("#institution-wikiURL").focus();
     },
     prepareForWiki: function () {
-        this.wikiReceive = true;
+        this.original.wikiReceive = true;
       $("#institution-logo").html(wisply.getLoadingImage("medium"));
 
       var name = $("#institution-name"),
@@ -160,7 +155,7 @@ var FunctionalityInstitution = function () {
         });
     },
     wikiHasError: function() {
-        this.wikiReceive = false;
+        this.original.wikiReceive = false;
         this.setDefaultLogo();
     },
     /**

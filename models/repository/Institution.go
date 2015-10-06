@@ -14,6 +14,9 @@ type Institution struct {
 	Name        string
 	URL         string
 	Description string
+	LogoURL     string
+	WikiID      string
+	WikiURL     string
 }
 
 // Delete removes the institution from database
@@ -27,7 +30,7 @@ func (institution *Institution) Delete() error {
 // Modify changes the details of the institution
 func (institution *Institution) Modify(institutionDetails map[string]interface{}) (adapter.WisplyError, error) {
 	var problem = adapter.WisplyError{}
-	result := hasValidModificationDetails(institutionDetails)
+	result := hasValidInstitutionModifyDetails(institutionDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
 		return problem, errors.New("It does not have valid details")
@@ -53,11 +56,14 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	name := institutionDetails["name"].(string)
 	description := institutionDetails["description"].(string)
 	id := strconv.Itoa(institution.ID)
+	logoURL := institutionDetails["logoURL"].(string)
+	wikiURL := institutionDetails["wikiURL"].(string)
+	wikiID := institutionDetails["wikiID"].(string)
 
-	sql := "UPDATE `institution` SET name=?, description=? WHERE id=?"
+	sql := "UPDATE `institution` SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=? WHERE id=?"
 	institution.Name = name
 	institution.Description = description
 	query, _ := database.Database.Prepare(sql)
-	_, err := query.Exec(name, description, id)
+	_, err := query.Exec(name, description, logoURL, wikiURL, wikiID, id)
 	return err
 }

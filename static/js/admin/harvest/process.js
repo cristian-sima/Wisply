@@ -1,4 +1,4 @@
-/* global $, Harvest, wisply, server */
+/* global $, Harvest, wisply, server, harvestHistory, CountUp */
 /**
  * @file Encapsulates the functionality for the harvest process
  * @author Cristian Sima
@@ -213,7 +213,6 @@ var HarvestProcess = function() {
 			if (this.manager.existingProcessActions) {
 				this.loadServerCounters();
 			}
-
 		},
 		loadServerCounters: function() {
 			var serverCounter, serverType, clientCounter;
@@ -298,7 +297,7 @@ var HarvestProcess = function() {
 					return counter;
 				}
 			}
-			throw new Exception("There is no counter with the name " + requested);
+			throw "There is no counter with the name " + requested;
 		},
 		/**
 		 * It is called by stage manager. In case there is a current counter, it tells it to show the error
@@ -310,9 +309,8 @@ var HarvestProcess = function() {
 		},
 		/**
 		 * It is called when the stage has finished. It deletes the counters, the current counter and goes to the next stage
-		 * @return {[type]}
 		 */
-		end: function () {
+		end: function() {
 			delete this.currentCounter;
 			delete this.counters;
 			this.manager.firedStageFinished();
@@ -352,16 +350,17 @@ var HarvestProcess = function() {
 				this._start(value);
 			},
 			/**
-			 * It gets the JQuery elements
+			 * It gets the JQuery elements. It is private
+			 * @ignore
 			 */
-			_getElements: function () {
-					this.container = $("#repository-counter-container-" + this.type);
-					this.element = $("#repository-counter-" + this.type);
+			_getElements: function() {
+				this.container = $("#repository-counter-container-" + this.type);
+				this.element = $("#repository-counter-" + this.type);
 			},
 			/**
-			 * @private
-			 * It creates the counter and starts the counter
+			 * It creates the counter and starts the counter. It is private
 			 * @param [number] value The value to go to
+			 * @ignore
 			 */
 			_start: function(value) {
 				var instance = this,
@@ -374,8 +373,7 @@ var HarvestProcess = function() {
 						  suffix: ''
 					},
 					time = (value / 80);
-
-				if(time > 10) {
+				if (time > 10) {
 					time = 10;
 				}
 				this.object = new CountUp("repository-counter-" + this.type, 0, value, 0, time, options);
@@ -385,7 +383,7 @@ var HarvestProcess = function() {
 			},
 			/**
 			 * It is called when the counter has finished
-			 * @private
+			 * @ignore
 			 */
 			_finish: function() {
 				if (this.stopped) {
@@ -395,7 +393,6 @@ var HarvestProcess = function() {
 			},
 			/**
 			 * It sets the stopped value to true. In case the counter has finished, it calls _finish
-			 * @return {[type]}
 			 */
 			finish: function() {
 				this.stopped = true;
@@ -406,7 +403,7 @@ var HarvestProcess = function() {
 			/**
 			 * It makes the counter red
 			 */
-			showError: function(type) {
+			showError: function() {
 				this.element.removeClass("text-muted label-warning label-success");
 				this.element.addClass("label-danger");
 			},
@@ -611,7 +608,7 @@ var HarvestProcess = function() {
 			 */
 			drawCounters: function(counters, id) {
 				var text = "",
-				 	html = "",
+					html = "",
 					counter = {},
 					i;
 				for (i = 0; i < counters.length; i++) {

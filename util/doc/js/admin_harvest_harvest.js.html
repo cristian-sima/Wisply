@@ -26,7 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* globals $, Websockets, server*/
+            <pre class="prettyprint source linenums"><code>/* globals $, Websockets, server, wisply */
 /**
  * @file Encapsulates the functionality for harvest process.
  * @author Cristian Sima
@@ -122,62 +122,55 @@ var Harvest = function() {
 					header = "&lt;thead>&lt;tr>&lt;th class='text-center'>Number&lt;/th>&lt;th class='text-center'>Date&lt;/th>&lt;th class='text-center'>Category&lt;/th>&lt;th class='text-center'>Content&lt;/th>&lt;/tr>&lt;/thead>";
 					return header;
 				}
-
-					var events = "&lt;tbody>",
+				var events = "&lt;tbody>",
 					moreButton = "",
-						index, currentEvent;
-					/**
-					 * It returns the type of HTML code
-					 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
-					 * @return {string}      The HTML code for the type of the event
-					 */
-					function getType(type) {
-						var textClass = "",
-							content = "";
-						switch (type) {
-							case "LOG":
-								textClass = "";
-								content = "Event";
-								break;
-							case "ERROR":
-								textClass = "text-danger";
-								content = "Error";
-								break;
-							case "WARN":
-								textClass = "text-warning";
-								content = "Warning";
-								break;
-						}
-						return "&lt;span class='" + textClass + "'>" + content + "&lt;/span>";
+					index, currentEvent;
+				/**
+				 * It returns the type of HTML code
+				 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
+				 * @return {string}      The HTML code for the type of the event
+				 */
+				function getType(type) {
+					var textClass = "",
+						content = "";
+					switch (type) {
+						case "LOG":
+							textClass = "";
+							content = "Event";
+							break;
+						case "ERROR":
+							textClass = "text-danger";
+							content = "Error";
+							break;
+						case "WARN":
+							textClass = "text-warning";
+							content = "Warning";
+							break;
 					}
-
-					var dif = this.data.length - this.see,
+					return "&lt;span class='" + textClass + "'>" + content + "&lt;/span>";
+				}
+				var dif = this.data.length - this.see,
 					see = 0;
-					if(dif &lt;= 0) {
-						see = this.data.length - 1;
-					} else {
-						see = this.see;
-						moreButton = "You have seen " + this.see + " events. There are " + dif + " events more &lt;br />&lt;div class='text-center'>&lt;button id='harvest-history-see-more' class='btn btn-info'>See more&lt;/button>&lt;/div>";
-					}
-
-					for (index = this.start; index &lt;= see; index++) {
-						currentEvent = this.data[index];
-						events += "&lt;tr>";
-						events += "&lt;td>" + (this.data.length - index) + "&lt;/td>";
-						events += "&lt;td>" + currentEvent.date + "&lt;/td>";
-						events += "&lt;td>" + getType(currentEvent.type) + "&lt;/td>";
-						events += "&lt;td>" + currentEvent.content + "&lt;/td>";
-						events += "&lt;/tr>";
-					}
-					events += "&lt;/tbody>";
-
-
+				if (dif &lt;= 0) {
+					see = this.data.length - 1;
+				} else {
+					see = this.see;
+					moreButton = "You have seen " + this.see + " events. There are " + dif + " events more &lt;br />&lt;div class='text-center'>&lt;button id='harvest-history-see-more' class='btn btn-info'>See more&lt;/button>&lt;/div>";
+				}
+				for (index = this.start; index &lt;= see; index++) {
+					currentEvent = this.data[index];
+					events += "&lt;tr>";
+					events += "&lt;td>" + (this.data.length - index) + "&lt;/td>";
+					events += "&lt;td>" + currentEvent.date + "&lt;/td>";
+					events += "&lt;td>" + getType(currentEvent.type) + "&lt;/td>";
+					events += "&lt;td>" + currentEvent.content + "&lt;/td>";
+					events += "&lt;/tr>";
+				}
+				events += "&lt;/tbody>";
 				var html = "&lt;table class='table table=condensed table-hover ''>";
-
 				html += getHeader();
 				html += events;
 				html += "&lt;/table>";
-
 				html += moreButton;
 				return html;
 			},
@@ -196,48 +189,48 @@ var Harvest = function() {
 				this.start = 0;
 			}
 		};
-		/**
-		 * The constructor creates the connection
-		 * @memberof Harvest
-		 * @class HarvestConnection
-		 * @classdesc It is a middleware between the harvest manager and the web sockets connection
-		 * @param [string] id The id of the element where the history will be displayed
-		 * @param [Harvest.History] history The reference to the gui
-		 */
-		var HistoryGUI = function HistoryGUI(id, history) {
-			this.activ = false;
-			this.element = $(id);
-			this.history = history;
-		};
-		HistoryGUI.prototype =
-			/** @lends Harvest.HistoryGUI */
-			{
-				/**
-				 * It updates the gui
-				 */
-				refresh: function () {
-						if(this.activ) {
-								this.element.html(this.history.getHTML());
-								$("#harvest-history-see-more").click(function() {
-										harvestHistory.seeMore();
-								});
-						}
-				},
-				/**
-				 * It activates the update of gui
-				 */
-				activate: function () {
-					this.history.reset();
-					this.activ = true;
-					this.refresh();
-				},
-				/**
-				 * It disables the gui
-				 */
-				disable: function () {
-					this.activ = false;
+	/**
+	 * The constructor creates the connection
+	 * @memberof Harvest
+	 * @class HarvestConnection
+	 * @classdesc It is a middleware between the harvest manager and the web sockets connection
+	 * @param [string] id The id of the element where the history will be displayed
+	 * @param [Harvest.History] history The reference to the gui
+	 */
+	var HistoryGUI = function HistoryGUI(id, history) {
+		this.activ = false;
+		this.element = $(id);
+		this.history = history;
+	};
+	HistoryGUI.prototype =
+		/** @lends Harvest.HistoryGUI */
+		{
+			/**
+			 * It updates the gui
+			 */
+			refresh: function() {
+				if (this.activ) {
+					this.element.html(this.history.getHTML());
+					$("#harvest-history-see-more").click(function() {
+						harvestHistory.seeMore();
+					});
 				}
-			};
+			},
+			/**
+			 * It activates the update of gui
+			 */
+			activate: function() {
+				this.history.reset();
+				this.activ = true;
+				this.refresh();
+			},
+			/**
+			 * It disables the gui
+			 */
+			disable: function() {
+				this.activ = false;
+			}
+		};
 	/**
 	 * The constructor creates the connection
 	 * @memberof Harvest
@@ -301,26 +294,24 @@ var Harvest = function() {
 					function getRepo(current, id) {
 						if (current === id) {
 							return "this repository";
-						} else if(id === 0) {
-								return "all repositories";
+						} else if (id === 0) {
+							return "all repositories";
 						}
 						return "the repository number " + id;
 					}
-
 					/**
 					 * It describes some actions
 					 * @param  {string} name The name of the message
 					 */
 					function getName(message) {
 						var toReturn = "";
-							toReturn += "&lt;strong>" + message.Name + "&lt;/strong>";
-							if(message.Name === "status-changed") {
-							 	toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
-							}
-							return toReturn;
+						toReturn += "&lt;strong>" + message.Name + "&lt;/strong>";
+						if (message.Name === "status-changed") {
+							toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
+						}
+						return toReturn;
 					}
-
-					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Value) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+					return ("I received from server the socket " + getName(msg) + " " + getContentMessage(msg.Value) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);
@@ -573,7 +564,7 @@ $(document).ready(function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Tue Oct 06 2015 11:51:06 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Tue Oct 06 2015 12:47:44 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

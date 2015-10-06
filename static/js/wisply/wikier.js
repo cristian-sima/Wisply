@@ -1,8 +1,10 @@
 /* global $, wisply */
+
 /**
  * @file Encapsulates the functionality for wiki requests
  * @author Cristian Sima
  */
+
 /**
  * Encapsulates the functionality for wiki requests
  * @namespace WikierModule
@@ -44,7 +46,8 @@ var WikierModule = function() {
 			},
 			/**
 			 * It requests the picture of the wiki page and returns it by calling the callback
-			 * @param  {function} callback It is called when the picture is received
+			 * @param  {function} info It should contain the name and the callback
+			 * @private
 			 */
 			_getElements: function(info) {
 				var instance = this,
@@ -59,15 +62,12 @@ var WikierModule = function() {
             exintro: "",
             explaintext: "",
 					};
-
 					data.titles =  info.title;
-
           x = $.ajax({
 					url: this.wikiURL,
 					data: data,
 					dataType: 'jsonp',
 					success: function(response) {
-            console.log(response);
 						if (response.query) {
 							instance.processResponse(response, infoCopy.callback);
 						} else {
@@ -86,7 +86,6 @@ var WikierModule = function() {
 			 */
       processResponse: function(response, callback){
         var page,
-        thumbnail,
         query = response.query,
         pages;
         pages = query.pages;

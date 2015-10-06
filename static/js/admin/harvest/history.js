@@ -1,4 +1,4 @@
-/* global $, Harvest, wisply*/
+/* global $, Harvest, wisply, harvestHistory, HarvestList */
 /**
  * @file Encapsulates the functionality for list harvesting
  * @author Cristian Sima
@@ -49,45 +49,45 @@ var HistoryEvent = function() {
 				DAY = HOUR * 24;
 			/**
 			 * It returns the number of days given the number of milliseconds
-			 * @param  {number} seconds The number of milliseconds
+			 * @param  {number} total The number of milliseconds
 			 * @return {number} The number of days
 			 */
-			function getDays(seconds) {
+			function getDays(total) {
 				return Math.floor(total / DAY);
 			}
 
 			/**
 			 * It returns the number of hours given the number of milliseconds
-			 * @param  {number} seconds The number of milliseconds
+			 * @param  {number} total The number of milliseconds
 			 * @return {number} The number of hours
 			 */
-			function getHours(seconds) {
+			function getHours(total) {
 				return Math.floor(total / HOUR);
 			}
 
 			/**
 			 * It returns the number of minutes given the number of milliseconds
-			 * @param  {number} seconds The number of milliseconds
+			 * @param  {number} total The number of milliseconds
 			 * @return {number} The number of minutes
 			 */
-			function getMinutes(seconds) {
+			function getMinutes(total) {
 				return Math.floor(total / MINUTE);
 			}
 
 			/**
 			 * It returns the number of minutes given the number of milliseconds
-			 * @param  {number} seconds The number of milliseconds
+			 * @param  {number} total The number of milliseconds
 			 * @return {number} The number of seconds
 			 */
-			function getSeconds(seconds) {
+			function getSeconds(total) {
 				return Math.floor(total / SECOND);
 			}
       total = end.getTime() - start.getTime();
      	difference = new TimeDifference();
-			difference.seconds = getSeconds(seconds);
-			difference.minutes = getSeconds(minutes);
-			difference.hours = getSeconds(hours);
-			difference.days = getSeconds(days);
+			difference.seconds = getSeconds(total);
+			difference.minutes = getSeconds(total);
+			difference.hours = getSeconds(total);
+			difference.days = getSeconds(total);
 	}
 
 	var Stages = [{

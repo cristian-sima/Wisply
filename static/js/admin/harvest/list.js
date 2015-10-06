@@ -1,4 +1,4 @@
-/* global $, Harvest, wisply*/
+/* global $, Harvest, wisply, harvestHistory */
 /**
  * @file Encapsulates the functionality for list harvesting
  * @author Cristian Sima
@@ -23,11 +23,11 @@ var HarvestList = function() {
 			harvestHistory.setGUI("#harvest-history-element");
 			$("#harvest-history-button").click(function() {
 				$("#harvest-history-container").modal('show');
-					harvestHistory.gui.activate();
+				harvestHistory.gui.activate();
 			});
-			$("#harvest-history-container").on('hidden.bs.modal', function () {
+			$("#harvest-history-container").on('hidden.bs.modal', function() {
 				console.log("inchis");
-					harvestHistory.gui.disable();
+				harvestHistory.gui.disable();
 			});
 		}
 	}];

@@ -12,7 +12,7 @@ var (
 		"description": {"String", "max:1000"},
 		"id":          {"Int"},
 		"institution": {"Int"},
-		"wikiID":      {"String", "Regexp:^(NULL)|((0-9)+)$"},
+		"wikiID":      {"String", "Regexp:^(NULL)$|^((\\d)+)$"},
 	}
 )
 

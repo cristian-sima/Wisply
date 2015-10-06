@@ -12,10 +12,10 @@ type Process struct {
 	remote         RemoteRepositoryInterface
 	local          *repository.Repository
 	db             *databaseManager
-	CurrentAction  int                `json:"CurrentAction"`
-	Actions        map[string]*Action `json:"Actions"`
-	Controller     WisplyController   `json:"-"`
-	Identification *Identificationer  `json:"Identification"`
+	CurrentAction  int                 `json:"CurrentAction"`
+	Actions        map[string]*Action2 `json:"Actions"`
+	Controller     WisplyController    `json:"-"`
+	Identification *Identificationer   `json:"Identification"`
 	managers       []*WisplyManager
 	currentManager *WisplyManager
 }
@@ -167,7 +167,7 @@ func (process *Process) setCurrentAction(actionName string) {
 }
 
 func (process *Process) createAction(name string) {
-	process.Actions[name] = &Action{
+	process.Actions[name] = &Action2{
 		Type:      name,
 		IsCurrent: true,
 	}
@@ -180,7 +180,7 @@ func (process *Process) updateAction(newCount int, name string) {
 	process.notifyAction(action, "update")
 }
 
-func (process *Process) notifyAction(action *Action, operation string) {
+func (process *Process) notifyAction(action *Action2, operation string) {
 
 	type Content struct {
 		Operation string `json:"Operation"`
@@ -254,7 +254,7 @@ func NewProcess(ID string, controller WisplyController) *Process {
 		remote:     remote,
 		Controller: controller,
 		db:         db,
-		Actions:    make(map[string]*Action),
+		Actions:    make(map[string]*Action2),
 	}
 	process.SetName("Harvest")
 	db.SetManager(process)

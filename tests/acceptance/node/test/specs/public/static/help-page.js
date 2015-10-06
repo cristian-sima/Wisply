@@ -9,7 +9,7 @@ describe('Help functionality', function() {
           })
           .call(done);
   });
-  it("cotains the notice about cookies", function(done) {
+  it("contains the notice about cookies", function(done) {
       browser
       .pause(2000)
       .isVisible(".cc_message").then(function(isVisible) {

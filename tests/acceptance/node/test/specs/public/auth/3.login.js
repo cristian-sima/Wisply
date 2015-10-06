@@ -146,7 +146,7 @@ describe('Login', function() {
       });
   });
   describe('Send me', function() {
-    it('sends home a request witout sendMe', function(done) {
+    it('sends home a request without sendMe', function(done) {
         browser
             .url("/auth/login")
             .setValue('#login-email', user.email)
@@ -160,7 +160,7 @@ describe('Login', function() {
             .pause(3000)
             .call(done);
     });
-    it('sends home an account without priviledges for a restricted area', function(done) {
+    it('sends home an account without privileges for a restricted area', function(done) {
         browser
             .url("/auth/login?sendMe=/admin")
             .setValue('#login-email', user.email)
@@ -202,7 +202,7 @@ describe('Login', function() {
             .pause(3000)
             .call(done);
     });
-    it('sends to a restricted area an account with enought priviledges)', function(done) {
+    it('sends to a restricted area an account with enough privileges)', function(done) {
         browser
             .url("/auth/login?sendMe=/admin")
             .setValue('#login-email', admin.email)

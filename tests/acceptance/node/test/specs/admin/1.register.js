@@ -80,7 +80,7 @@ describe('Register', function() {
           })
           .call(done);
       });
-      it('deconnects the account', function(done) {
+      it('disconnects the account', function(done) {
           browser
           .click('#menu-logout-button')
           .pause(3500)
@@ -177,7 +177,7 @@ describe('Register', function() {
            });
          });
 
-         describe('Password confirmation fied', function() {
+         describe('Password confirmation field', function() {
            it('rejects a form without password confirmation', function(done) {
                browser
                    .url("/auth/register")
@@ -207,7 +207,7 @@ describe('Register', function() {
            });
          });
 
-           describe('Validating email fied', function() {
+           describe('Validating email field', function() {
               it('rejects empty email', function(done) {
                   browser
                       .url("/auth/register")
@@ -271,7 +271,7 @@ describe('Register', function() {
                       .call(done);
               });
            });
-           describe('Validating password fied', function() {
+           describe('Validating password field', function() {
               it('rejects form without password field', function(done) {
                   browser
                       .url("/auth/register")

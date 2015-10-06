@@ -41,7 +41,7 @@
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
                   <!-- Repositories -->
-                  <div class="list-group">
+                  <div class="list-group" id="repositories">
                   {{range $index, $repository := .repositories}}
                     <a href="/repository/{{ $repository.ID }}" class="list-group-item">
                       <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $repository.Name }}</h4>

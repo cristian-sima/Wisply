@@ -28,14 +28,4 @@ describe('Institutions', function() {
         .back()
         .call(done);
     });
-    it("clicks to see a repository", function(done){
-        browser
-        .refresh()
-        .click('a=Ed Share')
-        .getTitle(function(err, title) {
-            expect(err).toBe(undefined);
-            expect(title).toBe('Ed Share');
-        })
-        .call(done);
-    });
 });

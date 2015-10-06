@@ -33,7 +33,11 @@ func (controller *InstitutionController) Insert() {
 
 	institutionDetails := make(map[string]interface{})
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
-	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
+	description := controller.GetString("institution-description")
+
+	// jquery has a problem with \r
+	institutionDetails["description"] = strings.TrimSpace(strings.Replace(description, "\r", "", -1))
+
 	institutionDetails["url"] = strings.TrimSpace(controller.GetString("institution-URL"))
 	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
 	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
@@ -60,6 +64,19 @@ func (controller *InstitutionController) Modify() {
 		controller.Abort("databaseError")
 	} else {
 		controller.Data["institution"] = institution
+
+		wikiReceive := false
+		if institution.WikiID == "" {
+			institution.WikiID = "NULL"
+		}
+		if institution.WikiID == "NULL" {
+			wikiReceive = false
+		} else {
+			wikiReceive = true
+		}
+
+		controller.Data["wikiID"] = institution.WikiID
+		controller.Data["wikiReceive"] = wikiReceive
 		controller.showModifyForm()
 	}
 }
@@ -73,7 +90,11 @@ func (controller *InstitutionController) Update() {
 	ID = controller.Ctx.Input.Param(":id")
 
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
-	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
+	description := controller.GetString("institution-description")
+
+	// jquery has a problem with \r
+	institutionDetails["description"] = strings.TrimSpace(strings.Replace(description, "\r", "", -1))
+
 	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
 	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
 	institutionDetails["wikiID"] = strings.TrimSpace(controller.GetString("institution-wikiID"))
@@ -115,6 +136,8 @@ func (controller *InstitutionController) showModifyForm() {
 
 func (controller *InstitutionController) showAddForm() {
 	controller.showForm("Add", "Add a new institution")
+	controller.Data["wikiID"] = "NULL"
+	controller.Data["wikiReceive"] = false
 }
 
 func (controller *InstitutionController) showForm(action string, legend string) {

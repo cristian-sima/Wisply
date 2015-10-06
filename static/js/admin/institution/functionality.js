@@ -29,9 +29,13 @@ var FunctionalityInstitution = function() {
 			 * It activates the listeners
 			 */
 			init: function() {
+				var instance = this;
 				this.activateListeners();
 				wisply.activateTooltip();
 				$("#institution-name").focus();
+				setTimeout(function() {
+					instance.checkForChanges();
+				}, 200);
 			},
 			/**
 			 * It activates the listener for deleting a institution
@@ -245,6 +249,6 @@ $(document).ready(function() {
 	"use strict";
 	var module = new FunctionalityInstitution();
 	wisply.functionalityInstitutionModule = module;
-	wisply.functionalityInstitutionModule = new module.Manager();
-	wisply.functionalityInstitutionModule.init();
+	wisply.functionalityInstitutionModule.manager = new module.Manager();
+	wisply.functionalityInstitutionModule.manager.init();
 });

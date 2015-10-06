@@ -11,7 +11,8 @@
       <h4>Options</h4>
       <div class="btn-group-sm">
         <a href="/admin/repositories/add" class="btn btn-primary">Add repository</a>
-        <span id="harvest-history-button" class="btn btn-info hover">Live history</span>
+          <a href="/admin/harvest/event-log" class="btn btn-primary">Event log</a>
+        <span id="harvest-history-button" class="btn btn-info hover">Live actions</span>
       </div>
     </section>
     <br />
@@ -33,15 +34,13 @@
             <th>Current status</th>
             <th>Base URL</th>
             <th>Description</th>
-            <th>Modify</th>
-            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {{range $index, $element := .repositories}}
           {{$safe := $element.Name|html}}
           <tr>
-            <td>{{ $element.Name |html }}</td>
+            <td><a href="/admin/repositories/repository/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
             <td> <div  id="rep-status-{{ $element.ID }}">
               {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}
@@ -76,15 +75,12 @@
 
               {{ end }}
             </div>
+
+                          <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
+
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>{{ $element.Description |html }}</td>
-            <td>
-              <a href="/admin/repositories/modify/{{$element.ID}}">Modify</a>
-            </td>
-            <td>
-              <a class="deleteRepositoryButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
-            </td>
           </tr>
           {{end }}
         </tbody>
@@ -106,17 +102,12 @@
           </div>
       </div>
 
-
     </div>
     {{ else }}
     There are no repositories... :(
     {{ end }}
   </div>
 </div>
-
-
-
-
 <script>
 var server = {};
 server.host = {{ .host }};

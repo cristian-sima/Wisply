@@ -29,6 +29,7 @@ func (controller *RepositoryController) ShowRepository() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		controller.SetCustomTitle(rep.Name)
 		controller.Data["repository"] = rep
 		controller.Data["institution"] = institution
 		controller.Data["identification"] = identification

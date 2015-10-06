@@ -1,4 +1,4 @@
-/* globals $, Websockets, server*/
+/* globals $, Websockets, server, wisply */
 /**
  * @file Encapsulates the functionality for harvest process.
  * @author Cristian Sima
@@ -94,62 +94,55 @@ var Harvest = function() {
 					header = "<thead><tr><th class='text-center'>Number</th><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
 					return header;
 				}
-
-					var events = "<tbody>",
+				var events = "<tbody>",
 					moreButton = "",
-						index, currentEvent;
-					/**
-					 * It returns the type of HTML code
-					 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
-					 * @return {string}      The HTML code for the type of the event
-					 */
-					function getType(type) {
-						var textClass = "",
-							content = "";
-						switch (type) {
-							case "LOG":
-								textClass = "";
-								content = "Event";
-								break;
-							case "ERROR":
-								textClass = "text-danger";
-								content = "Error";
-								break;
-							case "WARN":
-								textClass = "text-warning";
-								content = "Warning";
-								break;
-						}
-						return "<span class='" + textClass + "'>" + content + "</span>";
+					index, currentEvent;
+				/**
+				 * It returns the type of HTML code
+				 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
+				 * @return {string}      The HTML code for the type of the event
+				 */
+				function getType(type) {
+					var textClass = "",
+						content = "";
+					switch (type) {
+						case "LOG":
+							textClass = "";
+							content = "Event";
+							break;
+						case "ERROR":
+							textClass = "text-danger";
+							content = "Error";
+							break;
+						case "WARN":
+							textClass = "text-warning";
+							content = "Warning";
+							break;
 					}
-
-					var dif = this.data.length - this.see,
+					return "<span class='" + textClass + "'>" + content + "</span>";
+				}
+				var dif = this.data.length - this.see,
 					see = 0;
-					if(dif <= 0) {
-						see = this.data.length - 1;
-					} else {
-						see = this.see;
-						moreButton = "You have seen " + this.see + " events. There are " + dif + " events more <br /><div class='text-center'><button id='harvest-history-see-more' class='btn btn-info'>See more</button></div>";
-					}
-
-					for (index = this.start; index <= see; index++) {
-						currentEvent = this.data[index];
-						events += "<tr>";
-						events += "<td>" + (this.data.length - index) + "</td>";
-						events += "<td>" + currentEvent.date + "</td>";
-						events += "<td>" + getType(currentEvent.type) + "</td>";
-						events += "<td>" + currentEvent.content + "</td>";
-						events += "</tr>";
-					}
-					events += "</tbody>";
-
-
+				if (dif <= 0) {
+					see = this.data.length - 1;
+				} else {
+					see = this.see;
+					moreButton = "You have seen " + this.see + " events. There are " + dif + " events more <br /><div class='text-center'><button id='harvest-history-see-more' class='btn btn-info'>See more</button></div>";
+				}
+				for (index = this.start; index <= see; index++) {
+					currentEvent = this.data[index];
+					events += "<tr>";
+					events += "<td>" + (this.data.length - index) + "</td>";
+					events += "<td>" + currentEvent.date + "</td>";
+					events += "<td>" + getType(currentEvent.type) + "</td>";
+					events += "<td>" + currentEvent.content + "</td>";
+					events += "</tr>";
+				}
+				events += "</tbody>";
 				var html = "<table class='table table=condensed table-hover ''>";
-
 				html += getHeader();
 				html += events;
 				html += "</table>";
-
 				html += moreButton;
 				return html;
 			},
@@ -168,48 +161,48 @@ var Harvest = function() {
 				this.start = 0;
 			}
 		};
-		/**
-		 * The constructor creates the connection
-		 * @memberof Harvest
-		 * @class HarvestConnection
-		 * @classdesc It is a middleware between the harvest manager and the web sockets connection
-		 * @param [string] id The id of the element where the history will be displayed
-		 * @param [Harvest.History] history The reference to the gui
-		 */
-		var HistoryGUI = function HistoryGUI(id, history) {
-			this.activ = false;
-			this.element = $(id);
-			this.history = history;
-		};
-		HistoryGUI.prototype =
-			/** @lends Harvest.HistoryGUI */
-			{
-				/**
-				 * It updates the gui
-				 */
-				refresh: function () {
-						if(this.activ) {
-								this.element.html(this.history.getHTML());
-								$("#harvest-history-see-more").click(function() {
-										harvestHistory.seeMore();
-								});
-						}
-				},
-				/**
-				 * It activates the update of gui
-				 */
-				activate: function () {
-					this.history.reset();
-					this.activ = true;
-					this.refresh();
-				},
-				/**
-				 * It disables the gui
-				 */
-				disable: function () {
-					this.activ = false;
+	/**
+	 * The constructor creates the connection
+	 * @memberof Harvest
+	 * @class HarvestConnection
+	 * @classdesc It is a middleware between the harvest manager and the web sockets connection
+	 * @param [string] id The id of the element where the history will be displayed
+	 * @param [Harvest.History] history The reference to the gui
+	 */
+	var HistoryGUI = function HistoryGUI(id, history) {
+		this.activ = false;
+		this.element = $(id);
+		this.history = history;
+	};
+	HistoryGUI.prototype =
+		/** @lends Harvest.HistoryGUI */
+		{
+			/**
+			 * It updates the gui
+			 */
+			refresh: function() {
+				if (this.activ) {
+					this.element.html(this.history.getHTML());
+					$("#harvest-history-see-more").click(function() {
+						harvestHistory.seeMore();
+					});
 				}
-			};
+			},
+			/**
+			 * It activates the update of gui
+			 */
+			activate: function() {
+				this.history.reset();
+				this.activ = true;
+				this.refresh();
+			},
+			/**
+			 * It disables the gui
+			 */
+			disable: function() {
+				this.activ = false;
+			}
+		};
 	/**
 	 * The constructor creates the connection
 	 * @memberof Harvest
@@ -273,26 +266,24 @@ var Harvest = function() {
 					function getRepo(current, id) {
 						if (current === id) {
 							return "this repository";
-						} else if(id === 0) {
-								return "all repositories";
+						} else if (id === 0) {
+							return "all repositories";
 						}
 						return "the repository number " + id;
 					}
-
 					/**
 					 * It describes some actions
 					 * @param  {string} name The name of the message
 					 */
 					function getName(message) {
 						var toReturn = "";
-							toReturn += "<strong>" + message.Name + "</strong>";
-							if(message.Name === "status-changed") {
-							 	toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
-							}
-							return toReturn;
+						toReturn += "<strong>" + message.Name + "</strong>";
+						if (message.Name === "status-changed") {
+							toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
+						}
+						return toReturn;
 					}
-
-					return ("I received from server the socket " + getName(msg)  + " " +  getContentMessage(msg.Content) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
+					return ("I received from server the socket " + getName(msg) + " " + getContentMessage(msg.Value) + " for " + getRepo(msg.Repository.id, msg.Repository) + ".");
 				}
 				description = createHumanDescription(message);
 				harvestHistory.log(description);

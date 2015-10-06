@@ -17,12 +17,14 @@ func (controller *InstitutionController) DisplayAll() {
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
+	controller.SetCustomTitle("Admin - Institutions")
 	controller.TplNames = "site/admin/institution/list.tpl"
 	controller.Layout = "site/admin-layout.tpl"
 }
 
 // Add shows the form to add an institution
 func (controller *InstitutionController) Add() {
+	controller.SetCustomTitle("Add Institution")
 	controller.showAddForm()
 }
 
@@ -31,8 +33,15 @@ func (controller *InstitutionController) Insert() {
 
 	institutionDetails := make(map[string]interface{})
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
-	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
+	description := controller.GetString("institution-description")
+
+	// jquery has a problem with \r
+	institutionDetails["description"] = strings.TrimSpace(strings.Replace(description, "\r", "", -1))
+
 	institutionDetails["url"] = strings.TrimSpace(controller.GetString("institution-URL"))
+	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
+	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
+	institutionDetails["wikiID"] = strings.TrimSpace(controller.GetString("institution-wikiID"))
 
 	problems, err := controller.model.InsertNewInstitution(institutionDetails)
 	if err != nil {
@@ -54,11 +63,21 @@ func (controller *InstitutionController) Modify() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		institutionDetails := map[string]string{
-			"Name":        institution.Name,
-			"Description": institution.Description,
+		controller.Data["institution"] = institution
+
+		wikiReceive := false
+		if institution.WikiID == "" {
+			institution.WikiID = "NULL"
 		}
-		controller.showModifyForm(institutionDetails)
+		if institution.WikiID == "NULL" {
+			wikiReceive = false
+		} else {
+			wikiReceive = true
+		}
+
+		controller.Data["wikiID"] = institution.WikiID
+		controller.Data["wikiReceive"] = wikiReceive
+		controller.showModifyForm()
 	}
 }
 
@@ -71,7 +90,14 @@ func (controller *InstitutionController) Update() {
 	ID = controller.Ctx.Input.Param(":id")
 
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
-	institutionDetails["description"] = strings.TrimSpace(controller.GetString("institution-description"))
+	description := controller.GetString("institution-description")
+
+	// jquery has a problem with \r
+	institutionDetails["description"] = strings.TrimSpace(strings.Replace(description, "\r", "", -1))
+
+	institutionDetails["logoURL"] = strings.TrimSpace(controller.GetString("institution-logoURL"))
+	institutionDetails["wikiURL"] = strings.TrimSpace(controller.GetString("institution-wikiURL"))
+	institutionDetails["wikiID"] = strings.TrimSpace(controller.GetString("institution-wikiID"))
 
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
@@ -104,15 +130,14 @@ func (controller *InstitutionController) Delete() {
 	}
 }
 
-func (controller *InstitutionController) showModifyForm(institution map[string]string) {
-	controller.Data["institutionName"] = institution["Name"]
-	controller.Data["institutionUrl"] = institution["Url"]
-	controller.Data["institutionDescription"] = institution["Description"]
+func (controller *InstitutionController) showModifyForm() {
 	controller.showForm("Modify", "Modify this institution")
 }
 
 func (controller *InstitutionController) showAddForm() {
 	controller.showForm("Add", "Add a new institution")
+	controller.Data["wikiID"] = "NULL"
+	controller.Data["wikiReceive"] = false
 }
 
 func (controller *InstitutionController) showForm(action string, legend string) {

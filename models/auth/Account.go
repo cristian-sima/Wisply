@@ -6,10 +6,9 @@ import (
 	"strconv"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
-	"github.com/nu7hatch/gouuid"
 )
 
-// Account It represents an account
+// Account represents an account
 type Account struct {
 	ID              int
 	Name            string
@@ -18,7 +17,7 @@ type Account struct {
 	IsAdministrator bool
 }
 
-// ChangeType It changes the type of the account
+// ChangeType changes the type of the account
 func (account *Account) ChangeType(isAdministrator string) error {
 
 	result := isValidAdminType(isAdministrator)
@@ -30,54 +29,42 @@ func (account *Account) ChangeType(isAdministrator string) error {
 	return err
 }
 
+// It modifies the status of the user
 func (account *Account) modifyStatus(isAdministrator string) error {
 
 	stmt, err := wisply.Database.Prepare("UPDATE `account` SET administrator=? WHERE id=?")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	_, err = stmt.Exec(isAdministrator, strconv.Itoa(account.ID))
 	if err != nil {
-		panic(err)
+		return err
 	}
 	return err
 }
 
-// GenerateConnectionCookie It generates a new connection cookie
+// GenerateConnectionCookie generates a new "connection" cookie
+// This cookie is used to remember the coonection of the account
 func (account *Account) GenerateConnectionCookie() *Cookie {
-
-	var timestamp, value string
-	temp, _ := uuid.NewV4()
-	plain := temp.String()
-	value = getSHA1Digest(plain)
-
-	timestamp = getCurrentTimestamp()
-
-	sql := "INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)"
-	query, _ := wisply.Database.Prepare(sql)
-	query.Exec("NULL", strconv.Itoa(account.ID), value, timestamp)
-
-	intTimestamp, _ := strconv.Atoi(timestamp)
-	token := Token{
-		Value:     plain,
-		Timestamp: intTimestamp,
-	}
-
+	token := account.createNewToken()
 	cookie := Cookie{
 		Account:  account,
-		Token:    &token,
+		Token:    token,
 		Duration: Settings["duration"].(int),
 		Path:     Settings["path"].(string),
 	}
-
 	return &cookie
 }
 
-// Delete It delets the account
+func (account *Account) createNewToken() *Token {
+	token := generateToken(account)
+	token.Insert()
+	return token
+}
+
+// Delete removes the account from the database
 func (account *Account) Delete() error {
-
 	sql := "DELETE from `account` WHERE id=?"
-
 	query, _ := wisply.Database.Prepare(sql)
 	_, err := query.Exec(strconv.Itoa(account.ID))
 

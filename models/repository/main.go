@@ -15,11 +15,11 @@ type Model struct {
 // GetAllInstitutions returns an array of Institution with all institutions
 func (model *Model) GetAllInstitutions() []Institution {
 	var list []Institution
-	sql := "SELECT id, name, url, description FROM institution"
+	sql := "SELECT id, name, url, description, logoURL, wikiURL, wikiID FROM institution"
 	rows, _ := database.Database.Query(sql)
 	for rows.Next() {
 		institution := Institution{}
-		rows.Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description)
+		rows.Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description, &institution.LogoURL, &institution.WikiURL, &institution.WikiID)
 		list = append(list, institution)
 	}
 	return list
@@ -30,7 +30,7 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 
 	problem := adapter.WisplyError{}
 
-	result := hasValidInsertDetails(institutionDetails)
+	result := hasValidInstitutionInsertDetails(institutionDetails)
 	if !result.IsValid {
 		problem.Data = result.Errors
 		return problem, errors.New("Error")
@@ -39,9 +39,14 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 	name := institutionDetails["name"].(string)
 	description := institutionDetails["description"].(string)
 	url := institutionDetails["url"].(string)
-	sql := "INSERT INTO `institution` (`name`, `description`, `url`) VALUES (?, ?, ?)"
+	logoURL := institutionDetails["logoURL"].(string)
+	wikiURL := institutionDetails["wikiURL"].(string)
+	wikiID := institutionDetails["wikiID"].(string)
+
+	sql := "INSERT INTO `institution` (`name`, `description`, `url`, `logoURL`, `wikiURL`, `wikiID`) VALUES (?, ?, ?, ?, ?, ?)"
 	query, err := database.Database.Prepare(sql)
-	query.Exec(name, description, url)
+	query.Exec(name, description, url, logoURL, wikiURL, wikiID)
+
 	if err != nil {
 		problem.Message = "No institution like that"
 		return problem, errors.New("Error")
@@ -85,12 +90,17 @@ func NewInstitution(ID string) (*Institution, error) {
 	if !isValid.IsValid {
 		return institution, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, name, url, description FROM institution WHERE id = ?"
+
+	fieldsList := "`id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID`"
+	sql := "SELECT " + fieldsList + " FROM institution WHERE id = ?"
 	query, err := database.Database.Prepare(sql)
-	query.QueryRow(ID).Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description)
+
+	query.QueryRow(ID).Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description, &institution.LogoURL, &institution.WikiURL, &institution.WikiID)
+
 	if err != nil {
 		return institution, errors.New("No institution like that")
 	}
+
 	return institution, nil
 }
 

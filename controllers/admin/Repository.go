@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"strconv"
 	"strings"
 
 	repository "github.com/cristian-sima/Wisply/models/repository"
@@ -20,12 +21,14 @@ func (controller *RepositoryController) List() {
 	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
+	controller.SetCustomTitle("Admin - Repositories")
 	controller.TplNames = "site/admin/repository/list.tpl"
 }
 
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
+	controller.SetCustomTitle("Add Repository")
 	controller.showAddForm()
 }
 
@@ -86,7 +89,7 @@ func (controller *RepositoryController) Update() {
 		if err != nil {
 			controller.DisplayError(problems)
 		} else {
-			controller.DisplaySuccessMessage("The account has been modified!", "/admin/repositories/")
+			controller.DisplaySuccessMessage("The account has been modified!", "/admin/repositories/repository/"+strconv.Itoa(repository.ID))
 		}
 	}
 }
@@ -127,4 +130,32 @@ func (controller *RepositoryController) showForm(action string, legend string) {
 	controller.Data["actionURL"] = ""
 	controller.Data["actionType"] = "POST"
 	controller.TplNames = "site/admin/repository/form.tpl"
+}
+
+// ShowRepository shows the administrative information regarding a repository
+func (controller *RepositoryController) ShowRepository() {
+	ID := controller.Ctx.Input.Param(":id")
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["repository"] = repository
+		controller.Data["institution"] = repository.GetInstitution()
+		controller.Data["identification"] = repository.GetIdentification()
+		controller.TplNames = "site/admin/repository/repository.tpl"
+	}
+}
+
+// ShowAdvanceOptions displays the page with further options such as modify or delete
+func (controller *RepositoryController) ShowAdvanceOptions() {
+	ID := controller.Ctx.Input.Param(":id")
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["repository"] = repository
+		controller.Data["institution"] = repository.GetInstitution()
+		controller.Data["identification"] = repository.GetIdentification()
+		controller.TplNames = "site/admin/repository/advance-options.tpl"
+	}
 }

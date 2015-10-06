@@ -60,7 +60,6 @@ func (connection *Connection) ReadPump() {
 			fmt.Println(msg)
 
 			connection.controller.DecideAction(&msg, connection)
-
 		}
 	}
 }

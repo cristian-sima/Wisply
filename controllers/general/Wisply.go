@@ -42,7 +42,7 @@ func (controller *WisplyController) checkConnectionCookie() {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
 	if cookie != "" {
-		idUser, err := auth.ReConnect(cookie)
+		idUser, err := auth.ReconnectUsingCookie(cookie)
 		if err == nil {
 			controller.initConnectedState(idUser)
 		} else {

@@ -18,6 +18,7 @@ type AccountController struct {
 func (controller *AccountController) List() {
 	accounts := controller.model.GetAllAccounts()
 	controller.Data["accounts"] = accounts
+	controller.SetCustomTitle("Admin - Accounts")
 	controller.TplNames = "site/admin/account/list.tpl"
 }
 

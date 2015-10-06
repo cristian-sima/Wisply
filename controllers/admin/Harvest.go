@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	event "github.com/cristian-sima/Wisply/models/event"
 	harvest "github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 	ws "github.com/cristian-sima/Wisply/models/ws"
@@ -17,7 +18,7 @@ var CurrentProcesses = make(map[int]*Process)
 // Process contians information about a process
 type Process struct {
 	Connections []*ws.Connection `json:"-"`
-	Manager     *harvest.Manager `json:"-"`
+	Process     *harvest.Process `json:"Manager"`
 }
 
 func (process *Process) addConnection(connection *ws.Connection) {
@@ -32,7 +33,8 @@ func init() {
 // HarvestController manages the operations for repository (list, delete, add)
 type HarvestController struct {
 	Controller
-	Model repository.Model
+	Model        repository.Model
+	EventManager event.Manager
 }
 
 // InitWebsocketConnection initiats the websocket connection
@@ -118,13 +120,13 @@ func (controller *HarvestController) StartProcess(message *ws.Message, connectio
 		ID := message.Repository
 		delete(CurrentProcesses, ID)
 
-		harvestManager := harvest.NewManager(strconv.Itoa(ID), controller)
+		harvestProcess := harvest.NewProcess(strconv.Itoa(ID), controller)
 		process := &Process{
-			Manager: harvestManager,
+			Process: harvestProcess,
 		}
 		process.addConnection(connection)
 		CurrentProcesses[ID] = process
-		harvestManager.StartProcess()
+		harvestProcess.Start()
 	}
 }
 
@@ -132,22 +134,20 @@ func (controller *HarvestController) StartProcess(message *ws.Message, connectio
 func (controller *HarvestController) Notify(message *harvest.Message) {
 	process, ok := CurrentProcesses[message.Repository]
 
-	fmt.Println("<-->  Harvest Controller: The controller has received this message:")
+	controller.log("The controller has received this message:")
 	fmt.Println(message)
 	if ok {
 		switch message.Name {
-		case "status-changed", "identification-details":
+		case "status-changed", "identification-details", "event-notice":
 			{
 				msg := ConvertToWebsocketMessage(message)
 				hub.BroadcastMessage(msg)
 			}
 			break
-		case "verification-finished":
-			if message.Value == "failed" {
-				msg := ConvertToWebsocketMessage(message)
-				hub.SendGroupMessage(msg, process.Connections)
-				delete(CurrentProcesses, message.Repository)
-			}
+		case "harvesting", "verification-finished":
+			msg := ConvertToWebsocketMessage(message)
+			hub.SendGroupMessage(msg, process.Connections)
+			break
 		case "delete-process":
 			{
 				delete(CurrentProcesses, message.Repository)
@@ -169,12 +169,26 @@ func ConvertToWebsocketMessage(old *harvest.Message) *ws.Message {
 
 // GetProcess sends the current process on the server for a repository
 func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
-	processObject, _ := CurrentProcesses[message.Repository]
+	controller.log("Yes it goes")
+	process, processExists := CurrentProcesses[message.Repository]
+	if !processExists {
+		controller.log("I do not have any process for " + strconv.Itoa(message.Repository))
+	} else {
+		controller.log("I have a process for the repository " + strconv.Itoa(message.Repository))
+		controller.log("I add a new connection for the repository " + strconv.Itoa(message.Repository) + " process")
+		process.addConnection(connection)
+		fmt.Println(process)
+	}
 	hub.SendMessage(&ws.Message{
 		Name:       "existing-process-on-server",
-		Value:      &processObject,
+		Value:      &process,
 		Repository: message.Repository,
 	}, connection)
+
+}
+
+func (controller *HarvestController) log(message string) {
+	fmt.Println("<-->  Harvest Controller: " + message)
 }
 
 // SendAllRepositoriesStatus gets all repositories' status only and sends them to a connection
@@ -184,4 +198,11 @@ func (controller *HarvestController) SendAllRepositoriesStatus(connection *ws.Co
 		Name:  "repositories-status-list",
 		Value: &list,
 	}, connection)
+}
+
+// ShowEventLog displays the last events for harvesting
+func (controller *HarvestController) ShowEventLog() {
+	controller.Data["events"] = controller.EventManager.GetLastEvents()
+	controller.SetCustomTitle("Admin - Event Log")
+	controller.TplNames = "site/admin/harvest/event-log.tpl"
 }

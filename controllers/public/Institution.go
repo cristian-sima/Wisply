@@ -16,6 +16,7 @@ func (controller *InstitutionController) List() {
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
+	controller.SetCustomTitle("Institutions")
 	controller.TplNames = "site/public/institution/list.tpl"
 	controller.Layout = "site/public-layout.tpl"
 }
@@ -27,6 +28,7 @@ func (controller *InstitutionController) ShowInstitution() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		controller.SetCustomTitle(institution.Name)
 		controller.Data["institution"] = institution
 		controller.Data["repositories"] = institution.GetRepositories()
 		controller.Layout = "site/public-layout.tpl"

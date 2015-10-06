@@ -9,11 +9,37 @@ var (
 	rules = map[string][]string{
 		"name":        {"String", "between_inclusive:3,255"},
 		"url":         {"String", "url", "between_inclusive:3,2083"},
-		"description": {"String", "max:255"},
+		"description": {"String", "max:1000"},
 		"id":          {"Int"},
 		"institution": {"Int"},
+		"wikiID":      {"String", "Regexp:^(NULL)$|^((\\d)+)$"},
 	}
 )
+
+func hasValidInstitutionInsertDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"name":        rules["name"],
+		"url":         rules["url"],
+		"description": rules["description"],
+		"institution": rules["institution"],
+		"logoURL":     rules["url"],
+		"wikiURL":     rules["url"],
+		"wikiID":      rules["wikiID"],
+	}
+	return adapter.Validate(details, rules)
+}
+
+func hasValidInstitutionModifyDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"name":        rules["name"],
+		"description": rules["description"],
+		"institution": rules["institution"],
+		"logoURL":     rules["url"],
+		"wikiURL":     rules["url"],
+		"wikiID":      rules["wikiID"],
+	}
+	return adapter.Validate(details, rules)
+}
 
 func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{

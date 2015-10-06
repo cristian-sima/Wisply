@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"strconv"
-	"strings"
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
@@ -13,7 +12,7 @@ import (
 
 // Settings The authentication's settings
 var Settings = map[string]interface{}{
-	"duration":        (60 * 60 * 24 * 7), // one week
+	"duration":        (60 * 60 * 24 * 7 * 4), // one month
 	"path":            "/",
 	"separatorCookie": "::",
 	"cookieName":      "connection",
@@ -24,61 +23,31 @@ var Settings = map[string]interface{}{
 type Model struct {
 }
 
-// ReConnect It tries to reconnect the user using the value from the connection cookiePath
+// ReconnectUsingCookie It tries to reconnect the user using the value from the connection cookiePath
 // The value is splited in 2 values: ID and hashedToken
 // Then the values are verified in the database
 // Finally, it is checked if the token is still valid
-func ReConnect(plainCookie string) (string, error) {
-	ID := ""
+func ReconnectUsingCookie(plainCookie string) (string, error) {
 
-	elements, err := splitCookie(plainCookie)
+	cookie, err := newLoginCookie(plainCookie)
 	if err != nil {
-		return ID, errors.New("The cookie has an invalid format")
+		return "", errors.New("The cookie has an invalid format")
 	}
 
-	ID = elements[0]
-	hashedToken := elements[1]
-
-	validToken := isTokenValid(ID, hashedToken)
+	validToken := cookie.IsGood()
 	if !validToken {
-		return ID, errors.New("The token is not valid")
+		return "", errors.New("The token is not valid")
 	}
 
 	deleteOldTokens()
 
-	return ID, nil
-}
-
-func isTokenValid(ID, hashedToken string) bool {
-
-	token := Token{}
-
-	if wisply.Database == nil {
-		return false
-	}
-
-	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
-	query, err := wisply.Database.Prepare(sql)
-	query.QueryRow(ID, hashedToken).Scan(&token)
-
-	if err != nil {
-		return false
-	}
-
-	now, _ := strconv.Atoi(getCurrentTimestamp())
-	duration := Settings["duration"].(int)
-
-	isValid := (now <= (token.Timestamp + duration))
-	return isValid
+	return cookie.AccountID, nil
 }
 
 func deleteOldTokens() {
-	var (
-		now, duration, diff int
-	)
-	now, _ = strconv.Atoi(getCurrentTimestamp())
-	duration = Settings["duration"].(int)
-	diff = now - duration
+	now, _ := strconv.Atoi(getCurrentTimestamp())
+	duration := Settings["duration"].(int)
+	diff := now - duration
 
 	query, _ := wisply.Database.Prepare("DELETE from account_token WHERE timestamp < ?")
 	query.Exec(strconv.Itoa(diff))
@@ -94,7 +63,6 @@ func (model *Model) GetAllAccounts() []Account {
 		rows.Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 		list = append(list, account)
 	}
-
 	return list
 }
 
@@ -113,29 +81,9 @@ func getCurrentTimestamp() string {
 	return timestamp
 }
 
-func splitCookie(cookieValue string) ([]string, error) {
-	var (
-		toReturn  []string
-		separator = Settings["separatorCookie"].(string)
-	)
-
-	validFormat := strings.Contains(cookieValue, separator)
-
-	if !validFormat {
-		return toReturn, errors.New("Not a valid format")
-	}
-	toReturn = strings.Split(cookieValue, "::")
-	if len(toReturn) != 2 {
-		return toReturn, errors.New("Not a valid format")
-	}
-	return toReturn, nil
-}
-
 // GetAccountByEmail It searches and returns the account with that email
 func GetAccountByEmail(email string) (*Account, error) {
-
 	account := Account{}
-
 	id := isValidEmail(email)
 	if !id.IsValid {
 		return &account, errors.New("The id is not valid")
@@ -172,6 +120,7 @@ func NewAccount(ID string) (*Account, error) {
 	return account, nil
 }
 
+// Returns the SHA1 of a string in a string format
 func getSHA1Digest(plainToken string) string {
 	array := []byte(plainToken)
 	hasher := sha1.New()

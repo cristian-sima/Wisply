@@ -74,6 +74,12 @@ func init() {
 		beego.NSNamespace("/delete",
 			beego.NSRouter(":id", &admin.RepositoryController{}, "POST:Delete"),
 		),
+		beego.NSNamespace("/repository",
+			beego.NSNamespace("/:id",
+				beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowRepository"),
+				beego.NSRouter("/advance-options", &admin.RepositoryController{}, "GET:ShowAdvanceOptions"),
+			),
+		),
 	)
 
 	// admin
@@ -100,6 +106,10 @@ func init() {
 	adminHarvestNS := beego.NSNamespace("/harvest",
 		beego.NSNamespace("/init",
 			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
+			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
+		),
+		beego.NSNamespace("/event-log",
+			beego.NSRouter("", &admin.HarvestController{}, "Get:ShowEventLog"),
 			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
 	)

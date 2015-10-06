@@ -77,8 +77,15 @@ func (request *Request) ChannelHarvestIdentifiers(channels []chan *Header) {
 // call the batchCallback function argument with the OAI responses
 // The finish callback is called when there is no more things
 func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
+
+	fmt.Println("------------Starting---------------")
+	fmt.Println("<--> OAI: Start harvesting request...")
+
 	// Use Perform to get the OAI response
+
 	response := request.Perform()
+
+	fmt.Println(" --> OAI Request: The request has been loaded.")
 
 	// Execute the callback function with the response
 	batchCallback(response)
@@ -88,12 +95,19 @@ func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 
 	// Harvest further if there is a resumption token
 	if hasResumptionToken {
+		fmt.Println(" --> OAI Request: Has resumption")
 		request.Set = ""
 		request.MetadataPrefix = ""
 		request.From = ""
 		request.ResumptionToken = resumptionToken
+
+		fmt.Println("------------Finished---------------")
+
 		request.Harvest(batchCallback, finishCallback)
 	} else {
+		fmt.Println(" <--> OAI: Request: Does not have resumption!")
+		fmt.Println("<--> OAI: Finished request")
+		fmt.Println("-------------Finished--------------")
 		finishCallback(response)
 	}
 }
@@ -102,6 +116,11 @@ func (request *Request) Harvest(batchCallback, finishCallback func(*Response)) {
 // and return an OAI Response reference
 func (request *Request) Perform() (response *Response) {
 	url := request.GetFullURL()
+
+	fmt.Println("<--> OAI: Performing request from:")
+	fmt.Println(url)
+	fmt.Println("<--> OAI: Please wait...")
+
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
@@ -118,6 +137,8 @@ func (request *Request) Perform() (response *Response) {
 	// Unmarshall all the data
 	err = xml.Unmarshal(body, &response)
 	if err != nil {
+		fmt.Println(" <--> Problem when unmarshal XML")
+		fmt.Println(err)
 		panic(err)
 	}
 

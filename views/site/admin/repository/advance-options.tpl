@@ -20,7 +20,7 @@
               <h2>Delete</h2>
               <div class="well">
                 Please note that the repository can not be recovered.
-                <a class="deleteRepositoryButton" data-id="" data-name="" href="#" class="btn btn-danger">Delete repository</a>
+                <a data-id="" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository</a>
               </div>
             </div>
           </div>

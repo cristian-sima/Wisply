@@ -26,50 +26,64 @@ var WikierModule = function() {
 	 */
 	var Wikier = function Wikier() {
 		this.wikiURL = 'http://en.wikipedia.org/w/api.php';
-		this.subject = "";
     this.id = "";
 	};
 	Wikier.prototype =
 		/** @lends WikierModule.Wikier */
 		{
 			/**
-			 * It changes the subject of the wiki
-			 * @param  {string} subject The new subject
-			 */
-			changeSubject: function(subject) {
-				this.subject = subject;
+		 * Gets the elements of a wiki page by the name
+		 * @param  {string}   title     The name of the page
+		 * @param  {Function} callback The callback to be called
+		 */
+			getByTitle: function(title, callback) {
+					var info = {};
+					info.title = title;
+					info.callback = callback;
+					this._getElements(info);
 			},
 			/**
 			 * It requests the picture of the wiki page and returns it by calling the callback
 			 * @param  {function} callback It is called when the picture is received
 			 */
-			getPicture: function(callback) {
+			_getElements: function(info) {
 				var instance = this,
-          x = $.ajax({
-					url: this.wikiURL,
-					data: {
+					infoCopy = info,
+					x,
+					data= {
 						action: "query",
-						titles: this.subject,
 						format: "json",
-						prop: "pageimages|extracts",
+						prop: "pageimages|extracts|info",
 						pithumbsize: 100,
+						inprop:"url",
             exintro: "",
             explaintext: "",
-					},
+					};
+
+					data.titles =  info.title;
+
+          x = $.ajax({
+					url: this.wikiURL,
+					data: data,
 					dataType: 'jsonp',
 					success: function(response) {
             console.log(response);
 						if (response.query) {
-							instance.processResponse(response, callback);
+							instance.processResponse(response, infoCopy.callback);
 						} else {
-							callback(error);
+							infoCopy.callback(error);
 						}
 					},
           error: function(){
-            callback(error);
+            infoCopy.callback(error);
           }
 				});
 			},
+			/**
+			 * It checks if the wiki resource is valid and it exists
+			 * @param  {object}   response The object which encapsulates the response
+			 * @param  {Function} callback The callback to be called
+			 */
       processResponse: function(response, callback){
         var page,
         thumbnail,
@@ -88,6 +102,11 @@ var WikierModule = function() {
           }
         }
       },
+			/**
+			 * It checks if the wiki image is valid and it exists
+			 * @param  {object}   page The object which encapsulates the page
+			 * @param  {Function} callback The callback to be called
+			 */
       processImage: function(page, callback) {
         if (page.thumbnail) {
           this.processExtract(page, callback);
@@ -95,6 +114,11 @@ var WikierModule = function() {
           callback(error);
         }
       },
+			/**
+			 * It checks if the wiki description is valid and it exists
+			 * @param  {object}   page The object which encapsulates the page
+			 * @param  {Function} callback The callback to be called
+			 */
       processExtract: function(page, callback) {
         var extract = page.extract,
           errorExtract = "This is a redirect from a single Unicode character to an article or Wikipedia project page that names the character and describes its usage. For a multiple-character long title with diacritics, use template {{R from diacritics}} instead. For more information follow the category link.\nThis is a redirect from a symbol to the meaning of the symbol or to a related topic. For more information follow the category link.";
@@ -104,55 +128,6 @@ var WikierModule = function() {
           callback(error);
         }
       },
-			/**
-			 * It gets the short description and returns it by calling the callback
-			 * @param  {function} callback It is called when the description is received
-			 */
-			getDescription: function(callback) {
-				var error = true,
-					success = false;
-				$.ajax({
-					url: this.wikiURL,
-					data: {
-						action: "query",
-						titles: this.subject,
-						prop: "extracts",
-						format: "json",
-            exintro: "",
-            explaintext: "",
-					},
-					dataType: 'jsonp',
-					success: function(response) {
-						var page,
-							extract,
-							query = response.query,
-							pages,
-              errorExtract = "This is a redirect from a single Unicode character to an article or Wikipedia project page that names the character and describes its usage. For a multiple-character long title with diacritics, use template {{R from diacritics}} instead. For more information follow the category link.\nThis is a redirect from a symbol to the meaning of the symbol or to a related topic. For more information follow the category link.";
-						if (query) {
-							pages = query.pages;
-							for (page in pages) {
-								if (pages.hasOwnProperty(page)) {
-									extract = pages[page].extract;
-									if (extract) {
-                    if(extract === errorExtract) {
-                      callback(error);
-                    } else {
-										  callback(success, extract);
-                    }
-									} else {
-										callback(error);
-									}
-								}
-							}
-						} else {
-							callback(error);
-						}
-					},
-          error: function(){
-            callback(error);
-          },
-				});
-			}
 		};
 	return {
 		Wikier: Wikier,

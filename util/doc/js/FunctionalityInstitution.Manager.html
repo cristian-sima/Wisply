@@ -196,7 +196,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line40">line 40</a>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -232,14 +232,14 @@
 
     
 
-    <h4 class="name" id=".fired_nameChanged"><span class="type-signature">(static) </span>fired_nameChanged<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".changeDescription"><span class="type-signature">(static) </span>changeDescription<span class="signature">(newDescription)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It is called when the name of the institution is changed.
+    It checks if the description is empty. If so it populates it with the description.
 </div>
 
 
@@ -248,6 +248,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newDescription</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new description</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -283,7 +332,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line55">line 55</a>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line202">line 202</a>
     </li></ul></dd>
     
 
@@ -365,7 +414,400 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line33">line 33</a>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".setWikiElements"><span class="type-signature">(static) </span>setWikiElements<span class="signature">(page)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It changes the logo, description, urls and wiki page ID to the ones received
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>page</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The object which contains the elements</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line170">line 170</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".setWikiID"><span class="type-signature">(static) </span>setWikiID<span class="signature">(newID)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It sets the ID of the wiki page
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new ID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line184">line 184</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".setWikiURL"><span class="type-signature">(static) </span>setWikiURL<span class="signature">(newURL)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It changes the wiki URL
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newURL</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new URL</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -447,7 +889,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line47">line 47</a>
+        <a href="admin_institution_functionality.js.html">admin/institution/functionality.js</a>, <a href="admin_institution_functionality.js.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -495,7 +937,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Oct 05 2015 19:07:47 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Tue Oct 06 2015 11:51:07 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

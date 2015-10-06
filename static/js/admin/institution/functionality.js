@@ -19,11 +19,16 @@ var FunctionalityInstitution = function () {
   */
   var Manager = function Manager() {
     var instance = this;
-    this.typer = new wisply.typerModule.Typer("institution-name", function(){
-      instance.fired_nameChanged();
+    this.nameTyper = new wisply.typerModule.Typer("institution-name", function(){
+      instance.getWikiByName();
     });
     this.wikier = new wisply.wikierModule.Wikier();
-    this.description = "";
+    this.original = {
+      description: "",
+      logoURL: "",
+      wikiID: "NULL",
+    };
+    this.wikiReceive = false;
   };
   Manager.prototype =
   /** @lends FunctionalityInstitution.Manager */
@@ -42,20 +47,43 @@ var FunctionalityInstitution = function () {
     */
     activateListeners: function () {
       var instance = this,
-      description = $("#institution-description");
+      description = $("#institution-description"),
+      logo = $("#institution-logoURL");
       $("#show-wiki-source").click(this.showWikiSource);
       description.elastic();
+      logo.on("change keyup paste", function() {
+        instance.checkForChanges();
+      });
       description.on("change keyup paste", function() {
-        if(instance.description !== $("#institution-description").val()) {
-          instance.fired_descriptionModified();
+        instance.checkForChanges();
+      });
+      $(".discard-description-changes").click(function(){
+          $(".description-modified").hide("fast");
+          instance.getWikiByName();
+      });
+      $("#button-get-wiki-by-address").click(function() {
+          var url = $("#institution-logoURL").val();
+          this.wikiReceive = false;
+          instance.changeLogo(url);
+      });
+      $("#button-institution-wikiURL").click(function(){
+        instance.getWikiByPage();
+      });
+    },
+    checkForChanges: function(){
+        var wikiID = "";
+        if(this.wikiReceive &&
+          this.original.description !== $("#institution-description").val() ||
+          this.original.logoURL !== $("#institution-logoURL").val()) {
+          wikiID = "NULL";
+          this.fired_descriptionModified();
+          $("#button-get-wiki-by-address").prop("disabled", false);
         } else {
+          wikiID = this.original.wikiID;
           $(".description-modified").hide("fast");
+          $("#button-get-wiki-by-address").prop("disabled", true);
         }
-      });
-      $("#discard-description-changes").click(function(){
-          $(".description-modified").hide("fast");
-          instance.update();
-      });
+        $("#institution-wikiID").val(wikiID);
     },
     /**
      * It shows the field for wiki source and hides the link
@@ -66,48 +94,106 @@ var FunctionalityInstitution = function () {
       $("#show-wiki-source").hide("fast");
       $("#institution-wikiURL").focus();
     },
-    /**
-     * It is called when the name of the institution is changed.
-     */
-    fired_nameChanged: function () {
-        this.update();
-    },
-    get: function () {
-        // get wiki id and description by name
+    prepareForWiki: function () {
+        this.wikiReceive = true;
+      $("#institution-logo").html(wisply.getLoadingImage("medium"));
+
+      var name = $("#institution-name"),
+        description = $("#institution-description"),
+        url = $("#institution-wikiURL"),
+        logo = $("#institution-logoURL"),
+        institutionURL = $("#institution-institution-URL"),
+        submit = $("#institution-submit-button"),
+        button = $("#button-institution-wikiURL");
+
+      name.prop( "disabled", true );
+      description.prop( "disabled", true );
+      url.prop( "disabled", true );
+      logo.prop( "disabled", true );
+      institutionURL.prop( "disabled", true );
+      submit.prop( "disabled", true );
+      button.prop( "disabled", true );
+
+      description.val("");
+      logo.val("");
 
     },
-    update: function() {
+    wikiIsDone: function() {
+        $("#institution-name").prop( "disabled", false );
+        $("#institution-description").prop( "disabled", false );
+        $("#institution-wikiURL").prop( "disabled", false );
+        $("#institution-logoURL").prop( "disabled", false );
+        $("#institution-institution-URL").prop( "disabled", false );
+        $("#institution-submit-button").prop( "disabled", false );
+        $("#button-institution-wikiURL").prop( "disabled", false );
+    },
+    getWikiByName: function() {
       var instance = this,
-        newName = $("#institution-name").val(),
-        html = "",
-        descriptionElement = $("#institution-description"),
-        callbackPicture;
-      this.wikier.changeSubject(newName);
-      $("#institution-logo").html(wisply.getLoadingImage("medium"));
-      this.wikier.getPicture(function(err, page){
-        if(err) {
-          instance.setDefaultLogo();
-        } else {
-          var picture = page.thumbnail;
-          instance.changeLogo(picture);
-        }
-      });
-      descriptionElement.html("Please wait");
-      descriptionElement.prop( "disabled", true );
-      this.wikier.getDescription(function(err, description){
-        var text = "";
-          if(!err) {
-            text = description;
+        name = $("#institution-name"),
+        newTitle = name.val(),
+        descriptionElement = $("#institution-description");
+      this.prepareForWiki();
+      this.wikier.getByTitle(newTitle, function(err, page){
+          instance.wikiIsDone();
+          if(err) {
+            instance.wikiHasError();
+          } else {
+            instance.setWikiElements(page);
           }
-          instance.changeDescription(text);
-      });
+          name.focus();
+        });
+    },
+    getWikiByPage: function() {
+      var instance = this,
+        wikiURL = $("#institution-wikiURL"),
+        rawPageValue = wikiURL.val(),
+        goodPage = rawPageValue.substr(rawPageValue.lastIndexOf('/') + 1);
+      this.prepareForWiki();
+      this.wikier.getByTitle(goodPage, function(err, page){
+          instance.wikiIsDone();
+          if(err) {
+            instance.wikiHasError();
+          } else {
+            instance.setWikiElements(page);
+          }
+          wikiURL.focus();
+        });
+    },
+    wikiHasError: function() {
+        this.wikiReceive = false;
+        this.setDefaultLogo();
+    },
+    /**
+     * It changes the logo, description, urls and wiki page ID to the ones received
+     * @param  {object} page The object which contains the elements
+     */
+    setWikiElements: function(page) {
+      var instance = this;
+        this.changeLogo(page.thumbnail.source);
+        this.changeDescription(page.extract);
+        this.setWikiURL(page.fullurl);
+        this.setWikiID(page.pageid);
+        setTimeout(function(){
+          instance.checkForChanges();
+        }, 500);
+    },
+    /**
+     * It sets the ID of the wiki page
+     * @param {number} newID The new ID
+     */
+    setWikiID: function (newID) {
+        this.original.wikiID = newID;
+        $("#institution-wikiID").val(newID);
+    },
+    /**
+     * It changes the wiki URL
+     * @param {string} newURL The new URL
+     */
+    setWikiURL: function (newURL) {
+      $("#institution-wikiURL").val(newURL);
     },
     setDefaultLogo: function() {
-        var html = '<span class="institution-logo glyphicon glyphicon-education institution-logo"></span>';
-        this._setLogo(html);
-    },
-    _setLogo: function(logo) {
-        $("#institution-logo").html(logo);
+        this._setLogo("");
     },
     /**
      * It checks if the description is empty. If so it populates it with the description.
@@ -130,9 +216,7 @@ var FunctionalityInstitution = function () {
           text = cutDescription(newDescription);
           description.val(text);
           description.elastic();
-          this.description = text;
-
-        $(description).prop( "disabled", false );
+          this.original.description = text;
     },
     fired_descriptionModified: function() {
         $(".description-modified").show("slow");
@@ -140,14 +224,22 @@ var FunctionalityInstitution = function () {
     changeLogo: function(picture) {
       var instance = this,
       html = "";
-      instance.checkURL(picture.source, function(isOk) {
+      instance.checkURL(picture, function(isOk) {
         if(!isOk) {
           instance.setDefaultLogo();
         } else {
-          var logo = "<img class='thumbnail' src='" + picture.source + "' />";
-          instance._setLogo(logo);
+          instance._setLogo(picture);
         }
       });
+    },
+    _setLogo: function(url) {
+        var logo = "<img class='thumbnail' src='" + url + "' />";
+        $("#institution-logoURL").val(url);
+        this.original.logoURL = url;
+        if(url === "") {
+          logo = '<span class="institution-logo glyphicon glyphicon-education institution-logo"></span>';
+        }
+        $("#institution-logo").html(logo);
     },
     checkURL: function(URL, callback) {
       $.ajax({

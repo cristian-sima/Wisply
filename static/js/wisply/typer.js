@@ -23,7 +23,7 @@ var TyperModule = function () {
   */
   var Typer = function Typer(id, callback) {
       this.timer = {};
-      this.interval = 2000;
+      this.interval = 1000;
       this.element = $("#" + id);
       this.callback = callback;
       this.init();

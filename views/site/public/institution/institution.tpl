@@ -6,7 +6,11 @@
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
             <li><a href="/institutions">Institutions</a></li>
-            <li class="active">{{ .institution.Name }}</li>
+            <li class="active">{{ .institution.Name }}
+            {{ if .currentAccount.IsAdministrator  }}
+                  <a href="/admin/institutions/institution/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a>
+            {{ end }}
+            </li>
           </ul>
         </div>
         <div class="panel-body">
@@ -33,9 +37,6 @@
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
-                    {{ if .currentAccount.IsAdministrator  }}
-                    <div><a href="/admin/institutions/institution/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a></div>
-                    {{ end }}
                   <!-- Repositories -->
                   <div class="list-group">
                   {{range $index, $repository := .repositories}}

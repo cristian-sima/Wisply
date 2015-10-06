@@ -59,7 +59,7 @@ var FunctionalityInstitution = function() {
 				});
 				$("#button-get-wiki-by-address").click(function() {
 					var url = $("#institution-logoURL").val();
-					this.original.wikiReceive = false;
+					instance.original.wikiReceive = false;
 					instance.changeLogo(url);
 				});
 				$("#button-institution-wikiURL").click(function() {
@@ -68,7 +68,7 @@ var FunctionalityInstitution = function() {
 			},
 			checkForChanges: function() {
 				var wikiID = "";
-				if (this.original.wikiReceive && this.original.description !== $("#institution-description").val() || this.original.logoURL !== $("#institution-logoURL").val()) {
+				if (!this.original.wikiReceive || this.original.description !== $("#institution-description").val() || this.original.logoURL !== $("#institution-logoURL").val()) {
 					wikiID = "NULL";
 					this.fired_descriptionModified();
 					$("#button-get-wiki-by-address").prop("disabled", false);

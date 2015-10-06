@@ -7,7 +7,11 @@
             <li><a href="/">Home</a></li>
             <li><a href="/institutions">Institutions</a></li>
             <li><a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
-            <li class="active">{{ .repository.Name }}</li>
+            <li class="active">{{ .repository.Name }}
+              {{ if .currentAccount.IsAdministrator  }}
+              <a href="/admin/repositories/repository/{{ .repository.ID }}"><span class="label label-default">Admin this</span></a>
+              {{ end }}
+            </li>
           </ul>
         </div>
         <div class="panel-body">
@@ -27,9 +31,6 @@
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
-                  {{ if .currentAccount.IsAdministrator  }}
-                  <div><a href="/admin/repositories/repository/{{ .repository.ID }}"><span class="label label-default">Admin this</span></a></div>
-                  {{ end }}
                   <div>Is part of <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
                   <div>{{ .repository.Category }}</div>
               </div>

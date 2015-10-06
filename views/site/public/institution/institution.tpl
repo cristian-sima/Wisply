@@ -15,25 +15,28 @@
         </div>
         <div class="panel-body">
           <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-3 text-center" >
-              {{ if eq .institution.LogoURL "" }}
-              <span class="glyphicon glyphicon-education institution-logo"></span>
-              {{ else }}
-              <img src="{{ .institution.LogoURL }}" />
-              {{ end }}
-              <br /><br /><br />
+            <div class="col-lg-2 col-md-2 col-sm-2 text-center" >
+              <div class="institution-profile">
+                <div class="insider">
+                  {{ if eq .institution.LogoURL "" }}
+                  <span class="glyphicon glyphicon-education institution-logo-default"></span>
+                  {{ else }}
+                  <img src="{{ .institution.LogoURL }}" class="inlogo" />
+                  {{ end }}
+                </div>
+              </div>
               <hr />
               <div class="text-left">
                 <span class="text-muted">Address:</span> <a href="{{ .institution.URL }}">Web page</a>
               </div>
             </div>
-            <div class="col-lg-5 col-md-5 col-sm-5" >
+            <div class="col-lg-6 col-md-6 col-sm-6" >
               <div>
                 <h1>{{ .institution.Name }}</h2>
                   <span class="text-muted">Institution</span>
                 </div>
                 <div>
-                  {{ .institution.Description}}
+                  {{ .institution.Description}} <a target="_blank" href="{{ .institution.WikiURL }}">Wikipedia</a>
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
@@ -57,4 +60,5 @@
       font-size: 13em;
     }
     </style>
+    <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" />
     <script src="/static/js/admin/institution/list.js"></script>

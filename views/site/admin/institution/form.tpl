@@ -27,30 +27,33 @@
 						</div>
 					</div>
 				</div>
-
         {{ if eq .action "Add" }}
-				<div class="form-group">
-					<label for="institution-URL" class="col-lg-2 control-label">Website</label>
-					<div class="col-lg-10">
-						<input type="url" value="{{.institutionUrl}}" class="form-control" name="institution-URL" id="institution-URL" placeholder="URL address" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+					<div class="form-group">
+						<label for="institution-URL" class="col-lg-2 control-label">Website</label>
+						<div class="col-lg-10">
+							<input type="url" value="{{.institutionUrl}}" class="form-control" name="institution-URL" id="institution-URL" placeholder="URL address" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+						</div>
 					</div>
-				</div>
-         {{ end }}
+      	{{ end }}
 			</fieldset>
 				<fieldset>
 					<legend>Profile</legend>
 				<div id="wiki-source-div">
 					<div class="form-group text-center" style="min-height:80px">
-						<label for="institution-description" class="col-lg-2 control-label text-center" id="institution-logo">
-							{{ if .institution }}
-								{{ if eq .institution.LogoURL "" }}
-								<span class="glyphicon glyphicon-education institution-logo"></span>
-								{{ else }}
-								<img src="{{ .institution.LogoURL }}" />
-								{{ end }}
-							{{ else }}
-						 	<span class="glyphicon glyphicon-education institution-logo"></span>
-						 {{ end }}
+						<label for="institution-description" class="col-lg-2 control-label text-center" >
+							  <div class="institution-profile">
+	                <div class="insider" id="institution-logo">
+										{{ if .institution }}
+											{{ if eq .institution.LogoURL "" }}
+												<span class="glyphicon glyphicon-education institution-logo-default"></span>
+											{{ else }}
+												<img src="{{ .institution.LogoURL }}" class="inlogo"  />
+											{{ end }}
+									 	{{ else }}
+									 		<span class="glyphicon glyphicon-education institution-logo-default"></span>
+									 	{{ end }}
+									</div>
+								</div>
 	          </label>
 						<div class="col-lg-10">
 							<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{.institution.Description}}</textarea><span class="help-block">
@@ -115,11 +118,7 @@
 		{{ end }}
 	};
 </script>
-<style>
-	.institution-logo {
-		font-size: 5em;
-	}
-</style>
+<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" />
 <script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
 <script src="/static/js/wisply/typer.js"></script>
 <script src="/static/js/wisply/wikier.js"></script>

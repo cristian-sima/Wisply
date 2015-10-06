@@ -224,7 +224,7 @@ var FunctionalityInstitution = function() {
 				$("#institution-logoURL").val(url);
 				this.original.logoURL = url;
 				if (url === "") {
-					logo = '<span class="institution-logo glyphicon glyphicon-education institution-logo"></span>';
+					logo = '<span class="glyphicon glyphicon-education institution-logo-default"></span>';
 				}
 				$("#institution-logo").html(logo);
 			},

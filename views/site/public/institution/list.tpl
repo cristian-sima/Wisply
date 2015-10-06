@@ -24,12 +24,12 @@
                   <a title="{{ $safe }}" href="/institutions/{{ $institution.ID }}" class="">
                     <div class="institution-profile thumbnail">
                       <div class="insider">
-                      {{ if eq $institution.LogoURL "" }}
-                      <span class="glyphicon glyphicon-education institution-logo-default"></span>
-                      {{ else }}
-                      <img src="{{ $institution.LogoURL }}" class="inlogo text-center" />
-                      {{ end }}
-                    </div>
+                        {{ if eq $institution.LogoURL "" }}
+                        <span class="glyphicon glyphicon-education institution-logo-default"></span>
+                        {{ else }}
+                        <img src="{{ $institution.LogoURL }}" class="inlogo text-center" />
+                        {{ end }}
+                      </div>
                       <div class="caption">
                         {{ $safe}}
                       </div>

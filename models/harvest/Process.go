@@ -3,22 +3,19 @@ package harvest
 import (
 	"strconv"
 
+	action "github.com/cristian-sima/Wisply/models/action"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Process is a link between controller and repository
 type Process struct {
-	*Action
-	ID             int
+	*action.Process
 	remote         RemoteRepositoryInterface
-	local          *repository.Repository
 	db             *databaseManager
 	CurrentAction  int                 `json:"CurrentAction"`
 	Actions        map[string]*Action2 `json:"Actions"`
 	Controller     WisplyController    `json:"-"`
 	Identification *Identificationer   `json:"Identification"`
-	managers       []*WisplyManager
-	currentManager *WisplyManager
 }
 
 // Start starts the process
@@ -210,7 +207,7 @@ func (process *Process) End() {
 }
 
 func (process *Process) changeLocalStatus(newStatus string) {
-	process.local.ModifyStatus(newStatus)
+	process.Local.ModifyStatus(newStatus)
 	process.notifyController(&Message{
 		Name:  "status-changed",
 		Value: newStatus,
@@ -219,11 +216,11 @@ func (process *Process) changeLocalStatus(newStatus string) {
 
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {
-	return process.local
+	return process.Local
 }
 
 func (process *Process) notifyController(message *Message) {
-	message.Repository = process.local.ID
+	message.Repository = process.Local.ID
 	process.Controller.Notify(message)
 }
 
@@ -232,5 +229,34 @@ func (process *Process) record(message string) {
 		Value: message,
 		Name:  "event-notice",
 	})
-	//process.operation.record(message, process.local.ID)
+	//process.operation.record(message, process.Local.ID)
+}
+
+// NewProcess creates a new harvest process
+func NewProcess(ID string, controller WisplyController) *Process {
+	var remote RemoteRepositoryInterface
+	local, _ := repository.NewRepository(ID)
+
+	switch local.Category {
+	case "EPrints":
+		{
+			remote = &EPrintsRepository{
+				URL: local.URL,
+			}
+		}
+	}
+	db := &databaseManager{}
+
+	process := &Process{
+		Process:    &*action.NewProcess(ID, "harvesting"),
+		remote:     remote,
+		Controller: controller,
+		db:         db,
+		Actions:    make(map[string]*Action2),
+	}
+	// process.SetName("Harvest")
+	db.SetManager(process)
+	remote.SetManager(process)
+
+	return process
 }

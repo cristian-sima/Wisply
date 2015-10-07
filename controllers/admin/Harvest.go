@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	event "github.com/cristian-sima/Wisply/models/event"
 	harvest "github.com/cristian-sima/Wisply/models/harvest"
@@ -76,7 +77,7 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 		}
 	case "start-progress":
 		{
-			controller.StartProcess(message, connection)
+			controller.CreateNewProcess(message, connection)
 		}
 	case "get-current-progress":
 		{
@@ -111,8 +112,8 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(message *ws.Message
 	hub.BroadcastMessage(&msg)
 }
 
-// StartProcess starts the initializing proccess
-func (controller *HarvestController) StartProcess(message *ws.Message, connection *ws.Connection) {
+// CreateNewProcess starts the initializing proccess
+func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
 
 	_, processExists := CurrentProcesses[message.Repository]
 
@@ -126,7 +127,10 @@ func (controller *HarvestController) StartProcess(message *ws.Message, connectio
 		}
 		process.addConnection(connection)
 		CurrentProcesses[ID] = process
-		harvestProcess.Start()
+		// harvestProcess.Start()
+		duration := time.Second
+		time.Sleep(duration)
+		harvestProcess.Finish()
 	}
 }
 

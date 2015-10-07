@@ -8,8 +8,8 @@ import (
 // Actioner ... defines the set of methods to be implemented by an action
 type Actioner interface {
 	Go()
-	Finish()
-	CustomFinish(result string)
+	finish()
+	updateInDatabase()
 }
 
 // Action is the most basic type. It has a starting and ending timestamps and a content
@@ -58,8 +58,8 @@ func (action *Action) getDate(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(time.Stamp)
 }
 
-// changeResult checks if the result is valid and it changes it
-func (action *Action) changeResult(result string) {
+// ChangeResult checks if the result is valid and it changes it
+func (action *Action) ChangeResult(result string) {
 	if result != "error" &&
 		result != "warning" &&
 		result != "success" &&
@@ -67,6 +67,12 @@ func (action *Action) changeResult(result string) {
 		fmt.Println("Task change result error. This result is not valid: " + result)
 	}
 	action.result = result
+}
+
+// Finish terminates normal an action
+func (action *Action) Finish() {
+	action.IsRunning = false
+	action.End = getCurrentTimestamp()
 }
 
 // GetResult returns the result of the task

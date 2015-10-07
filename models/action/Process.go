@@ -18,14 +18,11 @@ type Process struct {
 
 // Finish records in the database that the process is finished.
 func (process *Process) Finish() {
-
-	process.End = getCurrentTimestamp()
-	process.IsRunning = false
-
-	process.updateDatabase()
+	process.Action.Finish()
+	process.updateInDatabase()
 }
 
-func (process *Process) updateDatabase() {
+func (process *Process) updateInDatabase() {
 	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when finishing the process: ")
@@ -41,7 +38,7 @@ func (process *Process) updateDatabase() {
 // ChangeCurrentOperation sets the current operation
 func (process *Process) ChangeCurrentOperation(operation *Operation) {
 	process.currentOperation = operation
-	process.updateDatabase()
+	process.updateInDatabase()
 }
 
 // GetCurrentOperation returns the current operation

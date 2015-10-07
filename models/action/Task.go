@@ -17,20 +17,19 @@ type Task struct {
 }
 
 // Finish finishes in a normal state the request
-func (task *Task) Finish(content string) {
+func (task *Task) Finish(explication string) {
+	task.Action.Finish()
+	task.Explication = explication
+	task.updateInDatabase()
+}
 
-	task.changeResult("normal")
-	task.Content = content
-	task.IsRunning = false
-
-	task.End = getCurrentTimestamp()
-
+func (task *Task) updateInDatabase() {
 	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?, content=?, result=?, is_running=?, explication=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the task: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(task.End, content, task.result, strconv.FormatBool(task.IsRunning), task.Explication, strconv.Itoa(task.ID))
+	_, err = stmt.Exec(task.End, task.Content, task.result, strconv.FormatBool(task.IsRunning), task.Explication, strconv.Itoa(task.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the task: ")
 		fmt.Println(err)

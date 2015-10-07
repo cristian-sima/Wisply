@@ -16,19 +16,19 @@ type Operation struct {
 	CurrentTask *Task
 }
 
-// Finish records in the database that the task is finished.
-func (operation *Operation) Finish(content string) {
+// Finish finishes in a normal state the request
+func (operation *Operation) Finish() {
+	operation.Action.Finish()
+	operation.updateInDatabase()
+}
 
-	operation.End = getCurrentTimestamp()
-	operation.Content = content
-	operation.IsRunning = false
-
+func (operation *Operation) updateInDatabase() {
 	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?, content=?, is_running=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the operation: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(operation.End, content, strconv.FormatBool(operation.IsRunning), operation.result, strconv.Itoa(operation.ID))
+	_, err = stmt.Exec(operation.End, operation.Content, strconv.FormatBool(operation.IsRunning), operation.result, strconv.Itoa(operation.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the operation: ")
 		fmt.Println(err)

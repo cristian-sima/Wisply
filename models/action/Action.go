@@ -1,11 +1,15 @@
 package action
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // Actioner ... defines the set of methods to be implemented by an action
 type Actioner interface {
 	Go()
 	Finish()
+	CustomFinish(result string)
 }
 
 // Action is the most basic type. It has a starting and ending timestamps and a content
@@ -16,6 +20,7 @@ type Action struct {
 	End       int64
 	IsRunning bool
 	Content   string
+	result    string // it can be: error, warning, success, normal
 }
 
 // GetStartDate returns the start date of the action in a human readable form
@@ -51,4 +56,20 @@ func (action *Action) GetDuration() string {
 
 func (action *Action) getDate(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(time.Stamp)
+}
+
+// changeResult checks if the result is valid and it changes it
+func (action *Action) changeResult(result string) {
+	if result != "error" &&
+		result != "warning" &&
+		result != "success" &&
+		result != "normal" {
+		fmt.Println("Task change result error. This result is not valid: " + result)
+	}
+	action.result = result
+}
+
+// GetResult returns the result of the task
+func (action *Action) GetResult() string {
+	return action.result
 }

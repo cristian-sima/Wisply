@@ -9,17 +9,6 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// - constructors
-
-// NewAction creates a new action
-func NewAction(isRunning bool, content string) *Action {
-	return &Action{
-		IsRunning: isRunning,
-		Start:     getCurrentTimestamp(),
-		Content:   content,
-	}
-}
-
 // CreateProcess creates a new harvest process
 func CreateProcess(repositoryID, content string) *Process {
 

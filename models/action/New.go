@@ -7,6 +7,18 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
+// - constructors
+
+// NewAction creates a new action
+func NewAction(isRunning bool, content string) *Action {
+	return &Action{
+		IsRunning: isRunning,
+		Start:     getCurrentTimestamp(),
+		Content:   content,
+		result:    "normal",
+	}
+}
+
 // NewOperation returns an operation from database specified by ID
 // NOTE! It returns just the ID of both process and task.
 // In order to get the entire object use NewProcess or NewTask
@@ -17,13 +29,14 @@ func NewOperation(ID int) *Operation {
 		opStart, opEnd      int64
 		opIsRunning         bool
 		opContent           string
+		result              string
 	)
 
-	fieldList := "`id`, `process`, `current_task`, `content`, `start`, `end`, `is_running`"
+	fieldList := "`id`, `process`, `current_task`, `content`, `start`, `end`, `is_running`, `result`"
 	sql := "SELECT " + fieldList + " FROM `operation` WHERE id= ?"
 	query, err := wisply.Database.Prepare(sql)
 
-	query.QueryRow(ID).Scan(&opID, &proID, &taskID, &opContent, &opStart, &opEnd, &opIsRunning)
+	query.QueryRow(ID).Scan(&opID, &proID, &taskID, &opContent, &opStart, &opEnd, &opIsRunning, &result)
 
 	if err != nil {
 		fmt.Println("It has been an error when tring to get the info about the operation: ")
@@ -37,6 +50,7 @@ func NewOperation(ID int) *Operation {
 			End:       opEnd,
 			IsRunning: opIsRunning,
 			Content:   opContent,
+			result:    result,
 		},
 		Process: &Process{
 			Action: &Action{
@@ -62,19 +76,19 @@ func NewTask(ID int) *Task {
 		taskID, opeID           int
 		taskStart, taskEnd      int64
 		taskIsRunning           bool
-		taskStatus, taskContent string
+		taskResult, taskContent string
 	)
 
-	fieldList := "`id`, `operation`, `content`, `start`, `end`, `is_running`, `status`"
+	fieldList := "`id`, `operation`, `content`, `start`, `end`, `is_running`, `result`"
 	sql := "SELECT " + fieldList + " FROM `task` WHERE id= ?"
 	query, err := wisply.Database.Prepare(sql)
-
-	query.QueryRow(ID).Scan(&taskID, &opeID, &taskContent, &taskStart, &taskEnd, &taskIsRunning, &taskStatus)
 
 	if err != nil {
 		fmt.Println("It has been an error when tring to get the info about the task: ")
 		fmt.Println(err)
 	}
+
+	query.QueryRow(ID).Scan(&taskID, &opeID, &taskContent, &taskStart, &taskEnd, &taskIsRunning, &taskResult)
 
 	task := &Task{
 		Action: &Action{
@@ -83,8 +97,8 @@ func NewTask(ID int) *Task {
 			End:       taskEnd,
 			IsRunning: taskIsRunning,
 			Content:   taskContent,
+			result:    taskResult,
 		},
-		status: taskStatus,
 		Operation: &Operation{
 			Action: &Action{
 				ID: taskID,

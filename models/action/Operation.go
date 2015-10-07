@@ -23,12 +23,12 @@ func (operation *Operation) Finish(content string) {
 	operation.Content = content
 	operation.IsRunning = false
 
-	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?, content=?, is_running=? WHERE id=?")
+	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?, content=?, is_running=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the operation: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(operation.End, content, strconv.FormatBool(operation.IsRunning), strconv.Itoa(operation.ID))
+	_, err = stmt.Exec(operation.End, content, strconv.FormatBool(operation.IsRunning), operation.result, strconv.Itoa(operation.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the operation: ")
 		fmt.Println(err)
@@ -39,10 +39,9 @@ func (operation *Operation) Finish(content string) {
 func (operation *Operation) CreateTask(content string) *Task {
 	task := &Task{
 		Operation: operation,
-		status:    "normal",
 		Action:    NewAction(true, content),
 	}
-	columns := "(`process`, `start`, `operation`, `status`, `content`)"
+	columns := "(`process`, `start`, `operation`, `result`, `content`)"
 	values := "(?, ?, ?, ?, ?)"
 	sql := "INSERT INTO `task` " + columns + " VALUES " + values
 	query, err := wisply.Database.Prepare(sql)
@@ -51,7 +50,7 @@ func (operation *Operation) CreateTask(content string) *Task {
 		fmt.Println(err)
 	}
 
-	_, err = query.Exec(operation.Process.ID, task.Start, operation.ID, task.GetStatus(), task.Content)
+	_, err = query.Exec(operation.Process.ID, task.Start, operation.ID, task.GetResult(), task.Content)
 	if err != nil {
 		fmt.Println("Error 2 when creating the task:")
 		fmt.Println(err)
@@ -59,9 +58,9 @@ func (operation *Operation) CreateTask(content string) *Task {
 
 	// find its id
 
-	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=? AND is_running=? AND content=?"
+	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND result=? AND is_running=? AND content=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(task.Start, task.Operation.ID, task.status, strconv.FormatBool(task.IsRunning), task.Content).Scan(&task.ID)
+	query.QueryRow(task.Start, task.Operation.ID, task.result, strconv.FormatBool(task.IsRunning), task.Content).Scan(&task.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the task id:")
@@ -69,4 +68,50 @@ func (operation *Operation) CreateTask(content string) *Task {
 	}
 
 	return task
+}
+
+// GetTasks returns the list of tasks
+func (operation *Operation) GetTasks() []*Task {
+
+	// fields
+	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.result"
+
+	// the query
+	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
+
+	rows, err := wisply.Database.Query(sql, operation.Action.ID)
+	if err != nil {
+		fmt.Println("Problem when getting all the tasks of the operation: ")
+		fmt.Println(err)
+	}
+
+	var (
+		list                             []*Task
+		ID                               int
+		start, end                       int64
+		isRunning                        bool
+		content, isRunningString, result string
+	)
+
+	for rows.Next() {
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &result)
+
+		isRunning, err = strconv.ParseBool(isRunningString)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		list = append(list, &Task{
+			Action: &Action{
+				ID:        ID,
+				IsRunning: isRunning,
+				Start:     start,
+				End:       end,
+				Content:   content,
+				result:    result,
+			},
+		})
+	}
+	return list
 }

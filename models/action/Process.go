@@ -26,12 +26,12 @@ func (process *Process) Finish() {
 }
 
 func (process *Process) updateDatabase() {
-	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=? WHERE id=?")
+	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, strconv.Itoa(process.ID))
+	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.result, process.currentOperation.ID, strconv.Itoa(process.ID))
 	if err != nil {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)
@@ -85,7 +85,7 @@ func (process *Process) CreateOperation(content string) *Operation {
 func (process *Process) GetOperations() []*Operation {
 
 	// fields
-	fieldList := "operation.id, operation.content, operation.start, operation.end, operation.is_running, operation.current_task"
+	fieldList := "operation.id, operation.content, operation.start, operation.end, operation.is_running, operation.current_task, operation.result"
 
 	// the query
 	sql := "SELECT " + fieldList + " FROM `operation` AS operation WHERE process=? ORDER BY operation.id DESC"
@@ -97,16 +97,16 @@ func (process *Process) GetOperations() []*Operation {
 	}
 
 	var (
-		list                     []*Operation
-		ID, currentTaskID        int
-		start, end               int64
-		isRunning                bool
-		content, isRunningString string
-		task                     *Task
+		list                             []*Operation
+		ID, currentTaskID                int
+		start, end                       int64
+		isRunning                        bool
+		content, isRunningString, result string
+		task                             *Task
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &content, &start, &end, &isRunningString, &currentTaskID)
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &currentTaskID, &result)
 
 		isRunning, err = strconv.ParseBool(isRunningString)
 
@@ -126,6 +126,7 @@ func (process *Process) GetOperations() []*Operation {
 				Start:     start,
 				End:       end,
 				Content:   content,
+				result:    result,
 			},
 		})
 	}

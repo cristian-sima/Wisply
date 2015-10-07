@@ -12,93 +12,27 @@ import (
 // It has a type which denotes the state of the task
 type Task struct {
 	*Action
-	Operation *Operation
-	status    string // it can be: error, warning, success, normal
+	Explication string
+	Operation   *Operation
 }
 
-// ChangeStatus checks if the status is valid and it changes it
-func (task *Task) changeStatus(status string) {
-	if status != "error" &&
-		status != "warning" &&
-		status != "success" &&
-		status != "normal" {
-		fmt.Println("Task change status error. This status is not valid: " + status)
-	}
-	task.status = status
-}
+// Finish finishes in a normal state the request
+func (task *Task) Finish(content string) {
 
-// GetStatus returns the status of the task
-func (task *Task) GetStatus() string {
-	return task.status
-}
-
-// Change modifies the status and the content of the task
-func (task *Task) Change(status, content string) {
-	task.changeStatus(status)
+	task.changeResult("normal")
 	task.Content = content
-}
-
-// Finish records in the database that the task is finished.
-func (task *Task) Finish(status, content string) {
-
-	task.Change(status, content)
 	task.IsRunning = false
+
 	task.End = getCurrentTimestamp()
 
-	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?, content=?, status=?, is_running=? WHERE id=?")
+	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?, content=?, result=?, is_running=?, explication=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the task: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(task.End, content, status, strconv.FormatBool(task.IsRunning), strconv.Itoa(task.ID))
+	_, err = stmt.Exec(task.End, content, task.result, strconv.FormatBool(task.IsRunning), task.Explication, strconv.Itoa(task.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the task: ")
 		fmt.Println(err)
 	}
-}
-
-// GetTasks returns the list of tasks
-func (operation *Operation) GetTasks() []*Task {
-
-	// fields
-	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.status"
-
-	// the query
-	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
-
-	rows, err := wisply.Database.Query(sql, operation.Action.ID)
-	if err != nil {
-		fmt.Println("Problem when getting all the tasks of the operation: ")
-		fmt.Println(err)
-	}
-
-	var (
-		list                             []*Task
-		ID                               int
-		start, end                       int64
-		isRunning                        bool
-		content, isRunningString, status string
-	)
-
-	for rows.Next() {
-		rows.Scan(&ID, &content, &start, &end, &isRunningString, &status)
-
-		isRunning, err = strconv.ParseBool(isRunningString)
-
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		list = append(list, &Task{
-			status: status,
-			Action: &Action{
-				ID:        ID,
-				IsRunning: isRunning,
-				Start:     start,
-				End:       end,
-				Content:   content,
-			},
-		})
-	}
-	return list
 }

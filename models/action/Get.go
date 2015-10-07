@@ -12,7 +12,7 @@ import (
 func GetAllProcesses() []*Process {
 	var list []*Process
 	// fields
-	processFields := "process.id, process.content, process.start, process.end, process.is_running, process.current_operation"
+	processFields := "process.id, process.result, process.content, process.start, process.end, process.is_running, process.current_operation"
 	repositoryFields := "repository.id, repository.name"
 
 	fieldList := processFields + ", " + repositoryFields
@@ -31,16 +31,16 @@ func GetAllProcesses() []*Process {
 	}
 
 	var (
-		ID, repID, currentOperationID     int
-		start, end                        int64
-		isRunning                         bool
-		content, repName, isRunningString string
-		rep                               *repository.Repository
-		operation                         *Operation
+		ID, repID, currentOperationID             int
+		start, end                                int64
+		isRunning                                 bool
+		content, repName, isRunningString, result string
+		rep                                       *repository.Repository
+		operation                                 *Operation
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &content, &start, &end, &isRunningString, &currentOperationID, &repID, &repName)
+		rows.Scan(&ID, &result, &content, &start, &end, &isRunningString, &currentOperationID, &repID, &repName)
 
 		rep = &repository.Repository{
 			ID:   repID,
@@ -67,6 +67,7 @@ func GetAllProcesses() []*Process {
 				Start:     start,
 				End:       end,
 				Content:   content,
+				result:    result,
 			},
 		})
 	}

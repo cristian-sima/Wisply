@@ -31,6 +31,24 @@ func (action *Action) GetEndDate() string {
 	return action.getDate(action.End)
 }
 
+// GetDuration returns the duration between the start and end or some dots if it did not finished
+func (action *Action) GetDuration() string {
+	if action.IsRunning || action.End == 0 {
+		return "..."
+	}
+	var (
+		startTime time.Time
+		endTime   time.Time
+		duration  string
+	)
+	startTime = time.Unix(action.Start, 0)
+	endTime = time.Unix(action.End, 0)
+
+	duration = endTime.Sub(startTime).String()
+
+	return duration
+}
+
 func (action *Action) getDate(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(time.RubyDate)
 }

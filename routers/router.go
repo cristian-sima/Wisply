@@ -120,6 +120,7 @@ func init() {
 			beego.NSNamespace(":process/operation",
 				beego.NSRouter(":operation", &admin.LogController{}, "*:ShowOperation"),
 			),
+			beego.NSRouter(":process/history", &admin.LogController{}, "*:ShowProgressHistory"),
 		),
 	)
 

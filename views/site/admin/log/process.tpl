@@ -69,7 +69,7 @@
         </div>
       </div>
     <div>
-      <a href="/admin/log/process/{{ .process.Action.ID }}/entire-log">See entire log</a> <br />
+      <a href="/admin/log/process/{{ .process.Action.ID }}/history">Show history</a> <br />
       <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
     </div>
     <br />

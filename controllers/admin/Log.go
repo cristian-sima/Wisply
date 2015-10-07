@@ -50,3 +50,18 @@ func (controller *LogController) ShowOperation() {
 
 	controller.TplNames = "site/admin/log/operation.tpl"
 }
+
+// ShowProgressHistory displays the entire log of a process
+func (controller *LogController) ShowProgressHistory() {
+	idString := controller.Ctx.Input.Param(":process")
+	ID, _ := strconv.Atoi(idString)
+	process := action.NewProcess(ID)
+	if process.IsRunning {
+		operation := action.NewOperation(process.GetCurrentOperation().ID)
+		controller.Data["operation"] = operation
+	}
+
+	controller.Data["process"] = process
+	controller.Data["operations"] = process.GetOperations()
+	controller.TplNames = "site/admin/log/entire-progress.tpl"
+}

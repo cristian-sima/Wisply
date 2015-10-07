@@ -74,7 +74,7 @@ func (operation *Operation) CreateTask(content string) *Task {
 func (operation *Operation) GetTasks() []*Task {
 
 	// fields
-	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.result"
+	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.result, task.explication"
 
 	// the query
 	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
@@ -86,15 +86,15 @@ func (operation *Operation) GetTasks() []*Task {
 	}
 
 	var (
-		list                             []*Task
-		ID                               int
-		start, end                       int64
-		isRunning                        bool
-		content, isRunningString, result string
+		list                                          []*Task
+		ID                                            int
+		start, end                                    int64
+		isRunning                                     bool
+		content, isRunningString, result, explication string
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &content, &start, &end, &isRunningString, &result)
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &result, &explication)
 
 		isRunning, err = strconv.ParseBool(isRunningString)
 
@@ -103,6 +103,7 @@ func (operation *Operation) GetTasks() []*Task {
 		}
 
 		list = append(list, &Task{
+			Explication: explication,
 			Action: &Action{
 				ID:        ID,
 				IsRunning: isRunning,

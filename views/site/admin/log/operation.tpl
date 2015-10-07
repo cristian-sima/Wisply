@@ -49,6 +49,7 @@
             <th>Start</th>
             <th>End</th>
             <th>Duration</th>
+            <th>Explication</th>
           </tr>
         </thead>
         <tbody>
@@ -65,9 +66,10 @@
             {{ end }}
             </td>
             <!-- end state -->
-            <td class="col-md-3">{{ $task.GetStartDate }}</td>
-            <td class="col-md-3">{{ $task.GetEndDate }}</td>
+            <td class="col-md-2">{{ $task.GetStartDate }}</td>
+            <td class="col-md-2">{{ $task.GetEndDate }}</td>
             <td class="col-md-2">{{ $task.GetDuration }}</td>
+            <td class="col-md-2">{{ $task.Explication }}</td>
           </tr>
           {{end }}
         </tbody>

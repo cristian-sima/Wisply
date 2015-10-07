@@ -22,7 +22,15 @@ type Process struct {
 func (process *Process) Start() {
 	operation := process.Process.CreateOperation("Testing")
 	process.ChangeCurrentOperation(operation)
-	operation.CreateTask("Request")
+	task1 := operation.CreateTask("Request 1")
+	task2 := operation.CreateTask("Request 2")
+	task3 := operation.CreateTask("Request 3")
+	task4 := operation.CreateTask("Request 4")
+	task1.Finish("It was ok")
+	task2.CustomFinish("danger", "Timeout expired")
+	task3.CustomFinish("warning", "Ignored")
+	task4.CustomFinish("success", "Success")
+	operation.Finish()
 }
 
 func (process *Process) startVerification() {

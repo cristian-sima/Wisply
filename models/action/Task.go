@@ -17,10 +17,17 @@ type Task struct {
 }
 
 // Finish finishes in a normal state the request
+// It requires an explication (the error, a success message)
 func (task *Task) Finish(explication string) {
 	task.Action.Finish()
 	task.Explication = explication
 	task.updateInDatabase()
+}
+
+// CustomFinish finishes the task with a custom result
+func (task *Task) CustomFinish(result, explication string) {
+	task.Action.ChangeResult(result)
+	task.Finish(explication)
 }
 
 func (task *Task) updateInDatabase() {

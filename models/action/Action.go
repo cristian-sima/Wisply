@@ -64,7 +64,7 @@ func (action *Action) ChangeResult(result string) {
 		result != "warning" &&
 		result != "success" &&
 		result != "normal" {
-		fmt.Println("Task change result error. This result is not valid: " + result)
+		fmt.Println("Action change result error. This result is not valid: " + result)
 	}
 	action.result = result
 }
@@ -75,7 +75,7 @@ func (action *Action) Finish() {
 	action.End = getCurrentTimestamp()
 }
 
-// GetResult returns the result of the task
+// GetResult returns the result of the action
 func (action *Action) GetResult() string {
 	return action.result
 }

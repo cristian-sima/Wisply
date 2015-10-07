@@ -73,13 +73,13 @@ func NewOperation(ID int) *Operation {
 func NewTask(ID int) *Task {
 
 	var (
-		taskID, opeID           int
-		taskStart, taskEnd      int64
-		taskIsRunning           bool
-		taskResult, taskContent string
+		taskID, opeID                            int
+		taskStart, taskEnd                       int64
+		taskIsRunning                            bool
+		taskResult, taskContent, taskExplication string
 	)
 
-	fieldList := "`id`, `operation`, `content`, `start`, `end`, `is_running`, `result`"
+	fieldList := "`id`, `operation`, `content`, `start`, `end`, `is_running`, `result`, `explication`"
 	sql := "SELECT " + fieldList + " FROM `task` WHERE id= ?"
 	query, err := wisply.Database.Prepare(sql)
 
@@ -88,9 +88,10 @@ func NewTask(ID int) *Task {
 		fmt.Println(err)
 	}
 
-	query.QueryRow(ID).Scan(&taskID, &opeID, &taskContent, &taskStart, &taskEnd, &taskIsRunning, &taskResult)
+	query.QueryRow(ID).Scan(&taskID, &opeID, &taskContent, &taskStart, &taskEnd, &taskIsRunning, &taskResult, &taskExplication)
 
 	task := &Task{
+		Explication: taskExplication,
 		Action: &Action{
 			ID:        taskID,
 			Start:     taskStart,
@@ -110,7 +111,7 @@ func NewTask(ID int) *Task {
 }
 
 // NewProcess returns the process by ID
-// NOTE! It returns just the ID of the current task.
+// NOTE! It returns just the ID of the current operation.
 // In order to get the entire object use NewOperation
 func NewProcess(ID int) *Process {
 

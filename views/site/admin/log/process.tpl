@@ -77,7 +77,7 @@
         <tbody>
           {{ $p := .process}}
           {{range $index, $operation := .operations}}
-          <tr>
+          <tr class="{{ $operation.GetResult }}">
             <td class="col-md-1"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
             <td class="col-md-1">{{ $operation.Action.Content }}</td>
             <!-- start state -->

@@ -53,7 +53,7 @@
         </thead>
         <tbody>
           {{range $index, $task := .tasks}}
-          <tr>
+          <tr class="{{ $task.GetResult }}">
             <td class="col-md-1">{{ $task.ID }}</a></td>
             <td class="col-md-1">{{ $task.Action.Content }}</td>
             <!-- start state -->

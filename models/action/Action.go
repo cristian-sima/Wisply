@@ -50,5 +50,5 @@ func (action *Action) GetDuration() string {
 }
 
 func (action *Action) getDate(timestamp int64) string {
-	return time.Unix(timestamp, 0).Format(time.RubyDate)
+	return time.Unix(timestamp, 0).Format(time.Stamp)
 }

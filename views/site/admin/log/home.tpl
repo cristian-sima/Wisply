@@ -22,7 +22,7 @@
             <th>Start</th>
             <th>End</th>
             <th>Duration</th>
-            <!-- <th>Current Operation</th> -->
+            <th>Current Operation</th>
           </tr>
         </thead>
         <tbody>
@@ -40,9 +40,16 @@
             {{ end }}
             </td>
             <!-- end state -->
-            <td class="col-md-4">{{ $element.GetStartDate }}</td>
+            <td class="col-md-3">{{ $element.GetStartDate }}</td>
             <td class="col-md-3">{{ $element.GetEndDate }}</td>
             <td class="col-md-1">{{ $element.GetDuration }}</td>
+            <td class="col-md-1">
+              {{ if $element.GetCurrentOperation }}
+              {{ $element.GetCurrentOperation.Content }}
+              {{ else }}
+              -
+              {{ end }}
+            </td>
           </tr>
           {{end }}
         </tbody>

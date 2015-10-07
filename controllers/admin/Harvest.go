@@ -119,7 +119,7 @@ func (controller *HarvestController) CreateNewProcess(message *ws.Message, conne
 		ID := message.Repository
 		delete(CurrentProcesses, ID)
 
-		harvestProcess := harvest.NewProcess(strconv.Itoa(ID), controller)
+		harvestProcess := harvest.CreateProcess(strconv.Itoa(ID), controller)
 		process := &Process{
 			Process: harvestProcess,
 		}

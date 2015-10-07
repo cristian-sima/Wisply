@@ -19,8 +19,8 @@ func NewAction(isRunning bool) *Action {
 	}
 }
 
-// NewTask creates a new operation
-func NewTask(operation Operation) *Task {
+// CreateTask creates a new operation
+func CreateTask(operation Operation) *Task {
 	task := &Task{
 		OperationID: operation.ID,
 		status:      "normal",
@@ -51,11 +51,11 @@ func NewTask(operation Operation) *Task {
 	return task
 }
 
-// NewOperation creates a new operation
-func NewOperation(process Process) *Operation {
+// CreateOperation creates a new operation
+func CreateOperation(process Process) *Operation {
 	operation := &Operation{
-		Action:    NewAction(true),
-		ProcessID: process.ID,
+		Action:  NewAction(true),
+		Process: process,
 	}
 	columns := "(`start`, `process`)"
 	values := "(?, ?, ?)"
@@ -73,7 +73,7 @@ func NewOperation(process Process) *Operation {
 	// find its ID
 	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(operation.Start, operation.ProcessID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
+	query.QueryRow(operation.Start, operation.Process.ID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the operation id:")
@@ -83,8 +83,8 @@ func NewOperation(process Process) *Operation {
 	return operation
 }
 
-// NewProcess creates a new harvest process
-func NewProcess(repositoryID, content string) *Process {
+// CreateProcess creates a new harvest process
+func CreateProcess(repositoryID, content string) *Process {
 
 	local, _ := repository.NewRepository(repositoryID)
 

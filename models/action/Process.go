@@ -11,8 +11,9 @@ import (
 // Process is a top level action which coordonates many operations and communicates with the controller
 type Process struct {
 	*Action
-	ID         int
-	Repository *repository.Repository
+	ID               int
+	Repository       *repository.Repository
+	currentOperation *Operation
 }
 
 // Finish records in the database that the process is finished.
@@ -31,4 +32,14 @@ func (process *Process) Finish() {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)
 	}
+}
+
+// ChangeCurrentOperation sets the current operation
+func (process *Process) ChangeCurrentOperation(operation *Operation) {
+	process.currentOperation = operation
+}
+
+// GetCurrentOperation returns the current operation
+func (process *Process) GetCurrentOperation() *Operation {
+	return process.currentOperation
 }

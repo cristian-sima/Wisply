@@ -232,8 +232,8 @@ func (process *Process) record(message string) {
 	//process.operation.record(message, process.Local.ID)
 }
 
-// NewProcess creates a new harvest process
-func NewProcess(ID string, controller WisplyController) *Process {
+// CreateProcess creates a new harvest process
+func CreateProcess(ID string, controller WisplyController) *Process {
 	var remote RemoteRepositoryInterface
 	local, _ := repository.NewRepository(ID)
 
@@ -248,7 +248,7 @@ func NewProcess(ID string, controller WisplyController) *Process {
 	db := &databaseManager{}
 
 	process := &Process{
-		Process:    &*action.NewProcess(ID, "harvesting"),
+		Process:    &*action.CreateProcess(ID, "harvesting"),
 		remote:     remote,
 		Controller: controller,
 		db:         db,

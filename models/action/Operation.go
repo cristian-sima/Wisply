@@ -12,7 +12,7 @@ import (
 // It is coordonated by a process
 type Operation struct {
 	*Action
-	ProcessID   int
+	Process     Process
 	CurrentTask Task
 }
 

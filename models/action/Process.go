@@ -28,7 +28,7 @@ func (process *Process) updateInDatabase() {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.result, process.currentOperation.ID, strconv.Itoa(process.ID))
+	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, process.result, strconv.Itoa(process.ID))
 	if err != nil {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)

@@ -60,7 +60,7 @@ func (action *Action) getDate(timestamp int64) string {
 
 // ChangeResult checks if the result is valid and it changes it
 func (action *Action) ChangeResult(result string) {
-	if result != "error" &&
+	if result != "danger" &&
 		result != "warning" &&
 		result != "success" &&
 		result != "normal" {

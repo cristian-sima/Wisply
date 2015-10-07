@@ -26,7 +26,7 @@
         </thead>
         <tbody>
           {{range $index, $element := .processes}}
-          <tr>
+          <tr class="{{ $element.GetResult }}">
             <td class="col-md-1"><a href="/admin/log/process/{{ $element.ID }}">{{ $element.ID }}</a></td>
             <td class="col-md-1">{{ $element.Action.Content }}</td>
             <td class="col-md-2"><a href="/admin/repositories/repository/{{ $element.Repository.ID }}">{{ $element.Repository.Name }}</a></td>

@@ -106,8 +106,9 @@ CREATE TABLE `operation` (
   `end` int(200) NOT NULL DEFAULT '0',
   `current_task` int(11) NOT NULL,
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
+  `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,10 +126,11 @@ CREATE TABLE `process` (
   `end` int(11) NOT NULL DEFAULT '0',
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
   `current_operation` int(11) DEFAULT NULL,
+  `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,11 +285,13 @@ CREATE TABLE `task` (
   `start` int(11) NOT NULL DEFAULT '0',
   `end` int(11) NOT NULL DEFAULT '0',
   `content` text NOT NULL,
-  `status` enum('error','warning','success','normal') NOT NULL,
+  `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   `operation` int(11) NOT NULL,
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
+  `process` int(11) NOT NULL,
+  `explication` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -299,4 +303,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-07 14:24:09
+-- Dump completed on 2015-10-07 20:33:51

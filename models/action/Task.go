@@ -12,8 +12,8 @@ import (
 // It has a type which denotes the state of the task
 type Task struct {
 	*Action
-	OperationID int
-	status      string // it can be: error, warning, success, normal
+	Operation *Operation
+	status    string // it can be: error, warning, success, normal
 }
 
 // ChangeStatus checks if the status is valid and it changes it

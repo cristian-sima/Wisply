@@ -11,10 +11,18 @@ import (
 // GetAllProcesses returns a list with all available processes
 func GetAllProcesses() []*Process {
 	var list []*Process
-	processFields := "process.id, process.content, process.start, process.end, process.is_running"
+	// fields
+	processFields := "process.id, process.content, process.start, process.end, process.is_running, process.current_operation"
 	repositoryFields := "repository.id, repository.name"
+
 	fieldList := processFields + ", " + repositoryFields
-	sql := "SELECT " + fieldList + " FROM `process` AS process JOIN `repository` AS `repository` ON repository.id = process.repository ORDER BY process.id DESC"
+
+	// joins
+	joinRepository := "INNER JOIN `repository` AS `repository` ON repository.id = process.repository"
+	joins := joinRepository
+
+	// the query
+	sql := "SELECT " + fieldList + " FROM `process` AS process " + joins + " ORDER BY process.id DESC"
 
 	rows, err := wisply.Database.Query(sql)
 	if err != nil {
@@ -23,16 +31,16 @@ func GetAllProcesses() []*Process {
 	}
 
 	var (
-		ID, repID        int
-		start, end       int64
-		isRunningString  string
-		isRunning        bool
-		content, repName string
-		rep              *repository.Repository
+		ID, repID, currentOperationID     int
+		start, end                        int64
+		isRunning                         bool
+		content, repName, isRunningString string
+		rep                               *repository.Repository
+		operation                         *Operation
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &content, &start, &end, &isRunningString, &repID, &repName)
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &currentOperationID, &repID, &repName)
 
 		rep = &repository.Repository{
 			ID:   repID,
@@ -45,9 +53,15 @@ func GetAllProcesses() []*Process {
 			fmt.Println(err)
 		}
 
+		if isRunning {
+			fmt.Println(repName)
+			operation = NewOperation(currentOperationID)
+		}
+
 		list = append(list, &Process{
-			ID:         ID,
-			Repository: rep,
+			ID:               ID,
+			Repository:       rep,
+			currentOperation: operation,
 			Action: &Action{
 				IsRunning: isRunning,
 				Start:     start,

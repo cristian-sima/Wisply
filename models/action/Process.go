@@ -22,12 +22,16 @@ func (process *Process) Finish() {
 	process.End = getCurrentTimestamp()
 	process.IsRunning = false
 
-	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=? WHERE id=?")
+	process.updateDatabase()
+}
+
+func (process *Process) updateDatabase() {
+	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), strconv.Itoa(process.ID))
+	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, strconv.Itoa(process.ID))
 	if err != nil {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)
@@ -37,9 +41,42 @@ func (process *Process) Finish() {
 // ChangeCurrentOperation sets the current operation
 func (process *Process) ChangeCurrentOperation(operation *Operation) {
 	process.currentOperation = operation
+	process.updateDatabase()
 }
 
 // GetCurrentOperation returns the current operation
 func (process *Process) GetCurrentOperation() *Operation {
 	return process.currentOperation
+}
+
+// CreateOperation creates a new operation
+func (process *Process) CreateOperation(content string) *Operation {
+	operation := &Operation{
+		Action:  NewAction(true, content),
+		Process: process,
+	}
+	columns := "(`start`, `process`, `content`)"
+	values := "(?, ?, ?)"
+	sql := "INSERT INTO `operation` " + columns + " VALUES " + values
+
+	query, err := wisply.Database.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when creating the operation:")
+		fmt.Println(err)
+	}
+
+	query.Exec(operation.Start, process.ID, operation.Content)
+
+	// find its ID
+	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=? AND is_running=?"
+	query, err = wisply.Database.Prepare(sql)
+	query.QueryRow(operation.Start, operation.Process.ID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the operation id:")
+		fmt.Println(err)
+	}
+
+	return operation
 }

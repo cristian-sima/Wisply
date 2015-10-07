@@ -20,8 +20,8 @@ type Process struct {
 
 // Start starts the process
 func (process *Process) Start() {
-	process.record("The process has started")
-	process.startVerification()
+	operation := process.Process.CreateOperation("Testing")
+	process.ChangeCurrentOperation(operation)
 }
 
 func (process *Process) startVerification() {

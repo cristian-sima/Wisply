@@ -3,7 +3,6 @@ package admin
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	harvest "github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
@@ -125,10 +124,8 @@ func (controller *HarvestController) CreateNewProcess(message *ws.Message, conne
 		}
 		process.addConnection(connection)
 		CurrentProcesses[ID] = process
-		// harvestProcess.Start()
-		duration := time.Second
-		time.Sleep(duration)
-		harvestProcess.Finish()
+
+		harvestProcess.Start()
 	}
 }
 

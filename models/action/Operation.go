@@ -12,8 +12,8 @@ import (
 // It is coordonated by a process
 type Operation struct {
 	*Action
-	Process     Process
-	CurrentTask Task
+	Process     *Process
+	CurrentTask *Task
 }
 
 // Finish records in the database that the task is finished.

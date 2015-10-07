@@ -22,7 +22,7 @@
             <th>Start</th>
             <th>End</th>
             <th>Duration</th>
-            <th>Current Operation</th>
+            <th>Now</th>
           </tr>
         </thead>
         <tbody>

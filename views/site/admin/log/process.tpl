@@ -12,8 +12,9 @@
 				<span class="glyphicon glyphicon-warning-sign"></span>
         This page is not live updated.
 			</span>
+      <h2>Process #{{ .process.Action.ID }}</h2>
       <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="col-lg-4 col-md-4 col-sm-4">
             <table class="table">
                 <tbody>
                     <tr>
@@ -27,15 +28,46 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-lg-9 col-md-9 col-sm-9">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Started on:</td>
+                        <td>{{ .process.GetStartDate }}</td>
+                    </tr>
+                    <tr>
+                        <td>Finished on:</td>
+                        <td><strong>{{ .process.GetEndDate }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Total duration:</td>
+                        <td>{{ .process.GetDuration }}</td>
+                    </tr>
+                    <tr>
+                        <td>Current operation:</td>
+                        <td><strong>
+                          {{ if .operation }}
+                          <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                          {{ else }}
+                          -
+                          {{ end }}
+                        </strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
       </div>
       <table id="list-accounts" class="table table-hover table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>
-            <th>Type</th>
-            <th>Repository</th>
+            <th>Content</th>
             <th>State</th>
             <th>Start</th>
             <th>End</th>
@@ -44,26 +76,26 @@
           </tr>
         </thead>
         <tbody>
-          {{range $index, $element := .processes}}
+          {{range $index, $operation := .operations}}
           <tr>
-            <td class="col-md-1"><a href="/admin/log/process/{{ $element.ID }}">{{ $element.ID }}</a></td>
-            <td class="col-md-1">{{ $element.Action.Content }}</td>
-            <td class="col-md-2"><a href="/admin/repositories/repository/{{ $element.Repository.ID }}">{{ $element.Repository.Name }}</a></td>
+            <td class="col-md-1"><a href="/admin/log/process/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
+            <td class="col-md-1">{{ $operation.Action.Content }}</td>
+            <td class="col-md-2"><a href="/admin/repositories/repository/{{ $operation.Repository.ID }}">{{ $operation.Repository.Name }}</a></td>
             <!-- start state -->
             <td class="col-md-1">
-            {{ if $element.Action.IsRunning }}
+            {{ if $operation.Action.IsRunning }}
             <span class="text-warning">Working</span>
             {{ else }}
             Finished
             {{ end }}
             </td>
             <!-- end state -->
-            <td class="col-md-3">{{ $element.GetStartDate }}</td>
-            <td class="col-md-3">{{ $element.GetEndDate }}</td>
-            <td class="col-md-1">{{ $element.GetDuration }}</td>
+            <td class="col-md-3">{{ $operation.GetStartDate }}</td>
+            <td class="col-md-3">{{ $operation.GetEndDate }}</td>
+            <td class="col-md-1">{{ $operation.GetDuration }}</td>
             <td class="col-md-1">
-              {{ if $element.GetCurrentOperation }}
-              {{ $element.GetCurrentOperation.Content }}
+              {{ if $operation.GetCurrentOperation }}
+              {{ $operation.GetCurrentOperation.Content }}
               {{ else }}
               -
               {{ end }}

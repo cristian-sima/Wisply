@@ -23,6 +23,11 @@ func (controller *LogController) ShowProcess() {
 	idString := controller.Ctx.Input.Param(":id")
 	ID, _ := strconv.Atoi(idString)
 	process := action.NewProcess(ID)
+	if process.IsRunning {
+		operation := action.NewOperation(process.GetCurrentOperation().ID)
+		controller.Data["operation"] = operation
+	}
+
 	controller.Data["process"] = process
 	// controller.Data["tasks"] = process.GetTasks();
 	controller.TplNames = "site/admin/log/process.tpl"

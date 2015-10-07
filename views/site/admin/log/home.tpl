@@ -44,7 +44,7 @@
             <td class="col-md-1">{{ $element.GetDuration }}</td>
             <td class="col-md-1">
               {{ if $element.GetCurrentOperation }}
-              {{ $element.GetCurrentOperation.Content }}
+              <a href="/admin/log/process/{{$element.ID}}/operation/{{$element.GetCurrentOperation.ID}}">{{ $element.GetCurrentOperation.Content }}</a>
               {{ else }}
               -
               {{ end }}

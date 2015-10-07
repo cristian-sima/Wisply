@@ -207,7 +207,7 @@ func (process *Process) End() {
 }
 
 func (process *Process) changeLocalStatus(newStatus string) {
-	process.Local.ModifyStatus(newStatus)
+	process.Repository.ModifyStatus(newStatus)
 	process.notifyController(&Message{
 		Name:  "status-changed",
 		Value: newStatus,
@@ -216,11 +216,11 @@ func (process *Process) changeLocalStatus(newStatus string) {
 
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {
-	return process.Local
+	return process.Repository
 }
 
 func (process *Process) notifyController(message *Message) {
-	message.Repository = process.Local.ID
+	message.Repository = process.Repository.ID
 	process.Controller.Notify(message)
 }
 

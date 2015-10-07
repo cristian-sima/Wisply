@@ -1,35 +1,47 @@
 package action
 
+import (
+	"fmt"
+
+	wisply "github.com/cristian-sima/Wisply/models/database"
+	repository "github.com/cristian-sima/Wisply/models/repository"
+)
+
 // GetAllProcesses returns a list with all available processes
-func GetAllProcesses() []string {
-	var list []string
+func GetAllProcesses() []*Process {
+	var list []*Process
+	fieldList := "process.id, process.content, process.start, process.end, repository.id, repository.name"
+	sql := "SELECT " + fieldList + " FROM `process` AS process JOIN `repository` AS `repository` ON repository.id = process.repository ORDER BY process.id DESC"
+
+	rows, err := wisply.Database.Query(sql)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for rows.Next() {
+		var (
+			ID, repID        int
+			start, end       int64
+			isRunning        bool
+			content, repName string
+			rep              *repository.Repository
+		)
+		rows.Scan(&ID, &content, &start, &end, &repID, &repName)
+
+		rep = &repository.Repository{
+			ID:   repID,
+			Name: repName,
+		}
+
+		list = append(list, &Process{
+			ID:         ID,
+			Repository: rep,
+			Action: &Action{
+				Start:   start,
+				End:     end,
+				Content: content,
+			},
+		})
+	}
 	return list
-	// fieldList := "event.id as eventID, event.timestamp, repository.name, event.content, event.operation_name, event.operation_type, event.duration, repository.id"
-	// sql := "SELECT " + fieldList + " FROM `history_event` as `event` JOIN `repository` as `repository` ON event.repository = repository.id ORDER by eventID DESC"
-	// fmt.Println(sql)
-	// rows, err := wisply.Database.Query(sql)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// for rows.Next() {
-	// 	var (
-	// 		repository, timestamp, content, operationName, operationType string
-	// 		id, repositoryID                                             int
-	// 		duration                                                     float32
-	// 	)
-	// 	rows.Scan(&id, &timestamp, &repository, &content, &operationName, &operationType, &duration, &repositoryID)
-	// 	list = append(list, GUIEvent{
-	// 		Event: Event{
-	// 			ID:            id,
-	// 			Timestamp:     timestamp,
-	// 			Content:       content,
-	// 			OperationName: operationName,
-	// 			OperationType: operationType,
-	// 			Duration:      duration,
-	// 			Repository:    repositoryID,
-	// 		},
-	// 		RepositoryName: repository,
-	// 	})
-	// }
-	// return list
 }

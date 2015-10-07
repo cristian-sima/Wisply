@@ -7,9 +7,9 @@ type LogController struct {
 	Controller
 }
 
-// ShowEventLog displays the last events for harvesting
+// ShowGeneralPage displays the processes
 func (controller *LogController) ShowGeneralPage() {
-	controller.Data["events"] = action.GetAllProcesses()
+	controller.Data["processes"] = action.GetAllProcesses()
 	controller.SetCustomTitle("Admin - Event Log")
 	controller.TplNames = "site/admin/log/home.tpl"
 }

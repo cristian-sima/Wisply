@@ -2,7 +2,6 @@ package action
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
@@ -88,8 +87,8 @@ func NewProcess(repositoryID, content string) *Process {
 	local, _ := repository.NewRepository(repositoryID)
 
 	process := &Process{
-		Action: NewAction(),
-		Local:  local,
+		Action:     NewAction(),
+		Repository: local,
 	}
 	// insert
 
@@ -121,6 +120,6 @@ func NewProcess(repositoryID, content string) *Process {
 	return process
 }
 
-func getCurrentTimestamp() string {
-	return strconv.FormatInt(time.Now().Unix(), 10)
+func getCurrentTimestamp() int64 {
+	return time.Now().Unix()
 }

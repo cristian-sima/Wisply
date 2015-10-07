@@ -11,8 +11,8 @@ import (
 // Process is a top level action which coordonates many operations and communicates with the controller
 type Process struct {
 	*Action
-	ID    int
-	Local *repository.Repository
+	ID         int
+	Repository *repository.Repository
 }
 
 // Finish records in the database that the process is finished.

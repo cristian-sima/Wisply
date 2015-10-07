@@ -20,38 +20,6 @@ func NewAction(isRunning bool, content string) *Action {
 	}
 }
 
-// CreateTask creates a new operation
-func CreateTask(operation *Operation) *Task {
-	task := &Task{
-		Operation: operation,
-		status:    "normal",
-		Action:    NewAction(true, ""),
-	}
-	columns := "(`start`, `operation`, `status`)"
-	values := "(?, ?, ?)"
-	sql := "INSERT INTO `task` " + columns + " VALUES " + values
-	query, err := wisply.Database.Prepare(sql)
-	if err != nil {
-		fmt.Println("Error when creating the task:")
-		fmt.Println(err)
-	}
-
-	query.Exec(task.Start, operation.ID, task.GetStatus())
-
-	// find its id
-
-	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=? AND is_running=?"
-	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(task.Start, task.Operation.ID, task.status, strconv.FormatBool(task.IsRunning)).Scan(&task.ID)
-
-	if err != nil {
-		fmt.Println("Error when selecting the task id:")
-		fmt.Println(err)
-	}
-
-	return task
-}
-
 // CreateProcess creates a new harvest process
 func CreateProcess(repositoryID, content string) *Process {
 

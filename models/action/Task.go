@@ -16,6 +16,38 @@ type Task struct {
 	status    string // it can be: error, warning, success, normal
 }
 
+// CreateTask creates a new operation
+func (operation *Operation) CreateTask() *Task {
+	task := &Task{
+		Operation: operation,
+		status:    "normal",
+		Action:    NewAction(true, ""),
+	}
+	columns := "(`proces`, `start`, `operation`, `status`)"
+	values := "(?, ?, ?, ?)"
+	sql := "INSERT INTO `task` " + columns + " VALUES " + values
+	query, err := wisply.Database.Prepare(sql)
+	if err != nil {
+		fmt.Println("Error when creating the task:")
+		fmt.Println(err)
+	}
+
+	query.Exec(operation.Process, task.Start, operation.ID, task.GetStatus())
+
+	// find its id
+
+	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=? AND is_running=?"
+	query, err = wisply.Database.Prepare(sql)
+	query.QueryRow(task.Start, task.Operation.ID, task.status, strconv.FormatBool(task.IsRunning)).Scan(&task.ID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the task id:")
+		fmt.Println(err)
+	}
+
+	return task
+}
+
 // ChangeStatus checks if the status is valid and it changes it
 func (task *Task) changeStatus(status string) {
 	if status != "error" &&

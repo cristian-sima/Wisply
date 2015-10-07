@@ -34,10 +34,8 @@ func (process *Process) Start() {
 	task2.CustomFinish("danger", "Timeout expired")
 	time.Sleep(time.Second * 1)
 	task3.CustomFinish("warning", "Ignored")
-	time.Sleep(time.Second * 2000)
+	time.Sleep(time.Second * 20)
 	task4.CustomFinish("success", "Success")
-	operation.ChangeResult("danger")
-	process.ChangeResult("danger")
 	operation.Finish()
 	process.Finish()
 }

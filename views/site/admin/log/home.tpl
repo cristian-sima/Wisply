@@ -6,10 +6,14 @@
     </ul>
   </div>
   <div class="panel-body">
-      <span class="text-warning">
-				<span class="glyphicon glyphicon-warning-sign"></span>
-        This page is not live updated.
-			</span>
+      <div>
+        <span class="text-warning">
+  				<span class="glyphicon glyphicon-warning-sign"></span>
+          This page is not live updated.
+  			</span>
+        <br />
+      </div>
+      &nbsp;
       <div class="table-responsive">
       <table id="list-processes" class="table table-bordered table-condensed">
         <thead>

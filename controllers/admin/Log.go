@@ -18,6 +18,15 @@ func (controller *LogController) ShowGeneralPage() {
 	controller.TplNames = "site/admin/log/home.tpl"
 }
 
+// ShowAdvanceOptions displays the processes
+func (controller *LogController) ShowAdvanceOptions() {
+	controller.SetCustomTitle("Advance options")
+	idString := controller.Ctx.Input.Param(":process")
+	ID, _ := strconv.Atoi(idString)
+	controller.Data["process"] = action.NewProcess(ID)
+	controller.TplNames = "site/admin/log/advance-options.tpl"
+}
+
 // ShowProcess displays the log of a process
 func (controller *LogController) ShowProcess() {
 	idString := controller.Ctx.Input.Param(":process")

@@ -121,6 +121,7 @@ func init() {
 				beego.NSRouter(":operation", &admin.LogController{}, "*:ShowOperation"),
 			),
 			beego.NSRouter(":process/history", &admin.LogController{}, "*:ShowProgressHistory"),
+			beego.NSRouter(":process/advance-options", &admin.LogController{}, "*:ShowAdvanceOptions"),
 		),
 	)
 

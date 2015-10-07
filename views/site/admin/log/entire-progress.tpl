@@ -103,7 +103,7 @@
             <table class="list-tasks table table-bordered table-condensed">
               <thead>
                 <tr>
-                  <th class="hidden-xs">#</th>
+                  <th class="hidden-xs"># Task</th>
                   <th>Content</th>
                   <th>State</th>
                   <th>Start</th>

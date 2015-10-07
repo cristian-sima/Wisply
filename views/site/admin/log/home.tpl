@@ -6,12 +6,12 @@
     </ul>
   </div>
   <div class="panel-body">
-    <div class="table-responsive">
       <span class="text-warning">
 				<span class="glyphicon glyphicon-warning-sign"></span>
         This page is not live updated.
 			</span>
-      <table id="list-accounts" class="table table-hover table-bordered table-condensed">
+      <div class="table-responsive">
+      <table id="list-processes" class="table table-hover table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>

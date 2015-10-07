@@ -8,39 +8,53 @@
     </ul>
   </div>
   <div class="panel-body">
-    <div class="table-responsive">
       <span class="text-warning">
 				<span class="glyphicon glyphicon-warning-sign"></span>
         This page is not live updated.
 			</span>
       <h2>Operation #{{ .operation.Action.ID }}</h2>
       <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-4 col-md-4 col-sm-4">
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4">
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Started on:</td>
+                        <td><span class="glyphicon glyphicon-calendar"></span> Start:</td>
                         <td>{{ .operation.GetStartDate }}</td>
                     </tr>
                     <tr>
-                        <td>Finished on:</td>
+                        <td><span class="glyphicon glyphicon-calendar"></span> Finish:</td>
                         <td><strong>{{ .operation.GetEndDate }}</strong></td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-4 col-md-4 col-sm-4">
             <table class="table">
                 <tbody>
-                    <tr>
-                        <td>Total duration:</td>
-                        <td>{{ .operation.GetDuration }}</td>
-                    </tr>
+                      <td>
+                        {{ if .operation.Action.IsRunning }}
+                        <span class="label label-warning">Working</span>
+                        {{ else }}
+                        <span class="label label-success">Finished</span>
+                        {{ end }}
+                      </td>
+                      <td>
+                        <strong>
+                          {{ if .task }}
+                          <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                          {{ else }}
+                          <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
+                          {{ end }}
+                      </strong>
+                    </td>
                 </tbody>
             </table>
         </div>
       </div>
-      <table id="list-accounts" class="table table-hover table-bordered table-condensed">
+      <div class="table-responsive">
+      <table id="list-tasks" class="table table-hover table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>

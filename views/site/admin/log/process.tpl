@@ -7,7 +7,6 @@
     </ul>
   </div>
   <div class="panel-body">
-    <div class="table-responsive">
       <span class="text-warning">
 				<span class="glyphicon glyphicon-warning-sign"></span>
         This page is not live updated.
@@ -32,11 +31,11 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Started on:</td>
+                        <td><span class="glyphicon glyphicon-calendar"></span> Start:</td>
                         <td>{{ .process.GetStartDate }}</td>
                     </tr>
                     <tr>
-                        <td>Finished on:</td>
+                        <td><span class="glyphicon glyphicon-calendar"></span> Finish:</td>
                         <td><strong>{{ .process.GetEndDate }}</strong></td>
                     </tr>
                 </tbody>
@@ -46,24 +45,29 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td>Total duration:</td>
-                        <td>{{ .process.GetDuration }}</td>
-                    </tr>
-                    <tr>
-                        <td>Current operation:</td>
-                        <td><strong>
-                          {{ if .operation }}
-                          <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                        <td>
+                          {{ if .process.Action.IsRunning }}
+                          <span class="label label-warning">Working</span>
                           {{ else }}
-                          -
+                          <span class="label label-success">Finished</span>
                           {{ end }}
-                        </strong></td>
+                        </td>
+                        <td>
+                          <strong>
+                            {{ if .operation }}
+                            <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                            {{ else }}
+                            <span class="glyphicon glyphicon-time"></span> {{ .process.GetDuration }}
+                            {{ end }}
+                        </strong>
+                      </td>
                     </tr>
                 </tbody>
             </table>
         </div>
       </div>
-      <table id="list-accounts" class="table table-hover table-bordered table-condensed">
+    <div class="table-responsive">
+      <table id="list-operations" class="table table-hover table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>
@@ -71,7 +75,7 @@
             <th>State</th>
             <th>Start</th>
             <th>End</th>
-            <th>Duration</th>
+            <th><span class="glyphicon glyphicon-time"></span> Duration</th>
           </tr>
         </thead>
         <tbody>
@@ -97,5 +101,6 @@
         </tbody>
       </table>
     </div>
+    <div><a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a></div>
   </div>
 </div>

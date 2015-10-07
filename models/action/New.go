@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // NewOperation returns an operation from database specified by ID
@@ -92,4 +93,48 @@ func NewTask(ID int) *Task {
 	}
 
 	return task
+}
+
+// NewProcess returns the process by ID
+// NOTE! It returns just the ID of the current task.
+// In order to get the entire object use NewOperation
+func NewProcess(ID int) *Process {
+
+	var (
+		opeID             int
+		proStart, proEnd  int64
+		proIsRunning      bool
+		proContent, repID string
+	)
+
+	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`, `repository`"
+	sql := "SELECT " + fieldList + " FROM `process` WHERE id= ?"
+	query, err := wisply.Database.Prepare(sql)
+
+	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning, &repID)
+
+	if err != nil {
+		fmt.Println("It has been an error when tring to get the info about the process: ")
+		fmt.Println(err)
+	}
+
+	repository, _ := repository.NewRepository(repID)
+
+	process := &Process{
+		Action: &Action{
+			ID:        ID,
+			Start:     proStart,
+			End:       proEnd,
+			IsRunning: proIsRunning,
+			Content:   proContent,
+		},
+		Repository: repository,
+		currentOperation: &Operation{
+			Action: &Action{
+				ID: opeID,
+			},
+		},
+	}
+
+	return process
 }

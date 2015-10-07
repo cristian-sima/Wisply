@@ -115,6 +115,9 @@ func init() {
 
 	adminLogNS := beego.NSNamespace("/log",
 		beego.NSRouter("", &admin.LogController{}, "*:ShowGeneralPage"),
+		beego.NSNamespace("/process",
+			beego.NSRouter(":id", &admin.LogController{}, "*:ShowProcess"),
+		),
 	)
 
 	// admin

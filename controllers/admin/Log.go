@@ -20,7 +20,7 @@ func (controller *LogController) ShowGeneralPage() {
 
 // ShowProcess displays the log of a process
 func (controller *LogController) ShowProcess() {
-	idString := controller.Ctx.Input.Param(":id")
+	idString := controller.Ctx.Input.Param(":process")
 	ID, _ := strconv.Atoi(idString)
 	process := action.NewProcess(ID)
 	if process.IsRunning {
@@ -29,6 +29,24 @@ func (controller *LogController) ShowProcess() {
 	}
 
 	controller.Data["process"] = process
-	// controller.Data["tasks"] = process.GetTasks();
+	controller.Data["operations"] = process.GetOperations()
 	controller.TplNames = "site/admin/log/process.tpl"
+}
+
+// ShowOperation display the
+func (controller *LogController) ShowOperation() {
+	processID := controller.Ctx.Input.Param(":process")
+	operationID := controller.Ctx.Input.Param(":operation")
+
+	IDProcess, _ := strconv.Atoi(processID)
+	IDOperation, _ := strconv.Atoi(operationID)
+
+	process := action.NewProcess(IDProcess)
+	operation := action.NewOperation(IDOperation)
+
+	controller.Data["process"] = process
+	controller.Data["operation"] = operation
+	controller.Data["tasks"] = operation.GetTasks()
+
+	controller.TplNames = "site/admin/log/operation.tpl"
 }

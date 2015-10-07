@@ -16,38 +16,6 @@ type Task struct {
 	status    string // it can be: error, warning, success, normal
 }
 
-// CreateTask creates a new operation
-func (operation *Operation) CreateTask() *Task {
-	task := &Task{
-		Operation: operation,
-		status:    "normal",
-		Action:    NewAction(true, ""),
-	}
-	columns := "(`proces`, `start`, `operation`, `status`)"
-	values := "(?, ?, ?, ?)"
-	sql := "INSERT INTO `task` " + columns + " VALUES " + values
-	query, err := wisply.Database.Prepare(sql)
-	if err != nil {
-		fmt.Println("Error when creating the task:")
-		fmt.Println(err)
-	}
-
-	query.Exec(operation.Process, task.Start, operation.ID, task.GetStatus())
-
-	// find its id
-
-	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=? AND is_running=?"
-	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(task.Start, task.Operation.ID, task.status, strconv.FormatBool(task.IsRunning)).Scan(&task.ID)
-
-	if err != nil {
-		fmt.Println("Error when selecting the task id:")
-		fmt.Println(err)
-	}
-
-	return task
-}
-
 // ChangeStatus checks if the status is valid and it changes it
 func (task *Task) changeStatus(status string) {
 	if status != "error" &&
@@ -87,4 +55,50 @@ func (task *Task) Finish(status, content string) {
 		fmt.Println("Error 2 when updating the task: ")
 		fmt.Println(err)
 	}
+}
+
+// GetTasks returns the list of tasks
+func (operation *Operation) GetTasks() []*Task {
+
+	// fields
+	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.status"
+
+	// the query
+	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
+
+	rows, err := wisply.Database.Query(sql, operation.Action.ID)
+	if err != nil {
+		fmt.Println("Problem when getting all the tasks of the operation: ")
+		fmt.Println(err)
+	}
+
+	var (
+		list                             []*Task
+		ID                               int
+		start, end                       int64
+		isRunning                        bool
+		content, isRunningString, status string
+	)
+
+	for rows.Next() {
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &status)
+
+		isRunning, err = strconv.ParseBool(isRunningString)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		list = append(list, &Task{
+			status: status,
+			Action: &Action{
+				ID:        ID,
+				IsRunning: isRunning,
+				Start:     start,
+				End:       end,
+				Content:   content,
+			},
+		})
+	}
+	return list
 }

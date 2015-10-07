@@ -72,15 +72,14 @@
             <th>Start</th>
             <th>End</th>
             <th>Duration</th>
-            <th>Now</th>
           </tr>
         </thead>
         <tbody>
+          {{ $p := .process}}
           {{range $index, $operation := .operations}}
           <tr>
-            <td class="col-md-1"><a href="/admin/log/process/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
+            <td class="col-md-1"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
             <td class="col-md-1">{{ $operation.Action.Content }}</td>
-            <td class="col-md-2"><a href="/admin/repositories/repository/{{ $operation.Repository.ID }}">{{ $operation.Repository.Name }}</a></td>
             <!-- start state -->
             <td class="col-md-1">
             {{ if $operation.Action.IsRunning }}
@@ -92,14 +91,7 @@
             <!-- end state -->
             <td class="col-md-3">{{ $operation.GetStartDate }}</td>
             <td class="col-md-3">{{ $operation.GetEndDate }}</td>
-            <td class="col-md-1">{{ $operation.GetDuration }}</td>
-            <td class="col-md-1">
-              {{ if $operation.GetCurrentOperation }}
-              {{ $operation.GetCurrentOperation.Content }}
-              {{ else }}
-              -
-              {{ end }}
-            </td>
+            <td class="col-md-2">{{ $operation.GetDuration }}</td>
           </tr>
           {{end }}
         </tbody>

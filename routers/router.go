@@ -116,7 +116,10 @@ func init() {
 	adminLogNS := beego.NSNamespace("/log",
 		beego.NSRouter("", &admin.LogController{}, "*:ShowGeneralPage"),
 		beego.NSNamespace("/process",
-			beego.NSRouter(":id", &admin.LogController{}, "*:ShowProcess"),
+			beego.NSRouter(":process", &admin.LogController{}, "*:ShowProcess"),
+			beego.NSNamespace(":process/operation",
+				beego.NSRouter(":operation", &admin.LogController{}, "*:ShowOperation"),
+			),
 		),
 	)
 

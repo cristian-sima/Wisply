@@ -80,3 +80,54 @@ func (process *Process) CreateOperation(content string) *Operation {
 
 	return operation
 }
+
+// GetOperations it returns the list of operations
+func (process *Process) GetOperations() []*Operation {
+
+	// fields
+	fieldList := "operation.id, operation.content, operation.start, operation.end, operation.is_running, operation.current_task"
+
+	// the query
+	sql := "SELECT " + fieldList + " FROM `operation` AS operation WHERE process=? ORDER BY operation.id DESC"
+
+	rows, err := wisply.Database.Query(sql, process.Action.ID)
+	if err != nil {
+		fmt.Println("Problem when getting all the operations of the process: ")
+		fmt.Println(err)
+	}
+
+	var (
+		list                     []*Operation
+		ID, currentTaskID        int
+		start, end               int64
+		isRunning                bool
+		content, isRunningString string
+		task                     *Task
+	)
+
+	for rows.Next() {
+		rows.Scan(&ID, &content, &start, &end, &isRunningString, &currentTaskID)
+
+		isRunning, err = strconv.ParseBool(isRunningString)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		if isRunning {
+			task = NewTask(currentTaskID)
+		}
+
+		list = append(list, &Operation{
+			CurrentTask: task,
+			Action: &Action{
+				ID:        ID,
+				IsRunning: isRunning,
+				Start:     start,
+				End:       end,
+				Content:   content,
+			},
+		})
+	}
+	return list
+}

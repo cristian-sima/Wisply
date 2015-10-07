@@ -9,8 +9,8 @@ type Actioner interface {
 // Action is the most basic type. It has a starting and ending timestamps and a content
 type Action struct {
 	Actioner
-	ID      int
-	Start   string
-	End     string
-	Content string
+	ID      int    `json:"ID"`
+	Start   string `json:"Start"`
+	End     string `json:"End"`
+	Content string `json:"Content"`
 }

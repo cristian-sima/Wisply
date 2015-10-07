@@ -8,6 +8,9 @@
   </div>
   <div class="panel-body">
     <div class="table-responsive">
+      <span class="text-warning">
+										<span class="glyphicon glyphicon-warning-sign"></span> This log is not live updated.
+									</span>
       <table id="list-accounts" class="table table-hover table-bordered table-condensed">
         <thead>
           <tr>

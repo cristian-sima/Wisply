@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
@@ -11,9 +12,10 @@ import (
 // - constructors
 
 // NewAction creates a new action
-func NewAction() *Action {
+func NewAction(isRunning bool) *Action {
 	return &Action{
-		Start: getCurrentTimestamp(),
+		IsRunning: isRunning,
+		Start:     getCurrentTimestamp(),
 	}
 }
 
@@ -22,7 +24,7 @@ func NewTask(operation Operation) *Task {
 	task := &Task{
 		OperationID: operation.ID,
 		status:      "normal",
-		Action:      NewAction(),
+		Action:      NewAction(true),
 	}
 	columns := "(`start`, `operation`, `status`)"
 	values := "(?, ?, ?)"
@@ -37,9 +39,9 @@ func NewTask(operation Operation) *Task {
 
 	// find its id
 
-	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=?"
+	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(task.Start, task.OperationID, task.status).Scan(&task.ID)
+	query.QueryRow(task.Start, task.OperationID, task.status, strconv.FormatBool(task.IsRunning)).Scan(&task.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the task id:")
@@ -52,7 +54,7 @@ func NewTask(operation Operation) *Task {
 // NewOperation creates a new operation
 func NewOperation(process Process) *Operation {
 	operation := &Operation{
-		Action:    NewAction(),
+		Action:    NewAction(true),
 		ProcessID: process.ID,
 	}
 	columns := "(`start`, `process`)"
@@ -69,9 +71,9 @@ func NewOperation(process Process) *Operation {
 	query.Exec(operation.Start, 0)
 
 	// find its ID
-	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=?"
+	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(operation.Start, operation.ProcessID).Scan(&operation.ID)
+	query.QueryRow(operation.Start, operation.ProcessID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the operation id:")
@@ -87,7 +89,7 @@ func NewProcess(repositoryID, content string) *Process {
 	local, _ := repository.NewRepository(repositoryID)
 
 	process := &Process{
-		Action:     NewAction(),
+		Action:     NewAction(true),
 		Repository: local,
 	}
 	// insert
@@ -104,12 +106,12 @@ func NewProcess(repositoryID, content string) *Process {
 		fmt.Println(err)
 	}
 
-	query.Exec(content, process.Start, local.ID, "1")
+	query.Exec(content, process.Start, local.ID, strconv.FormatBool(process.IsRunning))
 
 	// find its ID
 	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND repository=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow("harvesting", process.Start, local.ID, "1").Scan(&process.ID)
+	query.QueryRow("harvesting", process.Start, local.ID, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of process:")

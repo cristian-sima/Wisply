@@ -21,13 +21,14 @@ func (operation *Operation) Finish(content string) {
 
 	operation.End = getCurrentTimestamp()
 	operation.Content = content
+	operation.IsRunning = false
 
-	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?,content=? WHERE id=?")
+	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?, content=?, is_running=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the operation: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(operation.End, content, strconv.Itoa(operation.ID))
+	_, err = stmt.Exec(operation.End, content, strconv.FormatBool(operation.IsRunning), strconv.Itoa(operation.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the operation: ")
 		fmt.Println(err)

@@ -42,14 +42,15 @@ func (task *Task) Change(status, content string) {
 func (task *Task) Finish(status, content string) {
 
 	task.Change(status, content)
+	task.IsRunning = false
 	task.End = getCurrentTimestamp()
 
-	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?,content=?,status=? WHERE id=?")
+	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?, content=?, status=?, is_running=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the task: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(task.End, content, status, strconv.Itoa(task.ID))
+	_, err = stmt.Exec(task.End, content, status, strconv.FormatBool(task.IsRunning), strconv.Itoa(task.ID))
 	if err != nil {
 		fmt.Println("Error 2 when updating the task: ")
 		fmt.Println(err)

@@ -11,7 +11,7 @@
         This page is not live updated.
 			</span>
       <div class="table-responsive">
-      <table id="list-processes" class="table table-hover table-bordered table-condensed">
+      <table id="list-processes" class="table table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>
@@ -41,7 +41,13 @@
             <!-- end state -->
             <td class="col-md-3">{{ $element.GetStartDate }}</td>
             <td class="col-md-3">{{ $element.GetEndDate }}</td>
-            <td class="col-md-1">{{ $element.GetDuration }}</td>
+            <td class="col-md-1">
+              {{ if eq $element.GetDuration "..." }}
+              <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+              {{ else }}
+              {{ $element.GetDuration }}
+              {{ end }}
+            </td>
             <td class="col-md-1">
               {{ if $element.GetCurrentOperation }}
               <a href="/admin/log/process/{{$element.ID}}/operation/{{$element.GetCurrentOperation.ID}}">{{ $element.GetCurrentOperation.Content }}</a>

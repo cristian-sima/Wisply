@@ -7,10 +7,12 @@
     </ul>
   </div>
   <div class="panel-body">
-      <span class="text-warning">
-				<span class="glyphicon glyphicon-warning-sign"></span>
-        This page is not live updated.
-			</span>
+      <div>
+          <span class="text-warning">
+  				<span class="glyphicon glyphicon-warning-sign"></span>
+          This page is not live updated.
+  			</span>
+      </div>
       <h2>Process #{{ .process.Action.ID }}</h2>
       <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-4">
@@ -54,7 +56,7 @@
                         </td>
                         <td>
                           <strong>
-                            {{ if .operation }}
+                            {{ if .process.Action.IsRunning }}
                             <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
                             {{ else }}
                             <span class="glyphicon glyphicon-time"></span> {{ .process.GetDuration }}
@@ -66,8 +68,13 @@
             </table>
         </div>
       </div>
+    <div>
+      <a href="/admin/log/process/{{ .process.Action.ID }}/entire-log">See entire log</a> <br />
+      <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+    </div>
+    <br />
     <div class="table-responsive">
-      <table id="list-operations" class="table table-hover table-bordered table-condensed">
+      <table id="list-operations" class="table table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>
@@ -95,12 +102,17 @@
             <!-- end state -->
             <td class="col-md-3">{{ $operation.GetStartDate }}</td>
             <td class="col-md-3">{{ $operation.GetEndDate }}</td>
-            <td class="col-md-2">{{ $operation.GetDuration }}</td>
+            <td class="col-md-2">
+              {{ if eq $operation.GetDuration "..." }}
+              <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+              {{ else }}
+              {{ $operation.GetDuration }}
+              {{ end }}
+            </td>
           </tr>
           {{end }}
         </tbody>
       </table>
     </div>
-    <div><a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a></div>
   </div>
 </div>

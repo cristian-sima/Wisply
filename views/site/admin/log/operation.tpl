@@ -42,8 +42,8 @@
                       </td>
                       <td>
                         <strong>
-                          {{ if .task }}
-                          <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                          {{ if .operation.Action.IsRunning }}
+                          <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
                           {{ else }}
                           <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
                           {{ end }}
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="table-responsive">
-      <table id="list-tasks" class="table table-hover table-bordered table-condensed">
+      <table id="list-tasks" class="table table-bordered table-condensed">
         <thead>
           <tr>
             <th class="hidden-xs">#</th>
@@ -73,16 +73,22 @@
             <td class="col-md-1">{{ $task.Action.Content }}</td>
             <!-- start state -->
             <td class="col-md-1">
-            {{ if $task.Action.IsRunning }}
-            <span class="text-warning">Working</span>
-            {{ else }}
-            Finished
-            {{ end }}
+              {{ if $task.Action.IsRunning }}
+              <span class="text-warning">Working</span>
+              {{ else }}
+              Finished
+              {{ end }}
             </td>
             <!-- end state -->
             <td class="col-md-2">{{ $task.GetStartDate }}</td>
             <td class="col-md-2">{{ $task.GetEndDate }}</td>
-            <td class="col-md-2">{{ $task.GetDuration }}</td>
+            <td class="col-md-2">
+              {{ if eq $task.GetDuration "..." }}
+              <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+              {{ else }}
+              {{ $task.GetDuration }}
+              {{ end }}
+            </td>
             <td class="col-md-2">{{ $task.Explication }}</td>
           </tr>
           {{end }}

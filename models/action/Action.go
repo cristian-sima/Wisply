@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -50,6 +51,12 @@ func (action *Action) GetDuration() string {
 	endTime = time.Unix(action.End, 0)
 
 	duration = endTime.Sub(startTime).String()
+
+	// make it nice
+
+	duration = strings.Replace(duration, "h", " h, ", -1)
+	duration = strings.Replace(duration, "m", " min, ", -1)
+	duration = strings.Replace(duration, "s", " sec", -1)
 
 	return duration
 }

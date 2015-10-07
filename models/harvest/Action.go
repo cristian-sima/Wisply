@@ -6,6 +6,7 @@ import (
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Actioner ... defines the set of methods to be implemented by an action
@@ -77,7 +78,7 @@ func (task *Task) Finish(status, content string) {
 // It is coordonated by a process
 type Operation struct {
 	*Action
-	Process     Process
+	ProcessID   int
 	CurrentTask Task
 }
 
@@ -121,13 +122,27 @@ func newTask(operation Operation) *Task {
 		fmt.Println("Error when creating the task:")
 		fmt.Println(err)
 	}
+
 	query.Exec(task.start, operation.ID, task.GetStatus())
+
+	// find its id
+
+	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND status=?"
+	query, err = wisply.Database.Prepare(sql)
+	query.QueryRow(task.start, task.OperationID, task.status).Scan(&task.ID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the task id:")
+		fmt.Println(err)
+	}
+
 	return task
 }
 
 func newOperation(process Process) *Operation {
 	operation := &Operation{
-		Action: newAction(),
+		Action:    newAction(),
+		ProcessID: process.ID,
 	}
 	columns := "(start`, `process`)"
 	values := "(?, ?, ?)"
@@ -142,7 +157,72 @@ func newOperation(process Process) *Operation {
 
 	query.Exec(operation.start, 0)
 
+	// find its ID
+	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=?"
+	query, err = wisply.Database.Prepare(sql)
+	query.QueryRow(operation.start, operation.ProcessID).Scan(&operation.ID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the operation id:")
+		fmt.Println(err)
+	}
+
 	return operation
+}
+
+// NewProcess creates a new harvest process
+func NewProcess(ID string, controller WisplyController) *Process {
+	var remote RemoteRepositoryInterface
+	local, _ := repository.NewRepository(ID)
+
+	switch local.Category {
+	case "EPrints":
+		{
+			remote = &EPrintsRepository{
+				URL: local.URL,
+			}
+		}
+	}
+	db := &databaseManager{}
+
+	process := &Process{
+		Action:     newAction(),
+		local:      local,
+		remote:     remote,
+		Controller: controller,
+		db:         db,
+		Actions:    make(map[string]*Action2),
+	}
+	// process.SetName("Harvest")
+	db.SetManager(process)
+	remote.SetManager(process)
+
+	// insert
+
+	columns := "(content`, `repository`, `start`, `is_running`)"
+	values := "(?, ?, ?, ?)"
+	sql := "INSERT INTO `process` " + columns + " VALUES " + values
+
+	query, err := wisply.Database.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when creating the process:")
+		fmt.Println(err)
+	}
+
+	query.Exec("harvesting", local.ID, process.start, "1")
+
+	// find its ID
+	sql = "SELECT `id` FROM `process` WHERE start=? AND repository=? AND start=? AND is_running=?"
+	query, err = wisply.Database.Prepare(sql)
+	query.QueryRow("harvesting", local.ID, process.start, "1").Scan(&process.ID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the ID of process:")
+		fmt.Println(err)
+	}
+
+	return process
 }
 
 func getCurrentTimestamp() string {

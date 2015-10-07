@@ -8,7 +8,8 @@ import (
 
 // Process is a link between controller and repository
 type Process struct {
-	WisplyProcess
+	*Action
+	ID             int
 	remote         RemoteRepositoryInterface
 	local          *repository.Repository
 	db             *databaseManager
@@ -231,33 +232,5 @@ func (process *Process) record(message string) {
 		Value: message,
 		Name:  "event-notice",
 	})
-	process.operation.record(message, process.local.ID)
-}
-
-// NewProcess creates a new harvest process
-func NewProcess(ID string, controller WisplyController) *Process {
-	var remote RemoteRepositoryInterface
-	local, _ := repository.NewRepository(ID)
-
-	switch local.Category {
-	case "EPrints":
-		{
-			remote = &EPrintsRepository{
-				URL: local.URL,
-			}
-		}
-	}
-	db := &databaseManager{}
-
-	process := &Process{
-		local:      local,
-		remote:     remote,
-		Controller: controller,
-		db:         db,
-		Actions:    make(map[string]*Action2),
-	}
-	process.SetName("Harvest")
-	db.SetManager(process)
-	remote.SetManager(process)
-	return process
+	//process.operation.record(message, process.local.ID)
 }

@@ -44,7 +44,6 @@ func CreateProcess(repositoryID, content string) *Process {
 		fmt.Println(err)
 	}
 
-	fmt.Println(process.ID)
 	return process
 }
 

@@ -54,7 +54,6 @@ func GetAllProcesses() []*Process {
 		}
 
 		if isRunning {
-			fmt.Println(repName)
 			operation = NewOperation(currentOperationID)
 		}
 

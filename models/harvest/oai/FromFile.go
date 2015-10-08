@@ -1,4 +1,3 @@
-// Package oai Data structure for the OAI-PMH protocol request:
 package oai
 
 import (

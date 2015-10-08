@@ -6,6 +6,7 @@ package oai
 // Each description container must be accompanied by the URL of an XML schema describing the structure of the description container.
 //
 // http://www.openarchives.org/OAI/openarchivesprotocol.html#Identify
+//
 type Description struct {
 	Body []byte `xml:",innerxml"`
 }

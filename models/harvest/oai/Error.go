@@ -17,6 +17,7 @@ package oai
 // - noSetHierarchy	The repository does not support sets.
 //
 // http://www.openarchives.org/OAI/openarchivesprotocol.html#ErrorConditions
+//
 type Error struct {
 	Code    string `xml:"code,attr"`
 	Message string `xml:",chardata"`

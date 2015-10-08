@@ -2,7 +2,6 @@ package harvest
 
 import (
 	"strconv"
-	"time"
 
 	action "github.com/cristian-sima/Wisply/models/action"
 	repository "github.com/cristian-sima/Wisply/models/repository"
@@ -21,30 +20,27 @@ type Process struct {
 
 // Start starts the process
 func (process *Process) Start() {
-	operation := process.Process.CreateOperation("Testing")
-	process.ChangeCurrentOperation(operation)
-	task1 := operation.CreateTask("Request 1")
-	time.Sleep(time.Second * 1)
-	task1.Finish("It was ok")
-	task2 := operation.CreateTask("Request 2")
-	time.Sleep(time.Second * 1)
-	task3 := operation.CreateTask("Request 3")
-	time.Sleep(time.Second * 1)
-	task4 := operation.CreateTask("Request 4")
-	task2.CustomFinish("danger", "Timeout expired")
-	time.Sleep(time.Second * 1)
-	task3.CustomFinish("warning", "Ignored")
-	time.Sleep(time.Second * 20)
-	task4.CustomFinish("success", "Success")
-	operation.Finish()
-	process.Finish()
-}
+	// operation := process.Process.CreateOperation("Testing")
+	// process.ChangeCurrentOperation(operation)
+	// task1 := operation.CreateTask("Request 1")
+	// time.Sleep(time.Second * 1)
+	// task1.Finish("It was ok")
+	// task2 := operation.CreateTask("Request 2")
+	// time.Sleep(time.Second * 1)
+	// task3 := operation.CreateTask("Request 3")
+	// time.Sleep(time.Second * 1)
+	// task4 := operation.CreateTask("Request 4")
+	// task2.CustomFinish("danger", "Timeout expired")
+	// time.Sleep(time.Second * 1)
+	// task3.CustomFinish("warning", "Ignored")
+	// time.Sleep(time.Second * 20)
+	// task4.CustomFinish("success", "Success")
+	// operation.Finish()
+	// process.Finish()
 
-func (process *Process) startVerification() {
-	process.record("I start the harvesting process")
-	process.changeLocalStatus("verifying")
-	process.setCurrentAction("verifying")
-	process.remote.Validate()
+	verification := newVerificationOperation(process)
+	process.ChangeCurrentOperation(verification.GetOperation())
+	verification.Start()
 }
 
 // Notify is called by a harvest repository with a message
@@ -54,12 +50,12 @@ func (process *Process) Notify(message *Message) {
 		{
 			if message.Value == "failed" {
 				process.record("The verification failed")
-				process.changeLocalStatus("verification-failed")
+				process.ChangeLocalStatus("verification-failed")
 				process.notifyController(message)
 				process.End()
 			} else {
 				process.record("The validation passed")
-				process.changeLocalStatus("verified")
+				process.ChangeLocalStatus("verified")
 				process.startIdentification()
 			}
 			break
@@ -69,7 +65,7 @@ func (process *Process) Notify(message *Message) {
 
 func (process *Process) startIdentification() {
 	process.record("I harvest the identification")
-	process.changeLocalStatus("initializing")
+	process.ChangeLocalStatus("initializing")
 	process.setCurrentAction("initializing")
 	process.remote.HarvestIdentification()
 }
@@ -78,7 +74,7 @@ func (process *Process) startIdentification() {
 func (process *Process) SaveIdentification(result IdentificationResulter) {
 	process.record("I received the identification.")
 	if !result.IsOk() {
-		process.changeLocalStatus("verification-failed")
+		process.ChangeLocalStatus("verification-failed")
 		process.record("Problems with identification")
 	} else {
 		process.notifyController(&Message{
@@ -86,7 +82,7 @@ func (process *Process) SaveIdentification(result IdentificationResulter) {
 			Value: result.GetData(),
 		})
 		process.record("The identification is ok")
-		process.changeLocalStatus("ok")
+		process.ChangeLocalStatus("ok")
 		process.db.InsertIdentity(result.GetData())
 		process.Identification = result.GetData()
 		process.harvestFormarts()
@@ -94,7 +90,7 @@ func (process *Process) SaveIdentification(result IdentificationResulter) {
 }
 
 func (process *Process) harvestFormarts() {
-	process.changeLocalStatus("updating")
+	process.ChangeLocalStatus("updating")
 	process.setCurrentAction("harvesting")
 	process.createAction("formats")
 	process.remote.HarvestFormats()
@@ -222,7 +218,8 @@ func (process *Process) End() {
 	})
 }
 
-func (process *Process) changeLocalStatus(newStatus string) {
+// ChangeLocalStatus changes the status of local repository
+func (process *Process) ChangeLocalStatus(newStatus string) {
 	process.Repository.ModifyStatus(newStatus)
 	process.notifyController(&Message{
 		Name:  "status-changed",

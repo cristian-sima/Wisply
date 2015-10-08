@@ -1,5 +1,17 @@
 package oai
 
+// ListIdentifiers is an abbreviated verb form of ListRecords, retrieving only headers rather than records.
+//
+//  Optional arguments permit selective harvesting of headers based on set membership and/or datestamp.
+//  Depending on the repository's support for deletions, a returned header may have a status attribute of "deleted" if a record matching the arguments specified in the request has been deleted.
+//
+// http://www.openarchives.org/OAI/openarchivesprotocol.html#ListIdentifiers
+//
+type ListIdentifiers struct {
+	Headers         []Header `xml:"header"`
+	ResumptionToken string   `xml:"resumptionToken"`
+}
+
 // Header contains the unique identifier of the item and properties necessary for selective harvesting.
 //
 // The header consists of the following parts:

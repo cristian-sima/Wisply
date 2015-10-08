@@ -226,7 +226,7 @@ func (repository *EPrintsRepository) HarvestRecords() {
 }
 
 func (repository *EPrintsRepository) notifyManager(message *Message) {
-	repository.Manager.Notify(message)
+	//repository.Manager.Notify(message)
 }
 
 func (repository *EPrintsRepository) log(message interface{}) {

@@ -16,6 +16,26 @@ type Process struct {
 	currentOperation *Operation
 }
 
+// Example:
+// process = newProcess...
+// operation := process.CreateOperation("Testing")
+// process.ChangeCurrentOperation(operation)
+// task1 := operation.CreateTask("Request 1")
+// time.Sleep(time.Second * 1)
+// task1.Finish("It was ok")
+// task2 := operation.CreateTask("Request 2")
+// time.Sleep(time.Second * 1)
+// task3 := operation.CreateTask("Request 3")
+// time.Sleep(time.Second * 1)
+// task4 := operation.CreateTask("Request 4")
+// task2.CustomFinish("danger", "Timeout expired")
+// time.Sleep(time.Second * 1)
+// task3.CustomFinish("warning", "Ignored")
+// time.Sleep(time.Second * 20)
+// task4.CustomFinish("success", "Success")
+// operation.Finish()
+// process.Finish()
+
 // Finish records in the database that the process is finished.
 func (process *Process) Finish() {
 	process.Action.Finish()

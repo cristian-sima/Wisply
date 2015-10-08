@@ -20,47 +20,21 @@ type Process struct {
 
 // Start starts the process
 func (process *Process) Start() {
-	// operation := process.Process.CreateOperation("Testing")
-	// process.ChangeCurrentOperation(operation)
-	// task1 := operation.CreateTask("Request 1")
-	// time.Sleep(time.Second * 1)
-	// task1.Finish("It was ok")
-	// task2 := operation.CreateTask("Request 2")
-	// time.Sleep(time.Second * 1)
-	// task3 := operation.CreateTask("Request 3")
-	// time.Sleep(time.Second * 1)
-	// task4 := operation.CreateTask("Request 4")
-	// task2.CustomFinish("danger", "Timeout expired")
-	// time.Sleep(time.Second * 1)
-	// task3.CustomFinish("warning", "Ignored")
-	// time.Sleep(time.Second * 20)
-	// task4.CustomFinish("success", "Success")
-	// operation.Finish()
-	// process.Finish()
-
-	verification := newVerificationOperation(process)
-	process.ChangeCurrentOperation(verification.GetOperation())
-	verification.Start()
+	process.run()
+	process.validate()
 }
 
-// Notify is called by a harvest repository with a message
-func (process *Process) Notify(message *Message) {
-	switch message.Name {
-	case "verification-finished":
-		{
-			if message.Value == "failed" {
-				process.record("The verification failed")
-				process.ChangeLocalStatus("verification-failed")
-				process.notifyController(message)
-				process.End()
-			} else {
-				process.record("The validation passed")
-				process.ChangeLocalStatus("verified")
-				process.startIdentification()
-			}
-			break
-		}
-	}
+func (process *Process) run() {
+}
+
+func (process *Process) validate() {
+	verification := newVerificationOperation(process)
+
+	// ovewrite
+	// todo method to inform clients
+	//
+	process.ChangeCurrentOperation(verification)
+	verification.Start()
 }
 
 func (process *Process) startIdentification() {
@@ -188,6 +162,12 @@ func (process *Process) updateAction(newCount int, name string) {
 	action := process.Actions[name]
 	action.Update(newCount)
 	process.notifyAction(action, "update")
+}
+
+// ChangeCurrentOperation informs the controller about the change and it calls its father
+func (process *Process) ChangeCurrentOperation(operation Operationer) {
+	// TODO notify the controller
+	process.Process.ChangeCurrentOperation(operation.GetOperation())
 }
 
 func (process *Process) notifyAction(action *Action2, operation string) {

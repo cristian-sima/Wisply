@@ -122,6 +122,7 @@ func init() {
 			),
 			beego.NSRouter(":process/history", &admin.LogController{}, "*:ShowProgressHistory"),
 			beego.NSRouter(":process/advance-options", &admin.LogController{}, "*:ShowAdvanceOptions"),
+			beego.NSRouter("/delete/:process", &admin.LogController{}, "POST:DeleteProcess"),
 		),
 	)
 

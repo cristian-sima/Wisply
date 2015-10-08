@@ -14,10 +14,11 @@
           <h2>Delete</h2>
           <div class="well">
             Please note that the process can not be recovered.
-            <a data-id="" data-name="" href="#" class="btn btn-danger deleteProcessButton">Delete process from Wisply</a>
+            <a data-id="{{ .process.Action.ID }}" href="#" class="btn btn-danger deleteProcessButton">Delete process from Wisply</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script src="/static/js/admin/log/advance.js"></script>

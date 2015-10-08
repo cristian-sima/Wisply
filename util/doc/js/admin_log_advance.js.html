@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DecisionManager</title>
+    <title>JSDoc: Source: admin/log/advance.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,400 +17,145 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DecisionManager</h1>
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>
-            <span class="ancestors"><a href="HarvestProcess.html">HarvestProcess</a>.</span>DecisionManager</h2>
-        
-            <div class="class-description">It decides what to do with the messages from the server</div>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="DecisionManager"><span class="type-signature"></span>new DecisionManager<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    The constructor does nothing
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line414">line 414</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".decide"><span class="type-signature">(static) </span>decide<span class="signature">(message)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It is called when a message has arrived from the server. It decides what to call
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The message from the server</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line428">line 428</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".isGoogMessage"><span class="type-signature">(static) </span>isGoogMessage<span class="signature">(message)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It checks that a message is for this process. It is if it contains a "Repository" field and the "Repository" field is the same as the current repository ID
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The message from server</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line471">line 471</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">Source: admin/log/advance.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global jQuery,$, wisply */
+/**
+ * @file Encapsulates the functionality for managing the processes
+ * @author Cristian Sima
+ */
+/**
+ * @namespace Processes
+ */
+var Processes = function() {
+	'use strict';
+
+	/**
+	 * The constructor activates the listeners
+	 * @class Manager
+	 * @memberof Processes
+	 * @classdesc It encapsulets the functions for processes
+	 */
+	var Manager = function Manager() {};
+	/**
+	 * @memberof Manager
+	 */
+	Manager.prototype =
+		/** @lends Processes.Manager */
+		{
+			/**
+			 * It activates the listener for all delete buttons
+			 */
+			init: function() {
+				$(".deleteProcessButton").click(confirmDelete);
+			},
+			/**
+			 * It requests the user to confirm
+			 * @param  {number} ID  The ID of the process
+			 */
+			confirmDelete: function(ID) {
+				var msg = this.getDialogMessage(ID);
+				wisply.message.dialog(msg);
+			},
+			/**
+			 * It returns the arguements of the confimation message
+			 * @param  {number} ID      The ID of the process
+			 * @return {object}         The arguements of the confimation message
+			 */
+			getDialogMessage: function(ID) {
+				var buttons,
+					cancelButton,
+					msg,
+					mainButton;
+				cancelButton = {
+					label: "Cancel",
+					className: "btn-default",
+					callback: function() {
+						this.modal('hide');
+					}
+				};
+				mainButton = {
+					label: "Delete",
+					className: "btn-primary",
+					callback: function() {
+						wisply.processManager.delete(ID);
+					}
+				};
+				buttons = {
+					"cancel": cancelButton,
+					"main": mainButton
+				};
+				msg = {
+					title: "Please confirm!",
+					message: "The process will be permanently removed. Are you sure?",
+					onEscape: true,
+					buttons: buttons
+				};
+				return msg;
+			},
+			/**
+			 * It deletes the process
+			 * @param  {number} ID The ID of the process
+			 */
+			delete: function(ID) {
+				var request,
+					successCallback,
+					errorCallback;
+				/**
+				 * It is called when the deletion has been done. It reloads the page in 2 seconds
+				 * @ignore
+				 */
+				successCallback = function() {
+					wisply.message.showSuccess("The process has been removed! Refreshing page...");
+					window.location="/admin/log"
+				};
+				/**
+				 * It is called when there has been problems
+				 * @ignore
+				 */
+				errorCallback = function() {
+					wisply.message.showError("There was a problem with your request!");
+				};
+				request = {
+					"url": '/admin/log/process/delete/' + ID,
+					"success": successCallback,
+					"error": errorCallback
+				};
+				wisply.executePostAjax(request);
+			}
+		};
+	/**
+	 * It is called when the user clicks the delete button. It requests the user to confirm
+	 * @param [event] event The event which is generated
+	 */
+	function confirmDelete(event) {
+		event.preventDefault();
+		var instance,
+			id;
+		instance = $(this);
+		id = instance.data("id");
+		wisply.processManager.confirmDelete(id);
+	}
+	return {
+		Manager: Manager,
+	};
+};
+jQuery(document).ready(function() {
+	"use strict";
+	var module = new Processes();
+	wisply.processManager = new module.Manager();
+	wisply.processManager.init();
+});
+</code></pre>
+        </article>
+    </section>
 
 
 
@@ -424,7 +169,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Oct 08 2015 01:44:58 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Oct 08 2015 01:44:56 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

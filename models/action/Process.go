@@ -129,3 +129,36 @@ func (process *Process) GetOperations() []*Operation {
 	}
 	return list
 }
+
+// Delete deletes the process along with the tasks and operations
+func (process *Process) Delete() {
+
+	sql := "DELETE FROM `process` WHERE id=?"
+	query, err := wisply.Database.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 1 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec(process.Action.ID)
+
+	// operations
+
+	sql = "DELETE FROM `operation` WHERE process=?"
+	query, err = wisply.Database.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 2 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec(process.Action.ID)
+
+	// tasks
+
+	sql = "DELETE FROM `task` WHERE process=?"
+	query, err = wisply.Database.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 3 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec(process.Action.ID)
+
+}

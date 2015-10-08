@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DecisionManager</title>
+    <title>JSDoc: Namespace: Processes</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DecisionManager</h1>
+    <h1 class="page-title">Namespace: Processes</h1>
 
     
 
@@ -28,10 +28,7 @@
 
 <header>
     
-        <h2>
-            <span class="ancestors"><a href="HarvestProcess.html">HarvestProcess</a>.</span>DecisionManager</h2>
-        
-            <div class="class-description">It decides what to do with the messages from the server</div>
+        <h2>Processes</h2>
         
     
 </header>
@@ -41,30 +38,7 @@
     
         
 
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="DecisionManager"><span class="type-signature"></span>new DecisionManager<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    The constructor does nothing
-</div>
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 <dl class="details">
@@ -96,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line414">line 414</a>
+        <a href="admin_log_advance.js.html">admin/log/advance.js</a>, <a href="admin_log_advance.js.html#line6">line 6</a>
     </li></ul></dd>
     
 
@@ -108,20 +82,7 @@
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 
@@ -129,6 +90,13 @@
 
     
 
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="Processes.Manager.html">Manager</a></dt>
+            <dd></dd>
+        </dl>
     
 
      
@@ -145,14 +113,14 @@
 
     
 
-    <h4 class="name" id=".decide"><span class="type-signature">(static) </span>decide<span class="signature">(message)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~confirmDelete"><span class="type-signature">(inner) </span>confirmDelete<span class="signature">(event<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It is called when a message has arrived from the server. It decides what to call
+    It is called when the user clicks the delete button. It requests the user to confirm
 </div>
 
 
@@ -176,6 +144,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -188,23 +158,28 @@
 
         <tr>
             
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>event</code></td>
             
 
             <td class="type">
             
-                
-<span class="param-type">object</span>
-
-
-            
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">The message from the server</td>
+            <td class="description last">event The event which is generated</td>
         </tr>
 
     
@@ -245,138 +220,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line428">line 428</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".isGoogMessage"><span class="type-signature">(static) </span>isGoogMessage<span class="signature">(message)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It checks that a message is for this process. It is if it contains a "Repository" field and the "Repository" field is the same as the current repository ID
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The message from server</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_harvest_process.js.html">admin/harvest/process.js</a>, <a href="admin_harvest_process.js.html#line471">line 471</a>
+        <a href="admin_log_advance.js.html">admin/log/advance.js</a>, <a href="admin_log_advance.js.html#line110">line 110</a>
     </li></ul></dd>
     
 

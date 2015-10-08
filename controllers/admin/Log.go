@@ -27,6 +27,15 @@ func (controller *LogController) ShowAdvanceOptions() {
 	controller.TplNames = "site/admin/log/advance-options.tpl"
 }
 
+// DeleteProcess deletes the process
+func (controller *LogController) DeleteProcess() {
+	idString := controller.Ctx.Input.Param(":process")
+	ID, _ := strconv.Atoi(idString)
+	process := action.NewProcess(ID)
+	process.Delete()
+	controller.TplNames = "site/admin/log/advance-options.tpl"
+}
+
 // ShowProcess displays the log of a process
 func (controller *LogController) ShowProcess() {
 	idString := controller.Ctx.Input.Param(":process")

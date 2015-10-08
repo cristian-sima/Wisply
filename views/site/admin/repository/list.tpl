@@ -11,7 +11,6 @@
       <h4>Options</h4>
       <div class="btn-group-sm">
         <a href="/admin/repositories/add" class="btn btn-primary">Add repository</a>
-          <a href="/admin/harvest/event-log" class="btn btn-primary">Event log</a>
         <span id="harvest-history-button" class="btn btn-info hover">Live actions</span>
       </div>
     </section>

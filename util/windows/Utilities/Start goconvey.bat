@@ -1,10 +1,3 @@
-:: Shortcut to convey
-
-
-:: Change this to your path
 W:
-cd go-workspace/src/github.com/smartystreets/goconvey/
-
-
-:: Run convey
-go run goconvey.go
+cd go-workspace/src/github.com/cristian-sima/Wisply/models
+go run W:/go-workspace/src/github.com/smartystreets/goconvey/goconvey.go

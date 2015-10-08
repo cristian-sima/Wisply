@@ -25,21 +25,28 @@ func (process *Process) Start() {
 }
 
 func (process *Process) run() {
+	// TODO the select for
 }
 
 func (process *Process) validate() {
 	verification := newVerificationOperation(process)
-
-	// ovewrite
-	// todo method to inform clients
-	//
 	process.ChangeCurrentOperation(verification)
 	verification.Start()
 }
 
+// GetRepository returns the wisply repository
+func (process *Process) GetRepository() *repository.Repository {
+	return process.Repository
+}
+
+// GetRemote returns the interface of a remote repository
+func (process *Process) GetRemote() RemoteRepositoryInterface {
+	return process.remote
+}
+
 func (process *Process) startIdentification() {
 	process.record("I harvest the identification")
-	process.ChangeLocalStatus("initializing")
+	process.ChangeRepositoryStatus("initializing")
 	process.setCurrentAction("initializing")
 	process.remote.HarvestIdentification()
 }
@@ -48,7 +55,7 @@ func (process *Process) startIdentification() {
 func (process *Process) SaveIdentification(result IdentificationResulter) {
 	process.record("I received the identification.")
 	if !result.IsOk() {
-		process.ChangeLocalStatus("verification-failed")
+		process.ChangeRepositoryStatus("verification-failed")
 		process.record("Problems with identification")
 	} else {
 		process.notifyController(&Message{
@@ -56,7 +63,7 @@ func (process *Process) SaveIdentification(result IdentificationResulter) {
 			Value: result.GetData(),
 		})
 		process.record("The identification is ok")
-		process.ChangeLocalStatus("ok")
+		process.ChangeRepositoryStatus("ok")
 		process.db.InsertIdentity(result.GetData())
 		process.Identification = result.GetData()
 		process.harvestFormarts()
@@ -64,7 +71,7 @@ func (process *Process) SaveIdentification(result IdentificationResulter) {
 }
 
 func (process *Process) harvestFormarts() {
-	process.ChangeLocalStatus("updating")
+	process.ChangeRepositoryStatus("updating")
 	process.setCurrentAction("harvesting")
 	process.createAction("formats")
 	process.remote.HarvestFormats()
@@ -198,18 +205,13 @@ func (process *Process) End() {
 	})
 }
 
-// ChangeLocalStatus changes the status of local repository
-func (process *Process) ChangeLocalStatus(newStatus string) {
+// ChangeRepositoryStatus changes the status of local repository
+func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	process.Repository.ModifyStatus(newStatus)
 	process.notifyController(&Message{
 		Name:  "status-changed",
 		Value: newStatus,
 	})
-}
-
-// GetRepository returns the wisply repository
-func (process *Process) GetRepository() *repository.Repository {
-	return process.Repository
 }
 
 func (process *Process) notifyController(message *Message) {

@@ -3,7 +3,7 @@ package harvest
 import (
 	"fmt"
 
-	oai "github.com/cristian-sima/Wisply/models/oai"
+	oai "github.com/cristian-sima/Wisply/models/harvest/oai"
 )
 
 // EPrintsRepository encapsulates the functionality for a repository repository using OAI format

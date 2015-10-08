@@ -47,3 +47,22 @@ type RequestNode struct {
 	Set            string `xml:"set,attr"`
 	MetadataPrefix string `xml:"metadataPrefix,attr"`
 }
+
+// HasResumptionToken determines if the request has or not a ResumptionToken
+func (response *Response) HasResumptionToken() bool {
+	return response.ListIdentifiers.ResumptionToken != "" || response.ListRecords.ResumptionToken != ""
+}
+
+// GetResumptionToken returns the resumption token or an empty string if it does not have a token
+func (response *Response) GetResumptionToken() string {
+	var resumptionToken string
+
+	// First attempt to obtain a resumption token from a ListIdentifiers response
+	resumptionToken = response.ListIdentifiers.ResumptionToken
+
+	// Then attempt to obtain a resumption token from a ListRecords response
+	if resumptionToken == "" {
+		resumptionToken = response.ListRecords.ResumptionToken
+	}
+	return resumptionToken
+}

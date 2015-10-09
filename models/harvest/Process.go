@@ -53,6 +53,14 @@ func (process *Process) run() {
 					process.Finish()
 				}
 				break
+			case "Harvest Collections":
+				if message.GetValue() == "normal" {
+					go process.harvestRecords()
+				} else {
+					process.ChangeResult("danger")
+					process.Finish()
+				}
+				break
 			}
 		}
 	}
@@ -95,6 +103,14 @@ func (process *Process) harvestCollections() {
 	harvestingCollections := newHarvestingCollections(process)
 	process.ChangeCurrentOperation(harvestingCollections)
 	harvestingCollections.Start()
+}
+
+// RECORDS
+
+func (process *Process) harvestRecords() {
+	harvestingRecords := newHarvestingRecords(process)
+	process.ChangeCurrentOperation(harvestingRecords)
+	harvestingRecords.Start()
 }
 
 // --- end activity

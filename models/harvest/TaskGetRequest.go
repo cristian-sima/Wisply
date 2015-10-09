@@ -39,6 +39,16 @@ func (task *GetRequestTask) RequestCollections() ([]byte, error) {
 	return task.get(request)
 }
 
+// RequestRecords returns all the records of the repository
+func (task *GetRequestTask) RequestRecords() ([]byte, error) {
+	request := &oai.Request{
+		BaseURL:        task.repository.URL,
+		Verb:           "ListRecords",
+		MetadataPrefix: "oai_dc",
+	}
+	return task.get(request)
+}
+
 // get returns the content of the remote repository
 func (task *GetRequestTask) get(request *oai.Request) ([]byte, error) {
 

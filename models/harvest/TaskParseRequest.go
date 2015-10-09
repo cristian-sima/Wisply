@@ -1,6 +1,7 @@
 package harvest
 
 import (
+	"encoding/xml"
 	"strconv"
 
 	oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
@@ -101,7 +102,49 @@ func (task *ParseRequestTask) GetCollections(content []byte) ([]Collectioner, er
 	task.Finish(number + " has been identified")
 
 	return collections, nil
+}
 
+// GetRecords returns an array with records
+func (task *ParseRequestTask) GetRecords(content []byte) ([]Recorder, error) {
+
+	var records []Recorder
+
+	response, err := task.parse(content)
+	if err != nil {
+		return records, err
+	}
+
+	remoteRecords := response.ListRecords.Records
+
+	for _, record := range remoteRecords {
+
+		keys, _ := task.getKeys(record.Metadata.Body)
+
+		record := &OAIRecord{
+			Identifier: record.Header.Identifier,
+			Datestamp:  record.Header.DateStamp,
+			Keys:       keys,
+		}
+		records = append(records, record)
+	}
+
+	number := strconv.Itoa(len(records))
+	task.Finish(number + " records has been identified")
+
+	return records, nil
+}
+
+func (task *ParseRequestTask) getKeys(plainText []byte) (*Keys, error) {
+
+	keys := &Keys{}
+
+	// Unmarshall all the data
+	err := xml.Unmarshal(plainText, &keys)
+	if err != nil {
+		return keys, err
+	}
+
+	return keys, nil
 }
 
 // parse returns the content of the remote repository

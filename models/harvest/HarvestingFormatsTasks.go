@@ -15,7 +15,7 @@ type InsertFormatsTask struct {
 	repository *repository.Repository
 }
 
-// Insert inserts the identification details
+// Insert saves the formats
 func (task *InsertFormatsTask) Insert(formats []Formater) error {
 
 	err := task.clearTable()
@@ -50,7 +50,7 @@ func (task *InsertFormatsTask) clearTable() error {
 	query, err := database.Database.Prepare(sql)
 
 	if err != nil {
-		return errors.New("Error while trying to clear the repository_format table: <br />" + err.Error())
+		return errors.New("Error while trying to clear the `repository_format` table: <br />" + err.Error())
 	}
 
 	query.Exec(strconv.Itoa(ID))

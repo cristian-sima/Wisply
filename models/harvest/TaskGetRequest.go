@@ -1,19 +1,31 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+import (
+	"github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+	"github.com/cristian-sima/Wisply/models/repository"
+)
 
 // GetRequestTask represents a task for requesting something
 type GetRequestTask struct {
 	Tasker
 	*Task
+	repository *repository.Repository
 }
 
 // Identify returns the content for the Identify request
-func (task *GetRequestTask) Identify(URL string) ([]byte, error) {
-
+func (task *GetRequestTask) Identify() ([]byte, error) {
 	request := &oai.Request{
-		BaseURL: URL,
+		BaseURL: task.repository.URL,
 		Verb:    "Identify",
+	}
+	return task.get(request)
+}
+
+// RequestFormats returns all the formats of the repository
+func (task *GetRequestTask) RequestFormats() ([]byte, error) {
+	request := &oai.Request{
+		BaseURL: task.repository.URL,
+		Verb:    "Formats",
 	}
 	return task.get(request)
 }
@@ -33,11 +45,12 @@ func (task *GetRequestTask) get(request *oai.Request) ([]byte, error) {
 	return body, err
 }
 
-func newGetRequestTask(operationHarvest Operationer) *GetRequestTask {
+func newGetRequestTask(operationHarvest Operationer, repository *repository.Repository) *GetRequestTask {
 	return &GetRequestTask{
 		Task: &Task{
 			operation: operationHarvest,
 			Task:      newTask(operationHarvest.GetOperation(), "request verification"),
 		},
+		repository: repository,
 	}
 }

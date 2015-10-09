@@ -1,11 +1,11 @@
 package harvest
 
-// HarvestingFormats encapsulates the methods for harvesting the formats
+// HarvestingFormats is the operation which collects the formats from a remote repository
 type HarvestingFormats struct {
 	*Operation
 }
 
-// Start starts the action. Gets the page, get the content, clean database and store it
+// Start marks the local repository status of the local repository as updating and gets the formats
 func (operation *HarvestingFormats) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("updating")
@@ -15,58 +15,45 @@ func (operation *HarvestingFormats) Start() {
 func (operation *HarvestingFormats) tryToGet() {
 
 	// remote := operation.Process.GetRemote()
-	// repository := operation.process.GetRepository()
+	repository := operation.process.GetRepository()
 
 	// create a task to request the server
-	newGetRequestTask(operation)
+	task := newGetRequestTask(operation, repository)
 
-	// page, err := task.Identify(repository.URL)
-	//
-	// if err != nil {
-	// 	operation.identificationFailed()
-	// } else {
-	// 	operation.identificationSucceded(page)
-	// }
-	// create a task to check the result
+	content, err := task.RequestFormats()
+
+	if err != nil {
+		operation.harvestFailed()
+	} else {
+		operation.tryToParse(content)
+	}
 }
 
-// func (operation *HarvestingOperation) tryToParse(page []byte) {
-// 	task := newParseRequestTask(operation)
-// 	response, err := task.GetIdentification(page)
-// 	if err != nil {
-// 		operation.identificationFailed()
-// 	} else {
-// 		operation.insertIdentification(response)
-// 	}
-// }
-//
-// func (operation *HarvestingOperation) insertIdentification(result *Identificationer) {
-// 	task := newInsertIdentificationTask(operation, operation.GetRepository())
-// 	err := task.Insert(result)
-// 	if err != nil {
-// 		operation.identificationFailed()
-// 	} else {
-// 		operation.identificationSucceded()
-// 	}
-// }
-//
-// func (operation *HarvestingOperation) identificationFailed() {
-// 	operation.ChangeRepositoryStatus("verification-failed")
-// 	operation.ChangeResult("danger")
-// 	operation.Finish()
-// }
-//
-// func (operation *HarvestingOperation) identificationSucceded() {
-// 	operation.ChangeRepositoryStatus("ok")
-// 	operation.Finish()
-// }
-//
+func (operation *HarvestingFormats) tryToParse(page []byte) {
+	task := newParseRequestTask(operation)
+	_, err := task.GetFormats(page)
+	if err != nil {
+		operation.harvestFailed()
+	} else {
+		operation.harvestSuccess()
+	}
+}
 
+func (operation *HarvestingFormats) harvestFailed() {
+	operation.ChangeResult("danger")
+	operation.Finish()
+}
+
+func (operation *HarvestingFormats) harvestSuccess() {
+	operation.Finish()
+}
+
+// constructor
 func newHarvestingFormats(harvestProcess *Process) Operationer {
 	return &HarvestingFormats{
 		Operation: &Operation{
 			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvesting"),
+			Operation: newOperation(harvestProcess.Process, "Harvesting Formats"),
 		},
 	}
 }

@@ -22,9 +22,9 @@ func (operation *VerificationOperation) tryToGet() {
 	repository := operation.process.GetRepository()
 
 	// create a task to request the server
-	task := newGetRequestTask(operation)
+	task := newGetRequestTask(operation, repository)
 
-	page, err := task.Identify(repository.URL)
+	page, err := task.Identify()
 
 	if err != nil {
 		operation.verificationFailed()

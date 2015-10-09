@@ -33,6 +33,30 @@ func (task *ParseRequestTask) GetIdentification(content []byte) (*Identification
 	return &idenfitication, nil
 }
 
+// GetFormats returns a formater interface as a result of parsing the formats of the page
+func (task *ParseRequestTask) GetFormats(content []byte) ([]Formater, error) {
+
+	var formats []Formater
+
+	response, err := task.parse(content)
+	if err != nil {
+		return formats, err
+	}
+
+	remoteFormats := response.ListMetadataFormats.MetadataFormat
+
+	for _, format := range remoteFormats {
+		format := &OAIFormat{
+			Prefix:    format.MetadataPrefix,
+			Namespace: format.MetadataNamespace,
+			Schema:    format.Schema,
+		}
+		formats = append(formats, format)
+	}
+
+	return formats, nil
+}
+
 // Verify checks if the content is valid or not as a result of parsing
 func (task *ParseRequestTask) Verify(content []byte) error {
 	_, err := task.parse(content)

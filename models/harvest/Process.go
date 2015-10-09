@@ -179,16 +179,16 @@ func (process *Process) record(message string) {
 // CreateProcess creates a new harvest process
 func CreateProcess(ID string, controller WisplyController) *Process {
 	var remote RemoteRepositoryInterface
-	local, _ := repository.NewRepository(ID)
+	repository.NewRepository(ID)
 
-	switch local.Category {
-	case "EPrints":
-		{
-			remote = &EPrintsRepository{
-				URL: local.URL,
-			}
-		}
-	}
+	// switch local.Category {
+	// case "EPrints":
+	// 	{
+	// 		remote = &EPrintsRepository{
+	// 			URL: local.URL,
+	// 		}
+	// 	}
+	// }
 	db := &databaseManager{}
 
 	process := &Process{
@@ -200,7 +200,7 @@ func CreateProcess(ID string, controller WisplyController) *Process {
 	}
 	// process.SetName("Harvest")
 	db.SetManager(process)
-	remote.SetManager(process)
+	// remote.SetManager(process)
 
 	return process
 }

@@ -12,12 +12,29 @@ type VerificationOperation struct {
 func (operation *VerificationOperation) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("verifying")
+	operation.Activity()
 }
 
 // Activity creates a task to verify if the url is good
 func (operation *VerificationOperation) Activity() {
-	// create a task to request the server
 
+	// remote := operation.Process.GetRemote()
+	repository := operation.process.GetRepository()
+
+	// create a task to request the server
+	task := newGetRequestTask(operation)
+
+	page, err := task.Identify(repository.URL)
+
+	if err != nil {
+		operation.ChangeResult("danger")
+		operation.Finish()
+	} else {
+		// create a task to parse the response
+		task := newParseRequestTask(operation)
+
+		task.Parse(page)
+	}
 	// create a task to check the result
 }
 

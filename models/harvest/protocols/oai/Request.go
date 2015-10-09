@@ -46,7 +46,7 @@ func (request *Request) GetFullURL() string {
 }
 
 // Get an HTTP request, reads the body of the request and returns it
-func (request *Request) get() ([]byte, error) {
+func (request *Request) Get() ([]byte, error) {
 	var (
 		content []byte
 	)

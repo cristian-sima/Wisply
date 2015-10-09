@@ -33,5 +33,5 @@ func (operation *Operation) ChangeRepositoryStatus(status string) {
 }
 
 func newOperation(process *action.Process, content string) *action.Operation {
-	return &*process.CreateOperation("Verification")
+	return &*process.CreateOperation(content)
 }

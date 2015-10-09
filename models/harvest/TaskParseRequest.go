@@ -2,44 +2,13 @@ package harvest
 
 import oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
 
-// GetRequestTask represents a task for requesting something
-type GetRequestTask struct {
-	Tasker
-	*Task
-}
-
-// Identify returns the content for the Identify request
-func (task *GetRequestTask) Identify(URL string) ([]byte, error) {
-
-	request := &oai.Request{
-		BaseURL: URL,
-		Verb:    "Identify",
-	}
-	return task.get(request)
-}
-
-// get returns the content of the remote repository
-func (task *GetRequestTask) get(request *oai.Request) ([]byte, error) {
-
-	task.Content = "HTTP Request " + request.Verb
-	body, err := request.Get()
-
-	if err != nil {
-		task.ChangeResult("danger")
-		task.Finish(err.Error())
-	} else {
-		task.Finish("Success")
-	}
-	return body, err
-}
-
 // ParseRequestTask represents a task for parsing the request
 type ParseRequestTask struct {
 	Tasker
 	*Task
 }
 
-// GetIdentification returns the identification parsed of a page
+// GetIdentification returns an identificationer interface as a result of parsing the identification of the page
 func (task *ParseRequestTask) GetIdentification(content []byte) (*Identificationer, error) {
 
 	var idenfitication Identificationer
@@ -64,7 +33,7 @@ func (task *ParseRequestTask) GetIdentification(content []byte) (*Identification
 	return &idenfitication, nil
 }
 
-// Verify checks if the content is valid or not
+// Verify checks if the content is valid or not as a result of parsing
 func (task *ParseRequestTask) Verify(content []byte) error {
 	_, err := task.parse(content)
 	return err
@@ -88,15 +57,6 @@ func newParseRequestTask(operationHarvest Operationer) *ParseRequestTask {
 		Task: &Task{
 			operation: operationHarvest,
 			Task:      newTask(operationHarvest.GetOperation(), "Parse request content"),
-		},
-	}
-}
-
-func newGetRequestTask(operationHarvest Operationer) *GetRequestTask {
-	return &GetRequestTask{
-		Task: &Task{
-			operation: operationHarvest,
-			Task:      newTask(operationHarvest.GetOperation(), "request verification"),
 		},
 	}
 }

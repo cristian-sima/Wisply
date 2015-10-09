@@ -1,18 +1,18 @@
 package harvest
 
-// HarvestingOperation encapsulates the methods for harvesting things
-type HarvestingOperation struct {
+// HarvestingFormats encapsulates the methods for harvesting the formats
+type HarvestingFormats struct {
 	*Operation
 }
 
 // Start starts the action. Gets the page, get the content, clean database and store it
-func (operation *HarvestingOperation) Start() {
+func (operation *HarvestingFormats) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("updating")
-	// operation.tryToGet()
+	operation.tryToGet()
 }
 
-func (operation *HarvestingOperation) tryToGet() {
+func (operation *HarvestingFormats) tryToGet() {
 
 	// remote := operation.Process.GetRemote()
 	// repository := operation.process.GetRepository()
@@ -62,8 +62,8 @@ func (operation *HarvestingOperation) tryToGet() {
 // }
 //
 
-func newHarvestingOperation(harvestProcess *Process) Operationer {
-	return &HarvestingOperation{
+func newHarvestingFormats(harvestProcess *Process) Operationer {
+	return &HarvestingFormats{
 		Operation: &Operation{
 			process:   harvestProcess,
 			Operation: newOperation(harvestProcess.Process, "Harvesting"),

@@ -2,7 +2,6 @@ package harvest
 
 import (
 	"fmt"
-	"strconv"
 
 	action "github.com/cristian-sima/Wisply/models/action"
 	repository "github.com/cristian-sima/Wisply/models/repository"
@@ -42,7 +41,7 @@ func (process *Process) run() {
 				break
 			case "Identifying":
 				if message.GetValue() == "normal" {
-					go process.harvest()
+					go process.harvestFormats()
 				} else {
 					process.ChangeResult("danger")
 					process.Finish()
@@ -71,10 +70,10 @@ func (process *Process) identify() {
 
 // Stage 3
 
-func (process *Process) harvest() {
-	harvesting := newHarvestingOperation(process)
+func (process *Process) harvestFormats() {
+	harvesting := newHarvestingFormats(process)
 	process.ChangeCurrentOperation(harvesting)
-	// harvesting.Start()
+	harvesting.Start()
 }
 
 // --- end activity
@@ -95,74 +94,6 @@ func (process *Process) harvestFormarts() {
 	process.createAction("formats")
 	process.remote.HarvestFormats()
 
-}
-
-// SaveFormats retrives a format and saves it
-func (process *Process) SaveFormats(result FormatResulter) {
-	formats := result.GetData()
-	process.record("Format received")
-	process.updateAction(len(formats), "formats")
-	process.db.InsertFormats(formats)
-}
-
-// EndFormats it notifies the client the formats are finished
-func (process *Process) EndFormats() {
-	process.endAction("formats")
-	process.startHarvestingCollections()
-}
-
-// COLLECTIONS
-
-func (process *Process) startHarvestingCollections() {
-	process.record("I am harvasting collections")
-	process.setCurrentAction("harvesting")
-	process.createAction("collections")
-	process.db.ClearCollections()
-	process.remote.HarvestCollections()
-
-}
-
-// SaveCollections retrives the collections and stores them
-func (process *Process) SaveCollections(result CollectionResult) {
-	collections := result.GetData()
-	numberOfCollections := len(collections)
-	process.record(strconv.Itoa(numberOfCollections) + " collections received")
-	process.updateAction(numberOfCollections, "collections")
-	process.db.InsertCollections(collections)
-}
-
-// EndCollections it notifies the client the collections are finished
-func (process *Process) EndCollections() {
-	process.record("The collections harvesting is finished")
-	process.endAction("collections")
-	process.harvestRecords()
-}
-
-// Records
-
-func (process *Process) harvestRecords() {
-	process.record("I am harvasting records")
-	process.setCurrentAction("harvesting")
-	process.createAction("records")
-	process.db.ClearRecords()
-	process.remote.HarvestRecords()
-
-}
-
-// SaveRecords retrives the records and stores them
-func (process *Process) SaveRecords(result RecordResult) {
-	records := result.GetData()
-	numberOfRecords := len(records)
-	process.record(strconv.Itoa(numberOfRecords) + " records received. From [" + records[0].GetIdentifier() + "] until [" + records[numberOfRecords-1].GetIdentifier() + "].")
-	process.updateAction(numberOfRecords, "records")
-	process.db.InsertRecords(records)
-}
-
-// EndRecords it notifies the client the records are finished
-func (process *Process) EndRecords() {
-	process.record("The record harvesting is finished")
-	process.endAction("records")
-	process.End()
 }
 
 // ---

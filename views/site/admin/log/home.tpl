@@ -6,15 +6,21 @@
     </ul>
   </div>
   <div class="panel-body">
-      <div>
-        <span class="text-warning">
-  				<span class="glyphicon glyphicon-warning-sign"></span>
-          This page is not live updated.
-  			</span>
-        <br />
+    <br />
+    {{ $len := .processes | len }}
+    {{ if eq $len 0 }}
+      <div class="text-center">
+        There is no recorded process
       </div>
-      &nbsp;
-      <div class="table-responsive">
+    {{ else }}
+    <div>
+      <span class="text-warning">
+				<span class="glyphicon glyphicon-warning-sign"></span>
+        This page is not live updated.
+			</span>
+      <br />
+    </div>
+    <div class="table-responsive">
       <table id="list-processes" class="table table-bordered table-condensed">
         <thead>
           <tr>
@@ -64,6 +70,7 @@
         </tbody>
       </table>
     </div>
+    {{ end }}
     <div id="other-options">
       <a href="/admin/log/advance-options">Advance options</a>
     </div>

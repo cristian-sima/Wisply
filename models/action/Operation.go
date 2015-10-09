@@ -14,12 +14,29 @@ type Operation struct {
 	*Action
 	Process     *Process
 	CurrentTask *Task
+	conduit     chan Messager
 }
 
 // Finish finishes in a normal state the request
 func (operation *Operation) Finish() {
 	operation.Action.Finish()
 	operation.updateInDatabase()
+}
+
+// TellProcess tells to the process a message
+func (operation *Operation) TellProcess(message Message) {
+	fmt.Println("Trimit de la operatie la controller messajul: ")
+	fmt.Println(message)
+	msg := OperationMessage{
+		Message:   &message,
+		Operation: operation,
+	}
+	operation.Process.GetOperationConduit() <- &msg
+}
+
+// GetTaskConduit returns the channel for communicating with tasks
+func (operation *Operation) GetTaskConduit() chan Messager {
+	return operation.conduit
 }
 
 func (operation *Operation) updateInDatabase() {

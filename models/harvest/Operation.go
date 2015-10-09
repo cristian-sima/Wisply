@@ -24,7 +24,13 @@ func (operation *Operation) Start() {
 // Finish calls its finish parents method
 func (operation *Operation) Finish() {
 	operation.Operation.Finish()
-	// TODO notify the controller it is finishing
+
+	msg := action.Message{
+		Name:  "Finish",
+		Value: operation.GetResult(),
+	}
+
+	operation.TellProcess(msg)
 }
 
 // ChangeRepositoryStatus tells the controller to change the status of the local repository

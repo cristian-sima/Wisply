@@ -1,6 +1,7 @@
 package harvest
 
 import (
+	"fmt"
 	"strconv"
 
 	action "github.com/cristian-sima/Wisply/models/action"
@@ -20,19 +21,48 @@ type Process struct {
 
 // Start starts the process
 func (process *Process) Start() {
-	process.run()
-	process.validate()
+	go process.run()
+	go process.verify()
 }
 
 func (process *Process) run() {
-	// TODO the select for
+	fmt.Println("RUN.....")
+	for {
+		select {
+		case message := <-process.Process.GetOperationConduit():
+			switch message.GetOperation().Content {
+			case "Verification":
+				fmt.Println("Verification finished with")
+				if message.GetValue() == "normal" {
+					go process.identify()
+				} else {
+					process.Finish()
+				}
+				break
+			default:
+				fmt.Println("The process has recived: I received this message")
+				fmt.Println(message)
+				break
+			}
+		}
+	}
 }
 
-func (process *Process) validate() {
+// Stage 1
+
+func (process *Process) verify() {
 	verification := newVerificationOperation(process)
 	process.ChangeCurrentOperation(verification)
 	verification.Start()
 }
+
+// Stage 2
+
+func (process *Process) identify() {
+	fmt.Println("Identifying...")
+}
+
+// --- end activity
 
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {

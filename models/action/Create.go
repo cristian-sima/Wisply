@@ -15,8 +15,9 @@ func CreateProcess(repositoryID, content string) *Process {
 	local, _ := repository.NewRepository(repositoryID)
 
 	process := &Process{
-		Action:     NewAction(true, content),
-		Repository: local,
+		Action:           NewAction(true, content),
+		Repository:       local,
+		operationConduit: make(chan OperationMessager, 100),
 	}
 	// insert
 

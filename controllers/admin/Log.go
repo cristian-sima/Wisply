@@ -18,13 +18,19 @@ func (controller *LogController) ShowGeneralPage() {
 	controller.TplNames = "site/admin/log/home.tpl"
 }
 
-// ShowAdvanceOptions displays the processes
-func (controller *LogController) ShowAdvanceOptions() {
+// ShowProcessAdvanceOptions displays the advance options for a process
+func (controller *LogController) ShowProcessAdvanceOptions() {
 	controller.SetCustomTitle("Advance options")
 	idString := controller.Ctx.Input.Param(":process")
 	ID, _ := strconv.Atoi(idString)
 	controller.Data["process"] = action.NewProcess(ID)
-	controller.TplNames = "site/admin/log/advance-options.tpl"
+	controller.TplNames = "site/admin/log/process-advance-options.tpl"
+}
+
+// ShowLogAdvanceOptions displays the advance options for the entire log
+func (controller *LogController) ShowLogAdvanceOptions() {
+	controller.SetCustomTitle("Log - Advance options")
+	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
 // DeleteProcess deletes the process
@@ -33,7 +39,7 @@ func (controller *LogController) DeleteProcess() {
 	ID, _ := strconv.Atoi(idString)
 	process := action.NewProcess(ID)
 	process.Delete()
-	controller.TplNames = "site/admin/log/advance-options.tpl"
+	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
 // ShowProcess displays the log of a process
@@ -82,4 +88,10 @@ func (controller *LogController) ShowProgressHistory() {
 	controller.Data["process"] = process
 	controller.Data["operations"] = process.GetOperations()
 	controller.TplNames = "site/admin/log/entire-progress.tpl"
+}
+
+// DeleteLog deletes the entire log
+func (controller *LogController) DeleteEntireLog() {
+	action.DeleteEntireLog()
+	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }

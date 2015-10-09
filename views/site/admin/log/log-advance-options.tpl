@@ -3,7 +3,6 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/log">Event log</a></li>
-      <li><a href="/admin/log/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
       <li class="active">Advance options</li>
     </ul>
   </div>
@@ -11,14 +10,14 @@
     <div class="row" >
       <div class="col-md-12">
         <div>
-          <h2>Delete</h2>
+          <h2>Delete the entire log</h2>
           <div class="well">
-            Please note that the process can not be recovered.
-            <a data-id="{{ .process.Action.ID }}" href="#" class="btn btn-danger deleteProcessButton">Delete process from Wisply</a>
+            <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the log can not be recovered.</span></h5><br />
+            <a  href="#" class="btn btn-danger deleteLogButton">Delete entire log for ever from Wisply</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<script src="/static/js/admin/log/advance.js"></script>
+<script src="/static/js/admin/log/log-advance-options.js"></script>

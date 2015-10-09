@@ -8,6 +8,14 @@ import (
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
+// DeleteEntireLog deletes all the processes, operations and tasks
+func DeleteEntireLog() {
+	processes := GetAllProcesses()
+	for _, process := range processes {
+		process.Delete()
+	}
+}
+
 // GetAllProcesses returns a list with all available processes
 func GetAllProcesses() []*Process {
 	var list []*Process
@@ -58,10 +66,10 @@ func GetAllProcesses() []*Process {
 		}
 
 		list = append(list, &Process{
-			ID:               ID,
 			Repository:       rep,
 			currentOperation: operation,
 			Action: &Action{
+				ID:        ID,
 				IsRunning: isRunning,
 				Start:     start,
 				End:       end,

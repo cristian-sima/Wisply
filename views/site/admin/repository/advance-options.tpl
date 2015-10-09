@@ -12,14 +12,14 @@
             <div>
               <h2>Modify</h2>
               <div class="well">
-                You can use this option to modify the details of the repository. It is impossible to modify the Base URL
+                You can use this option to modify the details of the repository. It is impossible to modify the Base URL <br/>
                 <a href="/admin/repositories/modify/{{ .repository.ID }}" class="btn btn-primary">Modify repository</a>
               </div>
             </div>
             <div>
               <h2>Delete</h2>
               <div class="well">
-                Please note that the repository can not be recovered.
+                <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the repository can not be recovered.</span></h5><br />
                 <a data-id="" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository from Wisply</a>
               </div>
             </div>

@@ -1,63 +1,61 @@
 /* global jQuery,$, wisply */
 /**
- * @file Encapsulates the functionality for managing the processes
+ * @file Encapsulates the functionality for managing the log
  * @author Cristian Sima
  */
 /**
- * @namespace Processes
+ * @namespace Log
  */
-var Processes = function() {
+var Log = function() {
 	'use strict';
 
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof Processes
-	 * @classdesc It encapsulets the functions for processes
+	 * @memberof Log
+	 * @classdesc It encapsulets the functions for the log
 	 */
 	var Manager = function Manager() {};
 	/**
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends Processes.Manager */
+		/** @lends Log.Manager */
 		{
 			/**
-			 * It activates the listener for all delete buttons
+			 * It activates the listener for delete button
 			 */
 			init: function() {
-				$(".deleteProcessButton").click(confirmDelete);
+				$(".deleteLogButton").click(confirmDelete);
 			},
 			/**
 			 * It requests the user to confirm
-			 * @param  {number} ID  The ID of the process
 			 */
-			confirmDelete: function(ID) {
-				var msg = this.getDialogMessage(ID);
+			confirmDelete: function() {
+				var msg = this.getDialogMessage();
 				wisply.message.dialog(msg);
 			},
 			/**
 			 * It returns the arguements of the confimation message
-			 * @param  {number} ID      The ID of the process
 			 * @return {object}         The arguements of the confimation message
 			 */
-			getDialogMessage: function(ID) {
+			getDialogMessage: function() {
 				var buttons,
 					cancelButton,
 					msg,
 					mainButton;
 				cancelButton = {
 					label: "Cancel",
-					className: "btn-default",
+					className: "btn-success",
 					callback: function() {
 						this.modal('hide');
 					}
 				};
 				mainButton = {
-					label: "Delete",
-					className: "btn-primary",
+					label: "Delete entire log",
+					className: "btn-danger",
 					callback: function() {
-						wisply.processManager.delete(ID);
+						wisply.logManager.delete();
 					}
 				};
 				buttons = {
@@ -66,17 +64,16 @@ var Processes = function() {
 				};
 				msg = {
 					title: "Please confirm!",
-					message: "The process will be permanently removed. Are you sure?",
+					message: "The entire log will be permanently removed. Do you want to continue?",
 					onEscape: true,
 					buttons: buttons
 				};
 				return msg;
 			},
 			/**
-			 * It deletes the process
-			 * @param  {number} ID The ID of the process
+			 * It deletes the log
 			 */
-			delete: function(ID) {
+			delete: function() {
 				var request,
 					successCallback,
 					errorCallback;
@@ -85,8 +82,8 @@ var Processes = function() {
 				 * @ignore
 				 */
 				successCallback = function() {
-					wisply.message.showSuccess("The process has been removed! Refreshing page...");
-					window.location="/admin/log"
+					wisply.message.showSuccess("The log has been removed! Refreshing page...");
+					window.location="/admin/log";
 				};
 				/**
 				 * It is called when there has been problems
@@ -96,7 +93,7 @@ var Processes = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/log/process/delete/' + ID,
+					"url": '/admin/log/delete',
 					"success": successCallback,
 					"error": errorCallback
 				};
@@ -109,11 +106,7 @@ var Processes = function() {
 	 */
 	function confirmDelete(event) {
 		event.preventDefault();
-		var instance,
-			id;
-		instance = $(this);
-		id = instance.data("id");
-		wisply.processManager.confirmDelete(id);
+		wisply.logManager.confirmDelete();
 	}
 	return {
 		Manager: Manager,
@@ -121,7 +114,7 @@ var Processes = function() {
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new Processes();
-	wisply.processManager = new module.Manager();
-	wisply.processManager.init();
+	var module = new Log();
+	wisply.logManager = new module.Manager();
+	wisply.logManager.init();
 });

@@ -30,19 +30,18 @@ func (operation *HarvestingCollections) tryToGet() {
 
 func (operation *HarvestingCollections) tryToParse(page []byte) {
 	task := newParseRequestTask(operation)
-	_, err := task.GetCollections(page)
+	collections, err := task.GetCollections(page)
 	if err != nil {
 		operation.harvestFailed()
 	} else {
-		operation.harvestFailed()
-		//operation.insertFormats(collections)
+		operation.insertFormats(collections)
 	}
 }
 
-func (operation *HarvestingCollections) insertFormats(formats []Formater) {
+func (operation *HarvestingCollections) insertFormats(collections []Collectioner) {
 	repository := operation.Operation.GetRepository()
-	task := newInsertFormatsTask(operation, repository)
-	err := task.Insert(formats)
+	task := newInsertCollectionsTask(operation, repository)
+	err := task.Insert(collections)
 	if err != nil {
 		operation.harvestFailed()
 	} else {

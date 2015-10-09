@@ -25,7 +25,7 @@ func (task *GetRequestTask) Identify() ([]byte, error) {
 func (task *GetRequestTask) RequestFormats() ([]byte, error) {
 	request := &oai.Request{
 		BaseURL: task.repository.URL,
-		Verb:    "Formats",
+		Verb:    "ListMetadataFormats",
 	}
 	return task.get(request)
 }

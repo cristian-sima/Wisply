@@ -31,7 +31,18 @@ func (operation *HarvestingFormats) tryToGet() {
 
 func (operation *HarvestingFormats) tryToParse(page []byte) {
 	task := newParseRequestTask(operation)
-	_, err := task.GetFormats(page)
+	formats, err := task.GetFormats(page)
+	if err != nil {
+		operation.harvestFailed()
+	} else {
+		operation.insertFormats(formats)
+	}
+}
+
+func (operation *HarvestingFormats) insertFormats(formats []Formater) {
+	repository := operation.Operation.GetRepository()
+	task := newInsertFormatsTask(operation, repository)
+	err := task.Insert(formats)
 	if err != nil {
 		operation.harvestFailed()
 	} else {

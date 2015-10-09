@@ -1,6 +1,10 @@
 package harvest
 
-import oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+import (
+	"strconv"
+
+	oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+)
 
 // ParseRequestTask represents a task for parsing the request
 type ParseRequestTask struct {
@@ -30,6 +34,8 @@ func (task *ParseRequestTask) GetIdentification(content []byte) (*Identification
 		Granularity:       remoteIdentity.Granularity,
 	}
 
+	task.Finish("The identification has been parsed")
+
 	return &idenfitication, nil
 }
 
@@ -54,13 +60,21 @@ func (task *ParseRequestTask) GetFormats(content []byte) ([]Formater, error) {
 		formats = append(formats, format)
 	}
 
+	number := strconv.Itoa(len(formats))
+	task.Finish(number + " has been identified")
+
 	return formats, nil
 }
 
 // Verify checks if the content is valid or not as a result of parsing
 func (task *ParseRequestTask) Verify(content []byte) error {
 	_, err := task.parse(content)
-	return err
+	if err != nil {
+		return err
+	}
+	task.Finish("The content has been parsed.")
+
+	return nil
 }
 
 // parse returns the content of the remote repository
@@ -70,8 +84,6 @@ func (task *ParseRequestTask) parse(content []byte) (*oai.Response, error) {
 	if err != nil {
 		task.ChangeResult("danger")
 		task.Finish(err.Error())
-	} else {
-		task.Finish("Success")
 	}
 	return response, err
 }

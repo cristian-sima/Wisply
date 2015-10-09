@@ -98,7 +98,7 @@
             {{range $index, $operation := .operations}}
             <tr class="{{ $operation.GetResult }}">
               <td class="col-md-1"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
-              <td class="col-md-1">{{ $operation.Action.Content }}</td>
+              <td class="col-md-3">{{ $operation.Action.Content }}</td>
               <!-- start state -->
               <td class="col-md-1">
               {{ if $operation.Action.IsRunning }}
@@ -108,9 +108,9 @@
               {{ end }}
               </td>
               <!-- end state -->
-              <td class="col-md-3">{{ $operation.GetStartDate }}</td>
-              <td class="col-md-3">{{ $operation.GetEndDate }}</td>
-              <td class="col-md-2">
+              <td class="col-md-1.5">{{ $operation.GetStartDate }}</td>
+              <td class="col-md-1.5">{{ $operation.GetEndDate }}</td>
+              <td class="col-md-3">
                 {{ if eq $operation.GetDuration "..." }}
                 <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
                 {{ else }}

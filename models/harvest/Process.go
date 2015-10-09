@@ -30,18 +30,15 @@ func (process *Process) run() {
 	for {
 		select {
 		case message := <-process.Process.GetOperationConduit():
+			fmt.Println("Got a message from the operation " + message.GetOperation().Content + ": ")
 			switch message.GetOperation().Content {
 			case "Verification":
-				fmt.Println("Verification finished with")
 				if message.GetValue() == "normal" {
 					go process.identify()
 				} else {
+					process.ChangeResult("danger")
 					process.Finish()
 				}
-				break
-			default:
-				fmt.Println("The process has recived: I received this message")
-				fmt.Println(message)
 				break
 			}
 		}

@@ -21,4 +21,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/admin/log/process-advance-options.js"></script>
+<script src="/static/js/admin/log/proces.js"></script>

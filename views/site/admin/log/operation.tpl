@@ -95,7 +95,14 @@
                 {{ $task.GetDuration }}
                 {{ end }}
               </td>
-              <td class="col-md-2">{{ $task.Explication }}</td>
+              <td class="col-md-2">
+                {{ $len := $task.Explication | len }}
+                  {{ if gt $len 70 }}
+                  <a data-explication="{{ $task.Explication | html }}" class="see-full-explication" href="#">See full explication</a>
+                {{ else }}
+                  {{ $task.Explication }}
+                {{ end }}
+              </td>
             </tr>
             {{end }}
           </tbody>
@@ -104,3 +111,4 @@
     {{ end }}
   </div>
 </div>
+<script src="/static/js/admin/log/operation.js"></script>

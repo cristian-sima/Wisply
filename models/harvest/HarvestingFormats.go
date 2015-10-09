@@ -64,7 +64,7 @@ func newHarvestingFormats(harvestProcess *Process) Operationer {
 	return &HarvestingFormats{
 		Operation: &Operation{
 			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvesting Formats"),
+			Operation: newOperation(harvestProcess.Process, "Harvest Formats"),
 		},
 	}
 }

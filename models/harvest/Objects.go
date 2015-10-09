@@ -20,16 +20,16 @@ type Formater interface {
 
 // COLLECTIONS
 
-// Collection ... must be implemented by a repository
-type Collection interface {
+// Collectioner ... must be implemented by a repository
+type Collectioner interface {
 	GetName() string
 	GetSpec() string
 }
 
 // RESOURCES
 
-// Record ... must be implemented by a repository
-type Record interface {
+// Recorder ... must be implemented by a repository
+type Recorder interface {
 	GetIdentifier() string
 	GetDatestamp() string
 	GetKeys() *Keys

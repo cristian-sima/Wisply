@@ -11,7 +11,6 @@ import (
 type Process struct {
 	*action.Process
 	remote         RemoteRepositoryInterface
-	db             *databaseManager
 	CurrentAction  int                 `json:"CurrentAction"`
 	Actions        map[string]*Action2 `json:"Actions"`
 	Controller     WisplyController    `json:"-"`
@@ -25,11 +24,10 @@ func (process *Process) Start() {
 }
 
 func (process *Process) run() {
-	fmt.Println("RUN.....")
+	fmt.Println("Run process...")
 	for {
 		select {
 		case message := <-process.Process.GetOperationConduit():
-			fmt.Println("Got a message from the operation " + message.GetOperation().Content + ": ")
 			switch message.GetOperation().Content {
 			case "Verification":
 				if message.GetValue() == "normal" {
@@ -41,7 +39,15 @@ func (process *Process) run() {
 				break
 			case "Identifying":
 				if message.GetValue() == "normal" {
-					go process.harvestFormats()
+					go process.harvest()
+				} else {
+					process.ChangeResult("danger")
+					process.Finish()
+				}
+				break
+			case "Harvest Formats":
+				if message.GetValue() == "normal" {
+					go process.harvestCollections()
 				} else {
 					process.ChangeResult("danger")
 					process.Finish()
@@ -70,10 +76,25 @@ func (process *Process) identify() {
 
 // Stage 3
 
+func (process *Process) harvest() {
+	process.ChangeRepositoryStatus("updating")
+	process.harvestFormats()
+}
+
+// FORMATS
+
 func (process *Process) harvestFormats() {
-	harvesting := newHarvestingFormats(process)
-	process.ChangeCurrentOperation(harvesting)
-	harvesting.Start()
+	harvestingFormats := newHarvestingFormats(process)
+	process.ChangeCurrentOperation(harvestingFormats)
+	harvestingFormats.Start()
+}
+
+// COLLECTIONS
+
+func (process *Process) harvestCollections() {
+	harvestingCollections := newHarvestingCollections(process)
+	process.ChangeCurrentOperation(harvestingCollections)
+	harvestingCollections.Start()
 }
 
 // --- end activity
@@ -189,17 +210,15 @@ func CreateProcess(ID string, controller WisplyController) *Process {
 	// 		}
 	// 	}
 	// }
-	db := &databaseManager{}
 
 	process := &Process{
 		Process:    &*action.CreateProcess(ID, "harvesting"),
 		remote:     remote,
 		Controller: controller,
-		db:         db,
 		Actions:    make(map[string]*Action2),
 	}
 	// process.SetName("Harvest")
-	db.SetManager(process)
+	// db.SetManager(process)
 	// remote.SetManager(process)
 
 	return process

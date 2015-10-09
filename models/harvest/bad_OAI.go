@@ -107,7 +107,7 @@ func (repository *OAIFormat) GetNamespace() string {
 // OAICollectionResult is a result which contains collections
 type OAICollectionResult struct {
 	isOk bool
-	data []Collection
+	data []Collectioner
 }
 
 // IsOk returns if the result has succeeded
@@ -116,7 +116,7 @@ func (identification *OAICollectionResult) IsOk() bool {
 }
 
 // GetData returns the data
-func (identification *OAICollectionResult) GetData() []Collection {
+func (identification *OAICollectionResult) GetData() []Collectioner {
 	return identification.data
 }
 
@@ -141,7 +141,7 @@ func (repository *OAICollection) GetSpec() string {
 // OAIRecordsResult is a result which contains records
 type OAIRecordsResult struct {
 	isOk bool
-	data []Record
+	data []Recorder
 }
 
 // IsOk returns if the result has succeeded
@@ -150,7 +150,7 @@ func (result *OAIRecordsResult) IsOk() bool {
 }
 
 // GetData returns the data
-func (result *OAIRecordsResult) GetData() []Record {
+func (result *OAIRecordsResult) GetData() []Recorder {
 	return result.data
 }
 

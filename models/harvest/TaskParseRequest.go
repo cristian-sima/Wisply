@@ -12,6 +12,17 @@ type ParseRequestTask struct {
 	*Task
 }
 
+// Verify checks if the content is valid or not as a result of parsing
+func (task *ParseRequestTask) Verify(content []byte) error {
+	_, err := task.parse(content)
+	if err != nil {
+		return err
+	}
+	task.Finish("The content has been parsed.")
+
+	return nil
+}
+
 // GetIdentification returns an identificationer interface as a result of parsing the identification of the page
 func (task *ParseRequestTask) GetIdentification(content []byte) (*Identificationer, error) {
 
@@ -66,15 +77,31 @@ func (task *ParseRequestTask) GetFormats(content []byte) ([]Formater, error) {
 	return formats, nil
 }
 
-// Verify checks if the content is valid or not as a result of parsing
-func (task *ParseRequestTask) Verify(content []byte) error {
-	_, err := task.parse(content)
-	if err != nil {
-		return err
-	}
-	task.Finish("The content has been parsed.")
+// GetCollections returns an array with all the collections
+func (task *ParseRequestTask) GetCollections(content []byte) ([]Collectioner, error) {
 
-	return nil
+	var collections []Collectioner
+
+	response, err := task.parse(content)
+	if err != nil {
+		return collections, err
+	}
+
+	remoteCollections := response.ListSets.Set
+
+	for _, collection := range remoteCollections {
+		collection := &OAICollection{
+			Name: collection.SetName,
+			Spec: collection.SetSpec,
+		}
+		collections = append(collections, collection)
+	}
+
+	number := strconv.Itoa(len(collections))
+	task.Finish(number + " has been identified")
+
+	return collections, nil
+
 }
 
 // parse returns the content of the remote repository

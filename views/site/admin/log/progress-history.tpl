@@ -74,9 +74,9 @@
       <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
     </div>
     <br />
-    <hr>
+    <hr/>
     <br />
-    <div class="well">
+    <div class="well" id="history" >
     {{ if .process.Action.IsRunning }}
         <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The process is working ...
     {{ else }}

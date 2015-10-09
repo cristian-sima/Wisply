@@ -87,10 +87,10 @@ func (controller *LogController) ShowProgressHistory() {
 
 	controller.Data["process"] = process
 	controller.Data["operations"] = process.GetOperations()
-	controller.TplNames = "site/admin/log/entire-progress.tpl"
+	controller.TplNames = "site/admin/log/progress-history.tpl"
 }
 
-// DeleteLog deletes the entire log
+// DeleteEntireLog deletes the entire log
 func (controller *LogController) DeleteEntireLog() {
 	action.DeleteEntireLog()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"

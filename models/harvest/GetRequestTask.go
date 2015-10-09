@@ -1,10 +1,6 @@
 package harvest
 
-import (
-	"fmt"
-
-	oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
-)
+import oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
 
 // GetRequestTask represents a task for requesting something
 type GetRequestTask struct {
@@ -45,7 +41,6 @@ type ParseRequestTask struct {
 
 // Parse returns the content of the remote repository
 func (task *ParseRequestTask) Parse(content []byte) (*oai.Response, error) {
-	fmt.Println(":)")
 	request := &oai.Request{
 		Verb: "Identify",
 	}

@@ -8,15 +8,15 @@ type VerificationOperation struct {
 	*Operation
 }
 
-// Start starts the operation
+// Start starts the action.Operation, change the status of repository to verifying and gets the page
 func (operation *VerificationOperation) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("verifying")
-	operation.Activity()
+	operation.tryToGet()
 }
 
-// Activity creates a task to verify if the url is good
-func (operation *VerificationOperation) Activity() {
+// Activity creates a task to verify if the URL is good
+func (operation *VerificationOperation) tryToGet() {
 
 	// remote := operation.Process.GetRemote()
 	repository := operation.process.GetRepository()
@@ -27,15 +27,21 @@ func (operation *VerificationOperation) Activity() {
 	page, err := task.Identify(repository.URL)
 
 	if err != nil {
-		operation.ChangeResult("danger")
-		operation.Finish()
+		operation.verificationFailed()
 	} else {
-		// create a task to parse the response
-		task := newParseRequestTask(operation)
-
-		task.Parse(page)
+		operation.tryToParse(page)
 	}
 	// create a task to check the result
+}
+
+func (operation *VerificationOperation) tryToParse(page []byte) {
+	task := newParseRequestTask(operation)
+	_, err := task.Parse(page)
+	if err != nil {
+		operation.verificationFailed()
+	} else {
+		operation.verificationSucceded()
+	}
 }
 
 func (operation *VerificationOperation) verificationFailed() {
@@ -49,10 +55,6 @@ func (operation *VerificationOperation) verificationSucceded() {
 	operation.Finish()
 }
 
-//  process.record("The validation passed")
-//  process.ChangeLocalStatus("verified")
-//  process.startIdentification()
-
 // GetOperation returns the operation
 func (operation *VerificationOperation) GetOperation() *action.Operation {
 	return operation.Operation.Operation
@@ -62,7 +64,7 @@ func newVerificationOperation(harvestProcess *Process) Operationer {
 	return &VerificationOperation{
 		Operation: &Operation{
 			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "verification"),
+			Operation: newOperation(harvestProcess.Process, "Verification"),
 		},
 	}
 }

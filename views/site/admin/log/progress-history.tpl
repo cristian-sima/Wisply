@@ -4,7 +4,7 @@
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/log">Event log</a></li>
       <li><a href="/admin/log/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
-      <li class="active">Entire log</li>
+      <li class="active">History</li>
     </ul>
   </div>
   <div class="panel-body">

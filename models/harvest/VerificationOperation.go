@@ -36,7 +36,7 @@ func (operation *VerificationOperation) tryToGet() {
 
 func (operation *VerificationOperation) tryToParse(page []byte) {
 	task := newParseRequestTask(operation)
-	_, err := task.Parse(page)
+	err := task.Verify(page)
 	if err != nil {
 		operation.verificationFailed()
 	} else {

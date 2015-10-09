@@ -39,13 +39,41 @@ type ParseRequestTask struct {
 	*Task
 }
 
-// Parse returns the content of the remote repository
-func (task *ParseRequestTask) Parse(content []byte) (*oai.Response, error) {
-	request := &oai.Request{
-		Verb: "Identify",
-	}
-	response, err := request.Parse(content)
+// GetIdentification returns the identification parsed of a page
+func (task *ParseRequestTask) GetIdentification(content []byte) (*Identificationer, error) {
 
+	var idenfitication Identificationer
+
+	response, err := task.parse(content)
+	if err != nil {
+		return &idenfitication, err
+	}
+
+	remoteIdentity := response.Identify
+
+	idenfitication = &OAIIdentification{
+		Name:              remoteIdentity.RepositoryName,
+		URL:               remoteIdentity.BaseURL,
+		Protocol:          remoteIdentity.ProtocolVersion,
+		AdminEmails:       remoteIdentity.AdminEmail,
+		EarliestDatestamp: remoteIdentity.EarliestDatestamp,
+		RecordPolicy:      remoteIdentity.DeletedRecord,
+		Granularity:       remoteIdentity.Granularity,
+	}
+
+	return &idenfitication, nil
+}
+
+// Verify checks if the content is valid or not
+func (task *ParseRequestTask) Verify(content []byte) error {
+	_, err := task.parse(content)
+	return err
+}
+
+// parse returns the content of the remote repository
+func (task *ParseRequestTask) parse(content []byte) (*oai.Response, error) {
+	request := &oai.Request{}
+	response, err := request.Parse(content)
 	if err != nil {
 		task.ChangeResult("danger")
 		task.Finish(err.Error())

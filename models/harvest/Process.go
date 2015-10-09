@@ -56,7 +56,9 @@ func (process *Process) verify() {
 // Stage 2
 
 func (process *Process) identify() {
-	fmt.Println("Identifying...")
+	identification := newIdentificationOperation(process)
+	process.ChangeCurrentOperation(identification)
+	identification.Start()
 }
 
 // --- end activity
@@ -69,32 +71,6 @@ func (process *Process) GetRepository() *repository.Repository {
 // GetRemote returns the interface of a remote repository
 func (process *Process) GetRemote() RemoteRepositoryInterface {
 	return process.remote
-}
-
-func (process *Process) startIdentification() {
-	process.record("I harvest the identification")
-	process.ChangeRepositoryStatus("initializing")
-	process.setCurrentAction("initializing")
-	process.remote.HarvestIdentification()
-}
-
-// SaveIdentification receives the identification result and saves it in the local repository
-func (process *Process) SaveIdentification(result IdentificationResulter) {
-	process.record("I received the identification.")
-	if !result.IsOk() {
-		process.ChangeRepositoryStatus("verification-failed")
-		process.record("Problems with identification")
-	} else {
-		process.notifyController(&Message{
-			Name:  "identification-details",
-			Value: result.GetData(),
-		})
-		process.record("The identification is ok")
-		process.ChangeRepositoryStatus("ok")
-		process.db.InsertIdentity(result.GetData())
-		process.Identification = result.GetData()
-		process.harvestFormarts()
-	}
 }
 
 func (process *Process) harvestFormarts() {

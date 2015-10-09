@@ -1,6 +1,9 @@
 package harvest
 
-import action "github.com/cristian-sima/Wisply/models/action"
+import (
+	action "github.com/cristian-sima/Wisply/models/action"
+	"github.com/cristian-sima/Wisply/models/repository"
+)
 
 // Operationer ... defines the set of methods which should be implemented by the harvest operations
 type Operationer interface {
@@ -36,6 +39,11 @@ func (operation *Operation) Finish() {
 // ChangeRepositoryStatus tells the controller to change the status of the local repository
 func (operation *Operation) ChangeRepositoryStatus(status string) {
 	operation.process.ChangeRepositoryStatus(status)
+}
+
+// GetRepository returns a reference to the local repository
+func (operation *Operation) GetRepository() *repository.Repository {
+	return operation.process.GetRepository()
 }
 
 func newOperation(process *action.Process, content string) *action.Operation {

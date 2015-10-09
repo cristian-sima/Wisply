@@ -8,7 +8,6 @@ import (
 // Operationer ... defines the set of methods which should be implemented by the harvest operations
 type Operationer interface {
 	Start()
-	Activity()
 	GetOperation() *action.Operation
 }
 
@@ -44,6 +43,11 @@ func (operation *Operation) ChangeRepositoryStatus(status string) {
 // GetRepository returns a reference to the local repository
 func (operation *Operation) GetRepository() *repository.Repository {
 	return operation.process.GetRepository()
+}
+
+// GetOperation returns the operation
+func (operation *Operation) GetOperation() *action.Operation {
+	return operation.Operation
 }
 
 func newOperation(process *action.Process, content string) *action.Operation {

@@ -1,10 +1,7 @@
 package harvest
 
-import action "github.com/cristian-sima/Wisply/models/action"
-
 // IdentificationOperation encapsulates the methods for requesting information from the repository
 type IdentificationOperation struct {
-	Operationer
 	*Operation
 }
 
@@ -62,11 +59,6 @@ func (operation *IdentificationOperation) identificationFailed() {
 func (operation *IdentificationOperation) identificationSucceded() {
 	operation.ChangeRepositoryStatus("ok")
 	operation.Finish()
-}
-
-// GetOperation returns the operation
-func (operation *IdentificationOperation) GetOperation() *action.Operation {
-	return operation.Operation.Operation
 }
 
 func newIdentificationOperation(harvestProcess *Process) Operationer {

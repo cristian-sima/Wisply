@@ -1,4 +1,4 @@
-package oai
+package harvest
 
 import (
 	"errors"

@@ -40,6 +40,14 @@ func (process *Process) run() {
 					process.Finish()
 				}
 				break
+			case "Identifying":
+				if message.GetValue() == "normal" {
+					go process.harvest()
+				} else {
+					process.ChangeResult("danger")
+					process.Finish()
+				}
+				break
 			}
 		}
 	}
@@ -59,6 +67,14 @@ func (process *Process) identify() {
 	identification := newIdentificationOperation(process)
 	process.ChangeCurrentOperation(identification)
 	identification.Start()
+}
+
+// Stage 3
+
+func (process *Process) harvest() {
+	harvesting := newHarvestingOperation(process)
+	process.ChangeCurrentOperation(harvesting)
+	// harvesting.Start()
 }
 
 // --- end activity
@@ -176,7 +192,6 @@ func (process *Process) updateAction(newCount int, name string) {
 
 // ChangeCurrentOperation informs the controller about the change and it calls its father
 func (process *Process) ChangeCurrentOperation(operation Operationer) {
-	// TODO notify the controller
 	process.Process.ChangeCurrentOperation(operation.GetOperation())
 }
 

@@ -21,9 +21,22 @@ type Institution struct {
 
 // Delete removes the institution from database
 func (institution *Institution) Delete() error {
+
+	// delete repostiories
+	repositories := institution.GetRepositories()
+
+	for _, repository := range repositories {
+		err := repository.Delete()
+		if err != nil {
+			return err
+		}
+	}
+
+	// delete institution
 	sql := "DELETE from `institution` WHERE id=?"
 	query, err := database.Database.Prepare(sql)
-	query.Exec(strconv.Itoa(institution.ID))
+	query.Exec(institution.ID)
+
 	return err
 }
 

@@ -134,6 +134,34 @@ func (task *ParseRequestTask) GetRecords(content []byte) ([]Recorder, error) {
 	return records, nil
 }
 
+// GetIdentifiers returns an array with identifiers
+func (task *ParseRequestTask) GetIdentifiers(content []byte) ([]Identifier, error) {
+
+	var identifiers []Identifier
+
+	response, err := task.parse(content)
+	if err != nil {
+		return identifiers, err
+	}
+
+	remoteIdentifiers := response.ListIdentifiers.Headers
+
+	for _, remoteIdentifier := range remoteIdentifiers {
+
+		identifier := &OAIIdentifier{
+			Identifier: remoteIdentifier.Identifier,
+			Datestamp:  remoteIdentifier.DateStamp,
+			Spec:       remoteIdentifier.SetSpec,
+		}
+		identifiers = append(identifiers, identifier)
+	}
+
+	number := strconv.Itoa(len(identifiers))
+	task.Finish(number + " identifiers has been identified")
+
+	return identifiers, nil
+}
+
 func (task *ParseRequestTask) getKeys(plainText []byte) (*Keys, error) {
 
 	keys := &Keys{}

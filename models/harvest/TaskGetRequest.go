@@ -49,6 +49,16 @@ func (task *GetRequestTask) RequestRecords() ([]byte, error) {
 	return task.get(request)
 }
 
+// RequestIdentifiers returns all the identifiers of the repository
+func (task *GetRequestTask) RequestIdentifiers() ([]byte, error) {
+	request := &oai.Request{
+		BaseURL:        task.repository.URL,
+		Verb:           "ListIdentifiers",
+		MetadataPrefix: "oai_dc",
+	}
+	return task.get(request)
+}
+
 // get returns the content of the remote repository
 func (task *GetRequestTask) get(request *oai.Request) ([]byte, error) {
 

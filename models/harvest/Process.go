@@ -61,6 +61,19 @@ func (process *Process) run() {
 					process.Finish()
 				}
 				break
+			case "Harvest Records":
+				if message.GetValue() == "normal" {
+					go process.harvestIdentifiers()
+				} else {
+					process.ChangeResult("danger")
+					process.Finish()
+				}
+			case "Harvest Identifiers":
+				if message.GetValue() != "normal" {
+					process.ChangeResult("danger")
+				}
+				process.Finish()
+				break
 			}
 		}
 	}
@@ -111,6 +124,14 @@ func (process *Process) harvestRecords() {
 	harvestingRecords := newHarvestingRecords(process)
 	process.ChangeCurrentOperation(harvestingRecords)
 	harvestingRecords.Start()
+}
+
+// IDENTIFIERS
+
+func (process *Process) harvestIdentifiers() {
+	identifiers := newHarvestingIdentifiers(process)
+	process.ChangeCurrentOperation(identifiers)
+	identifiers.Start()
 }
 
 // --- end activity

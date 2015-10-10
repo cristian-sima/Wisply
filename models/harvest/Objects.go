@@ -33,6 +33,13 @@ type Recorder interface {
 	GetIdentifier() string
 	GetDatestamp() string
 	GetKeys() *Keys
-	GetID() int64
-	SetID(ID int64)
+}
+
+// IDENTIFIERS
+
+// Identifier ... must be implemented by a identifier
+type Identifier interface {
+	GetIdentifier() string
+	GetTimestamp() string
+	GetSpec() []string
 }

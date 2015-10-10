@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <td>Repository</td>
-                        <td><strong>{{ .process.Repository.Name }}</strong></td>
+                        <td><strong><a href="/admin/repositories/repository/{{ .process.Repository.ID }}">{{ .process.Repository.Name }}</strong></a></td>
                     </tr>
                 </tbody>
             </table>

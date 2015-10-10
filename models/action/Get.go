@@ -60,7 +60,6 @@ func getProcesses(repositoryID string) []*Process {
 	// the query
 	sql := "SELECT " + fieldList + " FROM `process` AS process " + joins + whereClause + " ORDER BY process.id DESC"
 
-	fmt.Println(sql)
 	rows, err := wisply.Database.Query(sql)
 	if err != nil {
 		fmt.Println("Problem when getting all the processes: ")

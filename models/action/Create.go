@@ -38,7 +38,7 @@ func CreateProcess(repositoryID, content string) *Process {
 	// find its ID
 	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND repository=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow("harvesting", process.Start, local.ID, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
+	query.QueryRow(process.Content, process.Start, local.ID, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of process:")

@@ -72,6 +72,7 @@ func (process *Process) run() {
 				if message.GetValue() != "normal" {
 					process.ChangeResult("danger")
 				}
+				process.ChangeRepositoryStatus("ok")
 				process.Finish()
 				break
 			}
@@ -249,7 +250,7 @@ func CreateProcess(ID string, controller WisplyController) *Process {
 	// }
 
 	process := &Process{
-		Process:    &*action.CreateProcess(ID, "harvesting"),
+		Process:    &*action.CreateProcess(ID, "Harvest"),
 		remote:     remote,
 		Controller: controller,
 		Actions:    make(map[string]*Action2),

@@ -41,7 +41,7 @@
                 <td class="col-md-1"><a href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
                 <td class="col-md-1.5">{{ $element.Action.Content }}</td>
                 <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
-                <td class="col-md-1"><a href="/admin/repositories/repository/{{ $element.Repository.ID }}">{{ $element.Repository.Name }}</a></td>
+                <td class="col-md-2"><a href="/admin/repositories/repository/{{ $element.Repository.ID }}">{{ $element.Repository.Name }}</a></td>
                 <!-- start state -->
                 <td class="col-md-1">
                 {{ if $element.Action.IsRunning }}
@@ -51,9 +51,9 @@
                 {{ end }}
                 </td>
                 <!-- end state -->
-                <td class="col-md-3">{{ $element.GetStartDate }}</td>
-                <td class="col-md-3">{{ $element.GetEndDate }}</td>
-                <td class="col-md-1">
+                <td class="col-md-1.5">{{ $element.GetStartDate }}</td>
+                <td class="col-md-1.5">{{ $element.GetEndDate }}</td>
+                <td class="col-md-3">
                   {{ if eq $element.GetDuration "..." }}
                     <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
                   {{ else }}

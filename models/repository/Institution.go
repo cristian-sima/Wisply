@@ -22,14 +22,10 @@ type Institution struct {
 // Delete removes the institution from database
 func (institution *Institution) Delete() error {
 
-	// delete repostiories
-	repositories := institution.GetRepositories()
+	err := institution.deleteRepositories()
 
-	for _, repository := range repositories {
-		err := repository.Delete()
-		if err != nil {
-			return err
-		}
+	if err != nil {
+		return err
 	}
 
 	// delete institution
@@ -38,6 +34,20 @@ func (institution *Institution) Delete() error {
 	query.Exec(institution.ID)
 
 	return err
+}
+
+func (institution *Institution) deleteRepositories() error {
+	// delete repostiories
+	repositories := institution.GetRepositories()
+
+	for _, repository := range repositories {
+
+		err := repository.Delete()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Modify changes the details of the institution

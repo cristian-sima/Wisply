@@ -22,6 +22,10 @@ type Repository struct {
 
 // Delete removes the repository from database
 func (repository *Repository) Delete() error {
+
+	// delete all things
+
+	// delete repository
 	sql := "DELETE from `repository` WHERE id=?"
 	query, err := wisply.Database.Prepare(sql)
 	query.Exec(strconv.Itoa(repository.ID))

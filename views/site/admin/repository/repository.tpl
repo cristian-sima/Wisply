@@ -28,7 +28,12 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div>{{ .repository.Category }} repository. See: <a href="/repository/{{ .repository.ID }}">here</a></div>
+                <div>
+                   <a href="/repository/{{ .repository.ID }}">Public page</a>
+                  <br />
+                  <br />
+                </div>
+                <div>{{ .repository.Category }} repository.</div>
                 <div>Is part of <a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
             </div>
         </div>

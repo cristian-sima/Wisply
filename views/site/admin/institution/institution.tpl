@@ -34,13 +34,21 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
                 <!-- Repositories -->
-                <a href="/admin/repositories/add/?institution={{ .institution.ID}}">Add repository</a> <br />
+                <a href="/institutions/{{ .institution.ID}}">Public page</a>
+                <br />
+                <br />
+                <a href="/admin/repositories/add/?institution={{ .institution.ID}}">
+                  <span class="glyphicon glyphicon-plus-sign text-success"> </span>
+                  Add repository
+                </a>
+                <br />
+                <br />
                 {{ if eq (not .repositories) true }}
                 <div class="text-muted">
                   :( it does not have repositories
                 </div>
                 {{ else }}
-                Repositories ({{ .repositories | len }})
+                <h4>Repositories ({{ .repositories | len }})</h4>
                 <div class="list-group" id="repositories">
                 {{range $index, $repository := .repositories}}
                   <a href="/admin/repositories/repository/{{ $repository.ID }}" class="list-group-item">

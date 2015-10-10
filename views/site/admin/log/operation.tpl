@@ -8,7 +8,7 @@
     </ul>
   </div>
   <div class="panel-body">
-    <span class="text-warning">
+    <span class="text-warning warning-notice">
 			<span class="glyphicon glyphicon-warning-sign"></span>
       This page is not live updated.
 		</span>
@@ -59,11 +59,13 @@
         There are no tasks for this operation
       </div>
     {{ else }}
+
+    <div class="print-div">
       <div class="table-responsive">
         <table id="list-tasks" class="table table-bordered table-condensed">
           <thead>
             <tr>
-              <th class="hidden-xs"># Task</th>
+              <th># Task</th>
               <th>Content</th>
               <th>State</th>
               <th>Start</th>
@@ -107,6 +109,7 @@
             {{end }}
           </tbody>
         </table>
+      </div>
       </div>
     {{ end }}
   </div>

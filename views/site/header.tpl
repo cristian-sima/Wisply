@@ -11,8 +11,10 @@
 
     <link rel="icon" href="/static/img/wisply/favicon.ico">
 
-    <link rel="stylesheet" href="/static/3rd_party/product/paper/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="/static/3rd_party/product/paper/bootstrap.css">
     <link rel="stylesheet" href="/static/3rd_party/product/paper/bootswatch.min.css">
+
+    <link rel="stylesheet" href="/static/css/wisply/print.css" media="print">
 
     <link rel="stylesheet" href="/static/css/wisply/wisply.css">
 </head>

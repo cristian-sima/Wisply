@@ -1,0 +1,28 @@
+.navbar .navbar-default .navbar-fixed-top, #sidebar, .warning-notice, .breadcrumb, footer {
+  display:none;
+}
+
+table {
+  page-break-inside:auto !important;
+}
+tr    {
+  page-break-inside:avoid !important;
+  page-break-after:auto !important;
+}
+thead {
+  display:table-header-group !important;
+}
+tfoot {
+  display:table-footer-group !important;
+}
+a[href]:after {
+  content: none
+}
+.print-div {
+   page-break-after: always;
+   page-break-inside: avoid;
+}
+
+.no-print {
+  display:none;
+}

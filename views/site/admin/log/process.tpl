@@ -8,7 +8,7 @@
   </div>
   <div class="panel-body">
     <div>
-      <span class="text-warning">
+      <span class="text-warning warning-notice">
 			<span class="glyphicon glyphicon-warning-sign"></span>
         This page is not live updated.
 			</span>
@@ -70,7 +70,7 @@
           </table>
       </div>
     </div>
-    <div>
+    <div class="no-print">
       <a href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a> <br />
       <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
     </div>
@@ -81,11 +81,12 @@
         There are no operations for this process
       </div>
     {{ else }}
+    <div class="print-div">
       <div class="table-responsive">
         <table id="list-operations" class="table table-bordered table-condensed">
           <thead>
             <tr>
-              <th class="hidden-xs">#</th>
+              <th>#Operation</th>
               <th>Content</th>
               <th>State</th>
               <th>Start</th>
@@ -121,6 +122,7 @@
             {{end }}
           </tbody>
         </table>
+      </div>
       </div>
     {{ end }}
   </div>

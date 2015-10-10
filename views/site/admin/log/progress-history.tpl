@@ -9,7 +9,7 @@
   </div>
   <div class="panel-body">
       <div>
-          <span class="text-warning">
+          <span class="text-warning warning-notice">
   				<span class="glyphicon glyphicon-warning-sign"></span>
           This page is not live updated.
   			</span>
@@ -69,31 +69,32 @@
             </table>
         </div>
       </div>
-    <div>
+    <div class="no-print">
       <a href="/admin/log/process/{{ .process.Action.ID }}">See overview</a> <br />
       <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
     </div>
     <br />
     <hr/>
     <br />
-    <div class="well" id="history" >
+    <div class="well tex-left" id="history" >
     {{ if .process.Action.IsRunning }}
-        <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The process is working ...
+        <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The process is <span class="label label-warning">working</span> ...
     {{ else }}
-        <span class="glyphicon glyphicon-calendar"></span>  {{ .process.GetEndDate }}: The process has finished
+        <span class="glyphicon glyphicon-calendar"></span>  {{ .process.GetEndDate }}: The process has <span class="label label-success">finished</span>
     {{ end }}
     </div>
     {{ $p := .process}}
     {{range $index, $operation := .operations}}
     {{ $tasks := $operation.GetTasks }}
-    <div class="well">
+    <div class="well text-left">
     {{ if $operation.Action.IsRunning }}
-        <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> is working ...
+        <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> is <span class="label label-warning">working</span> ...
     {{ else }}
-        <span class="glyphicon glyphicon-calendar"></span>  {{ $operation.GetEndDate }}: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> has finished in
+        <span class="glyphicon glyphicon-calendar"></span>  {{ $operation.GetEndDate }}: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> has <span class="label label-success">finished</span> in
             <span class="glyphicon glyphicon-time"></span> {{ $operation.GetDuration }}.
     {{ end }}
     </div>
+    <div class="print-div">
     <div class="panel panel-{{ $operation.GetResult }}">
         <div class="panel-heading"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">#{{ $operation.ID }} </a> Operation {{ $operation.Action.Content }}
         </div>
@@ -103,7 +104,7 @@
             <table class="list-tasks table table-bordered table-condensed">
               <thead>
                 <tr>
-                  <th class="hidden-xs"># Task</th>
+                  <th># Task</th>
                   <th>Content</th>
                   <th>State</th>
                   <th>Start</th>
@@ -148,14 +149,15 @@
               </tbody>
             </table>
           </div>
+          </div>
         </div>
       </div>
-      <div class="well">
-        <strong><span class="glyphicon glyphicon-calendar"></span> {{ $operation.GetStartDate }}</strong>: Starting operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{$operation.ID }}">{{$operation.Action.Content}}</a>
+      <div class="well text-left">
+        <strong><span class="glyphicon glyphicon-calendar"></span> {{ $operation.GetStartDate }}</strong>: The  operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{$operation.ID }}">{{$operation.Action.Content}}</a> has <span class="label label-default">started</span>
       </div>
       {{ end }}
-    <div class="well">
-      <strong><span class="glyphicon glyphicon-calendar"></span> {{ .process.GetStartDate }}</strong>: The process has started
+    <div class="well text-left">
+      <strong><span class="glyphicon glyphicon-calendar"></span> {{ .process.GetStartDate }}</strong>: The process has <span class="label label-default">started</span>
     </div>
   </div>
 </div>

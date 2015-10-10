@@ -14,7 +14,7 @@
       </div>
     {{ else }}
       <div>
-        <span class="text-warning">
+        <span class="text-warning warning-notice">
   				<span class="glyphicon glyphicon-warning-sign"></span>
           This page is not live updated.
   			</span>

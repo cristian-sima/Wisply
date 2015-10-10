@@ -1,5 +1,25 @@
 package harvest
 
+// RemoteRepositoryInterface ... defines the method to be implemented by a standard (remote repository)
+type RemoteRepositoryInterface interface {
+	Validate()
+	HarvestIdentification()
+	HarvestFormats()
+	HarvestCollections()
+	HarvestRecords()
+	SetManager(manager *Process)
+}
+
+// RemoteRepository represents a remote repository
+type RemoteRepository struct {
+	Manager *Process
+}
+
+// SetManager sets the manager of a current repository
+func (repository *RemoteRepository) SetManager(manager *Process) {
+	repository.Manager = manager
+}
+
 // Identificationer ... must be implemented by a repository
 type Identificationer interface {
 	GetName() string

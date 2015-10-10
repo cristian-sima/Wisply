@@ -38,38 +38,35 @@ func (process *Process) run() {
 				} else {
 					process.ChangeResult("danger")
 					process.Finish()
+					process.ChangeRepositoryStatus("verification-failed")
 				}
 				break
 			case "Identifying":
 				if message.GetValue() == "normal" {
 					go process.harvest()
 				} else {
-					process.ChangeResult("danger")
-					process.Finish()
+					process.processFails()
 				}
 				break
 			case "Harvest Formats":
 				if message.GetValue() == "normal" {
 					go process.harvestCollections()
 				} else {
-					process.ChangeResult("danger")
-					process.Finish()
+					process.processFails()
 				}
 				break
 			case "Harvest Collections":
 				if message.GetValue() == "normal" {
 					go process.harvestRecords()
 				} else {
-					process.ChangeResult("danger")
-					process.Finish()
+					process.processFails()
 				}
 				break
 			case "Harvest Records":
 				if message.GetValue() == "normal" {
 					go process.harvestIdentifiers()
 				} else {
-					process.ChangeResult("danger")
-					process.Finish()
+					process.processFails()
 				}
 			case "Harvest Identifiers":
 				if message.GetValue() != "normal" {
@@ -139,6 +136,12 @@ func (process *Process) harvestIdentifiers() {
 }
 
 // --- end activity
+
+func (process *Process) processFails() {
+	process.ChangeResult("danger")
+	process.Finish()
+	process.ChangeRepositoryStatus("problems")
+}
 
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {
@@ -350,8 +353,6 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 func DeleteProcess(processID int) {
 	sql := "DELETE FROM `process_harvest` WHERE process=?"
 	query, err := database.Database.Prepare(sql)
-
-	fmt.Println(processID)
 
 	if err != nil {
 		fmt.Println("Error when deleting the harvest process:")

@@ -1,5 +1,24 @@
 package harvest
 
+// Keys encapsulate all the dublin core keys
+type Keys struct {
+	Titles       []string `xml:"title"`
+	Creators     []string `xml:"creator"`
+	Subjects     []string `xml:"subject"`
+	Descriptions []string `xml:"description"`
+	Publishers   []string `xml:"publisher"`
+	Contributors []string `xml:"contributor"`
+	Dates        []string `xml:"date"`
+	Types        []string `xml:"type"`
+	Formats      []string `xml:"format"`
+	Identifiers  []string `xml:"identifier"`
+	Sources      []string `xml:"source"`
+	Languages    []string `xml:"language"`
+	Relations    []string `xml:"relation"`
+	Coverages    []string `xml:"coverage"`
+	Rights       []string `xml:"rights"`
+}
+
 // OAIIdentification represents the identification for a OAI repository
 type OAIIdentification struct {
 	Name              string
@@ -125,7 +144,7 @@ type OAIIdentifier struct {
 	Spec       []string
 }
 
-// OAIIdentifier returns the datastamp of the record
+// GetTimestamp returns the datastamp of the record
 func (record *OAIIdentifier) GetTimestamp() string {
 	return record.Datestamp
 }

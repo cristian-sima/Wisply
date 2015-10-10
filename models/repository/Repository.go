@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
@@ -47,7 +46,6 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 // GetInstitution returns a reference to the institution which holds the repository
 func (repository *Repository) GetInstitution() *Institution {
 	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))
-	fmt.Println(institution)
 	return institution
 }
 
@@ -110,11 +108,7 @@ func (repository *Repository) GetIdentification() *Identification {
 
 	emailsSQL := "SELECT `email` FROM `repository_email` WHERE `repository` = ?"
 	smt, _ := wisply.Database.Prepare(emailsSQL)
-	rows, errEmails := smt.Query(repository.ID)
-
-	if errEmails != nil {
-		fmt.Println(errEmails)
-	}
+	rows, _ := smt.Query(repository.ID)
 
 	for rows.Next() {
 		email := ""

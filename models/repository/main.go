@@ -114,10 +114,10 @@ func NewRepository(ID string) (*Repository, error) {
 	}
 	sql := "SELECT id, name, url, description, status, institution, category FROM repository WHERE id = ?"
 	query, err := database.Database.Prepare(sql)
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
 	return repository, nil
 }
 

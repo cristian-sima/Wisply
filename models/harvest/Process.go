@@ -2,14 +2,17 @@ package harvest
 
 import (
 	"fmt"
+	"strconv"
 
 	action "github.com/cristian-sima/Wisply/models/action"
+	database "github.com/cristian-sima/Wisply/models/database"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Process is a link between controller and repository
 type Process struct {
 	*action.Process
+	repository     *repository.Repository
 	remote         RemoteRepositoryInterface
 	CurrentAction  int                 `json:"CurrentAction"`
 	Actions        map[string]*Action2 `json:"Actions"`
@@ -139,7 +142,7 @@ func (process *Process) harvestIdentifiers() {
 
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {
-	return process.Repository
+	return process.repository
 }
 
 // GetRemote returns the interface of a remote repository
@@ -215,7 +218,7 @@ func (process *Process) End() {
 
 // ChangeRepositoryStatus changes the status of local repository
 func (process *Process) ChangeRepositoryStatus(newStatus string) {
-	process.Repository.ModifyStatus(newStatus)
+	process.repository.ModifyStatus(newStatus)
 	process.notifyController(&Message{
 		Name:  "status-changed",
 		Value: newStatus,
@@ -223,7 +226,7 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 }
 
 func (process *Process) notifyController(message *Message) {
-	message.Repository = process.Repository.ID
+	message.Repository = process.repository.ID
 	process.Controller.Notify(message)
 }
 
@@ -237,8 +240,9 @@ func (process *Process) record(message string) {
 
 // CreateProcess creates a new harvest process
 func CreateProcess(ID string, controller WisplyController) *Process {
-	var remote RemoteRepositoryInterface
-	repository.NewRepository(ID)
+	// var remote RemoteRepositoryInterface
+
+	local, _ := repository.NewRepository(ID)
 
 	// switch local.Category {
 	// case "EPrints":
@@ -250,14 +254,102 @@ func CreateProcess(ID string, controller WisplyController) *Process {
 	// }
 
 	process := &Process{
-		Process:    &*action.CreateProcess(ID, "Harvest"),
-		remote:     remote,
+		Process: &*action.CreateProcess("Harvest"),
+		// remote:     remote,
 		Controller: controller,
+		repository: local,
 		Actions:    make(map[string]*Action2),
 	}
-	// process.SetName("Harvest")
-	// db.SetManager(process)
-	// remote.SetManager(process)
+
+	insertHarvestProcess(process)
 
 	return process
+}
+
+func insertHarvestProcess(process *Process) {
+	columns := "(`process`, `repository`)"
+	values := "(?, ?)"
+	sql := "INSERT INTO `process_harvest` " + columns + " VALUES " + values
+
+	query, err := database.Database.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when creating the harvest process:")
+		fmt.Println(sql)
+		fmt.Println(err)
+	}
+	query.Exec(process.ID, process.GetRepository().ID)
+}
+
+// NewProcess selects from database and creates a harvest.Process by ID
+// NOTE! It returns only the Repository
+func NewProcess(processID int) *Process {
+
+	var (
+		repID int
+		local *repository.Repository
+	)
+
+	sql := "SELECT `repository` FROM `process_harvest` WHERE process=?"
+	query, err := database.Database.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when selecting the ID of repository from harvest process:")
+		fmt.Println(err)
+	}
+	query.QueryRow(processID).Scan(&repID)
+
+	local, err2 := repository.NewRepository(strconv.Itoa(repID))
+
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+
+	return &Process{
+		repository: local,
+	}
+}
+
+// DeleteProcess deletes a harvest process
+func DeleteProcess(processID int) {
+	sql := "DELETE FROM `process_harvest` WHERE process=?"
+	query, err := database.Database.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when deleting the harvest process:")
+		fmt.Println(err)
+	}
+	query.Exec(processID)
+
+}
+
+// GetProcessesByRepository returns the processes of for the repository
+func GetProcessesByRepository(repositoryID int) []*Process {
+
+	var (
+		list      []*Process
+		processID int
+		repID     string
+	)
+
+	repID = strconv.Itoa(repositoryID)
+
+	sql := "SELECT `process` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
+	rows, err := database.Database.Query(sql, repositoryID)
+
+	if err != nil {
+		fmt.Println("Error while selecting the processes by repository: ")
+		fmt.Println(repositoryID)
+	}
+
+	for rows.Next() {
+		rows.Scan(&processID)
+		rep, _ := repository.NewRepository(repID)
+		process := Process{
+			repository: rep,
+			Process:    action.NewProcess(processID),
+		}
+		list = append(list, &process)
+	}
+	return list
 }

@@ -6,23 +6,19 @@ import (
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // CreateProcess creates a new harvest process
-func CreateProcess(repositoryID, content string) *Process {
-
-	local, _ := repository.NewRepository(repositoryID)
+func CreateProcess(content string) *Process {
 
 	process := &Process{
 		Action:           NewAction(true, content),
-		Repository:       local,
 		operationConduit: make(chan OperationMessager, 100),
 	}
 	// insert
 
-	columns := "(`content`, `start`, `repository`, `is_running`)"
-	values := "(?, ?, ?, ?)"
+	columns := "(`content`, `start`, `is_running`)"
+	values := "(?, ?, ?)"
 	sql := "INSERT INTO `process` " + columns + " VALUES " + values
 
 	query, err := wisply.Database.Prepare(sql)
@@ -33,12 +29,12 @@ func CreateProcess(repositoryID, content string) *Process {
 		fmt.Println(err)
 	}
 
-	query.Exec(process.Content, process.Start, local.ID, strconv.FormatBool(process.IsRunning))
+	query.Exec(process.Content, process.Start, strconv.FormatBool(process.IsRunning))
 
 	// find its ID
-	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND repository=? AND is_running=?"
+	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND is_running=?"
 	query, err = wisply.Database.Prepare(sql)
-	query.QueryRow(process.Content, process.Start, local.ID, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
+	query.QueryRow(process.Content, process.Start, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of process:")

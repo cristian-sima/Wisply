@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <td>Repository</td>
-                        <td><strong><a href="/admin/repositories/repository/{{ .process.Repository.ID }}">{{ .process.Repository.Name }}</strong></a></td>
+                        <td><strong><a href="/admin/repositories/repository/{{ .harvestProcess.GetRepository.ID }}">{{ .harvestProcess.GetRepository.Name }}</strong></a></td>
                     </tr>
                 </tbody>
             </table>

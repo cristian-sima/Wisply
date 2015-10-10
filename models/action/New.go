@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // - constructors
@@ -116,24 +115,22 @@ func NewTask(ID int) *Task {
 func NewProcess(ID int) *Process {
 
 	var (
-		opeID             int
-		proStart, proEnd  int64
-		proIsRunning      bool
-		proContent, repID string
+		opeID            int
+		proStart, proEnd int64
+		proIsRunning     bool
+		proContent       string
 	)
 
-	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`, `repository`"
+	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`"
 	sql := "SELECT " + fieldList + " FROM `process` WHERE id= ?"
 	query, err := wisply.Database.Prepare(sql)
 
-	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning, &repID)
+	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning)
 
 	if err != nil {
 		fmt.Println("It has been an error when tring to get the info about the process: ")
 		fmt.Println(err)
 	}
-
-	repository, _ := repository.NewRepository(repID)
 
 	process := &Process{
 		Action: &Action{
@@ -143,7 +140,6 @@ func NewProcess(ID int) *Process {
 			IsRunning: proIsRunning,
 			Content:   proContent,
 		},
-		Repository: repository,
 		currentOperation: &Operation{
 			Action: &Action{
 				ID: opeID,

@@ -5,14 +5,12 @@ import (
 	"strconv"
 
 	wisply "github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Process is a top level action which coordonates many operations and communicates with the controller
 type Process struct {
 	*Action
 	ID               int
-	Repository       *repository.Repository
 	currentOperation *Operation
 	operationConduit chan OperationMessager
 }

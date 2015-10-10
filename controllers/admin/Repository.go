@@ -28,6 +28,8 @@ func (controller *RepositoryController) List() {
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
+	selected, _ := strconv.Atoi(strings.TrimSpace(controller.GetString("institution")))
+	controller.Data["selectedInstitution"] = selected
 	controller.SetCustomTitle("Add Repository")
 	controller.showAddForm()
 }
@@ -61,11 +63,8 @@ func (controller *RepositoryController) Modify() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		repositoryDetails := map[string]string{
-			"Name":        repository.Name,
-			"Description": repository.Description,
-		}
-		controller.showModifyForm(repositoryDetails)
+		controller.Data["repository"] = repository
+		controller.showModifyForm()
 	}
 }
 
@@ -111,11 +110,7 @@ func (controller *RepositoryController) Delete() {
 	}
 }
 
-func (controller *RepositoryController) showModifyForm(repository map[string]string) {
-	controller.Data["repositoryName"] = repository["Name"]
-	controller.Data["repositoryUrl"] = repository["Url"]
-	controller.Data["repositoryDescription"] = repository["Description"]
-	controller.Data["repositoryInstitution"] = repository["Institution"]
+func (controller *RepositoryController) showModifyForm() {
 	controller.showForm("Modify", "Modify this repository")
 }
 

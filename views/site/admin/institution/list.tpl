@@ -31,15 +31,13 @@
             <th>Name</th>
             <th>Web adddress</th>
             <th>Auto Wiki</th>
-            <th>Modify</th>
-            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           {{range $index, $element := .institutions}}
           {{$safe := $element.Name|html}}
           <tr>
-            <td>{{ $element.Name |html }}</td>
+            <td><a href="/admin/institutions/institution/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td>
             {{ if eq $element.WikiID "NULL" }}
@@ -47,12 +45,6 @@
             {{ else }}
             <span class="label label-success">Enabled</label>
             {{ end }}
-            </td>
-            <td>
-              <a href="/admin/institutions/modify/{{$element.ID}}">Modify</a>
-            </td>
-            <td>
-              <a class="deleteInstitutionButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="/">Delete</a>
             </td>
           </tr>
           {{end }}

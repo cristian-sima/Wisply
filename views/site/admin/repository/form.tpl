@@ -8,12 +8,12 @@
     <div class="panel-body">
         <form method="{{.actionType}}" class="form-horizontal" >
           {{ .xsrf_input }}
-          {{ $safeDescription := .repositoryDescription|html}}
+          {{ $safeDescription := .repository.Description|html}}
           <fieldset>
             <div class="form-group">
               <label for="repository-name" class="col-lg-2 control-label">Name</label>
               <div class="col-lg-10">
-                <input type="text" value="{{.repositoryName}}" class="form-control" name="repository-name" id="repository-name" placeholder="Name" required pattern=".{3,255}" title="The name has 3 up to 255 characters!">
+                <input type="text" value="{{.repository.Name}}" class="form-control" name="repository-name" id="repository-name" placeholder="Name" required pattern=".{3,255}" title="The name has 3 up to 255 characters!">
               </div>
             </div>
             {{ if eq .action "Add" }}
@@ -21,9 +21,19 @@
               <label for="institution-URL" class="col-lg-2 control-label">Institution <a href="/admin/institutions/add" target="_blank"><span data-toggle="tooltip" data-placement="top" title="Create institution" class="glyphicon glyphicon-plus-sign text-success"> </span></a></label>
                 <div class="col-lg-10">
                 <select class="form-control" name="repository-institution" id="repository-institution">
+                  {{ $selected := .selectedInstitution }}
+                  {{ $repInstitution := .repository.Institution }}
                     {{range $index, $institution := .institutions}}
                     {{$safe := $institution.Name|html}}
-                    <option value="{{ $institution.ID }}">{{ $safe }}</option>
+                    <option
+                    {{ if $selected }}
+                      {{ if eq $selected $institution.ID }}
+                      selected
+                      {{ end }}
+                    {{ end }}
+
+
+                    value="{{ $institution.ID }}">{{ $safe }}</option>
                     {{ end }}
                 </select>
               </div>
@@ -31,14 +41,14 @@
             <div class="form-group">
               <label for="repository-URL" class="col-lg-2 control-label">Base URL</label>
               <div class="col-lg-10">
-                <input type="url" value="{{.repositoryUrl}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+                <input type="url" value="{{.repository.Url}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
               </div>
             </div>
             {{ end }}
             <div class="form-group">
               <label for="repository-description" class="col-lg-2 control-label">Description</label>
               <div class="col-lg-10">
-                <textarea class="form-control" rows="3" name="repository-description" id="repository-description" maxlength="255" >{{ .repositoryDescription}}</textarea>
+                <textarea class="form-control" rows="3" name="repository-description" id="repository-description" maxlength="255" >{{ .repository.Description}}</textarea>
                 <span class="help-block">This field may contain notes about the intitution.</span>
               </div>
             </div>

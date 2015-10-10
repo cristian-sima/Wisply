@@ -130,6 +130,31 @@ func (controller *InstitutionController) Delete() {
 	}
 }
 
+// ShowInstitution shows the administrative page for an institution
+func (controller *RepositoryController) ShowInstitution() {
+	ID := controller.Ctx.Input.Param(":id")
+	institution, err := repository.NewInstitution(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["institution"] = institution
+		controller.Data["repositories"] = institution.GetRepositories()
+		controller.TplNames = "site/admin/institution/institution.tpl"
+	}
+}
+
+// ShowAdvanceInstitutionOptions displays the page with further options such as modify or delete
+func (controller *RepositoryController) ShowAdvanceInstitutionOptions() {
+	ID := controller.Ctx.Input.Param(":id")
+	institution, err := repository.NewInstitution(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["institution"] = institution
+		controller.TplNames = "site/admin/institution/advance-options.tpl"
+	}
+}
+
 func (controller *InstitutionController) showModifyForm() {
 	controller.showForm("Modify", "Modify this institution")
 }

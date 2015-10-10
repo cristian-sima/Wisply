@@ -23,11 +23,18 @@ func (controller *RepositoryController) List() {
 	controller.TplNames = "site/admin/repository/list.tpl"
 }
 
+// ShowTypes displays the types which are available
+func (controller *RepositoryController) ShowTypes() {
+	controller.Data["institution"] = strings.TrimSpace(controller.GetString("institution"))
+	controller.TplNames = "site/admin/repository/add/category.tpl"
+}
+
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
 	selected, _ := strconv.Atoi(strings.TrimSpace(controller.GetString("institution")))
 	controller.Data["selectedInstitution"] = selected
+	controller.Data["category"] = strings.TrimSpace(controller.GetString("category"))
 	controller.SetCustomTitle("Add Repository")
 	controller.showAddForm()
 }
@@ -40,6 +47,8 @@ func (controller *RepositoryController) Insert() {
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
 	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
+	repositoryDetails["public-url"] = strings.TrimSpace(controller.GetString("repository-public-url"))
+	repositoryDetails["category"] = strings.TrimSpace(controller.GetString("repository-category"))
 
 	problems, err := controller.model.InsertNewRepository(repositoryDetails)
 	if err != nil {

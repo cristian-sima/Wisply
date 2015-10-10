@@ -6,10 +6,18 @@
       <li class="active">{{.action}}</li>
     </ul></div>
     <div class="panel-body">
-        <form method="{{.actionType}}" class="form-horizontal" >
+    </div>
+      <form method="{{.actionType}}" class="form-horizontal" >
+          <input type="hidden" name="repository-category" value="{{ .category }}"/>
           {{ .xsrf_input }}
           {{ $safeDescription := .repository.Description|html}}
           <fieldset>
+              <div class="form-group">
+                <label class="col-lg-2 control-label">Category</label>
+                <div class="col-lg-10">
+                   <strong>{{ .category }}</strong>
+                </div>
+              </div>
             <div class="form-group">
               <label for="repository-name" class="col-lg-2 control-label">Name</label>
               <div class="col-lg-10">
@@ -31,11 +39,15 @@
                       selected
                       {{ end }}
                     {{ end }}
-
-
                     value="{{ $institution.ID }}">{{ $safe }}</option>
                     {{ end }}
                 </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="repository-public-url" class="col-lg-2 control-label">Public URL</label>
+              <div class="col-lg-10">
+                <input type="url" value="{{.repository.PublicURL}}" class="form-control" name="repository-public-url" id="repository-public-url" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
               </div>
             </div>
             <div class="form-group">

@@ -17,6 +17,7 @@ type Repository struct {
 	Status      string
 	Institution int
 	Category    string
+	PublicURL   string
 }
 
 // Delete removes the repository from database

@@ -110,7 +110,7 @@ var Repositories = function () {
       * The callback called when the repository has been deleted. It shows a message and reloads the page in 2 seconds
       */
       successCallback =  function () {
-        wisply.message.showSuccess("The repository has been removed! Refreshing page...");
+        //wisply.message.showSuccess("The repository has been removed! Refreshing page...");
         window.location = "/admin/repositories";
       };
 

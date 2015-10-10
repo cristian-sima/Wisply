@@ -58,11 +58,11 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 // GetAllRepositories returns an array of Repository with all repositories
 func (model *Model) GetAllRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description, status, institution, category FROM repository"
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository"
 	rows, _ := database.Database.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
 		list = append(list, repository)
 	}
 	return list
@@ -112,12 +112,12 @@ func NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, name, url, description, status, institution, category FROM repository WHERE id = ?"
+	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository WHERE id = ?"
 	query, err := database.Database.Prepare(sql)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
 	return repository, nil
 }
 
@@ -145,10 +145,11 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 	description := repositoryDetails["description"].(string)
 	url := repositoryDetails["url"].(string)
 	institutionID := repositoryDetails["institution"].(string)
-	category := "EPrints"
-	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`, category) VALUES (?, ?, ?, ?, ?)"
+	category := repositoryDetails["category"].(string)
+	publicURL := repositoryDetails["public-url"].(string)
+	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`, `category`, `public_url`) VALUES (?, ?, ?, ?, ?, ?)"
 	query, err := database.Database.Prepare(sql)
-	query.Exec(name, description, url, institutionID, category)
+	query.Exec(name, description, url, institutionID, category, publicURL)
 	if err != nil {
 		problem.Message = "No repository like that"
 		return problem, errors.New("Error")

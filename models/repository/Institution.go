@@ -65,11 +65,11 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 // GetRepositories returns the list of repositories
 func (institution *Institution) GetRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description, status, institution FROM repository WHERE institution = ?"
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository WHERE institution = ?"
 	rows, _ := database.Database.Query(sql, institution.ID)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
 		list = append(list, repository)
 	}
 	return list

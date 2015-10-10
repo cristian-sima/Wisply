@@ -13,6 +13,7 @@ var (
 		"id":          {"Int"},
 		"institution": {"Int"},
 		"wikiID":      {"String", "Regexp:^(NULL)$|^((\\d)+)$"},
+		"category":    {"String", "Regexp:^(EPrints)$"},
 	}
 )
 
@@ -47,6 +48,8 @@ func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationR
 		"url":         rules["url"],
 		"description": rules["description"],
 		"institution": rules["institution"],
+		"category":    rules["category"],
+		"public-url":  rules["url"],
 	}
 	return adapter.Validate(details, rules)
 }

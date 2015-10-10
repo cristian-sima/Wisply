@@ -24,7 +24,7 @@
           <div id="websocket-connection"></div>
         </div>
       </div>
-    {{ if .anything }}
+    {{ if ne (len .repositories) 0 }}
     <div class="table-responsive">
       <table class="table table-striped table-hover " id="repositories-list">
         <thead>
@@ -32,11 +32,12 @@
             <th>Name</th>
             <th>Current status</th>
             <th>Base URL</th>
-            <th>Description</th>
+            <th>Institution</th>
           </tr>
         </thead>
         <tbody>
           {{range $index, $element := .repositories}}
+          {{ $institution := $element.GetInstitution }}
           {{$safe := $element.Name|html}}
           <tr>
             <td><a href="/admin/repositories/repository/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
@@ -79,7 +80,7 @@
 
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
-            <td>{{ $element.Description |html }}</td>
+            <td><a href="/admin/institutions/institution/{{ $institution.ID }}">{{ $institution.Name }}</a></td>
           </tr>
           {{end }}
         </tbody>

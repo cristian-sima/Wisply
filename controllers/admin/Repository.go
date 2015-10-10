@@ -15,10 +15,7 @@ type RepositoryController struct {
 
 // List shows all the repositories
 func (controller *RepositoryController) List() {
-	var exists bool
 	list := controller.model.GetAllRepositories()
-	exists = (len(list) != 0)
-	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.SetCustomTitle("Admin - Repositories")

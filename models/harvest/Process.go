@@ -238,6 +238,11 @@ func (process *Process) record(message string) {
 	//process.operation.record(message, process.Local.ID)
 }
 
+// Delete deletes the harvest process and calls its parent method
+func (process *Process) Delete() {
+	DeleteProcess(process.ID)
+}
+
 // CreateProcess creates a new harvest process
 func CreateProcess(ID string, controller WisplyController) *Process {
 	// var remote RemoteRepositoryInterface
@@ -310,19 +315,6 @@ func NewProcess(processID int) *Process {
 	}
 }
 
-// DeleteProcess deletes a harvest process
-func DeleteProcess(processID int) {
-	sql := "DELETE FROM `process_harvest` WHERE process=?"
-	query, err := database.Database.Prepare(sql)
-
-	if err != nil {
-		fmt.Println("Error when deleting the harvest process:")
-		fmt.Println(err)
-	}
-	query.Exec(processID)
-
-}
-
 // GetProcessesByRepository returns the processes of for the repository
 func GetProcessesByRepository(repositoryID int) []*Process {
 
@@ -352,4 +344,18 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 		list = append(list, &process)
 	}
 	return list
+}
+
+// DeleteProcess deletes a process
+func DeleteProcess(processID int) {
+	sql := "DELETE FROM `process_harvest` WHERE process=?"
+	query, err := database.Database.Prepare(sql)
+
+	fmt.Println(processID)
+
+	if err != nil {
+		fmt.Println("Error when deleting the harvest process:")
+		fmt.Println(err)
+	}
+	query.Exec(processID)
 }

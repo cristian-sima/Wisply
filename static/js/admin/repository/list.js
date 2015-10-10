@@ -111,7 +111,7 @@ var Repositories = function () {
       */
       successCallback =  function () {
         wisply.message.showSuccess("The repository has been removed! Refreshing page...");
-        wisply.reloadPage(2000);
+        window.location = "/admin/repositories";
       };
 
       /**

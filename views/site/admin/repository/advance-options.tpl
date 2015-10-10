@@ -20,7 +20,7 @@
               <h2>Delete</h2>
               <div class="well">
                 <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the repository can not be recovered.</span></h5><br />
-                <a data-id="" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository from Wisply</a>
+                <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository from Wisply</a>
               </div>
             </div>
           </div>

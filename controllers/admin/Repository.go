@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -98,6 +99,10 @@ func (controller *RepositoryController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		processes := harvest.GetProcessesByRepository(repository.ID)
+		for _, process := range processes {
+			process.Delete()
+		}
 		databaseError := repository.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")

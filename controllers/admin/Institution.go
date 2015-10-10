@@ -2,7 +2,10 @@ package admin
 
 import "strings"
 
-import repository "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/harvest"
+	repository "github.com/cristian-sima/Wisply/models/repository"
+)
 
 // InstitutionController manages the operations for institutions
 type InstitutionController struct {
@@ -121,6 +124,15 @@ func (controller *InstitutionController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		repositories := institution.GetRepositories()
+
+		for _, repository := range repositories {
+			processes := harvest.GetProcessesByRepository(repository.ID)
+			for _, process := range processes {
+				process.Delete()
+			}
+		}
+
 		databaseError := institution.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")

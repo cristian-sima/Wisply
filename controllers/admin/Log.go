@@ -34,6 +34,15 @@ func (controller *LogController) ShowLogAdvanceOptions() {
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
+// DeleteEntireLog deletes the entire log
+func (controller *LogController) DeleteEntireLog() {
+	processes := action.GetAllProcesses()
+	for _, process := range processes {
+		controller.deleteProcess(process)
+	}
+	controller.TplNames = "site/admin/log/log-advance-options.tpl"
+}
+
 // DeleteProcess deletes a process
 func (controller *LogController) DeleteProcess() {
 	idString := controller.Ctx.Input.Param(":process")
@@ -47,7 +56,7 @@ func (controller *LogController) deleteProcess(process *action.Process) {
 
 	switch process.Content {
 	case "Harvest":
-		harvest.DeleteProcess(process.ID)
+		harvest.DeleteProcess(process.Action.ID)
 		break
 	}
 
@@ -109,13 +118,4 @@ func (controller *LogController) ShowOperation() {
 	controller.Data["tasks"] = operation.GetTasks()
 
 	controller.TplNames = "site/admin/log/operation.tpl"
-}
-
-// DeleteEntireLog deletes the entire log
-func (controller *LogController) DeleteEntireLog() {
-	processes := action.GetAllProcesses()
-	for _, process := range processes {
-		controller.deleteProcess(process)
-	}
-	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }

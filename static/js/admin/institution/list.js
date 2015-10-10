@@ -70,15 +70,15 @@ var Institutions = function () {
       mainButton;
 
       cancelButton = {
-        label: "Cancel",
-        className: "btn-default",
+        label: "No, thanks",
+        className: "btn-success",
         callback: function () {
           this.modal('hide');
         }
       };
       mainButton = {
-        label: "Delete",
-        className: "btn-primary",
+        label: "Yes",
+        className: "btn-danger",
         callback: function () {
           wisply.institutionsManager.delete(institution);
         }
@@ -88,8 +88,8 @@ var Institutions = function () {
         "main": mainButton
       };
       msg = {
-        title: "Please confirm!",
-        message: "The institution <b>" + institution.name + "</b> will be permanently removed. Are you sure?",
+        title: "We need your confirmation!",
+        message: "<h2 class='text-warning'>Warning:</h2> <div>These will be permanently removed:</div> <ul>                  <li> The details of institution</li>                  <li> All the repositories                  <ul>                    <li>All the records</li>                    <li>All the collections</li>                    <li>All the identifiers</li>                    <li>All the formats</li>                    <li>All the logs</li>                  </ul>                </li>       <li>All details regarding the repositories</li>         </ul> <b>" + institution.name + "</b><br /><br /> Are you sure?",
         onEscape: true,
         buttons: buttons
       };

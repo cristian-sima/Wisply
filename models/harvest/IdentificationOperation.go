@@ -32,17 +32,17 @@ func (operation *IdentificationOperation) tryToGet() {
 
 func (operation *IdentificationOperation) tryToParse(page []byte) {
 
-	// rem := operation.process.GetRemoteServer()
-	//
-	// task := newParseTask(operation, rem)
-	//
-	// response, err := task.GetIdentification(page)
-	//
-	// if err != nil {
-	// 	operation.identificationFailed()
-	// } else {
-	// 	operation.insertIdentification(response)
-	// }
+	rem := operation.process.GetRemoteServer()
+
+	task := newParseTask(operation, rem)
+
+	response, err := task.GetIdentification(page)
+
+	if err != nil {
+		operation.identificationFailed()
+	} else {
+		operation.insertIdentification(response)
+	}
 }
 
 func (operation *IdentificationOperation) insertIdentification(result *wisply.Identificationer) {

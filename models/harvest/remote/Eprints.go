@@ -1,6 +1,8 @@
 package remote
 
 import (
+	"errors"
+
 	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
 	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
@@ -27,7 +29,7 @@ func (repository *EPrintsRepository) Identify() ([]byte, error) {
 	return repository.request.Identify()
 }
 
-// GetIdentification returns the identification details
+// GetIdentification returns the identification details in Wisply format
 func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.Identificationer, error) {
 
 	var idenfitication wisply.Identificationer
@@ -38,6 +40,11 @@ func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.
 	}
 
 	remoteIdentity := response.Identify
+
+	// check a field which must be
+	if remoteIdentity.RepositoryName == "" {
+		return &idenfitication, errors.New("There was a problem getting the fields")
+	}
 
 	idenfitication = &OAIIdentification{
 		Name:              remoteIdentity.RepositoryName,

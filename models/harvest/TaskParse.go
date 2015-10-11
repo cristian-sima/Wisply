@@ -1,6 +1,9 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/remote"
+import (
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+)
 
 // ParseTask represents a task for parsing the content of a request from a remote repository
 // It is a decorator pattern
@@ -19,15 +22,14 @@ func (task *ParseTask) Verify(content []byte) error {
 }
 
 // GetIdentification tells the remote server to parse the content and to return the identification
-func (task *ParseTask) GetIdentification(content []byte) error {
+func (task *ParseTask) GetIdentification(content []byte) (*wisply.Identificationer, error) {
 
-	// task.addContent("identification")
-	// err := task.remote.GetIdentification(content)
-	// task.finishRequest(err, "The identification has been parsed")
-	//
-	// return err
-	//
-	return nil
+	task.addContent("identification")
+	identification, err := task.remote.GetIdentification(content)
+	task.finishRequest(err, "The identification has been parsed")
+
+	return identification, err
+
 }
 
 //

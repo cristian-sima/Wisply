@@ -32,15 +32,15 @@ func (request *Request) getVerb(verb string) ([]byte, error) {
 
 // IsValidResponse parses a content and returns the error
 func (request *Request) IsValidResponse(content []byte) error {
-	_, err := request.parse(content)
+	_, err := request.Parse(content)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// parse returns the content of the remote repository
-func (request *Request) parse(content []byte) (*Response, error) {
+// Parse returns the content of the remote repository
+func (request *Request) Parse(content []byte) (*Response, error) {
 	response, err := request.getResponse(content)
 	if err != nil {
 		return response, err

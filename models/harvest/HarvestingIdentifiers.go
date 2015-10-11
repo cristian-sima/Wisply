@@ -1,5 +1,7 @@
 package harvest
 
+import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+
 // HarvestingIdentifiers is the operation which collects the identifiers from a remote repository
 type HarvestingIdentifiers struct {
 	*Operation
@@ -37,7 +39,7 @@ func (operation *HarvestingIdentifiers) tryToParse(page []byte) {
 	// }
 }
 
-func (operation *HarvestingIdentifiers) insertRecords(collections []Identifier) {
+func (operation *HarvestingIdentifiers) insertRecords(collections []wisply.Identifier) {
 	repository := operation.Operation.GetRepository()
 	task := newInsertIdentifiersTask(operation, repository)
 	err := task.Insert(collections)

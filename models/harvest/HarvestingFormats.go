@@ -1,5 +1,7 @@
 package harvest
 
+import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+
 // HarvestingFormats is the operation which collects the formats from a remote repository
 type HarvestingFormats struct {
 	*Operation
@@ -38,7 +40,7 @@ func (operation *HarvestingFormats) tryToParse(page []byte) {
 	// }
 }
 
-func (operation *HarvestingFormats) insertFormats(formats []Formater) {
+func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
 	repository := operation.Operation.GetRepository()
 	task := newInsertFormatsTask(operation, repository)
 	err := task.Insert(formats)

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -16,7 +17,7 @@ type InsertRecordsTask struct {
 }
 
 // Insert clears the tables and inserts the records
-func (task *InsertRecordsTask) Insert(records []Recorder) error {
+func (task *InsertRecordsTask) Insert(records []wisply.Recorder) error {
 
 	err := task.clear()
 
@@ -69,7 +70,7 @@ func (task *InsertRecordsTask) clear() error {
 	return nil
 }
 
-func (task *InsertRecordsTask) insertRecords(records []Recorder) error {
+func (task *InsertRecordsTask) insertRecords(records []wisply.Recorder) error {
 	for _, record := range records {
 		err := task.insertRecord(record)
 		if err != nil {
@@ -79,7 +80,7 @@ func (task *InsertRecordsTask) insertRecords(records []Recorder) error {
 	return nil
 }
 
-func (task *InsertRecordsTask) insertRecord(record Recorder) error {
+func (task *InsertRecordsTask) insertRecord(record wisply.Recorder) error {
 
 	ID := task.repository.ID
 
@@ -98,84 +99,84 @@ func (task *InsertRecordsTask) insertRecord(record Recorder) error {
 	return task.saveKeys(&record)
 }
 
-func (task *InsertRecordsTask) saveKeys(record *Recorder) error {
+func (task *InsertRecordsTask) saveKeys(record *wisply.Recorder) error {
 	return task.insertTitles(record)
 }
 
 // There is no way to compress them
-func (task *InsertRecordsTask) insertTitles(record *Recorder) error {
+func (task *InsertRecordsTask) insertTitles(record *wisply.Recorder) error {
 	var keys = (*record).GetKeys()
-	err := task.insertKeys(record, keys.Titles, "title")
+	err := task.insertKeys(record, (*keys).GetTitles(), "title")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Creators, "creator")
+	err = task.insertKeys(record, (*keys).GetCreators(), "creator")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Subjects, "subject")
+	err = task.insertKeys(record, (*keys).GetSubjects(), "subject")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Descriptions, "description")
+	err = task.insertKeys(record, (*keys).GetDescriptions(), "description")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Publishers, "publisher")
+	err = task.insertKeys(record, (*keys).GetPublishers(), "publisher")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Contributors, "contributor")
+	err = task.insertKeys(record, (*keys).GetContributors(), "contributor")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Dates, "date")
+	err = task.insertKeys(record, (*keys).GetDates(), "date")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Types, "type")
+	err = task.insertKeys(record, (*keys).GetTypes(), "type")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Formats, "format")
+	err = task.insertKeys(record, (*keys).GetFormats(), "format")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Identifiers, "identifier")
+	err = task.insertKeys(record, (*keys).GetIdentifiers(), "identifier")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Sources, "source")
+	err = task.insertKeys(record, (*keys).GetSources(), "source")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Languages, "language")
+	err = task.insertKeys(record, (*keys).GetLanguages(), "language")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Relations, "relation")
+	err = task.insertKeys(record, (*keys).GetRelations(), "relation")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Coverages, "coverage")
+	err = task.insertKeys(record, (*keys).GetCoverages(), "coverage")
 
 	if err != nil {
 		return err
 	}
-	err = task.insertKeys(record, keys.Rights, "right")
+	err = task.insertKeys(record, (*keys).GetRights(), "right")
 
 	if err != nil {
 		return err
@@ -183,7 +184,7 @@ func (task *InsertRecordsTask) insertTitles(record *Recorder) error {
 	return nil
 }
 
-func (task *InsertRecordsTask) insertKeys(record *Recorder, keys []string, name string) error {
+func (task *InsertRecordsTask) insertKeys(record *wisply.Recorder, keys []string, name string) error {
 
 	ID := task.repository.ID
 

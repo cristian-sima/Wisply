@@ -2,6 +2,7 @@ package remote
 
 import (
 	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -24,6 +25,31 @@ func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
 // Identify returns the identification details
 func (repository *EPrintsRepository) Identify() ([]byte, error) {
 	return repository.request.Identify()
+}
+
+// GetIdentification returns the identification details
+func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.Identificationer, error) {
+
+	var idenfitication wisply.Identificationer
+
+	response, err := repository.request.Parse(content)
+	if err != nil {
+		return &idenfitication, err
+	}
+
+	remoteIdentity := response.Identify
+
+	idenfitication = &OAIIdentification{
+		Name:              remoteIdentity.RepositoryName,
+		URL:               remoteIdentity.BaseURL,
+		Protocol:          remoteIdentity.ProtocolVersion,
+		AdminEmails:       remoteIdentity.AdminEmail,
+		EarliestDatestamp: remoteIdentity.EarliestDatestamp,
+		RecordPolicy:      remoteIdentity.DeletedRecord,
+		Granularity:       remoteIdentity.Granularity,
+	}
+
+	return &idenfitication, nil
 }
 
 // NewEPrints returns a repository of type Eprints

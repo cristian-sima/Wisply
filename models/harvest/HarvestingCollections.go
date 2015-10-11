@@ -1,5 +1,7 @@
 package harvest
 
+import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+
 // HarvestingCollections is the operation which collects the collections from a remote repository
 type HarvestingCollections struct {
 	*Operation
@@ -38,7 +40,7 @@ func (operation *HarvestingCollections) tryToParse(page []byte) {
 	// }
 }
 
-func (operation *HarvestingCollections) insertFormats(collections []Collectioner) {
+func (operation *HarvestingCollections) insertFormats(collections []wisply.Collectioner) {
 	repository := operation.Operation.GetRepository()
 	task := newInsertCollectionsTask(operation, repository)
 	err := task.Insert(collections)

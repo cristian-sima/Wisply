@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -16,7 +17,7 @@ type InsertFormatsTask struct {
 }
 
 // Insert saves the formats
-func (task *InsertFormatsTask) Insert(formats []Formater) error {
+func (task *InsertFormatsTask) Insert(formats []wisply.Formater) error {
 
 	err := task.clearTable()
 
@@ -58,7 +59,7 @@ func (task *InsertFormatsTask) clearTable() error {
 	return nil
 }
 
-func (task *InsertFormatsTask) insertData(formats []Formater) error {
+func (task *InsertFormatsTask) insertData(formats []wisply.Formater) error {
 
 	ID := task.repository.ID
 

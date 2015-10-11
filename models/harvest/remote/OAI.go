@@ -90,8 +90,8 @@ func (repository *OAICollection) GetSpec() string {
 
 // RESOURCES
 
-// Keys encapsulate all the dublin core keys
-type Keys struct {
+// OAIKeys encapsulate all the dublin core keys
+type OAIKeys struct {
 	Titles       []string `xml:"title"`
 	Creators     []string `xml:"creator"`
 	Subjects     []string `xml:"subject"`
@@ -109,12 +109,86 @@ type Keys struct {
 	Rights       []string `xml:"rights"`
 }
 
+// GetTitles returns the Titles
+func (keys *OAIKeys) GetTitles() []string {
+	return keys.Titles
+}
+
+// GetCreators returns the Creators
+func (keys *OAIKeys) GetCreators() []string {
+	return keys.Creators
+}
+
+// GetSubjects returns the Subjects
+func (keys *OAIKeys) GetSubjects() []string {
+	return keys.Subjects
+}
+
+// GetDescriptions returns the Descriptions
+func (keys *OAIKeys) GetDescriptions() []string {
+	return keys.Descriptions
+}
+
+// GetPublishers returns the Publishers
+func (keys *OAIKeys) GetPublishers() []string {
+	return keys.Publishers
+}
+
+// GetContributors returns the Contributors
+func (keys *OAIKeys) GetContributors() []string {
+	return keys.Contributors
+}
+
+// GetDates returns the Dates
+func (keys *OAIKeys) GetDates() []string {
+	return keys.Dates
+}
+
+// GetTypes returns the Types
+func (keys *OAIKeys) GetTypes() []string {
+	return keys.Types
+}
+
+// GetFormats returns the Formats
+func (keys *OAIKeys) GetFormats() []string {
+	return keys.Formats
+}
+
+// GetIdentifiers returns the Identifiers
+func (keys *OAIKeys) GetIdentifiers() []string {
+	return keys.Identifiers
+}
+
+// GetSources returns the Sources
+func (keys *OAIKeys) GetSources() []string {
+	return keys.Sources
+}
+
+// GetLanguages returns the Languages
+func (keys *OAIKeys) GetLanguages() []string {
+	return keys.Languages
+}
+
+// GetRelations returns the Relations
+func (keys *OAIKeys) GetRelations() []string {
+	return keys.Relations
+}
+
+// GetCoverages returns the Coverages
+func (keys *OAIKeys) GetCoverages() []string {
+	return keys.Coverages
+}
+
+// GetRights returns the Rights
+func (keys *OAIKeys) GetRights() []string {
+	return keys.Rights
+}
+
 // OAIRecord represents an OAI record
 type OAIRecord struct {
 	Datestamp  string
 	Identifier string
-	Keys       *Keys
-	ID         int64
+	Keys       *OAIKeys
 }
 
 // GetDatestamp returns the datastamp of the record
@@ -128,13 +202,8 @@ func (record *OAIRecord) GetIdentifier() string {
 }
 
 // GetKeys returns the keys of the record
-func (record *OAIRecord) GetKeys() *Keys {
+func (record *OAIRecord) GetKeys() *OAIKeys {
 	return record.Keys
-}
-
-// SetID returns the keys of the record
-func (record *OAIRecord) SetID(ID int64) {
-	record.ID = ID
 }
 
 // OAIIdentifier represents an OAI identifier

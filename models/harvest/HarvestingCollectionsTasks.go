@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
+	wisply "github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -16,7 +17,7 @@ type InsertCollectionsTask struct {
 }
 
 // Insert clears the table and then inserts them
-func (task *InsertCollectionsTask) Insert(collections []Collectioner) error {
+func (task *InsertCollectionsTask) Insert(collections []wisply.Collectioner) error {
 
 	err := task.clearTable()
 
@@ -58,7 +59,7 @@ func (task *InsertCollectionsTask) clearTable() error {
 	return nil
 }
 
-func (task *InsertCollectionsTask) insertData(collections []Collectioner) error {
+func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner) error {
 
 	ID := task.repository.ID
 

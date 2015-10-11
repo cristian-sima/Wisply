@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -16,7 +17,7 @@ type InsertIdentificationTask struct {
 }
 
 // Insert inserts the identification details
-func (task *InsertIdentificationTask) Insert(identification *Identificationer) error {
+func (task *InsertIdentificationTask) Insert(identification *wisply.Identificationer) error {
 	err := task.clearTables()
 
 	if err != nil {
@@ -52,7 +53,7 @@ func (task *InsertIdentificationTask) clearTables() error {
 	return nil
 }
 
-func (task *InsertIdentificationTask) insertData(identification *Identificationer) error {
+func (task *InsertIdentificationTask) insertData(identification *wisply.Identificationer) error {
 	err1 := task.insertDetails(identification)
 	if err1 != nil {
 		task.ChangeResult("danger")
@@ -89,7 +90,7 @@ func (task *InsertIdentificationTask) insertEmails(emails []string) error {
 	return nil
 }
 
-func (task *InsertIdentificationTask) insertDetails(identification *Identificationer) error {
+func (task *InsertIdentificationTask) insertDetails(identification *wisply.Identificationer) error {
 
 	sqlColumns := "(`repository`, `protocol_version`, `earliest_datestamp`, `delete_policy`, `granularity`)"
 	sqlValues := "(?, ?, ?, ?, ?)"

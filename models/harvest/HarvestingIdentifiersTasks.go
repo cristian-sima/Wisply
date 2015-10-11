@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -16,7 +17,7 @@ type InsertIdentifiersTask struct {
 }
 
 // Insert clears the tables and inserts the records
-func (task *InsertIdentifiersTask) Insert(identifiers []Identifier) error {
+func (task *InsertIdentifiersTask) Insert(identifiers []wisply.Identifier) error {
 
 	err := task.clear()
 
@@ -69,7 +70,7 @@ func (task *InsertIdentifiersTask) clear() error {
 	return nil
 }
 
-func (task *InsertIdentifiersTask) insertIdentifiers(identifiers []Identifier) error {
+func (task *InsertIdentifiersTask) insertIdentifiers(identifiers []wisply.Identifier) error {
 	for _, identifier := range identifiers {
 		err := task.insertIdentifier(identifier)
 		if err != nil {
@@ -79,7 +80,7 @@ func (task *InsertIdentifiersTask) insertIdentifiers(identifiers []Identifier) e
 	return nil
 }
 
-func (task *InsertIdentifiersTask) insertIdentifier(identifier Identifier) error {
+func (task *InsertIdentifiersTask) insertIdentifier(identifier wisply.Identifier) error {
 	err := task.insertData(identifier)
 	if err != nil {
 		return err
@@ -91,7 +92,7 @@ func (task *InsertIdentifiersTask) insertIdentifier(identifier Identifier) error
 	return nil
 }
 
-func (task *InsertIdentifiersTask) insertData(identifier Identifier) error {
+func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) error {
 	ID := task.repository.ID
 	sqlColumns := "(`repository`, `identifier`, `datestamp`)"
 	sqlValues := "(?, ?, ?)"

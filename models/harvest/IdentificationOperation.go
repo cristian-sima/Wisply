@@ -1,5 +1,7 @@
 package harvest
 
+import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+
 // IdentificationOperation encapsulates the methods for requesting information from the repository
 type IdentificationOperation struct {
 	*Operation
@@ -43,7 +45,7 @@ func (operation *IdentificationOperation) tryToParse(page []byte) {
 	// }
 }
 
-func (operation *IdentificationOperation) insertIdentification(result *Identificationer) {
+func (operation *IdentificationOperation) insertIdentification(result *wisply.Identificationer) {
 	task := newInsertIdentificationTask(operation, operation.GetRepository())
 	err := task.Insert(result)
 	if err != nil {

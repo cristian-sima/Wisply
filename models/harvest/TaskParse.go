@@ -34,7 +34,7 @@ func (task *ParseTask) GetIdentification(content []byte) (*wisply.Identification
 
 }
 
-// GetFormats tells the remote server to parse the content and to return the formats
+// GetFormats tells the remote server to parse the content and to return the `formats`
 func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
 	task.addContent("formats")
 	formats, err := task.remote.GetFormats(content)
@@ -44,7 +44,7 @@ func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
 	return formats, err
 }
 
-// GetCollections tells the remote server to parse the content and to return the collections
+// GetCollections tells the remote server to parse the content and to return the `collections`
 func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, error) {
 	task.addContent("collections")
 	collections, err := task.remote.GetCollections(content)
@@ -54,36 +54,16 @@ func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, er
 	return collections, err
 }
 
-// // GetRecords returns an array with records
-// func (task *ParseRequestTask) GetRecords(content []byte) ([]Recorder, error) {
-//
-// 	var records []Recorder
-//
-// 	response, err := task.parse(content)
-// 	if err != nil {
-// 		return records, err
-// 	}
-//
-// 	remoteRecords := response.ListRecords.Records
-//
-// 	for _, record := range remoteRecords {
-//
-// 		keys, _ := task.getKeys(record.Metadata.Body)
-//
-// 		record := &remote.OAIRecord{
-// 			Identifier: record.Header.Identifier,
-// 			Datestamp:  record.Header.DateStamp,
-// 			Keys:       keys,
-// 		}
-// 		records = append(records, record)
-// 	}
-//
-// 	number := strconv.Itoa(len(records))
-// 	task.Finish(number + " records has been identified")
-//
-// 	return records, nil
-// }
-//
+// GetRecords tells the remote server to parse the content and to return the `records`
+func (task *ParseTask) GetRecords(content []byte) ([]wisply.Recorder, error) {
+	task.addContent("records")
+	records, err := task.remote.GetRecords(content)
+	number := strconv.Itoa(len(records))
+	task.finishRequest(err, "Success. "+number+" records has been identified")
+
+	return records, err
+}
+
 // // GetIdentifiers returns an array with identifiers
 // func (task *ParseRequestTask) GetIdentifiers(content []byte) ([]Identifier, error) {
 //

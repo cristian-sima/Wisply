@@ -188,21 +188,21 @@ func (keys *OAIKeys) GetRights() []string {
 type OAIRecord struct {
 	Datestamp  string
 	Identifier string
-	Keys       *OAIKeys
+	Keys       OAIKeys
 }
 
-// GetDatestamp returns the datastamp of the record
-func (record *OAIRecord) GetDatestamp() string {
+// GetTimestamp returns the datastamp of the record
+func (record OAIRecord) GetTimestamp() string {
 	return record.Datestamp
 }
 
 // GetIdentifier returns the identifier of the record
-func (record *OAIRecord) GetIdentifier() string {
+func (record OAIRecord) GetIdentifier() string {
 	return record.Identifier
 }
 
 // GetKeys returns the keys of the record
-func (record *OAIRecord) GetKeys() *OAIKeys {
+func (record *OAIRecord) GetKeys() OAIKeys {
 	return record.Keys
 }
 

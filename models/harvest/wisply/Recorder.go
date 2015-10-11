@@ -3,8 +3,7 @@ package wisply
 // Recorder ... must be implemented by a repository
 type Recorder interface {
 	GetIdentifier() string
-	GetDatestamp() string
-	GetKeys() *Keys
+	GetTimestamp() string
 }
 
 // Keys encapsulate all the dublin core keys

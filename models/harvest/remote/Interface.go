@@ -15,4 +15,7 @@ type RepositoryInterface interface {
 
 	ListCollections() ([]byte, error)
 	GetCollections(content []byte) ([]wisply.Collectioner, error)
+
+	ListRecords() ([]byte, error)
+	GetRecords(content []byte) ([]wisply.Recorder, error)
 }

@@ -30,9 +30,15 @@ func (request *Request) GetFormats() ([]byte, error) {
 	return request.getVerb("ListMetadataFormats")
 }
 
-// GetSets returns the content of the request to get all the sets for a particular metadata format
+// GetSets returns the content of the request to get all the sets
 func (request *Request) GetSets() ([]byte, error) {
 	return request.getVerb("ListSets")
+}
+
+// GetRecords returns the content of the request to get all the records for a particular metadata format
+func (request *Request) GetRecords(prefix string) ([]byte, error) {
+	request.MetadataPrefix = prefix
+	return request.getVerb("ListRecords")
 }
 
 func (request *Request) getVerb(verb string) ([]byte, error) {

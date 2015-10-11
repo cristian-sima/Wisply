@@ -44,6 +44,15 @@ func (task *GetTask) GetCollections() ([]byte, error) {
 	return body, err
 }
 
+// GetRecords returns the records of the remote repository
+// It waits for the answer and it modifies it state according to it
+func (task *GetTask) GetRecords() ([]byte, error) {
+	task.addContent("Get Records")
+	body, err := task.remote.ListRecords()
+	task.finishRequest(err, "Request performed")
+	return body, err
+}
+
 // // RequestRecords returns all the records of the repository
 // func (task *GetRequestTask) RequestRecords() ([]byte, error) {
 // 	request := &oai.Request{

@@ -1,6 +1,7 @@
 package remote
 
 import (
+	"encoding/xml"
 	"errors"
 
 	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
@@ -24,14 +25,19 @@ func (repository *EPrintsRepository) Identify() ([]byte, error) {
 	return repository.request.Identify()
 }
 
+// ListFormats returns the content of the request which requests for formats
+func (repository *EPrintsRepository) ListFormats() ([]byte, error) {
+	return repository.request.GetFormats()
+}
+
 // ListCollections returns the content of the request which requests the sets
 func (repository *EPrintsRepository) ListCollections() ([]byte, error) {
 	return repository.request.GetSets()
 }
 
-// ListFormats returns the content of the request which requests for formats
-func (repository *EPrintsRepository) ListFormats() ([]byte, error) {
-	return repository.request.GetFormats()
+// ListRecords returns the content of the request which requests for records
+func (repository *EPrintsRepository) ListRecords() ([]byte, error) {
+	return repository.request.GetRecords("oai_dc")
 }
 
 // Parse
@@ -109,6 +115,46 @@ func (repository *EPrintsRepository) GetCollections(content []byte) ([]wisply.Co
 		collections = append(collections, collection)
 	}
 	return collections, nil
+}
+
+// GetRecords returns the `records` in Wisply format
+func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Recorder, error) {
+
+	var records []wisply.Recorder
+
+	response, err := repository.request.Parse(content)
+
+	if err != nil {
+		return records, err
+	}
+
+	remoteRecords := response.ListRecords.Records
+
+	for _, record := range remoteRecords {
+
+		// keys, err := repository.getKeys(record.Metadata.Body)
+
+		if err == nil {
+			record := OAIRecord{
+				Identifier: record.Header.Identifier,
+				Datestamp:  record.Header.DateStamp,
+			}
+			records = append(records, record)
+		}
+	}
+
+	return records, nil
+}
+
+func (repository *EPrintsRepository) getKeys(plainText []byte) (OAIKeys, error) {
+
+	keys := OAIKeys{}
+
+	err := xml.Unmarshal(plainText, &keys)
+	if err != nil {
+		return keys, err
+	}
+	return keys, nil
 }
 
 // IsValidResponse checks if the content is a valid OAI reponse type

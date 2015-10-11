@@ -94,95 +94,97 @@ func (task *InsertRecordsTask) insertRecord(record wisply.Recorder) error {
 		return errors.New("Error while trying to insert into `repository_resource` table: <br />" + err.Error())
 	}
 
-	query.Exec(ID, record.GetIdentifier(), record.GetDatestamp())
+	query.Exec(ID, record.GetIdentifier(), record.GetTimestamp())
 
-	return task.saveKeys(&record)
-}
-
-func (task *InsertRecordsTask) saveKeys(record *wisply.Recorder) error {
-	return task.insertTitles(record)
-}
-
-// There is no way to compress them
-func (task *InsertRecordsTask) insertTitles(record *wisply.Recorder) error {
-	var keys = (*record).GetKeys()
-	err := task.insertKeys(record, (*keys).GetTitles(), "title")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetCreators(), "creator")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetSubjects(), "subject")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetDescriptions(), "description")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetPublishers(), "publisher")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetContributors(), "contributor")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetDates(), "date")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetTypes(), "type")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetFormats(), "format")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetIdentifiers(), "identifier")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetSources(), "source")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetLanguages(), "language")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetRelations(), "relation")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetCoverages(), "coverage")
-
-	if err != nil {
-		return err
-	}
-	err = task.insertKeys(record, (*keys).GetRights(), "right")
-
-	if err != nil {
-		return err
-	}
+	// return task.saveKeys(&record)
 	return nil
 }
+
+// func (task *InsertRecordsTask) saveKeys(record *wisply.Recorder) error {
+// 	return task.insertTitles(record)
+// }
+
+//
+// // There is no way to compress them
+// func (task *InsertRecordsTask) insertTitles(record *wisply.Recorder) error {
+// 	var keys = (*record).GetKeys()
+// 	err := task.insertKeys(record, (*keys).GetTitles(), "title")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetCreators(), "creator")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetSubjects(), "subject")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetDescriptions(), "description")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetPublishers(), "publisher")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetContributors(), "contributor")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetDates(), "date")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetTypes(), "type")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetFormats(), "format")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetIdentifiers(), "identifier")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetSources(), "source")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetLanguages(), "language")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetRelations(), "relation")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetCoverages(), "coverage")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	err = task.insertKeys(record, (*keys).GetRights(), "right")
+//
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
 func (task *InsertRecordsTask) insertKeys(record *wisply.Recorder, keys []string, name string) error {
 

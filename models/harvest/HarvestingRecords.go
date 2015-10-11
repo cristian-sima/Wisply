@@ -4,7 +4,7 @@ import "github.com/cristian-sima/Wisply/models/harvest/wisply"
 
 // HarvestingRecords is the operation which collects the records from a remote repository
 type HarvestingRecords struct {
-	*Operation
+	*HarvestingOperation
 }
 
 // Start gets the collections
@@ -15,56 +15,44 @@ func (operation *HarvestingRecords) Start() {
 
 func (operation *HarvestingRecords) tryToGet() {
 
-	// rem := operation.process.GetRemote()
+	rem := operation.GetRemote()
 
-	// create a task to request the server
-	// task := newGetRequestTask(operation, rem)
+	task := newGetTask(operation, rem)
 
-	// content, err := task.RequestRecords()
-	//
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.tryToParse(content)
-	// }
-}
+	content, err := task.GetRecords()
 
-func (operation *HarvestingRecords) tryToParse(page []byte) {
-	// task := newParseRequestTask(operation)
-	// collections, err := task.GetRecords(page)
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.insertRecords(collections)
-	// }
-}
-
-func (operation *HarvestingRecords) insertRecords(collections []wisply.Recorder) {
-	repository := operation.Operation.GetRepository()
-	task := newInsertRecordsTask(operation, repository)
-	err := task.Insert(collections)
 	if err != nil {
-		operation.harvestFailed()
+		operation.failed()
 	} else {
-		operation.harvestSuccess()
+		operation.tryToParse(content)
 	}
 }
 
-func (operation *HarvestingRecords) harvestFailed() {
-	operation.ChangeResult("danger")
-	operation.Finish()
+func (operation *HarvestingRecords) tryToParse(page []byte) {
+	rem := operation.GetRemote()
+	task := newParseTask(operation, rem)
+	records, err := task.GetRecords(page)
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.insertRecords(records)
+	}
 }
 
-func (operation *HarvestingRecords) harvestSuccess() {
-	operation.Finish()
+func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) {
+	repository := operation.Operation.GetRepository()
+	task := newInsertRecordsTask(operation, repository)
+	err := task.Insert(records)
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.succeeded()
+	}
 }
 
 // constructor
 func newHarvestingRecords(harvestProcess *Process) Operationer {
 	return &HarvestingRecords{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvest Records"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "Records"),
 	}
 }

@@ -19,12 +19,12 @@ func (operation *VerificationOperation) Start() {
 func (operation *VerificationOperation) tryToGet() {
 
 	// remote := operation.Process.GetRemote()
-	repository := operation.process.GetRepository()
+	repository := operation.process.GetRemote()
 
 	// create a task to request the server
 	task := newGetRequestTask(operation, repository)
 
-	page, err := task.Identify()
+	page, err := task.Verify()
 
 	if err != nil {
 		operation.verificationFailed()

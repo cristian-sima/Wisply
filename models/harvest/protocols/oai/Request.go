@@ -13,44 +13,25 @@ type Request struct {
 	BaseURL         string
 	Set             string
 	MetadataPrefix  string
-	Verb            string
+	verb            string
 	Identifier      string
 	ResumptionToken string
 	From            string
 	Until           string
 }
 
-// GetFullURL returns the full URL address for the request
-// scheme:[BaseURL][?][parameter=value[&]]
-// see http://www.w3.org/Addressing/URL/url-spec.txt
-func (request *Request) GetFullURL() string {
-	parameters := []string{}
-
-	addParameter := func(name, value string) {
-		if value != "" {
-			parameters = append(parameters, name+"="+value)
-		}
-	}
-	addParameter("verb", request.Verb)
-	addParameter("set", request.Set)
-	addParameter("metadataPrefix", request.MetadataPrefix)
-	addParameter("identifier", request.Identifier)
-	addParameter("from", request.From)
-	addParameter("until", request.Until)
-	addParameter("resumptionToken", request.ResumptionToken)
-
-	query := "?" + strings.Join(parameters, "&")
-	URL := request.BaseURL + query
-
-	return URL
+// Verify sends a Indentify request and returns the response
+func (request *Request) Verify() ([]byte, error) {
+	request.verb = "Identify"
+	return request.get()
 }
 
 // Get an HTTP request, reads the body of the request and returns it
-func (request *Request) Get() ([]byte, error) {
+func (request *Request) get() ([]byte, error) {
 	var (
 		content []byte
 	)
-	url := request.GetFullURL()
+	url := request.getFullURL()
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -65,6 +46,31 @@ func (request *Request) Get() ([]byte, error) {
 		return content, errors.New("There was a problem while trying to read the content of the page: <br />" + err.Error())
 	}
 	return content, nil
+}
+
+// GetFullURL returns the full URL address for the request
+// scheme:[BaseURL][?][parameter=value[&]]
+// see http://www.w3.org/Addressing/URL/url-spec.txt
+func (request *Request) getFullURL() string {
+	parameters := []string{}
+
+	addParameter := func(name, value string) {
+		if value != "" {
+			parameters = append(parameters, name+"="+value)
+		}
+	}
+	addParameter("verb", request.verb)
+	addParameter("set", request.Set)
+	addParameter("metadataPrefix", request.MetadataPrefix)
+	addParameter("identifier", request.Identifier)
+	addParameter("from", request.From)
+	addParameter("until", request.Until)
+	addParameter("resumptionToken", request.ResumptionToken)
+
+	query := "?" + strings.Join(parameters, "&")
+	URL := request.BaseURL + query
+
+	return URL
 }
 
 // Parse an array of bytes into an OAI Response and returns the Response

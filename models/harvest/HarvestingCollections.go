@@ -14,18 +14,18 @@ func (operation *HarvestingCollections) Start() {
 func (operation *HarvestingCollections) tryToGet() {
 
 	// remote := operation.Process.GetRemote()
-	repository := operation.process.GetRepository()
+	// rem := operation.process.GetRemote()
 
 	// create a task to request the server
-	task := newGetRequestTask(operation, repository)
+	// task := newGetRequestTask(operation, rem)
 
-	content, err := task.RequestCollections()
-
-	if err != nil {
-		operation.harvestFailed()
-	} else {
-		operation.tryToParse(content)
-	}
+	// content, err := task.RequestCollections()
+	//
+	// if err != nil {
+	// 	operation.harvestFailed()
+	// } else {
+	// 	operation.tryToParse(content)
+	// }
 }
 
 func (operation *HarvestingCollections) tryToParse(page []byte) {

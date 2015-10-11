@@ -1,6 +1,9 @@
 package harvest
 
-import action "github.com/cristian-sima/Wisply/models/action"
+import (
+	action "github.com/cristian-sima/Wisply/models/action"
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
+)
 
 // Tasker ... defines the set of methods which should be implemented by the harvest task
 type Tasker interface {
@@ -11,6 +14,7 @@ type Tasker interface {
 type Task struct {
 	Tasker
 	*action.Task
+	remote    *remote.RepositoryInterface
 	operation Operationer // it is the harvest operation
 }
 

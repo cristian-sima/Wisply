@@ -13,20 +13,19 @@ func (operation *IdentificationOperation) Start() {
 }
 
 func (operation *IdentificationOperation) tryToGet() {
+	//
+	// rem := operation.process.GetRepository()
+	//
+	// // create a task to request the server
+	// task := newGetRequestTask(operation, rem)
 
-	// remote := operation.Process.GetRemote()
-	repository := operation.process.GetRepository()
-
-	// create a task to request the server
-	task := newGetRequestTask(operation, repository)
-
-	page, err := task.Identify()
-
-	if err != nil {
-		operation.identificationFailed()
-	} else {
-		operation.tryToParse(page)
-	}
+	// page, err := task.Identify()
+	//
+	// if err != nil {
+	// 	operation.identificationFailed()
+	// } else {
+	// 	operation.tryToParse(page)
+	// }
 	// create a task to check the result
 }
 

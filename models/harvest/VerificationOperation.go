@@ -22,7 +22,7 @@ func (operation *VerificationOperation) tryToGet() {
 	repository := operation.process.GetRemote()
 
 	// create a task to request the server
-	task := newGetRequestTask(operation, repository)
+	task := newGetTask(operation, repository)
 
 	page, err := task.Verify()
 
@@ -38,7 +38,7 @@ func (operation *VerificationOperation) tryToParse(page []byte) {
 
 	repository := operation.process.GetRemote()
 
-	task := newParseRequestTask(operation, repository)
+	task := newParseTask(operation, repository)
 	err := task.Verify(page)
 	if err != nil {
 		operation.verificationFailed()

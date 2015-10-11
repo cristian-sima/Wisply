@@ -4,32 +4,17 @@ import "github.com/cristian-sima/Wisply/models/harvest/remote"
 
 // GetRequestTask represents a task for requesting something from the remote repository
 // It is a decorator pattern
-type GetRequestTask struct {
-	Tasker
-	*Task
-	remote remote.RepositoryInterface
+type GetTask struct {
+	*remoteTask
 }
 
 // Verify tells the remote to verify itself
 // It waits for the answer and it modifies it state according to it
-func (task *GetRequestTask) Verify() ([]byte, error) {
-	task.setContent("Verify")
+func (task *GetTask) Verify() ([]byte, error) {
+	task.addContent("Verify")
 	body, err := task.remote.Test()
 	task.finishRequest(err, "Request performed")
 	return body, err
-}
-
-func (task *GetRequestTask) setContent(verb string) {
-	task.Content = "HTTP Request " + verb
-}
-
-func (task *GetRequestTask) finishRequest(err error, success string) {
-	if err != nil {
-		task.ChangeResult("danger")
-		task.Finish(err.Error())
-	} else {
-		task.Finish(success)
-	}
 }
 
 //
@@ -110,12 +95,15 @@ func (task *GetRequestTask) finishRequest(err error, success string) {
 // 	return body, err
 // }
 
-func newGetRequestTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *GetRequestTask {
-	return &GetRequestTask{
-		Task: &Task{
-			operation: operationHarvest,
-			Task:      newTask(operationHarvest.GetOperation(), "request verification"),
+func newGetTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *GetTask {
+	return &GetTask{
+		remoteTask: &remoteTask{
+			Task: &Task{
+				operation: operationHarvest,
+				Task:      newTask(operationHarvest.GetOperation(), "Remote Request"),
+			},
+			remote: remoteRepository,
+			name:   "HTTP Request ",
 		},
-		remote: remoteRepository,
 	}
 }

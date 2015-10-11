@@ -10,44 +10,63 @@ type HarvestingIdentifiers struct {
 // Start gets the identifiers
 func (operation *HarvestingIdentifiers) Start() {
 	operation.Operation.Start()
-	operation.tryToGet()
+	operation.start()
 }
 
-func (operation *HarvestingIdentifiers) tryToGet() {
-
-	rem := operation.GetRemote()
-
-	task := newGetTask(operation, rem)
-
-	content, err := task.GetIdentifiers()
-
-	if err != nil {
-		operation.failed()
-	} else {
-		operation.tryToParse(content)
+func (operation *HarvestingIdentifiers) start() {
+	var (
+		hasMoreIdentifiers bool
+		resumptionToken    string
+		err                error
+	)
+	hasMoreIdentifiers = true // in order to enter in the loop
+	for hasMoreIdentifiers && (err == nil) {
+		err := operation.tryToGet(resumptionToken)
+		if err == nil {
+			resumptionToken, hasMoreIdentifiers = operation.GetRemote().GetNextPage()
+		}
 	}
-}
-
-func (operation *HarvestingIdentifiers) tryToParse(page []byte) {
-	rem := operation.GetRemote()
-	task := newParseTask(operation, rem)
-	identifiers, err := task.GetIdentifiers(page)
-	if err != nil {
-		operation.failed()
-	} else {
-		operation.insertIdentifiers(identifiers)
-	}
-}
-
-func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.Identifier) {
-	repository := operation.Operation.GetRepository()
-	task := newInsertIdentifiersTask(operation, repository)
-	err := task.Insert(identifiers)
 	if err != nil {
 		operation.failed()
 	} else {
 		operation.succeeded()
 	}
+}
+
+func (operation *HarvestingIdentifiers) tryToGet(token string) error {
+
+	rem := operation.GetRemote()
+
+	task := newGetTask(operation, rem)
+
+	content, err := task.GetIdentifiers(token)
+
+	if err != nil {
+		return err
+	}
+	return operation.tryToParse(content)
+
+}
+
+func (operation *HarvestingIdentifiers) tryToParse(page []byte) error {
+	rem := operation.GetRemote()
+	task := newParseTask(operation, rem)
+	identifiers, err := task.GetIdentifiers(page)
+	if err != nil {
+		return err
+	}
+	return operation.insertIdentifiers(identifiers)
+
+}
+
+func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.Identifier) error {
+	repository := operation.Operation.GetRepository()
+	task := newInsertIdentifiersTask(operation, repository)
+	err := task.Insert(identifiers)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // constructor

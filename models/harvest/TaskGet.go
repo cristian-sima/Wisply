@@ -55,9 +55,9 @@ func (task *GetTask) GetRecords(token string) ([]byte, error) {
 
 // GetIdentifiers returns the identifiers of the remote repository
 // It waits for the answer and it modifies it state according to it
-func (task *GetTask) GetIdentifiers() ([]byte, error) {
+func (task *GetTask) GetIdentifiers(token string) ([]byte, error) {
 	task.addContent("Get Identifiers")
-	body, err := task.remote.ListIdentifiers()
+	body, err := task.remote.ListIdentifiers(token)
 	task.finishRequest(err, "Request performed")
 	return body, err
 }

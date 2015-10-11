@@ -19,7 +19,7 @@ type RepositoryInterface interface {
 	ListRecords(token string) ([]byte, error)
 	GetRecords(content []byte) ([]wisply.Recorder, error)
 
-	ListIdentifiers() ([]byte, error)
+	ListIdentifiers(token string) ([]byte, error)
 	GetIdentifiers(content []byte) ([]wisply.Identifier, error)
 
 	// GetResumptionToken() string

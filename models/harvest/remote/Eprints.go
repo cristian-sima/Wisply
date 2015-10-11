@@ -46,7 +46,9 @@ func (repository *EPrintsRepository) ListRecords(token string) ([]byte, error) {
 }
 
 // ListIdentifiers returns the content of the request which requests for identifiers
-func (repository *EPrintsRepository) ListIdentifiers() ([]byte, error) {
+func (repository *EPrintsRepository) ListIdentifiers(token string) ([]byte, error) {
+	repository.request.Clear()
+	repository.request.ResumptionToken = token
 	return repository.request.GetIdentifiers("oai_dc")
 }
 

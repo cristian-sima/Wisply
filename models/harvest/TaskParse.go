@@ -1,6 +1,8 @@
 package harvest
 
 import (
+	"strconv"
+
 	"github.com/cristian-sima/Wisply/models/harvest/remote"
 	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 )
@@ -32,61 +34,16 @@ func (task *ParseTask) GetIdentification(content []byte) (*wisply.Identification
 
 }
 
-//
-// // GetIdentification returns an identificationer interface as a result of parsing the identification of the page
-// func (task *ParseRequestTask) GetIdentification(content []byte) (*Identificationer, error) {
-//
-// 	var idenfitication Identificationer
-//
-// 	response, err := task.parse(content)
-// 	if err != nil {
-// 		return &idenfitication, err
-// 	}
-//
-// 	remoteIdentity := response.Identify
-//
-// 	idenfitication = &remote.OAIIdentification{
-// 		Name:              remoteIdentity.RepositoryName,
-// 		URL:               remoteIdentity.BaseURL,
-// 		Protocol:          remoteIdentity.ProtocolVersion,
-// 		AdminEmails:       remoteIdentity.AdminEmail,
-// 		EarliestDatestamp: remoteIdentity.EarliestDatestamp,
-// 		RecordPolicy:      remoteIdentity.DeletedRecord,
-// 		Granularity:       remoteIdentity.Granularity,
-// 	}
-//
-// 	task.Finish("The identification has been parsed")
-//
-// 	return &idenfitication, nil
-// }
-//
-// // GetFormats returns a formater interface as a result of parsing the formats of the page
-// func (task *ParseRequestTask) GetFormats(content []byte) ([]Formater, error) {
-//
-// 	var formats []Formater
-//
-// 	response, err := task.parse(content)
-// 	if err != nil {
-// 		return formats, err
-// 	}
-//
-// 	remoteFormats := response.ListMetadataFormats.MetadataFormat
-//
-// 	for _, format := range remoteFormats {
-// 		format := &remote.OAIFormat{
-// 			Prefix:    format.MetadataPrefix,
-// 			Namespace: format.MetadataNamespace,
-// 			Schema:    format.Schema,
-// 		}
-// 		formats = append(formats, format)
-// 	}
-//
-// 	number := strconv.Itoa(len(formats))
-// 	task.Finish(number + " has been identified")
-//
-// 	return formats, nil
-// }
-//
+// GetFormats tells the remote server to parse the content and to return the formats
+func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
+	task.addContent("formats")
+	formats, err := task.remote.GetFormats(content)
+	number := strconv.Itoa(len(formats))
+	task.finishRequest(err, "Success. "+number+" has been identified")
+
+	return formats, err
+}
+
 // // GetCollections returns an array with all the collections
 // func (task *ParseRequestTask) GetCollections(content []byte) ([]Collectioner, error) {
 //

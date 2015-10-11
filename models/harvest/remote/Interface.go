@@ -8,4 +8,6 @@ type RepositoryInterface interface {
 	IsValidResponse(content []byte) error
 	Identify() ([]byte, error)
 	GetIdentification(content []byte) (*wisply.Identificationer, error)
+	ListFormats() ([]byte, error)
+	GetFormats(content []byte) ([]wisply.Formater, error)
 }

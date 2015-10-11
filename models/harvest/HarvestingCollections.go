@@ -4,7 +4,7 @@ import "github.com/cristian-sima/Wisply/models/harvest/wisply"
 
 // HarvestingCollections is the operation which collects the collections from a remote repository
 type HarvestingCollections struct {
-	*Operation
+	*HarvestingOperation
 }
 
 // Start gets the collections
@@ -14,17 +14,15 @@ func (operation *HarvestingCollections) Start() {
 }
 
 func (operation *HarvestingCollections) tryToGet() {
-
-	// remote := operation.Process.GetRemote()
-	// rem := operation.process.GetRemote()
-
-	// create a task to request the server
-	// task := newGetRequestTask(operation, rem)
-
-	// content, err := task.RequestCollections()
+	//
+	// rem := operation.process.GetRemoteServer()
+	//
+	// task := newGetTask(operation, rem)
+	//
+	// content, err := task.GetCollections()
 	//
 	// if err != nil {
-	// 	operation.harvestFailed()
+	// 	operation.failed()
 	// } else {
 	// 	operation.tryToParse(content)
 	// }
@@ -45,27 +43,15 @@ func (operation *HarvestingCollections) insertFormats(collections []wisply.Colle
 	task := newInsertCollectionsTask(operation, repository)
 	err := task.Insert(collections)
 	if err != nil {
-		operation.harvestFailed()
+		operation.failed()
 	} else {
-		operation.harvestSuccess()
+		operation.succeeded()
 	}
-}
-
-func (operation *HarvestingCollections) harvestFailed() {
-	operation.ChangeResult("danger")
-	operation.Finish()
-}
-
-func (operation *HarvestingCollections) harvestSuccess() {
-	operation.Finish()
 }
 
 // constructor
 func newHarvestingCollections(harvestProcess *Process) Operationer {
 	return &HarvestingCollections{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvest Collections"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "collections"),
 	}
 }

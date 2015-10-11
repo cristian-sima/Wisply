@@ -26,16 +26,24 @@ func (task *GetTask) Identify() ([]byte, error) {
 	return body, err
 }
 
-//
-// // Identify returns the content for the Identify request
-// func (task *GetRequestTask) Identify() ([]byte, error) {
-// 	request := &oai.Request{
-// 	// BaseURL: task.repository.URL,
-// 	// Verb: "Identify",
-// 	}
-// 	return task.get(request)
+// GetFormats returns the formats of the remote repository
+// It waits for the answer and it modifies it state according to it
+func (task *GetTask) GetFormats() ([]byte, error) {
+	task.addContent("Get Formats")
+	body, err := task.remote.ListFormats()
+	task.finishRequest(err, "Request performed")
+	return body, err
+}
+
+// // GetCollections returns the collections of the remote repository
+// // It waits for the answer and it modifies it state according to it
+// func (task *GetTask) GetCollections() ([]byte, error) {
+// 	task.addContent("Get Collections")
+// 	body, err := task.remote.GetCollections()
+// 	task.finishRequest(err, "Request performed")
+// 	return body, err
 // }
-//
+
 // // RequestFormats returns all the formats of the repository
 // func (task *GetRequestTask) RequestFormats() ([]byte, error) {
 // 	request := &oai.Request{

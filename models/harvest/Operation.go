@@ -2,6 +2,7 @@ package harvest
 
 import (
 	action "github.com/cristian-sima/Wisply/models/action"
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -45,6 +46,11 @@ func (operation *Operation) GetRepository() *repository.Repository {
 	return operation.process.GetRepository()
 }
 
+// GetRemote returns a reference to the remote repository
+func (operation *Operation) GetRemote() remote.RepositoryInterface {
+	return operation.process.GetRemoteServer()
+}
+
 // GetOperation returns the operation
 func (operation *Operation) GetOperation() *action.Operation {
 	return operation.Operation
@@ -52,4 +58,28 @@ func (operation *Operation) GetOperation() *action.Operation {
 
 func newOperation(process *action.Process, content string) *action.Operation {
 	return &*process.CreateOperation(content)
+}
+
+// HarvestingOperation is the operation which harvest something
+type HarvestingOperation struct {
+	*Operation
+}
+
+func (operation *HarvestingOperation) failed() {
+	operation.ChangeResult("danger")
+	operation.Finish()
+}
+
+func (operation *HarvestingOperation) succeeded() {
+	operation.Finish()
+}
+
+// constructor
+func newHarvestingOperation(harvestProcess *Process, name string) *HarvestingOperation {
+	return &HarvestingOperation{
+		Operation: &Operation{
+			process:   harvestProcess,
+			Operation: newOperation(harvestProcess.Process, "Harvest "+name),
+		},
+	}
 }

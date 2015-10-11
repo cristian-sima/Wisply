@@ -4,7 +4,7 @@ import "github.com/cristian-sima/Wisply/models/harvest/wisply"
 
 // HarvestingFormats is the operation which collects the formats from a remote repository
 type HarvestingFormats struct {
-	*Operation
+	*HarvestingOperation
 }
 
 // Start marks the local repository status of the local repository as updating and gets the formats
@@ -16,28 +16,29 @@ func (operation *HarvestingFormats) Start() {
 
 func (operation *HarvestingFormats) tryToGet() {
 
-	// rem := operation.process.GetRemote()
+	rem := operation.GetRemote()
 
-	// create a task to request the server
-	// task := newGetRequestTask(operation, rem)
+	task := newGetTask(operation, rem)
 
-	// content, err := task.RequestFormats()
-	//
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.tryToParse(content)
-	// }
+	content, err := task.GetFormats()
+
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.tryToParse(content)
+	}
 }
 
-func (operation *HarvestingFormats) tryToParse(page []byte) {
-	// task := newParseRequestTask(operation)
-	// formats, err := task.GetFormats(page)
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.insertFormats(formats)
-	// }
+func (operation *HarvestingFormats) tryToParse(content []byte) {
+	rem := operation.GetRemote()
+
+	task := newParseTask(operation, rem)
+	formats, err := task.GetFormats(content)
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.insertFormats(formats)
+	}
 }
 
 func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
@@ -45,9 +46,9 @@ func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
 	task := newInsertFormatsTask(operation, repository)
 	err := task.Insert(formats)
 	if err != nil {
-		operation.harvestFailed()
+		operation.failed()
 	} else {
-		operation.harvestSuccess()
+		operation.succeeded()
 	}
 }
 
@@ -63,9 +64,6 @@ func (operation *HarvestingFormats) harvestSuccess() {
 // constructor
 func newHarvestingFormats(harvestProcess *Process) Operationer {
 	return &HarvestingFormats{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvest Formats"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "formats"),
 	}
 }

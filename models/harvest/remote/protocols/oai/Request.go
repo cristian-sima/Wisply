@@ -25,6 +25,17 @@ func (request *Request) Identify() ([]byte, error) {
 	return request.getVerb("Identify")
 }
 
+// GetFormats returns the content of the request for formats
+func (request *Request) GetFormats() ([]byte, error) {
+	return request.getVerb("ListMetadataFormats")
+}
+
+// GetSets returns the content of the request to get all the sets for a particular metadata format
+func (request *Request) GetSets(metadataPrefix string) ([]byte, error) {
+	request.MetadataPrefix = metadataPrefix
+	return request.getVerb("ListSets")
+}
+
 func (request *Request) getVerb(verb string) ([]byte, error) {
 	request.verb = verb
 	return request.get()

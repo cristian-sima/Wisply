@@ -19,15 +19,22 @@ func (repository *EPrintsRepository) Test() ([]byte, error) {
 	return repository.request.Identify()
 }
 
-// IsValidResponse checks if the content is a valid OAI reponse type
-func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
-	return repository.request.IsValidResponse(content)
-}
-
 // Identify returns the identification details
 func (repository *EPrintsRepository) Identify() ([]byte, error) {
 	return repository.request.Identify()
 }
+
+// GetCollections returns the content of the request which requests the sets
+func (repository *EPrintsRepository) GetCollections(prefix string) ([]byte, error) {
+	return repository.request.GetSets(prefix)
+}
+
+// ListFormats returns the content of the request which requests for formats
+func (repository *EPrintsRepository) ListFormats() ([]byte, error) {
+	return repository.request.GetFormats()
+}
+
+// Parse
 
 // GetIdentification returns the identification details in Wisply format
 func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.Identificationer, error) {
@@ -57,6 +64,35 @@ func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.
 	}
 
 	return &idenfitication, nil
+}
+
+// GetFormats returns the `formats` in Wisply format
+func (repository *EPrintsRepository) GetFormats(content []byte) ([]wisply.Formater, error) {
+
+	var formats []wisply.Formater
+
+	response, err := repository.request.Parse(content)
+	if err != nil {
+		return formats, err
+	}
+
+	remoteFormats := response.ListMetadataFormats.MetadataFormat
+
+	for _, format := range remoteFormats {
+		format := OAIFormat{
+			Prefix:    format.MetadataPrefix,
+			Namespace: format.MetadataNamespace,
+			Schema:    format.Schema,
+		}
+		formats = append(formats, &format)
+	}
+
+	return formats, nil
+}
+
+// IsValidResponse checks if the content is a valid OAI reponse type
+func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
+	return repository.request.IsValidResponse(content)
 }
 
 // NewEPrints returns a repository of type Eprints

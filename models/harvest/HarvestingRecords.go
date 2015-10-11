@@ -28,13 +28,13 @@ func (operation *HarvestingRecords) tryToGet() {
 }
 
 func (operation *HarvestingRecords) tryToParse(page []byte) {
-	task := newParseRequestTask(operation)
-	collections, err := task.GetRecords(page)
-	if err != nil {
-		operation.harvestFailed()
-	} else {
-		operation.insertRecords(collections)
-	}
+	// task := newParseRequestTask(operation)
+	// collections, err := task.GetRecords(page)
+	// if err != nil {
+	// 	operation.harvestFailed()
+	// } else {
+	// 	operation.insertRecords(collections)
+	// }
 }
 
 func (operation *HarvestingRecords) insertRecords(collections []Recorder) {

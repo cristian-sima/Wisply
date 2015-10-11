@@ -35,7 +35,10 @@ func (operation *VerificationOperation) tryToGet() {
 }
 
 func (operation *VerificationOperation) tryToParse(page []byte) {
-	task := newParseRequestTask(operation)
+
+	repository := operation.process.GetRemote()
+
+	task := newParseRequestTask(operation, repository)
 	err := task.Verify(page)
 	if err != nil {
 		operation.verificationFailed()

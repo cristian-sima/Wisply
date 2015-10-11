@@ -14,7 +14,7 @@ type GetRequestTask struct {
 // It waits for the answer and it modifies it state according to it
 func (task *GetRequestTask) Verify() ([]byte, error) {
 	task.setContent("Verify")
-	body, err := task.remote.IsValid()
+	body, err := task.remote.Test()
 	task.finishRequest(err, "Request performed")
 	return body, err
 }

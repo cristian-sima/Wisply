@@ -30,13 +30,13 @@ func (operation *IdentificationOperation) tryToGet() {
 }
 
 func (operation *IdentificationOperation) tryToParse(page []byte) {
-	task := newParseRequestTask(operation)
-	response, err := task.GetIdentification(page)
-	if err != nil {
-		operation.identificationFailed()
-	} else {
-		operation.insertIdentification(response)
-	}
+	// task := newParseRequestTask(operation)
+	// response, err := task.GetIdentification(page)
+	// if err != nil {
+	// 	operation.identificationFailed()
+	// } else {
+	// 	operation.insertIdentification(response)
+	// }
 }
 
 func (operation *IdentificationOperation) insertIdentification(result *Identificationer) {

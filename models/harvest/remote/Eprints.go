@@ -11,9 +11,14 @@ type EPrintsRepository struct {
 	request *oai.Request
 }
 
-// IsValid calls the request validate method and returns its result
-func (repository *EPrintsRepository) IsValid() ([]byte, error) {
+// Test calls the request validate method and returns its result
+func (repository *EPrintsRepository) Test() ([]byte, error) {
 	return repository.request.Verify()
+}
+
+// IsValidResponse checks if the content is a valid OAI reponse type
+func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
+	return repository.request.IsValidResponse(content)
 }
 
 // NewEPrints returns a repository of type Eprints

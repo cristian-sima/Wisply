@@ -28,13 +28,13 @@ func (operation *HarvestingIdentifiers) tryToGet() {
 }
 
 func (operation *HarvestingIdentifiers) tryToParse(page []byte) {
-	task := newParseRequestTask(operation)
-	collections, err := task.GetIdentifiers(page)
-	if err != nil {
-		operation.harvestFailed()
-	} else {
-		operation.insertRecords(collections)
-	}
+	// task := newParseRequestTask(operation)
+	// collections, err := task.GetIdentifiers(page)
+	// if err != nil {
+	// 	operation.harvestFailed()
+	// } else {
+	// 	operation.insertRecords(collections)
+	// }
 }
 
 func (operation *HarvestingIdentifiers) insertRecords(collections []Identifier) {

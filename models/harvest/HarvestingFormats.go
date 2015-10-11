@@ -29,13 +29,13 @@ func (operation *HarvestingFormats) tryToGet() {
 }
 
 func (operation *HarvestingFormats) tryToParse(page []byte) {
-	task := newParseRequestTask(operation)
-	formats, err := task.GetFormats(page)
-	if err != nil {
-		operation.harvestFailed()
-	} else {
-		operation.insertFormats(formats)
-	}
+	// task := newParseRequestTask(operation)
+	// formats, err := task.GetFormats(page)
+	// if err != nil {
+	// 	operation.harvestFailed()
+	// } else {
+	// 	operation.insertFormats(formats)
+	// }
 }
 
 func (operation *HarvestingFormats) insertFormats(formats []Formater) {

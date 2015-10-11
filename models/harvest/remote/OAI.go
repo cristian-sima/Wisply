@@ -1,23 +1,4 @@
-package harvest
-
-// Keys encapsulate all the dublin core keys
-type Keys struct {
-	Titles       []string `xml:"title"`
-	Creators     []string `xml:"creator"`
-	Subjects     []string `xml:"subject"`
-	Descriptions []string `xml:"description"`
-	Publishers   []string `xml:"publisher"`
-	Contributors []string `xml:"contributor"`
-	Dates        []string `xml:"date"`
-	Types        []string `xml:"type"`
-	Formats      []string `xml:"format"`
-	Identifiers  []string `xml:"identifier"`
-	Sources      []string `xml:"source"`
-	Languages    []string `xml:"language"`
-	Relations    []string `xml:"relation"`
-	Coverages    []string `xml:"coverage"`
-	Rights       []string `xml:"rights"`
-}
+package remote
 
 // OAIIdentification represents the identification for a OAI repository
 type OAIIdentification struct {
@@ -108,6 +89,25 @@ func (repository *OAICollection) GetSpec() string {
 }
 
 // RESOURCES
+
+// Keys encapsulate all the dublin core keys
+type Keys struct {
+	Titles       []string `xml:"title"`
+	Creators     []string `xml:"creator"`
+	Subjects     []string `xml:"subject"`
+	Descriptions []string `xml:"description"`
+	Publishers   []string `xml:"publisher"`
+	Contributors []string `xml:"contributor"`
+	Dates        []string `xml:"date"`
+	Types        []string `xml:"type"`
+	Formats      []string `xml:"format"`
+	Identifiers  []string `xml:"identifier"`
+	Sources      []string `xml:"source"`
+	Languages    []string `xml:"language"`
+	Relations    []string `xml:"relation"`
+	Coverages    []string `xml:"coverage"`
+	Rights       []string `xml:"rights"`
+}
 
 // OAIRecord represents an OAI record
 type OAIRecord struct {

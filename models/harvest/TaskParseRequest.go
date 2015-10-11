@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
 )
 
 // ParseRequestTask represents a task for parsing the request
@@ -36,7 +37,7 @@ func (task *ParseRequestTask) GetIdentification(content []byte) (*Identification
 
 	remoteIdentity := response.Identify
 
-	idenfitication = &OAIIdentification{
+	idenfitication = &remote.OAIIdentification{
 		Name:              remoteIdentity.RepositoryName,
 		URL:               remoteIdentity.BaseURL,
 		Protocol:          remoteIdentity.ProtocolVersion,
@@ -64,7 +65,7 @@ func (task *ParseRequestTask) GetFormats(content []byte) ([]Formater, error) {
 	remoteFormats := response.ListMetadataFormats.MetadataFormat
 
 	for _, format := range remoteFormats {
-		format := &OAIFormat{
+		format := &remote.OAIFormat{
 			Prefix:    format.MetadataPrefix,
 			Namespace: format.MetadataNamespace,
 			Schema:    format.Schema,
@@ -91,7 +92,7 @@ func (task *ParseRequestTask) GetCollections(content []byte) ([]Collectioner, er
 	remoteCollections := response.ListSets.Set
 
 	for _, collection := range remoteCollections {
-		collection := &OAICollection{
+		collection := &remote.OAICollection{
 			Name: collection.SetName,
 			Spec: collection.SetSpec,
 		}
@@ -120,7 +121,7 @@ func (task *ParseRequestTask) GetRecords(content []byte) ([]Recorder, error) {
 
 		keys, _ := task.getKeys(record.Metadata.Body)
 
-		record := &OAIRecord{
+		record := &remote.OAIRecord{
 			Identifier: record.Header.Identifier,
 			Datestamp:  record.Header.DateStamp,
 			Keys:       keys,
@@ -148,7 +149,7 @@ func (task *ParseRequestTask) GetIdentifiers(content []byte) ([]Identifier, erro
 
 	for _, remoteIdentifier := range remoteIdentifiers {
 
-		identifier := &OAIIdentifier{
+		identifier := &remote.OAIIdentifier{
 			Identifier: remoteIdentifier.Identifier,
 			Datestamp:  remoteIdentifier.DateStamp,
 			Spec:       remoteIdentifier.SetSpec,
@@ -162,9 +163,9 @@ func (task *ParseRequestTask) GetIdentifiers(content []byte) ([]Identifier, erro
 	return identifiers, nil
 }
 
-func (task *ParseRequestTask) getKeys(plainText []byte) (*Keys, error) {
+func (task *ParseRequestTask) getKeys(plainText []byte) (*remote.Keys, error) {
 
-	keys := &Keys{}
+	keys := &remote.Keys{}
 
 	// Unmarshall all the data
 	err := xml.Unmarshal(plainText, &keys)

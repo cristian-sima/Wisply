@@ -6,18 +6,16 @@ import (
 
 	action "github.com/cristian-sima/Wisply/models/action"
 	database "github.com/cristian-sima/Wisply/models/database"
+	remote "github.com/cristian-sima/Wisply/models/harvest/remote"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Process is a link between controller and repository
 type Process struct {
 	*action.Process
-	repository     *repository.Repository
-	remote         RemoteRepositoryInterface
-	CurrentAction  int                 `json:"CurrentAction"`
-	Actions        map[string]*Action2 `json:"Actions"`
-	Controller     WisplyController    `json:"-"`
-	Identification *Identificationer   `json:"Identification"`
+	repository *repository.Repository
+	remote     remote.RepositoryInterface
+	controller WisplyController
 }
 
 // Start starts the process
@@ -149,66 +147,13 @@ func (process *Process) GetRepository() *repository.Repository {
 }
 
 // GetRemote returns the interface of a remote repository
-func (process *Process) GetRemote() RemoteRepositoryInterface {
+func (process *Process) GetRemote() remote.RepositoryInterface {
 	return process.remote
-}
-
-func (process *Process) harvestFormarts() {
-	process.ChangeRepositoryStatus("updating")
-	process.setCurrentAction("harvesting")
-	process.createAction("formats")
-	process.remote.HarvestFormats()
-
-}
-
-// ---
-
-func (process *Process) endAction(name string) {
-	process.Actions[name].Finish()
-	process.notifyAction(process.Actions[name], "finish")
-}
-
-func (process *Process) setCurrentAction(actionName string) {
-	process.CurrentAction = Actions[actionName]
-}
-
-func (process *Process) createAction(name string) {
-	process.Actions[name] = &Action2{
-		Type:      name,
-		IsCurrent: true,
-	}
-	process.notifyAction(process.Actions[name], "start")
-}
-
-func (process *Process) updateAction(newCount int, name string) {
-	action := process.Actions[name]
-	action.Update(newCount)
-	process.notifyAction(action, "update")
 }
 
 // ChangeCurrentOperation informs the controller about the change and it calls its father
 func (process *Process) ChangeCurrentOperation(operation Operationer) {
 	process.Process.ChangeCurrentOperation(operation.GetOperation())
-}
-
-func (process *Process) notifyAction(action *Action2, operation string) {
-
-	type Content struct {
-		Operation string `json:"Operation"`
-		Type      string `json:"Type"`
-		Count     int    `json:"Count"`
-	}
-
-	content := Content{
-		Operation: operation,
-		Type:      action.Type,
-		Count:     action.Count,
-	}
-
-	process.notifyController(&Message{
-		Name:  "harvesting",
-		Value: content,
-	})
 }
 
 // End receives the identification result and saves it in the local repository
@@ -228,9 +173,11 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	})
 }
 
+// ---
+
 func (process *Process) notifyController(message *Message) {
 	message.Repository = process.repository.ID
-	process.Controller.Notify(message)
+	process.controller.Notify(message)
 }
 
 func (process *Process) record(message string) {
@@ -248,25 +195,23 @@ func (process *Process) Delete() {
 
 // CreateProcess creates a new harvest process
 func CreateProcess(ID string, controller WisplyController) *Process {
-	// var remote RemoteRepositoryInterface
+
+	var rem remote.RepositoryInterface
 
 	local, _ := repository.NewRepository(ID)
 
-	// switch local.Category {
-	// case "EPrints":
-	// 	{
-	// 		remote = &EPrintsRepository{
-	// 			URL: local.URL,
-	// 		}
-	// 	}
-	// }
+	switch local.Category {
+	case "EPrints":
+		{
+			rem = remote.NewEPrints(local)
+		}
+	}
 
 	process := &Process{
-		Process: &*action.CreateProcess("Harvest"),
-		// remote:     remote,
-		Controller: controller,
+		Process:    &*action.CreateProcess("Harvest"),
+		remote:     rem,
+		controller: controller,
 		repository: local,
-		Actions:    make(map[string]*Action2),
 	}
 
 	insertHarvestProcess(process)

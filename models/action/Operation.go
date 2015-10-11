@@ -25,8 +25,6 @@ func (operation *Operation) Finish() {
 
 // TellProcess tells to the process a message
 func (operation *Operation) TellProcess(message Message) {
-	fmt.Println("Trimit de la operatie la controller messajul: ")
-	fmt.Println(message)
 	msg := OperationMessage{
 		Message:   &message,
 		Operation: operation,

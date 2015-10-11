@@ -99,7 +99,7 @@
               </td>
               <td class="col-md-2">
                 {{ $len := $task.Explication | len }}
-                  {{ if gt $len 70 }}
+                  {{ if gt $len 30 }}
                   <a data-explication="{{ $task.Explication | html }}" class="see-full-explication" href="#">See full explication</a>
                 {{ else }}
                   {{ $task.Explication }}

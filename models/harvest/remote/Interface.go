@@ -16,9 +16,13 @@ type RepositoryInterface interface {
 	ListCollections() ([]byte, error)
 	GetCollections(content []byte) ([]wisply.Collectioner, error)
 
-	ListRecords() ([]byte, error)
+	ListRecords(token string) ([]byte, error)
 	GetRecords(content []byte) ([]wisply.Recorder, error)
 
 	ListIdentifiers() ([]byte, error)
 	GetIdentifiers(content []byte) ([]wisply.Identifier, error)
+
+	// GetResumptionToken() string
+
+	GetNextPage() (string, bool)
 }

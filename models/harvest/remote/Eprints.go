@@ -12,7 +12,8 @@ import (
 // EPrintsRepository is an Eprints remote repository
 type EPrintsRepository struct {
 	*Repository
-	request *oai.Request
+	request      *oai.Request
+	lastResponse *oai.Response
 }
 
 // ------------------------- GET
@@ -38,7 +39,9 @@ func (repository *EPrintsRepository) ListCollections() ([]byte, error) {
 }
 
 // ListRecords returns the content of the request which requests for records
-func (repository *EPrintsRepository) ListRecords() ([]byte, error) {
+func (repository *EPrintsRepository) ListRecords(token string) ([]byte, error) {
+	repository.request.Clear()
+	repository.request.ResumptionToken = token
 	return repository.request.GetRecords("oai_dc")
 }
 
@@ -131,6 +134,9 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 
 	response, err := repository.request.Parse(content)
 
+	// cache the last response
+	repository.lastResponse = response
+
 	if err != nil {
 		return records, err
 	}
@@ -172,6 +178,9 @@ func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Id
 
 	response, err := repository.request.Parse(content)
 
+	// cache the last response
+	repository.lastResponse = response
+
 	if err != nil {
 		return identifiers, err
 	}
@@ -191,7 +200,24 @@ func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Id
 	return identifiers, nil
 }
 
-// IsValidResponse checks if the content is a valid OAI reponse type
+// GetNextPage checks if the last response has a resumption token
+func (repository *EPrintsRepository) GetNextPage() (string, bool) {
+	var (
+		token    string
+		hasToken bool
+	)
+	if repository.lastResponse == nil {
+		return token, false
+	}
+	hasToken = repository.lastResponse.HasResumptionToken()
+	token = repository.lastResponse.GetResumptionToken()
+	if !hasToken {
+		return token, false
+	}
+	return token, hasToken
+}
+
+// IsValidResponse checks if the content is an OAI format
 func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
 	return repository.request.IsValidResponse(content)
 }

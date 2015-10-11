@@ -20,6 +20,17 @@ type Request struct {
 	Until           string
 }
 
+// Clear sets to default all the fields
+func (request *Request) Clear() {
+	request.Set = ""
+	request.MetadataPrefix = ""
+	request.verb = ""
+	request.Identifier = ""
+	request.ResumptionToken = ""
+	request.From = ""
+	request.Until = ""
+}
+
 // Identify returns the identification details of the repository
 func (request *Request) Identify() ([]byte, error) {
 	return request.getVerb("Identify")

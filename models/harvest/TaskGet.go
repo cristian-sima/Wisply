@@ -46,10 +46,10 @@ func (task *GetTask) GetCollections() ([]byte, error) {
 
 // GetRecords returns the records of the remote repository
 // It waits for the answer and it modifies it state according to it
-func (task *GetTask) GetRecords() ([]byte, error) {
+func (task *GetTask) GetRecords(token string) ([]byte, error) {
 	task.addContent("Get Records")
-	body, err := task.remote.ListRecords()
-	task.finishRequest(err, "Request performed")
+	body, err := task.remote.ListRecords(token)
+	task.finishRequest(err, "Request performed. Token: ["+token+"]")
 	return body, err
 }
 

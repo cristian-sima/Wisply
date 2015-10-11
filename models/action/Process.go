@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Process is a top level action which coordonates many operations and communicates with the controller
@@ -27,7 +27,7 @@ func (process *Process) GetOperationConduit() chan OperationMessager {
 }
 
 func (process *Process) updateInDatabase() {
-	stmt, err := wisply.Database.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=?, result=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
@@ -61,7 +61,7 @@ func (process *Process) CreateOperation(content string) *Operation {
 	values := "(?, ?, ?)"
 	sql := "INSERT INTO `operation` " + columns + " VALUES " + values
 
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when creating the operation:")
@@ -72,7 +72,7 @@ func (process *Process) CreateOperation(content string) *Operation {
 
 	// find its ID
 	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=? AND is_running=?"
-	query, err = wisply.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(operation.Start, operation.Process.ID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
 
 	if err != nil {
@@ -92,7 +92,7 @@ func (process *Process) GetOperations() []*Operation {
 	// the query
 	sql := "SELECT " + fieldList + " FROM `operation` AS operation WHERE process=? ORDER BY operation.id DESC"
 
-	rows, err := wisply.Database.Query(sql, process.Action.ID)
+	rows, err := database.Connection.Query(sql, process.Action.ID)
 	if err != nil {
 		fmt.Println("Problem when getting all the operations of the process: ")
 		fmt.Println(err)
@@ -139,7 +139,7 @@ func (process *Process) GetOperations() []*Operation {
 func (process *Process) Delete() {
 
 	sql := "DELETE FROM `process` WHERE id=?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Delete 1 error for process:")
 		fmt.Println(err)
@@ -149,7 +149,7 @@ func (process *Process) Delete() {
 	// operations
 
 	sql = "DELETE FROM `operation` WHERE process=?"
-	query, err = wisply.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Delete 2 error for process:")
 		fmt.Println(err)
@@ -159,7 +159,7 @@ func (process *Process) Delete() {
 	// tasks
 
 	sql = "DELETE FROM `task` WHERE process=?"
-	query, err = wisply.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Delete 3 error for process:")
 		fmt.Println(err)

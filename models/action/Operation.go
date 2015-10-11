@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Operation coordonates a number of many tasks.
@@ -38,7 +38,7 @@ func (operation *Operation) GetTaskConduit() chan Messager {
 }
 
 func (operation *Operation) updateInDatabase() {
-	stmt, err := wisply.Database.Prepare("UPDATE `operation` SET end=?, content=?, is_running=?, result=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `operation` SET end=?, content=?, is_running=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the operation: ")
 		fmt.Println(err)
@@ -59,7 +59,7 @@ func (operation *Operation) CreateTask(content string) *Task {
 	columns := "(`process`, `start`, `operation`, `result`, `content`)"
 	values := "(?, ?, ?, ?, ?)"
 	sql := "INSERT INTO `task` " + columns + " VALUES " + values
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Error 1 when creating the task:")
 		fmt.Println(err)
@@ -74,7 +74,7 @@ func (operation *Operation) CreateTask(content string) *Task {
 	// find its id
 
 	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND result=? AND is_running=? AND content=?"
-	query, err = wisply.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(task.Start, task.Operation.ID, task.result, strconv.FormatBool(task.IsRunning), task.Content).Scan(&task.ID)
 
 	if err != nil {
@@ -94,7 +94,7 @@ func (operation *Operation) GetTasks() []*Task {
 	// the query
 	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
 
-	rows, err := wisply.Database.Query(sql, operation.Action.ID)
+	rows, err := database.Connection.Query(sql, operation.Action.ID)
 	if err != nil {
 		fmt.Println("Problem when getting all the tasks of the operation: ")
 		fmt.Println(err)

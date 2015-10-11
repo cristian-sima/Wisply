@@ -48,7 +48,7 @@ func (task *InsertIdentifiersTask) clear() error {
 	ID := task.repository.ID
 
 	sql := "DELETE from `identifier` WHERE repository=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `identifier` table: <br />" + err.Error())
@@ -59,7 +59,7 @@ func (task *InsertIdentifiersTask) clear() error {
 	// clear sets
 
 	sql = "DELETE from `identifier_set` WHERE repository=?"
-	query, err = database.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `identifier_set` table: <br />" + err.Error())
@@ -98,7 +98,7 @@ func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) erro
 	sqlValues := "(?, ?, ?)"
 	sql := "INSERT INTO `identifier` " + sqlColumns + " VALUES " + sqlValues
 
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to insert into `identifier` table: <br />" + err.Error())
@@ -114,7 +114,7 @@ func (task *InsertIdentifiersTask) insertSets(identifier string, sets []string) 
 		sqlValues := "(?, ?, ?)"
 		sql := "INSERT INTO `identifier_set` " + sqlColumns + " VALUES " + sqlValues
 
-		query, err := database.Database.Prepare(sql)
+		query, err := database.Connection.Prepare(sql)
 
 		if err != nil {
 			return errors.New("Error while trying to insert into `identifier_set` table: <br />" + err.Error())

@@ -3,7 +3,7 @@ package action
 import (
 	"fmt"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // - constructors
@@ -33,7 +33,7 @@ func NewOperation(ID int) *Operation {
 
 	fieldList := "`id`, `process`, `current_task`, `content`, `start`, `end`, `is_running`, `result`"
 	sql := "SELECT " + fieldList + " FROM `operation` WHERE id= ?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	query.QueryRow(ID).Scan(&opID, &proID, &taskID, &opContent, &opStart, &opEnd, &opIsRunning, &result)
 
@@ -80,7 +80,7 @@ func NewTask(ID int) *Task {
 
 	fieldList := "`id`, `operation`, `content`, `start`, `end`, `is_running`, `result`, `explication`"
 	sql := "SELECT " + fieldList + " FROM `task` WHERE id= ?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("It has been an error when tring to get the info about the task: ")
@@ -123,7 +123,7 @@ func NewProcess(ID int) *Process {
 
 	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`"
 	sql := "SELECT " + fieldList + " FROM `process` WHERE id= ?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning)
 

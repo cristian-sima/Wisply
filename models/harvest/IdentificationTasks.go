@@ -34,7 +34,7 @@ func (task *InsertIdentificationTask) clearTables() error {
 	ID := task.repository.ID
 
 	sql := "DELETE from `repository_identification` WHERE repository=?"
-	query, err1 := database.Database.Prepare(sql)
+	query, err1 := database.Connection.Prepare(sql)
 
 	if err1 != nil {
 		return errors.New("Error while trying to clear the repository_identification table: <br />" + err1.Error())
@@ -43,7 +43,7 @@ func (task *InsertIdentificationTask) clearTables() error {
 	query.Exec(strconv.Itoa(ID))
 
 	sql2 := "DELETE from `repository_email` WHERE repository=?"
-	query2, err2 := database.Database.Prepare(sql2)
+	query2, err2 := database.Connection.Prepare(sql2)
 
 	if err2 != nil {
 		return errors.New("Error while trying to clear the repository_email table: <br />" + err2.Error())
@@ -81,7 +81,7 @@ func (task *InsertIdentificationTask) insertEmails(emails []string) error {
 		sqlValues := "(?, ?)"
 		sql := "INSERT INTO `repository_email` " + sqlColumns + " VALUES " + sqlValues
 
-		query, err := database.Database.Prepare(sql)
+		query, err := database.Connection.Prepare(sql)
 		if err != nil {
 			return errors.New("There was problem while trying to insert the email addresses: " + err.Error())
 		}
@@ -94,7 +94,7 @@ func (task *InsertIdentificationTask) insertDetails(identification *wisply.Ident
 
 	modifyName := "UPDATE `repository` SET `name`=? WHERE `id` = ?"
 
-	query1, err1 := database.Database.Prepare(modifyName)
+	query1, err1 := database.Connection.Prepare(modifyName)
 
 	if err1 != nil {
 		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err1.Error())
@@ -105,7 +105,7 @@ func (task *InsertIdentificationTask) insertDetails(identification *wisply.Ident
 	sqlValues := "(?, ?, ?, ?, ?)"
 	idenSQL := "INSERT INTO `repository_identification` " + sqlColumns + " VALUES " + sqlValues
 
-	query2, err2 := database.Database.Prepare(idenSQL)
+	query2, err2 := database.Connection.Prepare(idenSQL)
 
 	if err2 != nil {
 		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err2.Error())

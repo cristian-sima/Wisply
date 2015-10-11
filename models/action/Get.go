@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // GetProcessesByType returns all the process of a type
@@ -34,7 +34,7 @@ func getProcesses(processType string) []*Process {
 	// the query
 	sql := "SELECT " + fieldList + " FROM `process` AS process " + whereClause + " ORDER BY process.id DESC"
 
-	rows, err := wisply.Database.Query(sql)
+	rows, err := database.Connection.Query(sql)
 	if err != nil {
 		fmt.Println("Problem when getting all the processes: ")
 		fmt.Println(err)

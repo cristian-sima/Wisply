@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Repository represents a repository for rerepositorys
@@ -27,7 +27,7 @@ func (repository *Repository) Delete() error {
 
 	// delete repository
 	sql := "DELETE from `repository` WHERE id=?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.Exec(strconv.Itoa(repository.ID))
 	return err
 }
@@ -58,7 +58,7 @@ func (repository *Repository) updateDatabase(repositoryDetails map[string]interf
 	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
 	repository.Name = name
 	repository.Description = description
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(name, description, id)
 	return err
 }
@@ -75,7 +75,7 @@ func (repository *Repository) ModifyURL(URL string) error {
 	repository.URL = URL
 
 	sql := "UPDATE `repository` SET URL=? WHERE id=?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(URL, id)
 	return err
 }
@@ -90,7 +90,7 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	id := strconv.Itoa(repository.ID)
 
 	sql := "UPDATE `repository` SET status=? WHERE id=?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(newStatus, id)
 
 	repository.Status = newStatus
@@ -104,11 +104,11 @@ func (repository *Repository) GetIdentification() *Identification {
 	identification := &Identification{}
 
 	sql := "SELECT id, repository, protocol_version, earliest_datestamp, delete_policy, granularity FROM repository_identification WHERE repository = ?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	query.QueryRow(repository.ID).Scan(&identification.ID, &identification.Repository, &identification.Protocol, &identification.EarliestDatestamp, &identification.RecordPolicy, &identification.Granularity)
 
 	emailsSQL := "SELECT `email` FROM `repository_email` WHERE `repository` = ?"
-	smt, _ := wisply.Database.Prepare(emailsSQL)
+	smt, _ := database.Connection.Prepare(emailsSQL)
 	rows, _ := smt.Query(repository.ID)
 
 	for rows.Next() {

@@ -3,7 +3,7 @@ package auth
 import (
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 	"github.com/nu7hatch/gouuid"
 )
 
@@ -24,7 +24,7 @@ func (token *Token) Encrypt() string {
 // Insert inserts the token in the database
 func (token *Token) Insert() {
 	sql := "INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	query.Exec("NULL", strconv.Itoa(token.Account.ID), token.Encrypt(), token.Timestamp)
 }
 
@@ -43,7 +43,7 @@ func (token *Token) IsValid() bool {
 func newTokenFromCookie(cookie *LoginCookie) (*Token, error) {
 	token := &Token{}
 	sql := "SELECT value, timestamp FROM account_token WHERE account=? AND value=?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(cookie.AccountID, cookie.Token).Scan(&token.Value, &token.Timestamp)
 	return token, err
 }

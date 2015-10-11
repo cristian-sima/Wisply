@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Settings The authentication's settings
@@ -49,7 +49,7 @@ func deleteOldTokens() {
 	duration := Settings["duration"].(int)
 	diff := now - duration
 
-	query, _ := wisply.Database.Prepare("DELETE from account_token WHERE timestamp < ?")
+	query, _ := database.Connection.Prepare("DELETE from account_token WHERE timestamp < ?")
 	query.Exec(strconv.Itoa(diff))
 }
 
@@ -57,7 +57,7 @@ func deleteOldTokens() {
 func (model *Model) GetAllAccounts() []Account {
 	var list []Account
 	sql := "SELECT id, name, password, email, administrator FROM account"
-	rows, _ := wisply.Database.Query(sql)
+	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		account := Account{}
 		rows.Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
@@ -69,7 +69,7 @@ func (model *Model) GetAllAccounts() []Account {
 // CountAccounts It returns the number of accounts
 func CountAccounts() int {
 	number := 0
-	query, _ := wisply.Database.Prepare("SELECT count(*) FROM account")
+	query, _ := database.Connection.Prepare("SELECT count(*) FROM account")
 	query.QueryRow().Scan(&number)
 	return number
 }
@@ -90,7 +90,7 @@ func GetAccountByEmail(email string) (*Account, error) {
 	}
 
 	sql := "SELECT id, name, password, email, administrator FROM account WHERE email = ? "
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(email).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 
 	if err != nil {
@@ -110,7 +110,7 @@ func NewAccount(ID string) (*Account, error) {
 	account := new(Account)
 
 	sql := "SELECT id, name, password, email, administrator FROM account WHERE id= ?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(ID).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 
 	if err != nil {

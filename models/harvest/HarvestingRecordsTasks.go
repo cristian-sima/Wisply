@@ -48,7 +48,7 @@ func (task *InsertRecordsTask) clear() error {
 	ID := task.repository.ID
 
 	sql := "DELETE from `repository_resource` WHERE repository=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `repository_resource` table: <br />" + err.Error())
@@ -59,7 +59,7 @@ func (task *InsertRecordsTask) clear() error {
 	// clear keys
 
 	sql = "DELETE from `resource_key` WHERE repository=?"
-	query, err = database.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `resource_key` table: <br />" + err.Error())
@@ -88,7 +88,7 @@ func (task *InsertRecordsTask) insertRecord(record wisply.Recorder) error {
 	sqlValues := "(?, ?, ?)"
 	sql := "INSERT INTO `repository_resource` " + sqlColumns + " VALUES " + sqlValues
 
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to insert into `repository_resource` table: <br />" + err.Error())
@@ -194,7 +194,7 @@ func (task *InsertRecordsTask) insertKeys(record *wisply.Recorder, keys []string
 		sqlValues := "(?, ?, ?, ?)"
 		sql := "INSERT INTO `resource_key` " + sqlColumns + " VALUES " + sqlValues
 
-		query, err := database.Database.Prepare(sql)
+		query, err := database.Connection.Prepare(sql)
 
 		if err != nil {
 			return errors.New("Error while inserting into `resource_key`: " + err.Error())

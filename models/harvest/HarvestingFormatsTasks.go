@@ -48,7 +48,7 @@ func (task *InsertFormatsTask) clearTable() error {
 	ID := task.repository.ID
 
 	sql := "DELETE from `repository_format` WHERE repository=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `repository_format` table: <br />" + err.Error())
@@ -68,7 +68,7 @@ func (task *InsertFormatsTask) insertData(formats []wisply.Formater) error {
 		sqlValues := "(?, ?, ?, ?)"
 		sql := "INSERT INTO `repository_format` " + sqlColumns + " VALUES " + sqlValues
 
-		query, err := database.Database.Prepare(sql)
+		query, err := database.Connection.Prepare(sql)
 
 		if err != nil {
 			return errors.New("Error while trying to insert into `repository_format` table: <br />" + err.Error())

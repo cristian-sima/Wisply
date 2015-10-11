@@ -30,7 +30,7 @@ func (institution *Institution) Delete() error {
 
 	// delete institution
 	sql := "DELETE from `institution` WHERE id=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.Exec(institution.ID)
 
 	return err
@@ -66,7 +66,7 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 func (institution *Institution) GetRepositories() []Repository {
 	var list []Repository
 	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository WHERE institution = ?"
-	rows, _ := database.Database.Query(sql, institution.ID)
+	rows, _ := database.Connection.Query(sql, institution.ID)
 	for rows.Next() {
 		repository := Repository{}
 		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
@@ -86,7 +86,7 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	sql := "UPDATE `institution` SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=? WHERE id=?"
 	institution.Name = name
 	institution.Description = description
-	query, _ := database.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(name, description, logoURL, wikiURL, wikiID, id)
 	return err
 }

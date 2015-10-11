@@ -226,7 +226,7 @@ func insertHarvestProcess(process *Process) {
 	values := "(?, ?)"
 	sql := "INSERT INTO `process_harvest` " + columns + " VALUES " + values
 
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when creating the harvest process:")
@@ -246,7 +246,7 @@ func NewProcess(processID int) *Process {
 	)
 
 	sql := "SELECT `repository` FROM `process_harvest` WHERE process=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of repository from harvest process:")
@@ -277,7 +277,7 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 	repID = strconv.Itoa(repositoryID)
 
 	sql := "SELECT `process` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
-	rows, err := database.Database.Query(sql, repositoryID)
+	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {
 		fmt.Println("Error while selecting the processes by repository: ")
@@ -299,7 +299,7 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 // DeleteProcess deletes a process
 func DeleteProcess(processID int) {
 	sql := "DELETE FROM `process_harvest` WHERE process=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when deleting the harvest process:")

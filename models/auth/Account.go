@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Account represents an account
@@ -32,7 +32,7 @@ func (account *Account) ChangeType(isAdministrator string) error {
 // It modifies the status of the user
 func (account *Account) modifyStatus(isAdministrator string) error {
 
-	stmt, err := wisply.Database.Prepare("UPDATE `account` SET administrator=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `account` SET administrator=? WHERE id=?")
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (account *Account) createNewToken() *Token {
 // Delete removes the account from the database
 func (account *Account) Delete() error {
 	sql := "DELETE from `account` WHERE id=?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(strconv.Itoa(account.ID))
 
 	if err != nil {

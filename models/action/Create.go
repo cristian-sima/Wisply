@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // CreateProcess creates a new harvest process
@@ -21,7 +21,7 @@ func CreateProcess(content string) *Process {
 	values := "(?, ?, ?)"
 	sql := "INSERT INTO `process` " + columns + " VALUES " + values
 
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when creating the process:")
@@ -33,7 +33,7 @@ func CreateProcess(content string) *Process {
 
 	// find its ID
 	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND is_running=?"
-	query, err = wisply.Database.Prepare(sql)
+	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(process.Content, process.Start, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
 
 	if err != nil {

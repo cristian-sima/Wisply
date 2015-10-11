@@ -48,7 +48,7 @@ func (task *InsertCollectionsTask) clearTable() error {
 	ID := task.repository.ID
 
 	sql := "DELETE from `repository_collection` WHERE repository=?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return errors.New("Error while trying to clear the `repository_collection` table: <br />" + err.Error())
@@ -68,7 +68,7 @@ func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner)
 		sqlValues := "(?, ?, ?)"
 		sql := "INSERT INTO `repository_collection` " + sqlColumns + " VALUES " + sqlValues
 
-		query, err := database.Database.Prepare(sql)
+		query, err := database.Connection.Prepare(sql)
 
 		if err != nil {
 			return errors.New("Error while trying to insert into `repository_collection` table: <br />" + err.Error())

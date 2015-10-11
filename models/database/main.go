@@ -12,9 +12,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Database It represents the connection to the database
+// Connection It represents the connection to the database
 var (
-	Database *sql.DB
+	Connection *sql.DB
 )
 
 // Db manages the connection to database
@@ -39,7 +39,7 @@ func (database *Db) connect() {
 	for !connected {
 		fmt.Println("[INFO] Connecting to database...")
 		db, err := sql.Open("mysql", databaseString)
-		Database = db
+		Connection = db
 		// Open doesn't open a connection. Validate DSN data:
 		err = db.Ping()
 		if err == nil {

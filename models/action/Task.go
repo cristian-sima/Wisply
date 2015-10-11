@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Task executes a single instruction. It can insert to database or requests an URL
@@ -31,7 +31,7 @@ func (task *Task) CustomFinish(result, explication string) {
 }
 
 func (task *Task) updateInDatabase() {
-	stmt, err := wisply.Database.Prepare("UPDATE `task` SET end=?, content=?, result=?, is_running=?, explication=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `task` SET end=?, content=?, result=?, is_running=?, explication=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when updating the task: ")
 		fmt.Println(err)

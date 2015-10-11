@@ -53,55 +53,14 @@ func (task *GetTask) GetRecords() ([]byte, error) {
 	return body, err
 }
 
-// // RequestRecords returns all the records of the repository
-// func (task *GetRequestTask) RequestRecords() ([]byte, error) {
-// 	request := &oai.Request{
-// 		BaseURL:        task.repository.URL,
-// 		Verb:           "ListRecords",
-// 		MetadataPrefix: "oai_dc",
-// 	}
-// 	return task.get(request)
-// }
-//
-// // RequestIdentifiers returns all the identifiers of the repository
-// func (task *GetRequestTask) RequestIdentifiers() ([]byte, error) {
-// 	request := &oai.Request{
-// 		BaseURL:        task.repository.URL,
-// 		Verb:           "ListIdentifiers",
-// 		MetadataPrefix: "oai_dc",
-// 	}
-// 	return task.get(request)
-// }
-//
-// // get returns the content of the remote repository
-// func (task *GetRequestTask) get() ([]byte, error) {
-//
-// 	task.Content = "HTTP Request " + request.Verb
-// 	body, err := request.Get()
-//
-// 	if err != nil {
-// 		task.ChangeResult("danger")
-// 		task.Finish(err.Error())
-// 	} else {
-// 		task.Finish("Success")
-// 	}
-// 	return body, err
-// }
-//
-// // get returns the content of the remote repository
-// func (task *GetRequestTask) get(request *oai.Request) ([]byte, error) {
-//
-// 	task.Content = "HTTP Request " + request.Verb
-// 	body, err := request.Get()
-//
-// 	if err != nil {
-// 		task.ChangeResult("danger")
-// 		task.Finish(err.Error())
-// 	} else {
-// 		task.Finish("Success")
-// 	}
-// 	return body, err
-// }
+// GetIdentifiers returns the identifiers of the remote repository
+// It waits for the answer and it modifies it state according to it
+func (task *GetTask) GetIdentifiers() ([]byte, error) {
+	task.addContent("Get Identifiers")
+	body, err := task.remote.ListIdentifiers()
+	task.finishRequest(err, "Request performed")
+	return body, err
+}
 
 func newGetTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *GetTask {
 	return &GetTask{

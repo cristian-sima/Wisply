@@ -41,6 +41,12 @@ func (request *Request) GetRecords(prefix string) ([]byte, error) {
 	return request.getVerb("ListRecords")
 }
 
+// GetIdentifiers returns the content of the request to get all the identifiers for a particular metadata format
+func (request *Request) GetIdentifiers(prefix string) ([]byte, error) {
+	request.MetadataPrefix = prefix
+	return request.getVerb("ListIdentifiers")
+}
+
 func (request *Request) getVerb(verb string) ([]byte, error) {
 	request.verb = verb
 	return request.get()

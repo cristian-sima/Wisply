@@ -15,6 +15,8 @@ type EPrintsRepository struct {
 	request *oai.Request
 }
 
+// ------------------------- GET
+
 // Test calls the request validate method and returns its result
 func (repository *EPrintsRepository) Test() ([]byte, error) {
 	return repository.request.Identify()
@@ -40,7 +42,12 @@ func (repository *EPrintsRepository) ListRecords() ([]byte, error) {
 	return repository.request.GetRecords("oai_dc")
 }
 
-// Parse
+// ListIdentifiers returns the content of the request which requests for identifiers
+func (repository *EPrintsRepository) ListIdentifiers() ([]byte, error) {
+	return repository.request.GetIdentifiers("oai_dc")
+}
+
+// ----------------------------------- Parse
 
 // GetIdentification returns the identification details in Wisply format
 func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.Identificationer, error) {
@@ -144,6 +151,32 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 	}
 
 	return records, nil
+}
+
+// GetIdentifiers returns the `records` in Wisply format
+func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Identifier, error) {
+
+	var identifiers []wisply.Identifier
+
+	response, err := repository.request.Parse(content)
+
+	if err != nil {
+		return identifiers, err
+	}
+
+	remoteIdentifiers := response.ListIdentifiers.Headers
+
+	for _, remoteIdentifier := range remoteIdentifiers {
+
+		identifier := &OAIIdentifier{
+			Identifier: remoteIdentifier.Identifier,
+			Datestamp:  remoteIdentifier.DateStamp,
+			Spec:       remoteIdentifier.SetSpec,
+		}
+		identifiers = append(identifiers, identifier)
+	}
+
+	return identifiers, nil
 }
 
 func (repository *EPrintsRepository) getKeys(plainText []byte) (OAIKeys, error) {

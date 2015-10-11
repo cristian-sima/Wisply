@@ -4,7 +4,7 @@ import "github.com/cristian-sima/Wisply/models/harvest/wisply"
 
 // HarvestingIdentifiers is the operation which collects the identifiers from a remote repository
 type HarvestingIdentifiers struct {
-	*Operation
+	*HarvestingOperation
 }
 
 // Start gets the identifiers
@@ -15,56 +15,44 @@ func (operation *HarvestingIdentifiers) Start() {
 
 func (operation *HarvestingIdentifiers) tryToGet() {
 
-	// rem := operation.process.GetRemote()
+	rem := operation.GetRemote()
 
-	// create a task to request the server
-	// task := newGetRequestTask(operation, rem)
+	task := newGetTask(operation, rem)
 
-	// content, err := task.RequestIdentifiers()
-	//
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.tryToParse(content)
-	// }
-}
+	content, err := task.GetIdentifiers()
 
-func (operation *HarvestingIdentifiers) tryToParse(page []byte) {
-	// task := newParseRequestTask(operation)
-	// collections, err := task.GetIdentifiers(page)
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.insertRecords(collections)
-	// }
-}
-
-func (operation *HarvestingIdentifiers) insertRecords(collections []wisply.Identifier) {
-	repository := operation.Operation.GetRepository()
-	task := newInsertIdentifiersTask(operation, repository)
-	err := task.Insert(collections)
 	if err != nil {
-		operation.harvestFailed()
+		operation.failed()
 	} else {
-		operation.harvestSuccess()
+		operation.tryToParse(content)
 	}
 }
 
-func (operation *HarvestingIdentifiers) harvestFailed() {
-	operation.ChangeResult("danger")
-	operation.Finish()
+func (operation *HarvestingIdentifiers) tryToParse(page []byte) {
+	rem := operation.GetRemote()
+	task := newParseTask(operation, rem)
+	identifiers, err := task.GetIdentifiers(page)
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.insertIdentifiers(identifiers)
+	}
 }
 
-func (operation *HarvestingIdentifiers) harvestSuccess() {
-	operation.Finish()
+func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.Identifier) {
+	repository := operation.Operation.GetRepository()
+	task := newInsertIdentifiersTask(operation, repository)
+	err := task.Insert(identifiers)
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.succeeded()
+	}
 }
 
 // constructor
 func newHarvestingIdentifiers(harvestProcess *Process) Operationer {
 	return &HarvestingIdentifiers{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvest Identifiers"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "Identifiers"),
 	}
 }

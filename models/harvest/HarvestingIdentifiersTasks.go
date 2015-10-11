@@ -9,14 +9,14 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// InsertIdentifiersTask represents a task that inserts the records into database
+// InsertIdentifiersTask represents a task that inserts the identifiers into database
 type InsertIdentifiersTask struct {
 	Tasker
 	*Task
 	repository *repository.Repository
 }
 
-// Insert clears the tables and inserts the records
+// Insert clears the tables and inserts the identifiers
 func (task *InsertIdentifiersTask) Insert(identifiers []wisply.Identifier) error {
 
 	err := task.clear()

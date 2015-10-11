@@ -39,7 +39,7 @@ func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
 	task.addContent("formats")
 	formats, err := task.remote.GetFormats(content)
 	number := strconv.Itoa(len(formats))
-	task.finishRequest(err, "Success. "+number+" formats has been identified")
+	task.finishRequest(err, "Success. "+number+" `formats` has been identified")
 
 	return formats, err
 }
@@ -49,7 +49,7 @@ func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, er
 	task.addContent("collections")
 	collections, err := task.remote.GetCollections(content)
 	number := strconv.Itoa(len(collections))
-	task.finishRequest(err, "Success. "+number+" collections has been identified")
+	task.finishRequest(err, "Success. "+number+" `collections` has been identified")
 
 	return collections, err
 }
@@ -59,51 +59,20 @@ func (task *ParseTask) GetRecords(content []byte) ([]wisply.Recorder, error) {
 	task.addContent("records")
 	records, err := task.remote.GetRecords(content)
 	number := strconv.Itoa(len(records))
-	task.finishRequest(err, "Success. "+number+" records has been identified")
+	task.finishRequest(err, "Success. "+number+" `records` has been identified")
 
 	return records, err
 }
 
-// // GetIdentifiers returns an array with identifiers
-// func (task *ParseRequestTask) GetIdentifiers(content []byte) ([]Identifier, error) {
-//
-// 	var identifiers []Identifier
-//
-// 	response, err := task.parse(content)
-// 	if err != nil {
-// 		return identifiers, err
-// 	}
-//
-// 	remoteIdentifiers := response.ListIdentifiers.Headers
-//
-// 	for _, remoteIdentifier := range remoteIdentifiers {
-//
-// 		identifier := &remote.OAIIdentifier{
-// 			Identifier: remoteIdentifier.Identifier,
-// 			Datestamp:  remoteIdentifier.DateStamp,
-// 			Spec:       remoteIdentifier.SetSpec,
-// 		}
-// 		identifiers = append(identifiers, identifier)
-// 	}
-//
-// 	number := strconv.Itoa(len(identifiers))
-// 	task.Finish(number + " identifiers has been identified")
-//
-// 	return identifiers, nil
-// }
-//
-// func (task *ParseRequestTask) getKeys(plainText []byte) (*remote.Keys, error) {
-//
-// 	keys := &remote.Keys{}
-//
-// 	// Unmarshall all the data
-// 	err := xml.Unmarshal(plainText, &keys)
-// 	if err != nil {
-// 		return keys, err
-// 	}
-//
-// 	return keys, nil
-// }
+// GetIdentifiers tells the remote server to parse the content and to return the `identifiers`
+func (task *ParseTask) GetIdentifiers(content []byte) ([]wisply.Identifier, error) {
+	task.addContent("identifiers")
+	identifiers, err := task.remote.GetIdentifiers(content)
+	number := strconv.Itoa(len(identifiers))
+	task.finishRequest(err, "Success. "+number+" `identifiers` has been identified")
+
+	return identifiers, err
+}
 
 func newParseTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *ParseTask {
 	return &ParseTask{

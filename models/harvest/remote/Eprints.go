@@ -24,9 +24,9 @@ func (repository *EPrintsRepository) Identify() ([]byte, error) {
 	return repository.request.Identify()
 }
 
-// GetCollections returns the content of the request which requests the sets
-func (repository *EPrintsRepository) GetCollections(prefix string) ([]byte, error) {
-	return repository.request.GetSets(prefix)
+// ListCollections returns the content of the request which requests the sets
+func (repository *EPrintsRepository) ListCollections() ([]byte, error) {
+	return repository.request.GetSets()
 }
 
 // ListFormats returns the content of the request which requests for formats
@@ -88,6 +88,27 @@ func (repository *EPrintsRepository) GetFormats(content []byte) ([]wisply.Format
 	}
 
 	return formats, nil
+}
+
+// GetCollections returns the `collections` in Wisply format
+func (repository *EPrintsRepository) GetCollections(content []byte) ([]wisply.Collectioner, error) {
+	var collections []wisply.Collectioner
+
+	response, err := repository.request.Parse(content)
+	if err != nil {
+		return collections, err
+	}
+
+	remoteCollections := response.ListSets.Set
+
+	for _, collection := range remoteCollections {
+		collection := &OAICollection{
+			Name: collection.SetName,
+			Spec: collection.SetSpec,
+		}
+		collections = append(collections, collection)
+	}
+	return collections, nil
 }
 
 // IsValidResponse checks if the content is a valid OAI reponse type

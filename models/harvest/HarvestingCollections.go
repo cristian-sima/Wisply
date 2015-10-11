@@ -14,28 +14,30 @@ func (operation *HarvestingCollections) Start() {
 }
 
 func (operation *HarvestingCollections) tryToGet() {
-	//
-	// rem := operation.process.GetRemoteServer()
-	//
-	// task := newGetTask(operation, rem)
-	//
-	// content, err := task.GetCollections()
-	//
-	// if err != nil {
-	// 	operation.failed()
-	// } else {
-	// 	operation.tryToParse(content)
-	// }
+
+	rem := operation.process.GetRemoteServer()
+
+	task := newGetTask(operation, rem)
+
+	content, err := task.GetCollections()
+
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.tryToParse(content)
+	}
 }
 
 func (operation *HarvestingCollections) tryToParse(page []byte) {
-	// task := newParseRequestTask(operation)
-	// collections, err := task.GetCollections(page)
-	// if err != nil {
-	// 	operation.harvestFailed()
-	// } else {
-	// 	operation.insertFormats(collections)
-	// }
+	rem := operation.process.GetRemoteServer()
+	task := newParseTask(operation, rem)
+	collections, err := task.GetCollections(page)
+
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.insertFormats(collections)
+	}
 }
 
 func (operation *HarvestingCollections) insertFormats(collections []wisply.Collectioner) {
@@ -52,6 +54,6 @@ func (operation *HarvestingCollections) insertFormats(collections []wisply.Colle
 // constructor
 func newHarvestingCollections(harvestProcess *Process) Operationer {
 	return &HarvestingCollections{
-		HarvestingOperation: newHarvestingOperation(harvestProcess, "collections"),
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "Collections"),
 	}
 }

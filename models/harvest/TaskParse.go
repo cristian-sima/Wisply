@@ -39,37 +39,21 @@ func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
 	task.addContent("formats")
 	formats, err := task.remote.GetFormats(content)
 	number := strconv.Itoa(len(formats))
-	task.finishRequest(err, "Success. "+number+" has been identified")
+	task.finishRequest(err, "Success. "+number+" formats has been identified")
 
 	return formats, err
 }
 
-// // GetCollections returns an array with all the collections
-// func (task *ParseRequestTask) GetCollections(content []byte) ([]Collectioner, error) {
-//
-// 	var collections []Collectioner
-//
-// 	response, err := task.parse(content)
-// 	if err != nil {
-// 		return collections, err
-// 	}
-//
-// 	remoteCollections := response.ListSets.Set
-//
-// 	for _, collection := range remoteCollections {
-// 		collection := &remote.OAICollection{
-// 			Name: collection.SetName,
-// 			Spec: collection.SetSpec,
-// 		}
-// 		collections = append(collections, collection)
-// 	}
-//
-// 	number := strconv.Itoa(len(collections))
-// 	task.Finish(number + " has been identified")
-//
-// 	return collections, nil
-// }
-//
+// GetCollections tells the remote server to parse the content and to return the collections
+func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, error) {
+	task.addContent("collections")
+	collections, err := task.remote.GetCollections(content)
+	number := strconv.Itoa(len(collections))
+	task.finishRequest(err, "Success. "+number+" collections has been identified")
+
+	return collections, err
+}
+
 // // GetRecords returns an array with records
 // func (task *ParseRequestTask) GetRecords(content []byte) ([]Recorder, error) {
 //

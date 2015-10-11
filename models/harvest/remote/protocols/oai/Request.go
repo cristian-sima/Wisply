@@ -31,8 +31,7 @@ func (request *Request) GetFormats() ([]byte, error) {
 }
 
 // GetSets returns the content of the request to get all the sets for a particular metadata format
-func (request *Request) GetSets(metadataPrefix string) ([]byte, error) {
-	request.MetadataPrefix = metadataPrefix
+func (request *Request) GetSets() ([]byte, error) {
 	return request.getVerb("ListSets")
 }
 

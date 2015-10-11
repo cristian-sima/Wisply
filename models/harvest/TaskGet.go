@@ -35,33 +35,15 @@ func (task *GetTask) GetFormats() ([]byte, error) {
 	return body, err
 }
 
-// // GetCollections returns the collections of the remote repository
-// // It waits for the answer and it modifies it state according to it
-// func (task *GetTask) GetCollections() ([]byte, error) {
-// 	task.addContent("Get Collections")
-// 	body, err := task.remote.GetCollections()
-// 	task.finishRequest(err, "Request performed")
-// 	return body, err
-// }
+// GetCollections returns the collections of the remote repository
+// It waits for the answer and it modifies it state according to it
+func (task *GetTask) GetCollections() ([]byte, error) {
+	task.addContent("Get Collections")
+	body, err := task.remote.ListCollections()
+	task.finishRequest(err, "Request performed")
+	return body, err
+}
 
-// // RequestFormats returns all the formats of the repository
-// func (task *GetRequestTask) RequestFormats() ([]byte, error) {
-// 	request := &oai.Request{
-// 		BaseURL: task.repository.URL,
-// 		Verb:    "ListMetadataFormats",
-// 	}
-// 	return task.get(request)
-// }
-//
-// // RequestCollections returns all the collections of the repository
-// func (task *GetRequestTask) RequestCollections() ([]byte, error) {
-// 	request := &oai.Request{
-// 		BaseURL: task.repository.URL,
-// 		Verb:    "ListSets",
-// 	}
-// 	return task.get(request)
-// }
-//
 // // RequestRecords returns all the records of the repository
 // func (task *GetRequestTask) RequestRecords() ([]byte, error) {
 // 	request := &oai.Request{

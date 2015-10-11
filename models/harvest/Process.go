@@ -73,6 +73,8 @@ func (process *Process) run() {
 				process.ChangeRepositoryStatus("ok")
 				process.Finish()
 				break
+			default:
+				fmt.Println("No such operation: " + message.GetOperation().Content)
 			}
 		}
 	}

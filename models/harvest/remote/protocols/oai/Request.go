@@ -20,9 +20,13 @@ type Request struct {
 	Until           string
 }
 
-// Verify sends a Indentify request and returns the response
-func (request *Request) Verify() ([]byte, error) {
-	request.verb = "Identify"
+// Identify returns the identification details of the repository
+func (request *Request) Identify() ([]byte, error) {
+	return request.getVerb("Identify")
+}
+
+func (request *Request) getVerb(verb string) ([]byte, error) {
+	request.verb = verb
 	return request.get()
 }
 

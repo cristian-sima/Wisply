@@ -2,7 +2,7 @@ package harvest
 
 import "github.com/cristian-sima/Wisply/models/harvest/remote"
 
-// GetRequestTask represents a task for requesting something from the remote repository
+// GetTask represents a task for requesting something from the remote repository
 // It is a decorator pattern
 type GetTask struct {
 	*remoteTask
@@ -13,6 +13,15 @@ type GetTask struct {
 func (task *GetTask) Verify() ([]byte, error) {
 	task.addContent("Verify")
 	body, err := task.remote.Test()
+	task.finishRequest(err, "Request performed")
+	return body, err
+}
+
+// Identify tells the remote to send the identification details
+// It waits for the answer and it modifies it state according to it
+func (task *GetTask) Identify() ([]byte, error) {
+	task.addContent("Verify")
+	body, err := task.remote.Identify()
 	task.finishRequest(err, "Request performed")
 	return body, err
 }

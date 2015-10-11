@@ -13,25 +13,29 @@ func (operation *IdentificationOperation) Start() {
 }
 
 func (operation *IdentificationOperation) tryToGet() {
-	//
-	// rem := operation.process.GetRepository()
-	//
-	// // create a task to request the server
-	// task := newGetRequestTask(operation, rem)
 
-	// page, err := task.Identify()
-	//
-	// if err != nil {
-	// 	operation.identificationFailed()
-	// } else {
-	// 	operation.tryToParse(page)
-	// }
-	// create a task to check the result
+	rem := operation.process.GetRemoteServer()
+
+	// create a task to request the server
+	task := newGetTask(operation, rem)
+
+	content, err := task.Identify()
+
+	if err != nil {
+		operation.identificationFailed()
+	} else {
+		operation.tryToParse(content)
+	}
 }
 
 func (operation *IdentificationOperation) tryToParse(page []byte) {
-	// task := newParseRequestTask(operation)
+
+	// rem := operation.process.GetRemoteServer()
+	//
+	// task := newParseTask(operation, rem)
+	//
 	// response, err := task.GetIdentification(page)
+	//
 	// if err != nil {
 	// 	operation.identificationFailed()
 	// } else {

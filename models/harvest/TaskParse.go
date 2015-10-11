@@ -2,20 +2,32 @@ package harvest
 
 import "github.com/cristian-sima/Wisply/models/harvest/remote"
 
-// ParseRequestTask represents a task for parsing the content of a request from a remote repository
+// ParseTask represents a task for parsing the content of a request from a remote repository
 // It is a decorator pattern
-type ParseRequestTask struct {
+type ParseTask struct {
 	*remoteTask
 }
 
 // Verify checks if the content is valid or not as a result of parsing
-func (task *ParseRequestTask) Verify(content []byte) error {
+func (task *ParseTask) Verify(content []byte) error {
 
 	task.addContent("verify")
 	err := task.remote.IsValidResponse(content)
-	task.finishRequest(err, "The response has been parsed")
+	task.finishRequest(err, "The content is valid")
 
 	return err
+}
+
+// GetIdentification tells the remote server to parse the content and to return the identification
+func (task *ParseTask) GetIdentification(content []byte) error {
+
+	// task.addContent("identification")
+	// err := task.remote.GetIdentification(content)
+	// task.finishRequest(err, "The identification has been parsed")
+	//
+	// return err
+	//
+	return nil
 }
 
 //
@@ -170,8 +182,8 @@ func (task *ParseRequestTask) Verify(content []byte) error {
 // 	return keys, nil
 // }
 
-func newParseTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *ParseRequestTask {
-	return &ParseRequestTask{
+func newParseTask(operationHarvest Operationer, remoteRepository remote.RepositoryInterface) *ParseTask {
+	return &ParseTask{
 		remoteTask: &remoteTask{
 			Task: &Task{
 				operation: operationHarvest,

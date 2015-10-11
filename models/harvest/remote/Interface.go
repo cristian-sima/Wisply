@@ -4,9 +4,5 @@ package remote
 type RepositoryInterface interface {
 	Test() ([]byte, error)
 	IsValidResponse(content []byte) error
-	// Identify()
-	// HarvestFormats()
-	// HarvestCollections()
-	// HarvestRecords()
-	// HarvestIdentifiers()
+	Identify() ([]byte, error)
 }

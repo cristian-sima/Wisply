@@ -146,8 +146,8 @@ func (process *Process) GetRepository() *repository.Repository {
 	return process.repository
 }
 
-// GetRemote returns the interface of a remote repository
-func (process *Process) GetRemote() remote.RepositoryInterface {
+// GetRemoteServer returns the interface of a remote repository
+func (process *Process) GetRemoteServer() remote.RepositoryInterface {
 	return process.remote
 }
 

@@ -18,10 +18,8 @@ func (operation *VerificationOperation) Start() {
 // Activity creates a task to verify if the URL is good
 func (operation *VerificationOperation) tryToGet() {
 
-	// remote := operation.Process.GetRemote()
-	repository := operation.process.GetRemote()
+	repository := operation.process.GetRemoteServer()
 
-	// create a task to request the server
 	task := newGetTask(operation, repository)
 
 	page, err := task.Verify()
@@ -36,7 +34,7 @@ func (operation *VerificationOperation) tryToGet() {
 
 func (operation *VerificationOperation) tryToParse(page []byte) {
 
-	repository := operation.process.GetRemote()
+	repository := operation.process.GetRemoteServer()
 
 	task := newParseTask(operation, repository)
 	err := task.Verify(page)

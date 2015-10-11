@@ -4,8 +4,8 @@ import (
 	"encoding/xml"
 	"strconv"
 
-	oai "github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
 	"github.com/cristian-sima/Wisply/models/harvest/remote"
+	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
 )
 
 // ParseRequestTask represents a task for parsing the request

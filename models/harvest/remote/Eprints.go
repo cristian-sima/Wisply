@@ -1,7 +1,7 @@
 package remote
 
 import (
-	"github.com/cristian-sima/Wisply/models/harvest/protocols/oai"
+	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 

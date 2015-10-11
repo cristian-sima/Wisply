@@ -92,16 +92,26 @@ func (task *InsertIdentificationTask) insertEmails(emails []string) error {
 
 func (task *InsertIdentificationTask) insertDetails(identification *wisply.Identificationer) error {
 
+	modifyName := "UPDATE `repository` SET `name`=? WHERE `id` = ?"
+
+	query1, err1 := database.Database.Prepare(modifyName)
+
+	if err1 != nil {
+		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err1.Error())
+	}
+	query1.Exec((*identification).GetName(), task.repository.ID)
+
 	sqlColumns := "(`repository`, `protocol_version`, `earliest_datestamp`, `delete_policy`, `granularity`)"
 	sqlValues := "(?, ?, ?, ?, ?)"
-	sql := "INSERT INTO `repository_identification` " + sqlColumns + " VALUES " + sqlValues
+	idenSQL := "INSERT INTO `repository_identification` " + sqlColumns + " VALUES " + sqlValues
 
-	query, err := database.Database.Prepare(sql)
-	query.Exec(task.repository.ID, (*identification).GetProtocol(), (*identification).GetEarliestDatestamp(), (*identification).GetDeletedRecord(), (*identification).GetGranularity())
+	query2, err2 := database.Database.Prepare(idenSQL)
 
-	if err != nil {
-		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err.Error())
+	if err2 != nil {
+		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err2.Error())
 	}
+	query2.Exec(task.repository.ID, (*identification).GetProtocol(), (*identification).GetEarliestDatestamp(), (*identification).GetDeletedRecord(), (*identification).GetGranularity())
+
 	return nil
 }
 

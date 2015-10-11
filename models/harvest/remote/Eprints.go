@@ -139,18 +139,30 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 
 	for _, record := range remoteRecords {
 
-		// keys, err := repository.getKeys(record.Metadata.Body)
+		keys, err := repository.getKeys(record.Metadata.Body)
 
 		if err == nil {
 			record := OAIRecord{
 				Identifier: record.Header.Identifier,
 				Datestamp:  record.Header.DateStamp,
+				Keys:       keys,
 			}
 			records = append(records, record)
 		}
 	}
 
 	return records, nil
+}
+
+func (repository *EPrintsRepository) getKeys(plainText []byte) (OAIKeys, error) {
+
+	keys := OAIKeys{}
+
+	err := xml.Unmarshal(plainText, &keys)
+	if err != nil {
+		return keys, err
+	}
+	return keys, nil
 }
 
 // GetIdentifiers returns the `records` in Wisply format
@@ -177,17 +189,6 @@ func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Id
 	}
 
 	return identifiers, nil
-}
-
-func (repository *EPrintsRepository) getKeys(plainText []byte) (OAIKeys, error) {
-
-	keys := OAIKeys{}
-
-	err := xml.Unmarshal(plainText, &keys)
-	if err != nil {
-		return keys, err
-	}
-	return keys, nil
 }
 
 // IsValidResponse checks if the content is a valid OAI reponse type

@@ -1,5 +1,9 @@
 package remote
 
+import (
+	wisply "github.com/cristian-sima/Wisply/models/harvest/wisply"
+)
+
 // OAIIdentification represents the identification for a OAI repository
 type OAIIdentification struct {
 	Name              string
@@ -110,77 +114,77 @@ type OAIKeys struct {
 }
 
 // GetTitles returns the Titles
-func (keys *OAIKeys) GetTitles() []string {
+func (keys OAIKeys) GetTitles() []string {
 	return keys.Titles
 }
 
 // GetCreators returns the Creators
-func (keys *OAIKeys) GetCreators() []string {
+func (keys OAIKeys) GetCreators() []string {
 	return keys.Creators
 }
 
 // GetSubjects returns the Subjects
-func (keys *OAIKeys) GetSubjects() []string {
+func (keys OAIKeys) GetSubjects() []string {
 	return keys.Subjects
 }
 
 // GetDescriptions returns the Descriptions
-func (keys *OAIKeys) GetDescriptions() []string {
+func (keys OAIKeys) GetDescriptions() []string {
 	return keys.Descriptions
 }
 
 // GetPublishers returns the Publishers
-func (keys *OAIKeys) GetPublishers() []string {
+func (keys OAIKeys) GetPublishers() []string {
 	return keys.Publishers
 }
 
 // GetContributors returns the Contributors
-func (keys *OAIKeys) GetContributors() []string {
+func (keys OAIKeys) GetContributors() []string {
 	return keys.Contributors
 }
 
 // GetDates returns the Dates
-func (keys *OAIKeys) GetDates() []string {
+func (keys OAIKeys) GetDates() []string {
 	return keys.Dates
 }
 
 // GetTypes returns the Types
-func (keys *OAIKeys) GetTypes() []string {
+func (keys OAIKeys) GetTypes() []string {
 	return keys.Types
 }
 
 // GetFormats returns the Formats
-func (keys *OAIKeys) GetFormats() []string {
+func (keys OAIKeys) GetFormats() []string {
 	return keys.Formats
 }
 
 // GetIdentifiers returns the Identifiers
-func (keys *OAIKeys) GetIdentifiers() []string {
+func (keys OAIKeys) GetIdentifiers() []string {
 	return keys.Identifiers
 }
 
 // GetSources returns the Sources
-func (keys *OAIKeys) GetSources() []string {
+func (keys OAIKeys) GetSources() []string {
 	return keys.Sources
 }
 
 // GetLanguages returns the Languages
-func (keys *OAIKeys) GetLanguages() []string {
+func (keys OAIKeys) GetLanguages() []string {
 	return keys.Languages
 }
 
 // GetRelations returns the Relations
-func (keys *OAIKeys) GetRelations() []string {
+func (keys OAIKeys) GetRelations() []string {
 	return keys.Relations
 }
 
 // GetCoverages returns the Coverages
-func (keys *OAIKeys) GetCoverages() []string {
+func (keys OAIKeys) GetCoverages() []string {
 	return keys.Coverages
 }
 
 // GetRights returns the Rights
-func (keys *OAIKeys) GetRights() []string {
+func (keys OAIKeys) GetRights() []string {
 	return keys.Rights
 }
 
@@ -202,7 +206,7 @@ func (record OAIRecord) GetIdentifier() string {
 }
 
 // GetKeys returns the keys of the record
-func (record *OAIRecord) GetKeys() OAIKeys {
+func (record OAIRecord) GetKeys() wisply.Keys {
 	return record.Keys
 }
 

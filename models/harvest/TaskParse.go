@@ -82,7 +82,7 @@ func newParseTask(operationHarvest Operationer, remoteRepository remote.Reposito
 				Task:      newTask(operationHarvest.GetOperation(), "Remote Request"),
 			},
 			remote: remoteRepository,
-			name:   "Parse ",
+			name:   "Parse",
 		},
 	}
 }

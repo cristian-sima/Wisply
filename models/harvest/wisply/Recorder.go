@@ -4,6 +4,7 @@ package wisply
 type Recorder interface {
 	GetIdentifier() string
 	GetTimestamp() string
+	GetKeys() Keys
 }
 
 // Keys encapsulate all the dublin core keys

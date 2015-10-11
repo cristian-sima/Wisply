@@ -70,7 +70,7 @@ func newGetTask(operationHarvest Operationer, remoteRepository remote.Repository
 				Task:      newTask(operationHarvest.GetOperation(), "Remote Request"),
 			},
 			remote: remoteRepository,
-			name:   "HTTP Request ",
+			name:   "HTTP Request",
 		},
 	}
 }

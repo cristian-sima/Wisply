@@ -133,7 +133,7 @@ var HistoryEvent = function() {
 					case "repositories-status-list":
 						this.changeAllStatus(message);
 						break;
-					case "status-changed":
+					case "repository-status-changed":
 						this.changeSingleStatus(message);
 						break;
 				}

@@ -42,16 +42,20 @@ func (message *OperationMessage) GetOperation() *Operation {
 // ProcessMessager ... defines the methods which must be implemented by a message sent from process to controller
 type ProcessMessager interface {
 	Messager
-	GetProcess() *Process
+	GetProcess() Processer
 }
 
 // ProcessMessage represents a message sent from process to its controller
 type ProcessMessage struct {
 	*Message
-	process *Process
+	Process Processer
 }
 
 // GetProcess returns the process
-func (message *ProcessMessage) GetProcess() *Process {
-	return message.process
+func (message *ProcessMessage) GetProcess() Processer {
+	return message.Process
+}
+
+// Processer represents an interface for a process
+type Processer interface {
 }

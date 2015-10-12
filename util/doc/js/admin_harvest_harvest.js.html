@@ -19,11 +19,11 @@
 
     <h1 class="page-title">Source: admin/harvest/harvest.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* globals $, Websockets, server, wisply */
@@ -306,7 +306,7 @@ var Harvest = function() {
 					function getName(message) {
 						var toReturn = "";
 						toReturn += "&lt;strong>" + message.Name + "&lt;/strong>";
-						if (message.Name === "status-changed") {
+						if (message.Name === "repository-status-changed") {
 							toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
 						}
 						return toReturn;

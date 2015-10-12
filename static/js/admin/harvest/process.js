@@ -428,7 +428,7 @@ var HarvestProcess = function() {
 			decide: function(message) {
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
-						case "status-changed":
+						case "repository-status-changed":
 							this.stage.repository.status = message.Value;
 							this.stage.GUI.updateRepositoryStatus();
 							if (message.Value === "verifying") {

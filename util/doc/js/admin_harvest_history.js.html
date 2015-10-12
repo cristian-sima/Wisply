@@ -19,11 +19,11 @@
 
     <h1 class="page-title">Source: admin/harvest/history.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global $, Harvest, wisply, harvestHistory, HarvestList */
@@ -161,7 +161,7 @@ var HistoryEvent = function() {
 					case "repositories-status-list":
 						this.changeAllStatus(message);
 						break;
-					case "status-changed":
+					case "repository-status-changed":
 						this.changeSingleStatus(message);
 						break;
 				}

@@ -29,6 +29,10 @@ func (process *Process) run() {
 	for {
 		select {
 		case message := <-process.Process.GetOperationConduit():
+
+			fmt.Println("Process: I got: ")
+			fmt.Println(message)
+
 			switch message.GetOperation().Content {
 			case "Verification":
 				if message.GetValue() == "normal" {
@@ -158,36 +162,32 @@ func (process *Process) ChangeCurrentOperation(operation Operationer) {
 	process.Process.ChangeCurrentOperation(operation.GetOperation())
 }
 
-// End receives the identification result and saves it in the local repository
-func (process *Process) End() {
-	process.record("The process is stopped")
-	process.notifyController(&MessageX{
-		Name: "delete-process",
-	})
-}
-
 // ChangeRepositoryStatus changes the status of local repository
 func (process *Process) ChangeRepositoryStatus(newStatus string) {
+	fmt.Println("I am telling the controller")
 	process.repository.ModifyStatus(newStatus)
-	process.notifyController(&MessageX{
-		Name:  "status-changed",
+	process.tellController(&Message{
+		Name:  "repository-status-changed",
 		Value: newStatus,
 	})
 }
 
 // ---
 
-func (process *Process) notifyController(message *MessageX) {
-	// message.Repository = process.repository.ID
-	// process.controller.Notify(message)
-}
+func (process *Process) tellController(simple *Message) {
+	msg := &ProcessMessage{
+		Repository: process.GetRepository().ID,
+		ProcessMessage: action.ProcessMessage{
+			Process: process,
+			Message: &action.Message{
+				Name:  simple.Name,
+				Value: simple.Value,
+			},
+		},
+	}
+	channel := process.controller.GetConduit()
 
-func (process *Process) record(message string) {
-	process.notifyController(&MessageX{
-		Value: message,
-		Name:  "event-notice",
-	})
-	//process.operation.record(message, process.Local.ID)
+	channel <- msg
 }
 
 // Delete deletes the harvest process and calls its parent method

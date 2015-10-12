@@ -38,6 +38,8 @@ type HarvestController struct {
 
 // Prepare starts the thread with channel
 func (controller *HarvestController) Prepare() {
+	controller.Controller.Prepare()
+	controller.conduit = make(chan harvest.ProcessMessager, 100)
 	go controller.run()
 }
 
@@ -123,7 +125,7 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(message *ws.Message
 // CreateNewProcess starts the initializing proccess
 func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
 
-	_, processExists := CurrentSessions[message.Repository]
+	existingProcess, processExists := CurrentSessions[message.Repository]
 
 	if !processExists {
 		ID := message.Repository
@@ -136,13 +138,43 @@ func (controller *HarvestController) CreateNewProcess(message *ws.Message, conne
 		process.addConnection(connection)
 		CurrentSessions[ID] = process
 
-		harvestProcess.Start()
+		go harvestProcess.Start()
+	} else {
+		existingProcess.addConnection(connection)
 	}
 }
 
 func (controller *HarvestController) run() {
-	fmt.Println("Running the process...")
+	fmt.Println("Running the controller!! ...")
 
+	for {
+		select {
+		case message := <-controller.conduit:
+			fmt.Println("controller: I received this name : " + message.GetName())
+
+			session, ok := CurrentSessions[message.GetRepository()]
+
+			if ok {
+				switch message.GetName() {
+				case "repository-status-changed", "identification-details", "event-notice":
+					{
+						msg := ConvertToWebsocketMessage(message)
+						hub.BroadcastMessage(msg)
+					}
+					break
+				case "harvesting", "verification-finished":
+					msg := ConvertToWebsocketMessage(message)
+					hub.SendGroupMessage(msg, session.Connections)
+					break
+				case "delete-process":
+					{
+						delete(CurrentSessions, message.GetRepository())
+					}
+					break
+				}
+			}
+		}
+	}
 	// process, ok := CurrentSessions[message.Repository]
 	//
 	// controller.log("The controller has received this message:")
@@ -169,11 +201,11 @@ func (controller *HarvestController) run() {
 }
 
 // ConvertToWebsocketMessage converts a harvest message to a websocket one
-func ConvertToWebsocketMessage(old *harvest.MessageX) *ws.Message {
+func ConvertToWebsocketMessage(old harvest.ProcessMessager) *ws.Message {
 	newMessage := &ws.Message{
-		Name:       old.Name,
-		Value:      old.Value,
-		Repository: old.Repository,
+		Name:       old.GetName(),
+		Value:      old.GetValue(),
+		Repository: old.GetRepository(),
 	}
 	return newMessage
 }

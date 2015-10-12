@@ -278,7 +278,7 @@ var Harvest = function() {
 					function getName(message) {
 						var toReturn = "";
 						toReturn += "<strong>" + message.Name + "</strong>";
-						if (message.Name === "status-changed") {
+						if (message.Name === "repository-status-changed") {
 							toReturn += " " + wisply.repositoriesModule.GUI.getStatusColor(message.Value.trim());
 						}
 						return toReturn;

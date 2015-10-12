@@ -204,7 +204,7 @@ func (controller *HarvestController) run() {
 						hub.BroadcastMessage(msg)
 					}
 					break
-				case "harvesting", "verification-finished":
+				case "harvest-update-records":
 					msg := ConvertToWebsocketMessage(message)
 					hub.SendGroupMessage(msg, session.Connections)
 					break

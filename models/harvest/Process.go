@@ -222,6 +222,12 @@ func (process *Process) updateStatistics(name string, number int) error {
 		return err
 	}
 	_, err = stmt.Exec(number, process.HarvestID)
+	if err == nil {
+		process.tellController(&Message{
+			Name:  "harvest-update-records",
+			Value: number,
+		})
+	}
 	return err
 }
 

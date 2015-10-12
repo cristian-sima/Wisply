@@ -31,14 +31,17 @@ func (operation *HarvestingIdentifiers) clear() error {
 func (operation *HarvestingIdentifiers) multiRequest() {
 	var (
 		hasMoreIdentifiers bool
-		resumptionToken    string
+		token              string
 		err                error
 	)
 	hasMoreIdentifiers = true // in order to enter in the loop
 	for hasMoreIdentifiers && (err == nil) {
-		err := operation.tryToGet(resumptionToken)
+		err := operation.tryToGet(token)
 		if err == nil {
-			resumptionToken, hasMoreIdentifiers = operation.GetRemote().GetNextPage()
+			token, hasMoreIdentifiers = operation.GetRemote().GetNextPage()
+		}
+		if hasMoreIdentifiers {
+			operation.process.SaveToken("identifiers", token)
 		}
 	}
 	if err != nil {

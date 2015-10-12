@@ -30,15 +30,18 @@ func (operation *HarvestingRecords) clear() error {
 
 func (operation *HarvestingRecords) multiRequest() {
 	var (
-		hasMoreRecords  bool
-		resumptionToken string
-		err             error
+		hasMoreRecords bool
+		token          string
+		err            error
 	)
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
-		err = operation.tryToGet(resumptionToken)
+		err = operation.tryToGet(token)
 		if err == nil {
-			resumptionToken, hasMoreRecords = operation.GetRemote().GetNextPage()
+			token, hasMoreRecords = operation.GetRemote().GetNextPage()
+		}
+		if hasMoreRecords {
+			operation.process.SaveToken("records", token)
 		}
 	}
 	if err != nil {

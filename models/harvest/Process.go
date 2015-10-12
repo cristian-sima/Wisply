@@ -13,6 +13,7 @@ import (
 // Process is a link between controller and repository
 type Process struct {
 	*action.Process
+	harvestID  int
 	repository *repository.Repository
 	remote     remote.RepositoryInterface
 	controller Controller
@@ -172,7 +173,19 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	})
 }
 
-// ---
+// SaveToken saves the token for a particular name
+func (process *Process) SaveToken(name string, token string) {
+	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `token_" + name + "`=? WHERE id=?")
+	if err != nil {
+		fmt.Println("Error 1 when updating the token for " + name + " inside harvesting process: ")
+		fmt.Println(err)
+	}
+	_, err = stmt.Exec(token, process.harvestID)
+	if err != nil {
+		fmt.Println("Error 2 when updating the token for " + name + " inside harvesting process: ")
+		fmt.Println(err)
+	}
+}
 
 func (process *Process) tellController(simple *Message) {
 	msg := &ProcessMessage{
@@ -198,7 +211,10 @@ func (process *Process) Delete() {
 // CreateProcess creates a new harvest process
 func CreateProcess(ID string, controller Controller) *Process {
 
-	var rem remote.RepositoryInterface
+	var (
+		rem       remote.RepositoryInterface
+		harvestID int
+	)
 
 	local, _ := repository.NewRepository(ID)
 
@@ -216,12 +232,17 @@ func CreateProcess(ID string, controller Controller) *Process {
 		repository: local,
 	}
 
-	insertHarvestProcess(process)
+	harvestID = insertHarvestProcess(process)
+
+	process.harvestID = harvestID
 
 	return process
 }
 
-func insertHarvestProcess(process *Process) {
+func insertHarvestProcess(process *Process) int {
+
+	var harvestID int
+
 	columns := "(`process`, `repository`)"
 	values := "(?, ?)"
 	sql := "INSERT INTO `process_harvest` " + columns + " VALUES " + values
@@ -234,6 +255,18 @@ func insertHarvestProcess(process *Process) {
 		fmt.Println(err)
 	}
 	query.Exec(process.ID, process.GetRepository().ID)
+
+	// find its ID
+	sql = "SELECT `id` FROM `process_harvest` WHERE process=? AND repository=? ORDER by id LIMIT 0,1"
+	query, err = database.Connection.Prepare(sql)
+	query.QueryRow(process.ID, process.GetRepository().ID).Scan(&harvestID)
+
+	if err != nil {
+		fmt.Println("Error when selecting the harvest id:")
+		fmt.Println(err)
+	}
+
+	return harvestID
 }
 
 // NewProcess selects from database and creates a harvest.Process by ID
@@ -241,18 +274,18 @@ func insertHarvestProcess(process *Process) {
 func NewProcess(processID int) *Process {
 
 	var (
-		repID int
-		local *repository.Repository
+		repID, harvestID int
+		local            *repository.Repository
 	)
 
-	sql := "SELECT `repository` FROM `process_harvest` WHERE process=?"
+	sql := "SELECT `id`, `repository` FROM `process_harvest` WHERE process=?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of repository from harvest process:")
 		fmt.Println(err)
 	}
-	query.QueryRow(processID).Scan(&repID)
+	query.QueryRow(processID).Scan(&harvestID, &repID)
 
 	local, err2 := repository.NewRepository(strconv.Itoa(repID))
 
@@ -261,6 +294,7 @@ func NewProcess(processID int) *Process {
 	}
 
 	return &Process{
+		harvestID:  harvestID,
 		repository: local,
 	}
 }
@@ -269,14 +303,14 @@ func NewProcess(processID int) *Process {
 func GetProcessesByRepository(repositoryID int) []*Process {
 
 	var (
-		list      []*Process
-		processID int
-		repID     string
+		list                 []*Process
+		processID, harvestID int
+		repID                string
 	)
 
 	repID = strconv.Itoa(repositoryID)
 
-	sql := "SELECT `process` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
+	sql := "SELECT `id`, `process` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
 	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {
@@ -285,9 +319,10 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 	}
 
 	for rows.Next() {
-		rows.Scan(&processID)
+		rows.Scan(&harvestID, &processID)
 		rep, _ := repository.NewRepository(repID)
 		process := Process{
+			harvestID:  harvestID,
 			repository: rep,
 			Process:    action.NewProcess(processID),
 		}

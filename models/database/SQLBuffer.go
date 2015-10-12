@@ -1,5 +1,7 @@
 package database
 
+import "errors"
+
 // SQLBuffer is a fater way to insert data into database
 // It keeps a buffer of all the rows and executes the statement only once
 //
@@ -51,7 +53,18 @@ func (buffer *SQLBuffer) Exec() error {
 
 	//format all vals at once
 	_, err = stmt.Exec(buffer.memory...)
-	return err
+
+	buffer.clear()
+
+	if err != nil {
+		return errors.New("Problem executing the buffer for table `" + buffer.table + "`:" + err.Error())
+	}
+	return nil
+}
+
+func (buffer *SQLBuffer) clear() {
+	buffer.memory = nil
+	buffer.questions = ""
 }
 
 // NewSQLBuffer creates a new buffer

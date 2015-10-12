@@ -50,10 +50,14 @@
               <tbody>
                   <tr>
                       <td>
-                        {{ if .process.Action.IsRunning }}
-                        <span class="label label-warning">Working</span>
+                        {{ if .process.IsSuspended }}
+                            <span class="label label-warning">Suspended</span>
                         {{ else }}
-                        <span class="label label-success">Finished</span>
+                          {{ if .process.Action.IsRunning }}
+                            <span class="label label-info">Working</span>
+                          {{ else }}
+                            <span class="label label-success">Finished</span>
+                          {{ end }}
                         {{ end }}
                       </td>
                       <td>
@@ -70,6 +74,15 @@
           </table>
       </div>
     </div>
+    {{ if .process.IsSuspended }}
+      <div class="well">
+        <h3>Warning</h3>
+        <span class="text-warning">This process has been forced to stop, because of a problem.</span> <br />
+        We need your action: <br /><br />
+        <a href="#" id="recover-button" data-id="{{.harvestProcess.HarvestID}}" class="btn btn-primary">Try again</a>
+        <a href="#" id="finish-button" data-id="{{.harvestProcess.HarvestID}}" class="btn btn-primary">Just Finish</a>
+      </div>
+    {{ end }}
     <div class="no-print">
       <a href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a> <br />
       <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
@@ -127,3 +140,30 @@
     {{ end }}
   </div>
 </div>
+<script>
+$(document).ready(function(){
+    /**
+     * It sends a POST form to an addres
+     * @param  {string} address The address of the page
+     * @param  {number} ID      The ID of the process
+     */
+    function sendForm(address, ID) {
+      var msg = {
+        url: "/admin/harvest/" + address + "/" + ID,
+        success: function() {
+          window.location="/admin/log";
+        },
+      };
+        wisply.executePostAjax(msg);
+    }
+    $("#recover-button").click(function(event){
+        event.preventDefault();
+        console.log($(this).data("id"))
+        sendForm("recover", $(this).data("id"));
+    });
+    $("#finish-button").click(function(event){
+        event.preventDefault();
+        sendForm("finish", $(this).data("id"));
+    });
+});
+</script>

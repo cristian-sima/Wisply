@@ -44,10 +44,14 @@
                 <td class="col-md-2"><a href="/admin/repositories/repository/{{ $element.Repository.ID }}">{{ $element.Repository.Name }}</a></td>
                 <!-- start state -->
                 <td class="col-md-1">
-                {{ if $element.Action.IsRunning }}
-                  <span class="text-warning">Working</span>
+                {{ if $element.IsSuspended }}
+                    <a href="/admin/log/process/{{ $element.Action.ID }}"><span class="label label-warning">Suspended</span></a>
                 {{ else }}
-                  Finished
+                  {{ if $element.Action.IsRunning }}
+                    <span class="label label-info">Working</span>
+                  {{ else }}
+                    <span class="label label-success">Finished</span>
+                  {{ end }}
                 {{ end }}
                 </td>
                 <!-- end state -->

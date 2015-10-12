@@ -27,6 +27,11 @@ func (operation *Operation) Start() {
 // Finish calls its finish parents method
 func (operation *Operation) Finish() {
 	operation.Operation.Finish()
+}
+
+// Finish calls its finish parents method
+func (operation *Operation) succedded() {
+	operation.Operation.Finish()
 
 	msg := action.Message{
 		Name:  "Finish",
@@ -67,11 +72,17 @@ type HarvestingOperation struct {
 
 func (operation *HarvestingOperation) failed() {
 	operation.ChangeResult("danger")
-	operation.Finish()
+
+	msg := action.Message{
+		Name: "operation-failed",
+	}
+
+	operation.Operation.Finish()
+	operation.TellProcess(msg)
 }
 
 func (operation *HarvestingOperation) succeeded() {
-	operation.Finish()
+	operation.succedded()
 }
 
 // constructor

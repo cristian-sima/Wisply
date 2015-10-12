@@ -117,6 +117,12 @@ func init() {
 			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
 			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
+		beego.NSNamespace("/recover",
+			beego.NSRouter(":id", &admin.HarvestController{}, "POST:RecoverProcess"),
+		),
+		beego.NSNamespace("/finish",
+			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ForceFinishProcess"),
+		),
 	)
 
 	// admin

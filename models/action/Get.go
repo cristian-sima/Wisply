@@ -41,20 +41,21 @@ func getProcesses(processType string) []*Process {
 	}
 
 	var (
-		ID, currentOperationID           int
-		start, end                       int64
-		isRunning, isSuspended           bool
-		content, isRunningString, result string
-		operation                        *Operation
+		ID, currentOperationID                              int
+		start, end                                          int64
+		content, isRunningString, isSuspendedString, result string
+		operation                                           *Operation
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &isSuspended, &result, &content, &start, &end, &isRunningString, &currentOperationID)
+		rows.Scan(&ID, &isSuspendedString, &result, &content, &start, &end, &isRunningString, &currentOperationID)
 
-		isRunning, err = strconv.ParseBool(isRunningString)
+		isRunning, err1 := strconv.ParseBool(isRunningString)
+		isSuspended, err2 := strconv.ParseBool(isSuspendedString)
 
-		if err != nil {
-			fmt.Println(err)
+		if err1 != nil || err2 != nil {
+			fmt.Println(err1)
+			fmt.Println(err2)
 		}
 
 		if isRunning {

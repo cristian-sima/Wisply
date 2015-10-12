@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"strconv"
 
 	database "github.com/cristian-sima/Wisply/models/database"
 )
@@ -115,21 +116,30 @@ func NewTask(ID int) *Task {
 func NewProcess(ID int) *Process {
 
 	var (
-		opeID                        int
-		proStart, proEnd             int64
-		proIsRunning, proIsSuspended bool
-		proContent                   string
+		opeID                                          int
+		proStart, proEnd                               int64
+		proIsRunning, proIsSuspended                   bool
+		proContent, IsRunningString, IsSuspendedString string
 	)
 
 	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`, `is_suspended`"
 	sql := "SELECT " + fieldList + " FROM `process` WHERE id= ?"
 	query, err := database.Connection.Prepare(sql)
 
-	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning, &proIsSuspended)
-
 	if err != nil {
-		fmt.Println("It has been an error when tring to get the info about the process: ")
-		fmt.Println(err)
+		fmt.Println("It has been an error 1 when trying to get the info about the process: ")
+	}
+	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &IsRunningString, &IsSuspendedString)
+
+	proIsRunning, err1 := strconv.ParseBool(IsRunningString)
+	proIsSuspended, err2 := strconv.ParseBool(IsSuspendedString)
+
+	if err1 != nil || err2 != nil {
+		fmt.Println("It has been an error 2 when trying to get the info about the process: ")
+		fmt.Println(opeID)
+		fmt.Println(ID)
+		fmt.Println(err1)
+		fmt.Println(err2)
 	}
 
 	process := &Process{

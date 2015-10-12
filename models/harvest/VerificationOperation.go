@@ -4,8 +4,7 @@ import action "github.com/cristian-sima/Wisply/models/action"
 
 // VerificationOperation encapsulates the methods for validating the repository
 type VerificationOperation struct {
-	Operationer
-	*Operation
+	*HarvestingOperation
 }
 
 // Start starts the action.Operation, change the status of repository to verifying and gets the page
@@ -25,7 +24,7 @@ func (operation *VerificationOperation) tryToGet() {
 	page, err := task.Verify()
 
 	if err != nil {
-		operation.verificationFailed()
+		operation.failed()
 	} else {
 		operation.tryToParse(page)
 	}
@@ -39,21 +38,19 @@ func (operation *VerificationOperation) tryToParse(page []byte) {
 	task := newParseTask(operation, repository)
 	err := task.Verify(page)
 	if err != nil {
-		operation.verificationFailed()
+		operation.failed()
 	} else {
-		operation.verificationSucceded()
+		operation.succeeded()
 	}
 }
 
-func (operation *VerificationOperation) verificationFailed() {
+func (operation *VerificationOperation) failed() {
 	operation.ChangeRepositoryStatus("verification-failed")
-	operation.ChangeResult("danger")
-	operation.Finish()
+	operation.HarvestingOperation.failed()
 }
 
-func (operation *VerificationOperation) verificationSucceded() {
-	operation.ChangeRepositoryStatus("verified")
-	operation.Finish()
+func (operation *VerificationOperation) succeeded() {
+	operation.HarvestingOperation.succeeded()
 }
 
 // GetOperation returns the operation
@@ -61,11 +58,9 @@ func (operation *VerificationOperation) GetOperation() *action.Operation {
 	return operation.Operation.Operation
 }
 
+// constructor
 func newVerificationOperation(harvestProcess *Process) Operationer {
 	return &VerificationOperation{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Verification"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "Verification"),
 	}
 }

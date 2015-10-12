@@ -52,15 +52,6 @@ func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
 	}
 }
 
-func (operation *HarvestingFormats) harvestFailed() {
-	operation.ChangeResult("danger")
-	operation.Finish()
-}
-
-func (operation *HarvestingFormats) harvestSuccess() {
-	operation.Finish()
-}
-
 // constructor
 func newHarvestingFormats(harvestProcess *Process) Operationer {
 	return &HarvestingFormats{

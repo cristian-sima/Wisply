@@ -43,6 +43,48 @@ func (controller *HarvestController) Prepare() {
 	go controller.run()
 }
 
+// RecoverProcess tries to recover a process
+func (controller *HarvestController) RecoverProcess() {
+
+	ID := controller.Ctx.Input.Param(":id")
+
+	// check if it is running
+	intID, _ := strconv.Atoi(ID)
+	harvestProcess := harvest.NewProcessByID(intID)
+
+	repID := harvestProcess.GetRepository().ID
+
+	_, processExists := CurrentSessions[repID]
+
+	// the process must be finished
+	if !processExists {
+		delete(CurrentSessions, repID)
+
+		harvest.RecoverProcess(harvestProcess, controller)
+		process := &Session{
+			Process: harvestProcess,
+		}
+		CurrentSessions[repID] = process
+
+		go harvestProcess.Recover()
+	}
+	controller.TplNames = "site/admin/harvest/init.tpl"
+}
+
+// ForceFinishProcess terminates a process in an error state
+func (controller *HarvestController) ForceFinishProcess() {
+
+	ID := controller.Ctx.Input.Param(":id")
+
+	// check if it is running
+	intID, _ := strconv.Atoi(ID)
+	harvestProcess := harvest.NewProcessByID(intID)
+
+	harvestProcess.ForceFinish()
+
+	controller.TplNames = "site/admin/harvest/init.tpl"
+}
+
 // GetConduit returns the channel for sending and receiving messages
 func (controller *HarvestController) GetConduit() chan harvest.ProcessMessager {
 	return controller.conduit
@@ -166,7 +208,7 @@ func (controller *HarvestController) run() {
 					msg := ConvertToWebsocketMessage(message)
 					hub.SendGroupMessage(msg, session.Connections)
 					break
-				case "delete-process":
+				case "process-finished":
 					{
 						delete(CurrentSessions, message.GetRepository())
 					}
@@ -175,29 +217,6 @@ func (controller *HarvestController) run() {
 			}
 		}
 	}
-	// process, ok := CurrentSessions[message.Repository]
-	//
-	// controller.log("The controller has received this message:")
-	// fmt.Println(message)
-	// if ok {
-	// 	switch message.Name {
-	// 	case "status-changed", "identification-details", "event-notice":
-	// 		{
-	// 			msg := ConvertToWebsocketMessage(message)
-	// 			hub.BroadcastMessage(msg)
-	// 		}
-	// 		break
-	// 	case "harvesting", "verification-finished":
-	// 		msg := ConvertToWebsocketMessage(message)
-	// 		hub.SendGroupMessage(msg, process.Connections)
-	// 		break
-	// 	case "delete-process":
-	// 		{
-	// 			delete(CurrentSessions, message.Repository)
-	// 		}
-	// 		break
-	// 	}
-	// }
 }
 
 // ConvertToWebsocketMessage converts a harvest message to a websocket one

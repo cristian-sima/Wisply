@@ -10,7 +10,6 @@ import (
 // Process is a top level action which coordonates many operations and communicates with the controller
 type Process struct {
 	*Action
-	ID               int
 	isSuspended      bool
 	currentOperation *Operation
 	operationConduit chan OperationMessager
@@ -20,6 +19,14 @@ type Process struct {
 func (process *Process) Finish() {
 	process.Action.Finish()
 	process.updateInDatabase()
+}
+
+// ForceFinish forces a process to finish in an error state
+func (process *Process) ForceFinish() {
+	fmt.Println("force finish")
+	process.ChangeResult("danger")
+	process.isSuspended = false
+	process.Finish()
 }
 
 // GetOperationConduit returns the channel for communicating with operations
@@ -33,7 +40,12 @@ func (process *Process) updateInDatabase() {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(strconv.FormatBool(process.isSuspended), process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, process.result, strconv.Itoa(process.ID))
+	if process.ID == 0 {
+		_, err = stmt.Exec(strconv.FormatBool(process.isSuspended), process.Action.End, strconv.FormatBool(process.Action.IsRunning), process.currentOperation.ID, process.Action.result, strconv.Itoa(process.Action.ID))
+	} else {
+		_, err = stmt.Exec(strconv.FormatBool(process.isSuspended), process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, process.result, strconv.Itoa(process.ID))
+	}
+
 	if err != nil {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)
@@ -49,6 +61,15 @@ func (process *Process) ChangeCurrentOperation(operation *Operation) {
 // Suspend sets the process as suspended
 func (process *Process) Suspend() {
 	process.isSuspended = true
+	process.Finish()
+}
+
+// Recover the process
+func (process *Process) Recover() {
+	process.isSuspended = false
+	process.IsRunning = true
+	process.End = 0
+	process.operationConduit = make(chan OperationMessager, 100)
 	process.updateInDatabase()
 }
 

@@ -39,13 +39,17 @@
               <tr class="{{ $element.GetResult }}">
                 <td class="col-md-1"><a href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
                 <td class="col-md-1.5">{{ $element.Action.Content }}</td>
-                <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>                
+                <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
                 <!-- start state -->
                 <td class="col-md-1">
-                {{ if $element.Action.IsRunning }}
-                  <span class="text-warning">Working</span>
+                {{ if $element.IsSuspended }}
+                    <a href="/admin/log/process/{{ $element.Action.ID }}"><span class="label label-warning">Suspended</span></a>
                 {{ else }}
-                  Finished
+                  {{ if $element.Action.IsRunning }}
+                    <span class="label label-info">Working</span>
+                  {{ else }}
+                    <span class="label label-success">Finished</span>
+                  {{ end }}
                 {{ end }}
                 </td>
                 <!-- end state -->

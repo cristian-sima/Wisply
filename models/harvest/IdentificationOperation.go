@@ -4,7 +4,7 @@ import "github.com/cristian-sima/Wisply/models/harvest/wisply"
 
 // IdentificationOperation encapsulates the methods for requesting information from the repository
 type IdentificationOperation struct {
-	*Operation
+	*HarvestingOperation
 }
 
 // Start starts the action. Gets the page, get the content, clean database and store it
@@ -24,7 +24,7 @@ func (operation *IdentificationOperation) tryToGet() {
 	content, err := task.Identify()
 
 	if err != nil {
-		operation.identificationFailed()
+		operation.failed()
 	} else {
 		operation.tryToParse(content)
 	}
@@ -39,7 +39,7 @@ func (operation *IdentificationOperation) tryToParse(page []byte) {
 	response, err := task.GetIdentification(page)
 
 	if err != nil {
-		operation.identificationFailed()
+		operation.failed()
 	} else {
 		operation.insertIdentification(response)
 	}
@@ -49,28 +49,15 @@ func (operation *IdentificationOperation) insertIdentification(result *wisply.Id
 	task := newInsertIdentificationTask(operation, operation.GetRepository())
 	err := task.Insert(result)
 	if err != nil {
-		operation.identificationFailed()
+		operation.failed()
 	} else {
-		operation.identificationSucceded()
+		operation.succeeded()
 	}
 }
 
-func (operation *IdentificationOperation) identificationFailed() {
-	operation.ChangeRepositoryStatus("verification-failed")
-	operation.ChangeResult("danger")
-	operation.Finish()
-}
-
-func (operation *IdentificationOperation) identificationSucceded() {
-	operation.ChangeRepositoryStatus("ok")
-	operation.Finish()
-}
-
+// constructor
 func newIdentificationOperation(harvestProcess *Process) Operationer {
 	return &IdentificationOperation{
-		Operation: &Operation{
-			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Identifying"),
-		},
+		HarvestingOperation: newHarvestingOperation(harvestProcess, "Identifying"),
 	}
 }

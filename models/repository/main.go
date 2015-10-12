@@ -15,7 +15,7 @@ type Model struct {
 // GetAllInstitutions returns an array of Institution with all institutions
 func (model *Model) GetAllInstitutions() []Institution {
 	var list []Institution
-	sql := "SELECT id, name, url, description, logoURL, wikiURL, wikiID FROM institution"
+	sql := "SELECT `id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID` FROM `institution`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		institution := Institution{}
@@ -58,11 +58,11 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 // GetAllRepositories returns an array of Repository with all repositories
 func (model *Model) GetAllRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository"
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM `repository`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL, &repository.LastProcess)
 		list = append(list, repository)
 	}
 	return list
@@ -112,12 +112,12 @@ func NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url` FROM repository WHERE id = ?"
+	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM repository WHERE id = ?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL)
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL, &repository.LastProcess)
 	return repository, nil
 }
 

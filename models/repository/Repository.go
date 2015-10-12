@@ -18,6 +18,20 @@ type Repository struct {
 	Institution int
 	Category    string
 	PublicURL   string
+	LastProcess int
+}
+
+// HasBeenProcessed checks if the repository has any process
+func (repository *Repository) HasBeenProcessed(processID int) bool {
+	return (repository.LastProcess != 0)
+}
+
+// SetLastProcess changes the ID of last harvesting process
+func (repository *Repository) SetLastProcess(processID int) error {
+	sql := "UPDATE `repository` SET lastProcess=? WHERE id=?"
+	query, _ := database.Connection.Prepare(sql)
+	_, err := query.Exec(processID, repository.ID)
+	return err
 }
 
 // Delete removes the repository from database

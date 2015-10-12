@@ -29,12 +29,12 @@ func (operation *HarvestingRecords) clear() error {
 }
 
 func (operation *HarvestingRecords) multiRequest() {
+	token := operation.getCurrentToken()
+	operation.failed()
 	var (
 		hasMoreRecords bool
-		token          string
 		err            error
 	)
-	token = operation.process.GetToken("records")
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)
@@ -50,6 +50,15 @@ func (operation *HarvestingRecords) multiRequest() {
 	} else {
 		operation.succeeded()
 	}
+}
+
+func (operation *HarvestingRecords) getCurrentToken() string {
+	token := operation.process.GetToken("records")
+	if token == "" {
+		lastProcess := operation.GetRepository().LastProcess
+		token = GetProcessToken(lastProcess, "records")
+	}
+	return token
 }
 
 func (operation *HarvestingRecords) tryToGet(token string) error {

@@ -26,14 +26,11 @@ func (process *Process) Start() {
 }
 
 func (process *Process) run() {
-	fmt.Println("Run process...")
+	fmt.Println("Run harvest process...")
 	for {
 		select {
 		case message := <-process.Process.GetOperationConduit():
-			fmt.Println("The process has received: ")
-			fmt.Println(message)
 			if message.GetName() == "operation-failed" {
-				fmt.Println("Ii spune")
 				process.processFails()
 			} else {
 				process.chooseAction(message)
@@ -43,8 +40,6 @@ func (process *Process) run() {
 }
 
 func (process *Process) chooseAction(message action.OperationMessager) {
-	fmt.Println("Process: I got: ")
-	fmt.Println(message)
 
 	switch message.GetOperation().Content {
 	case "Harvest Verification":
@@ -95,7 +90,6 @@ func (process *Process) chooseAction(message action.OperationMessager) {
 
 // It starts the process from a certain stage
 func (process *Process) startFrom(name string) {
-	fmt.Println("I am starting from: " + name)
 	switch name {
 	case "Harvest Verification":
 		go process.verify()
@@ -121,7 +115,6 @@ func (process *Process) startFrom(name string) {
 // Stage 1
 
 func (process *Process) verify() {
-	fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	verification := newVerificationOperation(process)
 	process.ChangeCurrentOperation(verification)
 	verification.Start()
@@ -181,6 +174,7 @@ func (process *Process) harvestIdentifiers() {
 
 // SuccessFinish tells the constructor that the process is finished
 func (process *Process) succeeded() {
+	process.GetRepository().SetLastProcess(process.HarvestID)
 	process.delete()
 	process.ChangeResult("success")
 	process.Process.Finish()
@@ -221,7 +215,6 @@ func (process *Process) ChangeCurrentOperation(operation Operationer) {
 
 // ChangeRepositoryStatus changes the status of local repository
 func (process *Process) ChangeRepositoryStatus(newStatus string) {
-	fmt.Println("I am telling the controller")
 	process.repository.ModifyStatus(newStatus)
 	process.tellController(&Message{
 		Name:  "repository-status-changed",
@@ -229,19 +222,22 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	})
 }
 
-// GetToken returns the token for a particular name
-func (process *Process) GetToken(name string) string {
+// GetProcessToken returns the token for a process by the name
+func GetProcessToken(ID int, name string) string {
 	var token string
-	// find its ID
 	sql := "SELECT `token_" + name + "` FROM `process_harvest` WHERE id=? LIMIT 0,1"
 	query, err := database.Connection.Prepare(sql)
-	query.QueryRow().Scan(&token)
-
+	query.QueryRow(ID).Scan(&token)
 	if err != nil {
-		fmt.Println("Error when selecting the token for " + name + ":")
+		fmt.Println("Error when selecting the token for " + name + " inside the harvesting process:")
 		fmt.Println(err)
 	}
 	return token
+}
+
+// GetToken returns the token for a particular name
+func (process *Process) GetToken(name string) string {
+	return GetProcessToken(process.HarvestID, name)
 }
 
 // SaveToken saves the token for a particular name
@@ -304,7 +300,6 @@ func (process *Process) Recover() {
 	go process.run()
 
 	// execute stage
-	fmt.Println("Recover")
 	process.startFrom(name)
 }
 

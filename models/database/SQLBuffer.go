@@ -57,7 +57,7 @@ func (buffer *SQLBuffer) Exec() error {
 	buffer.clear()
 
 	if err != nil {
-		return errors.New("Problem executing the buffer for table `" + buffer.table + "`:" + err.Error())
+		return errors.New("Problem executing the buffer for table: `" + buffer.table + "`:" + err.Error() + "<br /><br />The query was: <br /><br />" + sqlStr)
 	}
 	return nil
 }

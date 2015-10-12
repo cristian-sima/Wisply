@@ -11,6 +11,7 @@ import (
 type Process struct {
 	*Action
 	ID               int
+	isSuspended      bool
 	currentOperation *Operation
 	operationConduit chan OperationMessager
 }
@@ -27,12 +28,12 @@ func (process *Process) GetOperationConduit() chan OperationMessager {
 }
 
 func (process *Process) updateInDatabase() {
-	stmt, err := database.Connection.Prepare("UPDATE `process` SET end=?, is_running=?, current_operation=?, result=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `process` SET is_suspended=?, end=?, is_running=?, current_operation=?, result=? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error 1 when finishing the process: ")
 		fmt.Println(err)
 	}
-	_, err = stmt.Exec(process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, process.result, strconv.Itoa(process.ID))
+	_, err = stmt.Exec(strconv.FormatBool(process.isSuspended), process.End, strconv.FormatBool(process.IsRunning), process.currentOperation.ID, process.result, strconv.Itoa(process.ID))
 	if err != nil {
 		fmt.Println("Error 2 when finishing the process: ")
 		fmt.Println(err)
@@ -43,6 +44,17 @@ func (process *Process) updateInDatabase() {
 func (process *Process) ChangeCurrentOperation(operation *Operation) {
 	process.currentOperation = operation
 	process.updateInDatabase()
+}
+
+// Suspend sets the process as suspended
+func (process *Process) Suspend() {
+	process.isSuspended = true
+	process.updateInDatabase()
+}
+
+// IsSuspended verifiies if the process is suspended
+func (process *Process) IsSuspended() bool {
+	return process.isSuspended
 }
 
 // GetCurrentOperation returns the current operation

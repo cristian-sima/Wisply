@@ -115,17 +115,17 @@ func NewTask(ID int) *Task {
 func NewProcess(ID int) *Process {
 
 	var (
-		opeID            int
-		proStart, proEnd int64
-		proIsRunning     bool
-		proContent       string
+		opeID                        int
+		proStart, proEnd             int64
+		proIsRunning, proIsSuspended bool
+		proContent                   string
 	)
 
-	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`"
+	fieldList := "`current_operation`, `content`, `start`, `end`, `is_running`, `is_suspended`"
 	sql := "SELECT " + fieldList + " FROM `process` WHERE id= ?"
 	query, err := database.Connection.Prepare(sql)
 
-	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning)
+	query.QueryRow(ID).Scan(&opeID, &proContent, &proStart, &proEnd, &proIsRunning, &proIsSuspended)
 
 	if err != nil {
 		fmt.Println("It has been an error when tring to get the info about the process: ")
@@ -133,6 +133,7 @@ func NewProcess(ID int) *Process {
 	}
 
 	process := &Process{
+		isSuspended: proIsSuspended,
 		Action: &Action{
 			ID:        ID,
 			Start:     proStart,

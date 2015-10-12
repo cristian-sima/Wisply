@@ -23,7 +23,7 @@ func getProcesses(processType string) []*Process {
 		whereClause string
 	)
 	// fields
-	processFields := "process.id, process.result, process.content, process.start, process.end, process.is_running, process.current_operation"
+	processFields := "process.id, process.is_suspended, process.result, process.content, process.start, process.end, process.is_running, process.current_operation"
 
 	fieldList := processFields
 
@@ -43,13 +43,13 @@ func getProcesses(processType string) []*Process {
 	var (
 		ID, currentOperationID           int
 		start, end                       int64
-		isRunning                        bool
+		isRunning, isSuspended           bool
 		content, isRunningString, result string
 		operation                        *Operation
 	)
 
 	for rows.Next() {
-		rows.Scan(&ID, &result, &content, &start, &end, &isRunningString, &currentOperationID)
+		rows.Scan(&ID, &isSuspended, &result, &content, &start, &end, &isRunningString, &currentOperationID)
 
 		isRunning, err = strconv.ParseBool(isRunningString)
 
@@ -63,6 +63,7 @@ func getProcesses(processType string) []*Process {
 
 		list = append(list, &Process{
 			currentOperation: operation,
+			isSuspended:      isSuspended,
 			Action: &Action{
 				ID:        ID,
 				IsRunning: isRunning,

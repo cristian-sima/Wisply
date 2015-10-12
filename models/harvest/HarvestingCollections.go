@@ -36,18 +36,22 @@ func (operation *HarvestingCollections) tryToParse(page []byte) {
 	if err != nil {
 		operation.failed()
 	} else {
-		operation.insertFormats(collections)
+		operation.insertCollections(collections)
 	}
 }
 
-func (operation *HarvestingCollections) insertFormats(collections []wisply.Collectioner) {
+func (operation *HarvestingCollections) insertCollections(collections []wisply.Collectioner) {
 	repository := operation.Operation.GetRepository()
 	task := newInsertCollectionsTask(operation, repository)
 	err := task.Insert(collections)
 	if err != nil {
 		operation.failed()
+	}
+	err = operation.process.updateStatistics("collections", len(collections))
+	if err != nil {
+		operation.failed()
 	} else {
-		operation.succeeded()
+		operation.succedded()
 	}
 }
 

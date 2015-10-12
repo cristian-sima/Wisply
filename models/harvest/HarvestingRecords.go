@@ -29,12 +29,11 @@ func (operation *HarvestingRecords) clear() error {
 }
 
 func (operation *HarvestingRecords) multiRequest() {
-	token := operation.getCurrentToken()
-	operation.failed()
 	var (
 		hasMoreRecords bool
 		err            error
 	)
+	token := operation.getCurrentToken()
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)
@@ -94,7 +93,8 @@ func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) err
 	if err != nil {
 		return err
 	}
-	return nil
+	err = operation.process.updateStatistics("records", len(records))
+	return err
 }
 
 // constructor

@@ -31,10 +31,9 @@ func (operation *HarvestingIdentifiers) clear() error {
 func (operation *HarvestingIdentifiers) multiRequest() {
 	var (
 		hasMoreIdentifiers bool
-		token              string
 		err                error
 	)
-	token = operation.process.GetToken("identifiers")
+	token := operation.getCurrentToken()
 	hasMoreIdentifiers = true // in order to enter in the loop
 	for hasMoreIdentifiers && (err == nil) {
 		err := operation.tryToGet(token)
@@ -50,6 +49,15 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 	} else {
 		operation.succeeded()
 	}
+}
+
+func (operation *HarvestingIdentifiers) getCurrentToken() string {
+	token := operation.process.GetToken("identifiers")
+	if token == "" {
+		lastProcess := operation.GetRepository().LastProcess
+		token = GetProcessToken(lastProcess, "identifiers")
+	}
+	return token
 }
 
 func (operation *HarvestingIdentifiers) tryToGet(token string) error {
@@ -85,7 +93,8 @@ func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.I
 	if err != nil {
 		return err
 	}
-	return nil
+	err = operation.process.updateStatistics("identifiers", len(identifiers))
+	return err
 }
 
 // constructor

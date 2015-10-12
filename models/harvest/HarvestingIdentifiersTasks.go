@@ -13,19 +13,31 @@ import (
 type InsertIdentifiersTask struct {
 	Tasker
 	*Task
-	repository *repository.Repository
+	repository        *repository.Repository
+	identifiersBuffer *database.SQLBuffer
+	setsBuffer        *database.SQLBuffer
 }
 
 // Insert clears the tables and inserts the identifiers
 func (task *InsertIdentifiersTask) Insert(identifiers []wisply.Identifier) error {
 
-	err := task.clear()
+	err := task.insertIdentifiers(identifiers)
 
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
-	err = task.insertIdentifiers(identifiers)
+
+	// execute buffers
+
+	err = task.identifiersBuffer.Exec()
+
+	if err != nil {
+		task.hasProblems(err)
+		return err
+	}
+
+	err = task.setsBuffer.Exec()
 
 	if err != nil {
 		task.hasProblems(err)
@@ -43,7 +55,8 @@ func (task *InsertIdentifiersTask) hasProblems(err error) {
 	task.Finish(err.Error())
 }
 
-func (task *InsertIdentifiersTask) clear() error {
+// Clear deletes all identifiers and sets
+func (task *InsertIdentifiersTask) Clear() error {
 
 	ID := task.repository.ID
 
@@ -65,9 +78,11 @@ func (task *InsertIdentifiersTask) clear() error {
 		return errors.New("Error while trying to clear the `identifier_set` table: <br />" + err.Error())
 	}
 
-	query.Exec(ID)
+	task.Finish("All the previous identifiers and sets have been deleted")
 
-	return nil
+	_, err = query.Exec(ID)
+
+	return err
 }
 
 func (task *InsertIdentifiersTask) insertIdentifiers(identifiers []wisply.Identifier) error {
@@ -94,42 +109,52 @@ func (task *InsertIdentifiersTask) insertIdentifier(identifier wisply.Identifier
 
 func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) error {
 	ID := task.repository.ID
-	sqlColumns := "(`repository`, `identifier`, `datestamp`)"
-	sqlValues := "(?, ?, ?)"
-	sql := "INSERT INTO `identifier` " + sqlColumns + " VALUES " + sqlValues
+	// sqlColumns := "(`repository`, `identifier`, `datestamp`)"
+	// sqlValues := "(?, ?, ?)"
+	// sql := "INSERT INTO `identifier` " + sqlColumns + " VALUES " + sqlValues
+	//
+	// query, err := database.Connection.Prepare(sql)
+	//
+	// if err != nil {
+	// 	return errors.New("Error while trying to insert into `identifier` table: <br />" + err.Error())
+	// }
+	// query.Exec(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
 
-	query, err := database.Connection.Prepare(sql)
+	task.identifiersBuffer.AddRow(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
 
-	if err != nil {
-		return errors.New("Error while trying to insert into `identifier` table: <br />" + err.Error())
-	}
-	query.Exec(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
 	return nil
 }
 
 func (task *InsertIdentifiersTask) insertSets(identifier string, sets []string) error {
 	for _, set := range sets {
 		ID := task.repository.ID
-		sqlColumns := "(`repository`, `identifier`, `setSpec`)"
-		sqlValues := "(?, ?, ?)"
-		sql := "INSERT INTO `identifier_set` " + sqlColumns + " VALUES " + sqlValues
+		// sqlColumns := "(`repository`, `identifier`, `setSpec`)"
+		// sqlValues := "(?, ?, ?)"
+		// sql := "INSERT INTO `identifier_set` " + sqlColumns + " VALUES " + sqlValues
+		//
+		// query, err := database.Connection.Prepare(sql)
+		//
+		// if err != nil {
+		// 	return errors.New("Error while trying to insert into `identifier_set` table: <br />" + err.Error())
+		// }
+		// query.Exec(ID, identifier, set)
 
-		query, err := database.Connection.Prepare(sql)
-
-		if err != nil {
-			return errors.New("Error while trying to insert into `identifier_set` table: <br />" + err.Error())
-		}
-		query.Exec(ID, identifier, set)
+		task.setsBuffer.AddRow(ID, identifier, set)
 	}
 	return nil
 }
 
 func newInsertIdentifiersTask(operationHarvest Operationer, repository *repository.Repository) *InsertIdentifiersTask {
+	identifiersBuffer := database.NewSQLBuffer("identifier", "`repository`, `identifier`, `datestamp`")
+	setsBuffer := database.NewSQLBuffer("identifier", "`repository`, `identifier`, `datestamp`")
+
 	return &InsertIdentifiersTask{
 		Task: &Task{
 			operation: operationHarvest,
 			Task:      newTask(operationHarvest.GetOperation(), "Insert Identifiers"),
 		},
-		repository: repository,
+		repository:        repository,
+		identifiersBuffer: identifiersBuffer,
+		setsBuffer:        setsBuffer,
 	}
 }

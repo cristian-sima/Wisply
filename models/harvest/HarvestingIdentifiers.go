@@ -14,6 +14,21 @@ func (operation *HarvestingIdentifiers) Start() {
 }
 
 func (operation *HarvestingIdentifiers) start() {
+	err := operation.clear()
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.multiRequest()
+	}
+}
+
+func (operation *HarvestingIdentifiers) clear() error {
+	rem := operation.Operation.GetRepository()
+	task := newInsertIdentifiersTask(operation, rem)
+	return task.Clear()
+}
+
+func (operation *HarvestingIdentifiers) multiRequest() {
 	var (
 		hasMoreIdentifiers bool
 		resumptionToken    string

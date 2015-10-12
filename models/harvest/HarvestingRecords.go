@@ -15,7 +15,6 @@ func (operation *HarvestingRecords) Start() {
 
 func (operation *HarvestingRecords) start() {
 	err := operation.clear()
-
 	if err != nil {
 		operation.failed()
 	} else {

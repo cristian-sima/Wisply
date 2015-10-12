@@ -15,7 +15,7 @@ type Process struct {
 	*action.Process
 	repository *repository.Repository
 	remote     remote.RepositoryInterface
-	controller WisplyController
+	controller Controller
 }
 
 // Start starts the process
@@ -161,7 +161,7 @@ func (process *Process) ChangeCurrentOperation(operation Operationer) {
 // End receives the identification result and saves it in the local repository
 func (process *Process) End() {
 	process.record("The process is stopped")
-	process.notifyController(&Message{
+	process.notifyController(&MessageX{
 		Name: "delete-process",
 	})
 }
@@ -169,7 +169,7 @@ func (process *Process) End() {
 // ChangeRepositoryStatus changes the status of local repository
 func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	process.repository.ModifyStatus(newStatus)
-	process.notifyController(&Message{
+	process.notifyController(&MessageX{
 		Name:  "status-changed",
 		Value: newStatus,
 	})
@@ -177,13 +177,13 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 
 // ---
 
-func (process *Process) notifyController(message *Message) {
-	message.Repository = process.repository.ID
-	process.controller.Notify(message)
+func (process *Process) notifyController(message *MessageX) {
+	// message.Repository = process.repository.ID
+	// process.controller.Notify(message)
 }
 
 func (process *Process) record(message string) {
-	process.notifyController(&Message{
+	process.notifyController(&MessageX{
 		Value: message,
 		Name:  "event-notice",
 	})
@@ -196,7 +196,7 @@ func (process *Process) Delete() {
 }
 
 // CreateProcess creates a new harvest process
-func CreateProcess(ID string, controller WisplyController) *Process {
+func CreateProcess(ID string, controller Controller) *Process {
 
 	var rem remote.RepositoryInterface
 

@@ -173,6 +173,21 @@ func (process *Process) ChangeRepositoryStatus(newStatus string) {
 	})
 }
 
+// GetToken returns the token for a particular name
+func (process *Process) GetToken(name string) string {
+	var token string
+	// find its ID
+	sql := "SELECT `token_" + name + "` FROM `process_harvest` WHERE id=? LIMIT 0,1"
+	query, err := database.Connection.Prepare(sql)
+	query.QueryRow().Scan(&token)
+
+	if err != nil {
+		fmt.Println("Error when selecting the token for " + name + ":")
+		fmt.Println(err)
+	}
+	return token
+}
+
 // SaveToken saves the token for a particular name
 func (process *Process) SaveToken(name string, token string) {
 	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `token_" + name + "`=? WHERE id=?")

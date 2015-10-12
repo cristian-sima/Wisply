@@ -83,7 +83,7 @@ CREATE TABLE `identifier` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `repository` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18862 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=69826 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `operation` (
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
   `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=673 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=753 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,10 +159,11 @@ CREATE TABLE `process` (
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
   `current_operation` int(11) DEFAULT NULL,
   `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
+  `is_suspended` enum('true','false') NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=214 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,8 +177,10 @@ CREATE TABLE `process_harvest` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `process` int(11) NOT NULL,
   `repository` int(11) NOT NULL,
+  `token_records` varchar(1000) NOT NULL,
+  `token_identifiers` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,7 +220,7 @@ CREATE TABLE `repository_collection` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15334 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16720 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,7 +237,7 @@ CREATE TABLE `repository_email` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=525 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=538 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +256,7 @@ CREATE TABLE `repository_format` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1905 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1996 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,7 +274,7 @@ CREATE TABLE `repository_identification` (
   `delete_policy` enum('persistent','transient','no') NOT NULL,
   `granularity` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=541 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=554 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -287,7 +290,7 @@ CREATE TABLE `repository_resource` (
   `identifier` varchar(30) NOT NULL,
   `datestamp` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37682 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=72761 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,7 +321,7 @@ CREATE TABLE `resource_key` (
   `value` text NOT NULL,
   `resource` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=465320 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=934585 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +342,7 @@ CREATE TABLE `task` (
   `process` int(11) NOT NULL,
   `explication` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3573 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5372 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -351,4 +354,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-12 10:01:44
+-- Dump completed on 2015-10-12 12:50:40

@@ -34,6 +34,7 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 		token              string
 		err                error
 	)
+	token = operation.process.GetToken("identifiers")
 	hasMoreIdentifiers = true // in order to enter in the loop
 	for hasMoreIdentifiers && (err == nil) {
 		err := operation.tryToGet(token)

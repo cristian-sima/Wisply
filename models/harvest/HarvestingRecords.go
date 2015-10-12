@@ -34,6 +34,7 @@ func (operation *HarvestingRecords) multiRequest() {
 		token          string
 		err            error
 	)
+	token = operation.process.GetToken("records")
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)

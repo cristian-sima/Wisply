@@ -78,7 +78,7 @@
             {{range $index, $task := .tasks}}
             <tr class="{{ $task.GetResult }}">
               <td class="col-md-1">{{ $task.ID }}</a></td>
-              <td class="col-md-2">{{ $task.Action.Content }}</td>
+              <td class="col-md-2.5"><small>{{ $task.Action.Content }}</small></td>
               <!-- start state -->
               <td class="col-md-1">
                 {{ if $task.Action.IsRunning }}
@@ -90,7 +90,7 @@
               <!-- end state -->
               <td class="col-md-1.5">{{ $task.GetStartDate }}</td>
               <td class="col-md-1.5">{{ $task.GetEndDate }}</td>
-              <td class="col-md-2">
+              <td class="col-md-1.5">
                 {{ if eq $task.GetDuration "..." }}
                 <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
                 {{ else }}

@@ -14,6 +14,22 @@ func (operation *HarvestingRecords) Start() {
 }
 
 func (operation *HarvestingRecords) start() {
+	err := operation.clear()
+
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.multiRequest()
+	}
+}
+
+func (operation *HarvestingRecords) clear() error {
+	rem := operation.Operation.GetRepository()
+	task := newInsertRecordsTask(operation, rem)
+	return task.Clear()
+}
+
+func (operation *HarvestingRecords) multiRequest() {
 	var (
 		hasMoreRecords  bool
 		resumptionToken string
@@ -21,7 +37,7 @@ func (operation *HarvestingRecords) start() {
 	)
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
-		err := operation.tryToGet(resumptionToken)
+		err = operation.tryToGet(resumptionToken)
 		if err == nil {
 			resumptionToken, hasMoreRecords = operation.GetRemote().GetNextPage()
 		}

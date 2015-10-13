@@ -25,11 +25,17 @@ func (operation *Operation) Finish() {
 
 // TellProcess tells to the process a message
 func (operation *Operation) TellProcess(message Message) {
-	msg := OperationMessage{
-		Message:   &message,
-		Operation: operation,
+	var channel = operation.Process.GetOperationConduit()
+
+	if channel == nil {
+		fmt.Println("No channel for process")
+	} else {
+		msg := OperationMessage{
+			Message:   &message,
+			Operation: operation,
+		}
+		channel <- &msg
 	}
-	operation.Process.GetOperationConduit() <- &msg
 }
 
 // GetTaskConduit returns the channel for communicating with tasks

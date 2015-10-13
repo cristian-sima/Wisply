@@ -9,7 +9,10 @@ import (
 	ws "github.com/cristian-sima/Wisply/models/ws"
 )
 
-var hub *ws.Hub
+var (
+	hub     *ws.Hub
+	conduit = make(chan harvest.ProcessMessager, 100)
+)
 
 // CurrentSessions contains information about all the running sessions
 var CurrentSessions = make(map[int]*Session)
@@ -27,20 +30,13 @@ func (process *Session) addConnection(connection *ws.Connection) {
 func init() {
 	hub = ws.CreateHub()
 	go hub.Run()
+	go run()
 }
 
 // HarvestController manages the operations for repository (list, delete, add)
 type HarvestController struct {
 	Controller
-	conduit chan harvest.ProcessMessager
-	Model   repository.Model
-}
-
-// Prepare starts the thread with channel
-func (controller *HarvestController) Prepare() {
-	controller.Controller.Prepare()
-	controller.conduit = make(chan harvest.ProcessMessager, 100)
-	go controller.run()
+	Model repository.Model
 }
 
 // RecoverProcess tries to recover a process
@@ -87,7 +83,10 @@ func (controller *HarvestController) ForceFinishProcess() {
 
 // GetConduit returns the channel for sending and receiving messages
 func (controller *HarvestController) GetConduit() chan harvest.ProcessMessager {
-	return controller.conduit
+	if conduit == nil {
+		panic("conduit nil stop")
+	}
+	return conduit
 }
 
 // InitWebsocketConnection initiats the websocket connection
@@ -138,6 +137,29 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 	}
 }
 
+// CreateNewProcess starts the initializing proccess
+func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
+
+	_, processExists := CurrentSessions[message.Repository]
+
+	if !processExists {
+		ID := message.Repository
+		delete(CurrentSessions, ID)
+
+		harvestProcess := harvest.CreateProcess(strconv.Itoa(ID), controller)
+		process := &Session{
+			Process: harvestProcess,
+		}
+		process.addConnection(connection)
+		CurrentSessions[ID] = process
+
+		go harvestProcess.Start()
+	}
+	//  else {
+	// 	existingProcess.addConnection(connection)
+	// }
+}
+
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
@@ -164,35 +186,13 @@ func (controller *HarvestController) ChangeRepositoryBaseURL(message *ws.Message
 	hub.BroadcastMessage(&msg)
 }
 
-// CreateNewProcess starts the initializing proccess
-func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
-
-	existingProcess, processExists := CurrentSessions[message.Repository]
-
-	if !processExists {
-		ID := message.Repository
-		delete(CurrentSessions, ID)
-
-		harvestProcess := harvest.CreateProcess(strconv.Itoa(ID), controller)
-		process := &Session{
-			Process: harvestProcess,
-		}
-		process.addConnection(connection)
-		CurrentSessions[ID] = process
-
-		go harvestProcess.Start()
-	} else {
-		existingProcess.addConnection(connection)
-	}
-}
-
-func (controller *HarvestController) run() {
+func run() {
 	fmt.Println("Running the controller!! ...")
 
 	for {
 		select {
-		case message := <-controller.conduit:
-			fmt.Println("controller: I received this name : " + message.GetName())
+		case message := <-conduit:
+			fmt.Println("Controller: I received this name : " + message.GetName())
 
 			session, ok := CurrentSessions[message.GetRepository()]
 
@@ -204,12 +204,20 @@ func (controller *HarvestController) run() {
 						hub.BroadcastMessage(msg)
 					}
 					break
-				case "harvest-update-records":
+				case "harvest-update":
+					if session == nil {
+						panic("session nil")
+					}
+					if session.Connections == nil {
+						panic("session connections nil")
+					}
 					msg := ConvertToWebsocketMessage(message)
 					hub.SendGroupMessage(msg, session.Connections)
 					break
 				case "process-finished":
 					{
+						msg := ConvertToWebsocketMessage(message)
+						hub.SendGroupMessage(msg, session.Connections)
 						delete(CurrentSessions, message.GetRepository())
 					}
 					break
@@ -231,15 +239,14 @@ func ConvertToWebsocketMessage(old harvest.ProcessMessager) *ws.Message {
 
 // GetProcess sends the current process on the server for a repository
 func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
-	controller.log("Yes it goes")
 	process, processExists := CurrentSessions[message.Repository]
 	if !processExists {
 		controller.log("I do not have any process for " + strconv.Itoa(message.Repository))
 	} else {
-		controller.log("I have a process for the repository " + strconv.Itoa(message.Repository))
-		controller.log("I add a new connection for the repository " + strconv.Itoa(message.Repository) + " process")
-		process.addConnection(connection)
-		fmt.Println(process)
+		// controller.log("I have a process for the repository " + strconv.Itoa(message.Repository))
+		// controller.log("I add a new connection for the repository " + strconv.Itoa(message.Repository) + " process")
+		// process.addConnection(connection)
+		// fmt.Println(process)
 	}
 	hub.SendMessage(&ws.Message{
 		Name:       "existing-process-on-server",

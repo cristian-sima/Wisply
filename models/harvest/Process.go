@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
-	action "github.com/cristian-sima/Wisply/models/action"
-	database "github.com/cristian-sima/Wisply/models/database"
-	remote "github.com/cristian-sima/Wisply/models/harvest/remote"
-	repository "github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/action"
+	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
+	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // Process is a link between controller and repository
@@ -223,9 +223,16 @@ func (process *Process) updateStatistics(name string, number int) error {
 	}
 	_, err = stmt.Exec(number, process.HarvestID)
 	if err == nil {
+		type content struct {
+			Operation string
+			Number    int
+		}
 		process.tellController(&Message{
-			Name:  "harvest-update-records",
-			Value: number,
+			Name: "harvest-update",
+			Value: &content{
+				Operation: name,
+				Number:    number,
+			},
 		})
 	}
 	return err
@@ -261,7 +268,7 @@ func (process *Process) SaveToken(name string, token string) {
 
 func (process *Process) tellController(simple *Message) {
 
-	if process.controller != nil {
+	if process.controller != nil && process.controller.GetConduit() != nil {
 
 		channel := process.controller.GetConduit()
 

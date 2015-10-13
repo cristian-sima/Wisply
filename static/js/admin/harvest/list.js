@@ -26,7 +26,6 @@ var HarvestList = function() {
 				harvestHistory.gui.activate();
 			});
 			$("#harvest-history-container").on('hidden.bs.modal', function() {
-				console.log("inchis");
 				harvestHistory.gui.disable();
 			});
 		}
@@ -169,7 +168,6 @@ var HarvestList = function() {
 			 */
 			getAction: function(repository) {
 				var action = "<span class='text-muted'>Working</span>";
-				console.log(repository.Status)
 				switch (repository.Status) {
 					case "ok":
 					case "unverified":

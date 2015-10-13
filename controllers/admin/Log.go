@@ -36,10 +36,7 @@ func (controller *LogController) ShowLogAdvanceOptions() {
 
 // DeleteEntireLog deletes the entire log
 func (controller *LogController) DeleteEntireLog() {
-	processes := action.GetAllProcesses()
-	for _, process := range processes {
-		controller.deleteProcess(process)
-	}
+	action.DeleteLog()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 

@@ -3,6 +3,9 @@ package remote
 import (
 	"encoding/xml"
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
 	"github.com/cristian-sima/Wisply/models/harvest/wisply"
@@ -12,6 +15,7 @@ import (
 // EPrintsRepository is an Eprints remote repository
 type EPrintsRepository struct {
 	*Repository
+	finishToken  string
 	request      *oai.Request
 	lastResponse *oai.Response
 }
@@ -159,6 +163,10 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 		}
 	}
 
+	if len(remoteRecords) != 0 {
+		repository.prepareFinishToken()
+	}
+
 	return records, nil
 }
 
@@ -217,6 +225,26 @@ func (repository *EPrintsRepository) GetNextPage() (string, bool) {
 		return token, false
 	}
 	return token, hasToken
+}
+
+// GetFinishToken returns the finishing token
+func (repository *EPrintsRepository) GetFinishToken() string {
+	return repository.finishToken
+}
+
+func (repository *EPrintsRepository) prepareFinishToken() {
+	resp := repository.lastResponse
+
+	record := resp.ListRecords.Records[len(resp.ListRecords.Records)-1]
+	identifier := record.Header.Identifier
+	fmt.Println("identifier")
+	fmt.Println(identifier)
+
+	elements := strings.Split(identifier, ":")
+
+	id, _ := strconv.Atoi(elements[2])
+
+	repository.finishToken = "metadataPrefix%3Doai_dc%26offset%3D" + strconv.Itoa(id+1)
 }
 
 // IsValidResponse checks if the content is an OAI format

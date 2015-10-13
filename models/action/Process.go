@@ -168,6 +168,38 @@ func (process *Process) GetOperations() []*Operation {
 	return list
 }
 
+// DeleteLog the entire log
+func DeleteLog() {
+
+	sql := "TRUNCATE TABLE `process`"
+	query, err := database.Connection.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 1 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec()
+
+	// operations
+
+	sql = "TRUNCATE TABLE `operation`"
+	query, err = database.Connection.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 2 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec()
+
+	// tasks
+
+	sql = "TRUNCATE TABLE `task`"
+	query, err = database.Connection.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 3 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec()
+}
+
 // Delete deletes the process along with the tasks and operations
 func (process *Process) Delete() {
 

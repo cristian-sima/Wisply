@@ -1,6 +1,10 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+import (
+	"fmt"
+
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+)
 
 // HarvestingRecords is the operation which collects the records from a remote repository
 type HarvestingRecords struct {
@@ -42,6 +46,12 @@ func (operation *HarvestingRecords) multiRequest() {
 		}
 		if hasMoreRecords {
 			operation.process.SaveToken("records", token)
+		} else if operation.process.Records != 0 {
+			lastToken := operation.GetRemote().GetFinishToken()
+			fmt.Println("finishing token: " + lastToken)
+			operation.process.SaveToken("records", lastToken)
+		} else if operation.process.Records == 0 {
+			operation.process.SaveToken("records", token)
 		}
 	}
 	if err != nil {
@@ -73,8 +83,10 @@ func (operation *HarvestingRecords) tryToParse(page []byte) error {
 	if err != nil {
 		return err
 	}
-	return operation.insertRecords(records)
-
+	if len(records) != 0 {
+		return operation.insertRecords(records)
+	}
+	return nil
 }
 
 func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) error {
@@ -86,6 +98,7 @@ func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) err
 	}
 	err = operation.process.updateRecords(len(records))
 	return err
+
 }
 
 // constructor

@@ -25,4 +25,6 @@ type RepositoryInterface interface {
 	// GetResumptionToken() string
 
 	GetNextPage() (string, bool)
+
+	GetFinishToken() string
 }

@@ -1,6 +1,10 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+import (
+	"fmt"
+
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+)
 
 // HarvestingIdentifiers is the operation which collects the identifiers from a remote repository
 type HarvestingIdentifiers struct {
@@ -42,6 +46,12 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 		}
 		if hasMoreIdentifiers {
 			operation.process.SaveToken("identifiers", token)
+		} else if operation.process.Identifiers != 0 {
+			lastToken := operation.GetRemote().GetFinishToken()
+			fmt.Println("finishing token identifiers: " + lastToken)
+			operation.process.SaveToken("identifiers", lastToken)
+		} else if operation.process.Identifiers == 0 {
+			operation.process.SaveToken("identifiers", token)
 		}
 	}
 	if err != nil {
@@ -68,7 +78,10 @@ func (operation *HarvestingIdentifiers) tryToParse(page []byte) error {
 	if err != nil {
 		return err
 	}
-	return operation.insertIdentifiers(identifiers)
+	if len(identifiers) != 0 {
+		return operation.insertIdentifiers(identifiers)
+	}
+	return nil
 }
 
 func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.Identifier) error {

@@ -209,19 +209,15 @@ var HarvestProcess = function() {
 		 * @param  {object} result The message from the server
 		 */
 		analyse: function(result) {
-				var now;
 
 				harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
 				if(!this.currentCounter || this.currentCounter.type != result.Operation) {
 					console.log("Start");
-					this.lastTime = result.Number;
 					this.setCurrentCounter(result.Operation);
 					this.currentCounter.start(result.Number);
 				}
 				else {
-					now = this.lastTime + parseInt(result.Number, 10);
-				  this.getCounter(result.Operation).update(now);
-					this.lastTime = now;
+				  this.getCounter(result.Operation).update(result.Number);
 				}
 		},
 		/**

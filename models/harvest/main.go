@@ -10,8 +10,6 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// -------------------------------------------- Functions ---
-
 // RecoverProcess gets the information about the current process and recovers it
 func RecoverProcess(process *Process, controller Controller) *Process {
 	process.controller = controller
@@ -110,18 +108,19 @@ func NewProcessByID(harvestProcessID int) *Process {
 func NewProcess(processID int) *Process {
 
 	var (
-		repID, harvestID int
-		local            *repository.Repository
+		repID, harvestID                           int
+		local                                      *repository.Repository
+		formats, collections, records, identifiers int
 	)
 
-	sql := "SELECT `id`, `repository` FROM `process_harvest` WHERE process=?"
+	sql := "SELECT `id`, `repository`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE process=?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		fmt.Println("Error when selecting the ID of repository from harvest process:")
 		fmt.Println(err)
 	}
-	query.QueryRow(processID).Scan(&harvestID, &repID)
+	query.QueryRow(processID).Scan(&harvestID, &repID, &formats, &collections, &records, &identifiers)
 
 	local, err2 := repository.NewRepository(strconv.Itoa(repID))
 
@@ -130,10 +129,14 @@ func NewProcess(processID int) *Process {
 	}
 
 	return &Process{
-		HarvestID:  harvestID,
-		repository: local,
-		remote:     getRemoteServer(local),
-		Process:    &*action.NewProcess(processID),
+		Formats:     formats,
+		Records:     records,
+		Collections: collections,
+		Identifiers: identifiers,
+		HarvestID:   harvestID,
+		repository:  local,
+		remote:      getRemoteServer(local),
+		Process:     &*action.NewProcess(processID),
 	}
 }
 
@@ -141,14 +144,15 @@ func NewProcess(processID int) *Process {
 func GetProcessesByRepository(repositoryID int) []*Process {
 
 	var (
-		list                 []*Process
-		processID, harvestID int
-		repID                string
+		list                                       []*Process
+		processID, harvestID                       int
+		repID                                      string
+		formats, collections, records, identifiers int
 	)
 
 	repID = strconv.Itoa(repositoryID)
 
-	sql := "SELECT `id`, `process` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
+	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
 	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {
@@ -157,12 +161,16 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 	}
 
 	for rows.Next() {
-		rows.Scan(&harvestID, &processID)
+		rows.Scan(&harvestID, &processID, &formats, &collections, &records, &identifiers)
 		rep, _ := repository.NewRepository(repID)
 		process := Process{
-			HarvestID:  harvestID,
-			repository: rep,
-			Process:    action.NewProcess(processID),
+			Formats:     formats,
+			Records:     records,
+			Collections: collections,
+			Identifiers: identifiers,
+			HarvestID:   harvestID,
+			repository:  rep,
+			Process:     action.NewProcess(processID),
 		}
 		list = append(list, &process)
 	}

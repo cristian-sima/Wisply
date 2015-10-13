@@ -81,6 +81,15 @@ func (operation *HarvestingOperation) failed() {
 	operation.TellProcess(msg)
 }
 
+func (operation *HarvestingOperation) getCurrentToken() string {
+	token := operation.process.GetToken("identifiers")
+	if token == "" {
+		lastProcess := operation.GetRepository().LastProcess
+		token = GetProcessToken(lastProcess, "identifiers")
+	}
+	return token
+}
+
 func (operation *HarvestingOperation) succeeded() {
 	operation.succedded()
 }

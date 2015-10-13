@@ -13,10 +13,11 @@ import (
 // Process is a link between controller and repository
 type Process struct {
 	*action.Process
-	HarvestID  int
-	repository *repository.Repository
-	remote     remote.RepositoryInterface
-	controller Controller
+	HarvestID                                  int
+	repository                                 *repository.Repository
+	remote                                     remote.RepositoryInterface
+	controller                                 Controller
+	Records, Formats, Identifiers, Collections int
 }
 
 // Start starts the process
@@ -209,9 +210,44 @@ func (process *Process) GetRemoteServer() remote.RepositoryInterface {
 	return process.remote
 }
 
+// ForceFinish changes the status of repository to ok
+func (process *Process) ForceFinish() {
+	stmt, err := database.Connection.Prepare("UPDATE `repository` SET `status` = 'ok' WHERE id=?")
+	if err != nil {
+		fmt.Println(err)
+	}
+	stmt.Exec(process.GetRepository().ID)
+
+	process.Process.ForceFinish()
+}
+
 // ChangeCurrentOperation informs the controller about the change and it calls its father
 func (process *Process) ChangeCurrentOperation(operation Operationer) {
 	process.Process.ChangeCurrentOperation(operation.GetOperation())
+}
+
+// UpdateFormats updates the number of formats
+func (process *Process) updateFormats(number int) error {
+	process.Formats = process.Formats + number
+	return process.updateStatistics("formats", process.Formats)
+}
+
+// UpdateCollections updates the number of collections
+func (process *Process) updateCollections(number int) error {
+	process.Collections = process.Collections + number
+	return process.updateStatistics("collections", process.Collections)
+}
+
+// UpdateRecords updates the number of records
+func (process *Process) updateRecords(number int) error {
+	process.Records = process.Records + number
+	return process.updateStatistics("records", process.Records)
+}
+
+// updateIdentifiers updates the number of identifiers
+func (process *Process) updateIdentifiers(number int) error {
+	process.Identifiers = process.Identifiers + number
+	return process.updateStatistics("identifiers", process.Identifiers)
 }
 
 func (process *Process) updateStatistics(name string, number int) error {

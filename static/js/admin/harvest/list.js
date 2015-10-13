@@ -69,7 +69,7 @@ var HarvestList = function() {
 			 * @param  {object} message The message from the server
 			 */
 			changeSingleStatus: function(message) {
-				this.GUI.changeStatus({
+				this.GUI.changeGUI({
 					ID: message.Repository,
 					Status: message.Value
 				});
@@ -96,19 +96,35 @@ var HarvestList = function() {
 				var repository, index;
 				for (index = 0; index < repositories.length; index++) {
 					repository = repositories[index];
-					this.changeStatus(repository);
+					this.changeGUI(repository);
 				}
 				this.activateActionListeners();
 			},
 			/**
-			 * It changes the status for a single repository and activates the listeners for actions
+			 * It changes the status and action for a single repository and activates the listeners for actions
 			 * @param  {object} repository A reference to the object which contains the ID and the Status of the repository
 			 */
-			changeStatus: function(repository) {
+			changeGUI: function(repository) {
+				this.changeStatus(repository);
+				this.changeAction(repository);
+			},
+			/**
+			 * It changes the HTML status according to the repository status
+			 * @param  {object} repository The repository object
+			 */
+			changeStatus: function (repository) {
 				var htmlID = this.getHTMLID(repository.ID),
-					htmlSpan = this.getStatusColor(repository.Status),
-					action = this.getAction(repository);
-				this.list.find(htmlID).html(htmlSpan + action);
+					htmlSpan = this.getStatusColor(repository.Status);
+				this.list.find(htmlID).html(htmlSpan);
+			},
+			/**
+			 * It changes the action according to the status
+			 * @param  {object} repository The repository object
+			 */
+			changeAction: function (repository) {
+				var htmlID = this.getHTMLAction_ID(repository.ID),
+					htmlSpan = this.getAction(repository);
+				this.list.find(htmlID).html(htmlSpan);
 			},
 			/**
 			 * It activates the listeners for the status actions
@@ -125,29 +141,47 @@ var HarvestList = function() {
 				return wisply.repositoriesModule.GUI.getStatusColor(status);
 			},
 			/**
-			 * It returns the HTML code for the actions, based on the status
-			 * @param  {object} repository The repository object
-			 * @return {string} The HTML code for actions
-			 */
-			getAction: function(repository) {
-				var action = "";
-				switch (repository.Status) {
-					case "unverified":
-						action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>";
-						break;
-					case "verification-failed":
-						action = "<a href=''> <span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>";
-				}
-				return action;
-			},
-			/**
 			 * It returns the JQUERY ID of a repository
 			 * @param  {number} id The id of the repository
 			 * @return {string} The JQUERY ID of a repository
 			 */
 			getHTMLID: function(id) {
-				return "#rep-status-" + id;
-			}
+				return this.getID("status", id);
+			},
+			/**
+			 * It returns the ID of the action HTML element
+			 * @param  {number} id The ID of the repository
+			 */
+			getHTMLAction_ID: function(id) {
+				return this.getID("action", id);
+			},
+			/**
+			 * Returns the HTML id for an action
+			 * @param  {string} name The name of action
+			 * @param  {number} id   The ID of the repository
+			 */
+			getID: function (name, id) {
+				return "#rep-" + name + "-" + id;
+			},
+			/** It returns the HTML code for the actions, based on the status
+			 * @param  {object} repository The repository object
+			 * @return {string} The HTML code for actions
+			 */
+			getAction: function(repository) {
+				var action = "<span class='text-muted'>Working</span>";
+				console.log(repository.Status)
+				switch (repository.Status) {
+					case "ok":
+					case "unverified":
+						action = "<a href=''> <span data-toggle='tooltip' data-ID=" + repository.ID + " data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' ></span></a>";
+						break;
+					case "problems":
+					case "verification-failed":
+						action = "<a href='/admin/log/'>See log</a>";
+					break;
+				}
+				return action;
+			},
 		};
 	return {
 		DecisionManager: DecisionManager,

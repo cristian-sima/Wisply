@@ -48,7 +48,7 @@ func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
 	if err != nil {
 		operation.failed()
 	}
-	err = operation.process.updateStatistics("formats", len(formats))
+	err = operation.process.updateFormats(len(formats))
 	if err != nil {
 		operation.failed()
 	} else {

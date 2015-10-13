@@ -51,28 +51,14 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 	}
 }
 
-func (operation *HarvestingIdentifiers) getCurrentToken() string {
-	token := operation.process.GetToken("identifiers")
-	if token == "" {
-		lastProcess := operation.GetRepository().LastProcess
-		token = GetProcessToken(lastProcess, "identifiers")
-	}
-	return token
-}
-
 func (operation *HarvestingIdentifiers) tryToGet(token string) error {
-
 	rem := operation.GetRemote()
-
 	task := newGetTask(operation, rem)
-
 	content, err := task.GetIdentifiers(token)
-
 	if err != nil {
 		return err
 	}
 	return operation.tryToParse(content)
-
 }
 
 func (operation *HarvestingIdentifiers) tryToParse(page []byte) error {
@@ -83,7 +69,6 @@ func (operation *HarvestingIdentifiers) tryToParse(page []byte) error {
 		return err
 	}
 	return operation.insertIdentifiers(identifiers)
-
 }
 
 func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.Identifier) error {
@@ -93,7 +78,7 @@ func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.I
 	if err != nil {
 		return err
 	}
-	err = operation.process.updateStatistics("identifiers", len(identifiers))
+	err = operation.process.updateIdentifiers(len(identifiers))
 	return err
 }
 

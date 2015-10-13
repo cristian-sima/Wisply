@@ -47,7 +47,7 @@ func (operation *HarvestingCollections) insertCollections(collections []wisply.C
 	if err != nil {
 		operation.failed()
 	}
-	err = operation.process.updateStatistics("collections", len(collections))
+	err = operation.process.updateCollections(len(collections))
 	if err != nil {
 		operation.failed()
 	} else {

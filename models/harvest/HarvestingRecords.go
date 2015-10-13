@@ -51,15 +51,6 @@ func (operation *HarvestingRecords) multiRequest() {
 	}
 }
 
-func (operation *HarvestingRecords) getCurrentToken() string {
-	token := operation.process.GetToken("records")
-	if token == "" {
-		lastProcess := operation.GetRepository().LastProcess
-		token = GetProcessToken(lastProcess, "records")
-	}
-	return token
-}
-
 func (operation *HarvestingRecords) tryToGet(token string) error {
 
 	rem := operation.GetRemote()
@@ -93,7 +84,7 @@ func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) err
 	if err != nil {
 		return err
 	}
-	err = operation.process.updateStatistics("records", len(records))
+	err = operation.process.updateRecords(len(records))
 	return err
 }
 

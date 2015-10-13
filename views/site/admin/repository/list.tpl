@@ -31,6 +31,7 @@
           <tr>
             <th>Name</th>
             <th>Current status</th>
+            <th>Progress</th>
             <th>Base URL</th>
             <th>Institution</th>
           </tr>
@@ -44,40 +45,65 @@
             <td> <div  id="rep-status-{{ $element.ID }}">
               {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
               {{ if eq  $element.Status "unverified" }}
-              <span class="label label-info">Unverified</span><a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
 
               {{ else if eq  $element.Status "ok" }}
-              <span class="label label-success">Ok</span>
+              <span class="label label-success">ok</span>
 
               {{ else if eq  $element.Status "verified" }}
-              <span class="label label-success">Verified</span>
+              <span class="label label-success">verified</span>
 
 
               {{ else if eq  $element.Status "verifying" }}
-              <span class="label label-warning">Verifing</span>
+              <span class="label label-warning">verifing</span>
 
 
               {{ else if eq  $element.Status "updating" }}
-              <span class="label label-warning">Updating</span>
+              <span class="label label-warning">updating</span>
 
               {{ else if eq  $element.Status "initializing" }}
-              <span class="label label-warning">Initializing</span>
-              <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='See process' class='repositories-init-harvest glyphicon glyphicon-th-list hover' ></span>
+              <span class="label label-warning">initializing</span>
 
 
               {{ else if eq  $element.Status "verification-failed" }}
-              <span class="label label-danger">Verification failed</span>
-              <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' ></span></a>
+              <span class="label label-danger">verification failed</span>
 
 
               {{ else if eq  $element.Status "problems" }}
-              <span class="label label-danger">Problems</span>
+              <span class="label label-danger">problems</span>
 
               {{ end }}
             </div>
+            </td>
+            <td id="rep-action-{{ $element.ID }}">
+              {{ if eq  $element.Status "unverified" }}
+              <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' ></span></a>
 
-                          <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' ></span></a>
+              {{ else if eq  $element.Status "ok" }}
+              <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' ></span></a>
 
+              {{ else if eq  $element.Status "verified" }}
+              <span class="text-muted">Working...</span>
+
+
+              {{ else if eq  $element.Status "verifying" }}
+              <span class="text-muted">Working...</span>
+
+
+              {{ else if eq  $element.Status "updating" }}
+              <span class="text-muted">Working...</span>
+
+              {{ else if eq  $element.Status "initializing" }}
+              <span class="text-muted">Working...</span>
+
+
+              {{ else if eq  $element.Status "verification-failed" }}
+    				<a href='/admin/log/'>See log</a>
+
+
+              {{ else if eq  $element.Status "problems" }}
+    				<a href='/admin/log/'>See log</a>
+
+              {{ end }}
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
             <td><a href="/admin/institutions/institution/{{ $institution.ID }}">{{ $institution.Name }}</a></td>

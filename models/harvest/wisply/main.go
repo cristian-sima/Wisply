@@ -2,6 +2,21 @@ package wisply
 
 import "github.com/cristian-sima/Wisply/models/database"
 
+// GetCollections returns the collections
+func GetCollections(repositoryID int) []*Collection {
+	var list []*Collection
+	sql := "SELECT `id`, `spec`, `name`, `description` FROM `repository_collection` WHERE `repository` = ?"
+	rows, _ := database.Connection.Query(sql, repositoryID)
+	for rows.Next() {
+		collection := &Collection{
+			Repository: repositoryID,
+		}
+		rows.Scan(&collection.ID, &collection.Spec, &collection.Name, &collection.Description)
+		list = append(list, collection)
+	}
+	return list
+}
+
 // GetRecords returns all the records
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	var list []*Record

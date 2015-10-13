@@ -18,12 +18,12 @@ func (operation *HarvestingRecords) Start() {
 }
 
 func (operation *HarvestingRecords) start() {
-	err := operation.clear()
-	if err != nil {
-		operation.failed()
-	} else {
-		operation.multiRequest()
-	}
+	// err := operation.clear()
+	// if err != nil {
+	// 	operation.failed()
+	// } else {
+	operation.multiRequest()
+	// }
 }
 
 func (operation *HarvestingRecords) clear() error {

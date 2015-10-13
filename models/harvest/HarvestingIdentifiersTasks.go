@@ -109,17 +109,6 @@ func (task *InsertIdentifiersTask) insertIdentifier(identifier wisply.Identifier
 
 func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) error {
 	ID := task.repository.ID
-	// sqlColumns := "(`repository`, `identifier`, `datestamp`)"
-	// sqlValues := "(?, ?, ?)"
-	// sql := "INSERT INTO `identifier` " + sqlColumns + " VALUES " + sqlValues
-	//
-	// query, err := database.Connection.Prepare(sql)
-	//
-	// if err != nil {
-	// 	return errors.New("Error while trying to insert into `identifier` table: <br />" + err.Error())
-	// }
-	// query.Exec(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
-
 	task.identifiersBuffer.AddRow(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
 
 	return nil
@@ -128,17 +117,6 @@ func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) erro
 func (task *InsertIdentifiersTask) insertSets(identifier string, sets []string) error {
 	for _, set := range sets {
 		ID := task.repository.ID
-		// sqlColumns := "(`repository`, `identifier`, `setSpec`)"
-		// sqlValues := "(?, ?, ?)"
-		// sql := "INSERT INTO `identifier_set` " + sqlColumns + " VALUES " + sqlValues
-		//
-		// query, err := database.Connection.Prepare(sql)
-		//
-		// if err != nil {
-		// 	return errors.New("Error while trying to insert into `identifier_set` table: <br />" + err.Error())
-		// }
-		// query.Exec(ID, identifier, set)
-
 		task.setsBuffer.AddRow(ID, identifier, set)
 	}
 	return nil

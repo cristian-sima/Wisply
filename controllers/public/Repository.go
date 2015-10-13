@@ -2,6 +2,7 @@ package public
 
 import (
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest"
 	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
@@ -33,8 +34,10 @@ func (controller *RepositoryController) ShowRepository() {
 	} else {
 		controller.SetCustomTitle(rep.Name)
 		controller.Data["repository"] = rep
+		controller.Data["collections"] = wisply.GetCollections(rep.ID)
 		controller.Data["institution"] = rep.GetInstitution()
 		controller.Data["identification"] = rep.GetIdentification()
+		controller.Data["process"] = harvest.NewProcess(rep.LastProcess)
 		controller.Data["records"] = wisply.GetRecords(rep.ID, database.SQLOptions{
 			Limit: "0, 15",
 		})

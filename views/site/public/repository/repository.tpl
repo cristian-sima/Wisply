@@ -58,24 +58,47 @@
 
           <div class="row">
             <!-- Statistics -->
-            <div class="col-lg-2 col-md-2 col-sm-2 text-center" >
-
+            <div class="col-lg-2 col-md-2 col-sm-2 text-left" >
+                <table class="table">
+                  <tbody>
+                  <tr>
+                    <td>
+                      <span class="badge badge-info">{{ .process.Formats }}</span>
+                    </td>
+                    <td>
+                       formats
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span class="badge badge-info">{{ .process.Collections }}</span>
+                    </td>
+                    <td>
+                       collections
+                    </td>
+                  </tr>
+                    <tr>
+                    <td>
+                      <span class="badge badge-info">{{ .process.Records }}</span>
+                    </td>
+                    <td>
+                      records
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
             </div>
             <!-- Resources -->
+
             <div class="col-lg-6 col-md-6 col-sm-6" >
             <table class="table">
                 <tbody>
                     {{range $index, $record := .records}}
 
-
-
-
-
-
-
                     <tr>
                         <td>
                           <h4>
+
                             {{range $index, $title := $record.Keys.Get "title" }}
                             {{ $title }}
                             {{ end }}
@@ -83,8 +106,16 @@
                           {{range $index, $description := $record.Keys.Get "description" }}
                           {{ $description }}
                           {{ end }}
-
-                          <div class="creators"> By
+                          <div class="formats">
+                            {{range $index, $format := $record.Keys.Get "format" }}
+                            <span class="label label-default">
+                                {{ if eq $format "application/pdf" }}PDF{{ else }}
+                                {{  $format }}
+                                {{ end }}
+                            </span>&nbsp;
+                            {{ end }}
+                          </div>
+                          <div class="creators">
                             <span class="text-muted">
                               {{range $index, $creator := $record.Keys.Get "creator" }}
                               {{ $creator }}
@@ -97,9 +128,16 @@
                 </tbody>
             </table>
             </div>
-            <!-- Collections -->
             <div class="col-lg-4 col-md-4 col-sm-4" >
-
+              <!-- Collections -->
+              <div class="list-group" id="repositories">
+              {{range $index, $collection := .collections}}
+                <a href="#" class="list-group-item">
+                  <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }}</h5>
+                  <p class="list-group-item-text">{{ $collection.Description }}</p>
+                </a>
+              {{ end }}
+              </div>
             </div>
           </div>
 

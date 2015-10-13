@@ -48,7 +48,7 @@
                       <p class="list-group-item-text">{{ $repository.Description }}</p>
                     </a>
                   {{ end }}
-                </div>
+                  </div>
               </div>
             </div>
           </div>

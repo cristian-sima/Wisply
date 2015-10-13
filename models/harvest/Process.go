@@ -175,7 +175,7 @@ func (process *Process) harvestIdentifiers() {
 
 // SuccessFinish tells the constructor that the process is finished
 func (process *Process) succeeded() {
-	process.GetRepository().SetLastProcess(process.HarvestID)
+	process.GetRepository().SetLastProcess(process.Action.ID)
 	process.delete()
 	process.ChangeResult("success")
 	process.Process.Finish()
@@ -248,6 +248,21 @@ func (process *Process) updateRecords(number int) error {
 func (process *Process) updateIdentifiers(number int) error {
 	process.Identifiers = process.Identifiers + number
 	return process.updateStatistics("identifiers", process.Identifiers)
+}
+
+// GetStatistics returns the number of formats, collections, records, identifiers
+func (process *Process) GetStatistics() (int, int, int, int) {
+	var formats, collections, records, identifiers int
+	sql := "SELECT `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE id=? LIMIT 0,1"
+	query, err := database.Connection.Prepare(sql)
+
+	if err != nil {
+		fmt.Println("Error when selecting statistics id:")
+		fmt.Println(err)
+	}
+	query.QueryRow(process.HarvestID).Scan(&formats, &collections, &records, &identifiers)
+
+	return formats, collections, records, identifiers
 }
 
 func (process *Process) updateStatistics(name string, number int) error {

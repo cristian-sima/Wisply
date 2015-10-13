@@ -56,20 +56,32 @@ func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, er
 
 // GetRecords tells the remote server to parse the content and to return the `records`
 func (task *ParseTask) GetRecords(content []byte) ([]wisply.Recorder, error) {
+	msg := ""
 	task.addContent("records")
 	records, err := task.remote.GetRecords(content)
-	number := strconv.Itoa(len(records))
-	task.finishRequest(err, "Success. "+number+" `records` has been identified")
+	number := len(records)
+	if number == 0 {
+		msg = "There are no new records"
+	} else {
+		msg = "Success. " + strconv.Itoa(number) + " `records` has been identified"
+	}
+	task.finishRequest(err, msg)
 
 	return records, err
 }
 
 // GetIdentifiers tells the remote server to parse the content and to return the `identifiers`
 func (task *ParseTask) GetIdentifiers(content []byte) ([]wisply.Identifier, error) {
+	msg := ""
 	task.addContent("identifiers")
 	identifiers, err := task.remote.GetIdentifiers(content)
-	number := strconv.Itoa(len(identifiers))
-	task.finishRequest(err, "Success. "+number+" `identifiers` has been identified")
+	number := len(identifiers)
+	if number == 0 {
+		msg = "There are no new identifiers"
+	} else {
+		msg = "Success. " + strconv.Itoa(number) + " `identifiers` has been identified"
+	}
+	task.finishRequest(err, msg)
 
 	return identifiers, err
 }

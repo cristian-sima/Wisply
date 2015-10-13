@@ -60,10 +60,18 @@ func getRemoteServer(local *repository.Repository) remote.RepositoryInterface {
 
 func insertHarvestProcess(process *Process) int {
 
-	var harvestID int
+	var (
+		harvestID                                  int
+		formats, collections, records, identifiers int
+	)
 
-	columns := "(`process`, `repository`)"
-	values := "(?, ?)"
+	if process.GetRepository().LastProcess != 0 {
+		last := NewProcess(process.GetRepository().LastProcess)
+		formats, collections, records, identifiers = last.GetStatistics()
+	}
+
+	columns := "(`process`, `repository`, `formats`, `collections`, `records`, `identifiers`)"
+	values := "(?, ?, ?, ?, ?, ?)"
 	sql := "INSERT INTO `process_harvest` " + columns + " VALUES " + values
 
 	query, err := database.Connection.Prepare(sql)
@@ -73,7 +81,7 @@ func insertHarvestProcess(process *Process) int {
 		fmt.Println(sql)
 		fmt.Println(err)
 	}
-	query.Exec(process.ID, process.GetRepository().ID)
+	query.Exec(process.ID, process.GetRepository().ID, formats, collections, records, identifiers)
 
 	// find its ID
 	sql = "SELECT `id` FROM `process_harvest` WHERE process=? AND repository=? ORDER by id LIMIT 0,1"
@@ -180,7 +188,7 @@ func GetProcessesByRepository(repositoryID int) []*Process {
 // GetProcessToken returns the token for a process by the name
 func GetProcessToken(ID int, name string) string {
 	var token string
-	sql := "SELECT `token_" + name + "` FROM `process_harvest` WHERE id=? LIMIT 0,1"
+	sql := "SELECT `token_" + name + "` FROM `process_harvest` WHERE process=? LIMIT 0,1"
 	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(ID).Scan(&token)
 	if err != nil {

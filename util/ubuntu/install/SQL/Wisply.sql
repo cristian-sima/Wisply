@@ -67,7 +67,7 @@ CREATE TABLE `history_event` (
   `operation_type` varchar(200) NOT NULL,
   `duration` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=999 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +83,7 @@ CREATE TABLE `identifier` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `repository` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69826 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `identifier_set` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `repository` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5035 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `operation` (
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
   `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=753 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,6 @@ DROP TABLE IF EXISTS `process`;
 CREATE TABLE `process` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` enum('Harvest') NOT NULL,
-  `repository` int(11) NOT NULL,
   `start` int(11) NOT NULL DEFAULT '0',
   `end` int(11) NOT NULL DEFAULT '0',
   `is_running` enum('true','false') NOT NULL DEFAULT 'true',
@@ -163,7 +162,7 @@ CREATE TABLE `process` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,8 +178,12 @@ CREATE TABLE `process_harvest` (
   `repository` int(11) NOT NULL,
   `token_records` varchar(1000) NOT NULL,
   `token_identifiers` varchar(1000) NOT NULL,
+  `records` int(11) NOT NULL,
+  `formats` int(11) NOT NULL,
+  `collections` int(11) NOT NULL,
+  `identifiers` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,6 +202,7 @@ CREATE TABLE `repository` (
   `institution` int(11) NOT NULL,
   `category` varchar(100) NOT NULL,
   `public_url` varchar(2083) NOT NULL,
+  `lastProcess` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
@@ -220,7 +224,7 @@ CREATE TABLE `repository_collection` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16720 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -237,7 +241,7 @@ CREATE TABLE `repository_email` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=538 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +260,7 @@ CREATE TABLE `repository_format` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1996 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +278,7 @@ CREATE TABLE `repository_identification` (
   `delete_policy` enum('persistent','transient','no') NOT NULL,
   `granularity` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=554 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,7 +294,7 @@ CREATE TABLE `repository_resource` (
   `identifier` varchar(30) NOT NULL,
   `datestamp` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72761 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +325,7 @@ CREATE TABLE `resource_key` (
   `value` text NOT NULL,
   `resource` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=934585 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -342,7 +346,7 @@ CREATE TABLE `task` (
   `process` int(11) NOT NULL,
   `explication` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5372 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -354,4 +358,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-12 12:50:40
+-- Dump completed on 2015-10-13 12:27:55

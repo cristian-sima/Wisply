@@ -38,6 +38,7 @@ func (operation *HarvestingRecords) multiRequest() {
 		err            error
 	)
 	token := operation.getCurrentToken()
+	operation.process.SaveToken("records", token)
 	hasMoreRecords = true // in order to enter in the loop
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)
@@ -50,8 +51,6 @@ func (operation *HarvestingRecords) multiRequest() {
 			lastToken := operation.GetRemote().GetFinishToken()
 			fmt.Println("finishing token: " + lastToken)
 			operation.process.SaveToken("records", lastToken)
-		} else if operation.process.Records == 0 {
-			operation.process.SaveToken("records", token)
 		}
 	}
 	if err != nil {

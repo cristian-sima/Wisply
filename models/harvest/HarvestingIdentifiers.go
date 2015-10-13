@@ -38,6 +38,7 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 		err                error
 	)
 	token := operation.getCurrentToken()
+	operation.process.SaveToken("identifiers", token)
 	hasMoreIdentifiers = true // in order to enter in the loop
 	for hasMoreIdentifiers && (err == nil) {
 		err := operation.tryToGet(token)
@@ -50,8 +51,6 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 			lastToken := operation.GetRemote().GetFinishToken()
 			fmt.Println("finishing token identifiers: " + lastToken)
 			operation.process.SaveToken("identifiers", lastToken)
-		} else if operation.process.Identifiers == 0 {
-			operation.process.SaveToken("identifiers", token)
 		}
 	}
 	if err != nil {

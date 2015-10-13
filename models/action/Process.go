@@ -189,6 +189,14 @@ func DeleteLog() {
 	}
 	query.Exec()
 
+	sql = "TRUNCATE TABLE `process_harvest`"
+	query, err = database.Connection.Prepare(sql)
+	if err != nil {
+		fmt.Println("Delete 4 error for process:")
+		fmt.Println(err)
+	}
+	query.Exec()
+
 	// tasks
 
 	sql = "TRUNCATE TABLE `task`"

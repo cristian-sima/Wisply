@@ -91,18 +91,6 @@ func (task *InsertRecordsTask) insertRecords(records []wisply.Recorder) error {
 func (task *InsertRecordsTask) insertRecord(record wisply.Recorder) error {
 
 	ID := task.repository.ID
-	//
-	// sqlColumns := "(`repository`, `identifier`, `datestamp`)"
-	// sqlValues := "(?, ?, ?)"
-	// sql := "INSERT INTO `repository_resource` " + sqlColumns + " VALUES " + sqlValues
-	//
-	// query, err := database.Connection.Prepare(sql)
-	//
-	// if err != nil {
-	// 	return errors.New("Error while trying to insert into `repository_resource` table: <br />" + err.Error())
-	// }
-
-	// query.Exec(ID, record.GetIdentifier(), record.GetTimestamp())
 
 	task.repositoryBuffer.AddRow(ID, record.GetIdentifier(), record.GetTimestamp())
 
@@ -200,17 +188,6 @@ func (task *InsertRecordsTask) insertKeys(record *wisply.Recorder, keys []string
 	ID := task.repository.ID
 
 	for _, value := range keys {
-		// sqlColumns := "(`resource_key`, `repository`, `value`, `resource`)"
-		// sqlValues := "(?, ?, ?, ?)"
-		// sql := "INSERT INTO `resource_key` " + sqlColumns + " VALUES " + sqlValues
-		//
-		// query, err := database.Connection.Prepare(sql)
-		//
-		// if err != nil {
-		// 	return errors.New("Error while inserting into `resource_key`: " + err.Error())
-		// }
-
-		// query.Exec(name, ID, value, (*record).GetIdentifier())
 
 		task.keysBuffer.AddRow(name, ID, value, (*record).GetIdentifier())
 	}

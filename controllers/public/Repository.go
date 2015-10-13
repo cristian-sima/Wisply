@@ -1,6 +1,10 @@
 package public
 
-import repository "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+	repository "github.com/cristian-sima/Wisply/models/repository"
+)
 
 // RepositoryController managers the operations for displaying repositories
 type RepositoryController struct {
@@ -24,15 +28,16 @@ func (controller *RepositoryController) List() {
 func (controller *RepositoryController) ShowRepository() {
 	ID := controller.Ctx.Input.Param(":id")
 	rep, err := repository.NewRepository(ID)
-	institution := rep.GetInstitution()
-	identification := rep.GetIdentification()
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
 		controller.SetCustomTitle(rep.Name)
 		controller.Data["repository"] = rep
-		controller.Data["institution"] = institution
-		controller.Data["identification"] = identification
+		controller.Data["institution"] = rep.GetInstitution()
+		controller.Data["identification"] = rep.GetIdentification()
+		controller.Data["records"] = wisply.GetRecords(rep.ID, database.SQLOptions{
+			Limit: "0, 15",
+		})
 		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/repository/repository.tpl"
 	}

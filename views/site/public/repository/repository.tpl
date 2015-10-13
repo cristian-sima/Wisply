@@ -63,7 +63,39 @@
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
+            <table class="table">
+                <tbody>
+                    {{range $index, $record := .records}}
 
+
+
+
+
+
+
+                    <tr>
+                        <td>
+                          <h4>
+                            {{range $index, $title := $record.Keys.Get "title" }}
+                            {{ $title }}
+                            {{ end }}
+                          </h4>
+                          {{range $index, $description := $record.Keys.Get "description" }}
+                          {{ $description }}
+                          {{ end }}
+
+                          <div class="creators"> By
+                            <span class="text-muted">
+                              {{range $index, $creator := $record.Keys.Get "creator" }}
+                              {{ $creator }}
+                              {{ end }}
+                            </span>
+                          </div>
+                        </td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
             </div>
             <!-- Collections -->
             <div class="col-lg-4 col-md-4 col-sm-4" >

@@ -12,7 +12,7 @@
             <div>
               <h2>Modify</h2>
               <div class="well">
-                You can use this option to modify the details of the repository. It is impossible to modify the Base URL <br/>
+                You can use this option to modify the details of the repository. <br/>
                 <a href="/admin/repositories/modify/{{ .repository.ID }}" class="btn btn-primary">Modify repository</a>
               </div>
             </div>

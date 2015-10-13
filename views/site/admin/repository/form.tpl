@@ -24,6 +24,12 @@
                 <input type="text" value="{{.repository.Name}}" class="form-control" name="repository-name" id="repository-name" placeholder="Name" required pattern=".{3,255}" title="The name has 3 up to 255 characters!">
               </div>
             </div>
+            <div class="form-group">
+              <label for="repository-URL" class="col-lg-2 control-label">Base URL</label>
+              <div class="col-lg-10">
+                <input type="url" value="{{.repository.URL}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
+              </div>
+            </div>
             {{ if eq .action "Add" }}
             <div class="form-group">
               <label for="institution-URL" class="col-lg-2 control-label">Institution <a href="/admin/institutions/add" target="_blank"><span data-toggle="tooltip" data-placement="top" title="Create institution" class="glyphicon glyphicon-plus-sign text-success"> </span></a></label>
@@ -48,12 +54,6 @@
               <label for="repository-public-url" class="col-lg-2 control-label">Public URL</label>
               <div class="col-lg-10">
                 <input type="url" value="{{.repository.PublicURL}}" class="form-control" name="repository-public-url" id="repository-public-url" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="repository-URL" class="col-lg-2 control-label">Base URL</label>
-              <div class="col-lg-10">
-                <input type="url" value="{{.repository.Url}}" class="form-control" name="repository-URL" id="repository-URL" placeholder="http://address.domain" required pattern=".{3,2083}" title="The URL has 3 up to 2083 characters!">
               </div>
             </div>
             {{ end }}

@@ -86,6 +86,7 @@ func (controller *RepositoryController) Update() {
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
+	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
 
 	repository, err := repository.NewRepository(ID)
 	if err != nil {

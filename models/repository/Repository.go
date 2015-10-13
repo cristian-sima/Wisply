@@ -67,13 +67,14 @@ func (repository *Repository) GetInstitution() *Institution {
 func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)
+	url := repositoryDetails["url"].(string)
 	id := strconv.Itoa(repository.ID)
 
-	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
+	sql := "UPDATE `repository` SET name=?, description=?, url=? WHERE id=?"
 	repository.Name = name
 	repository.Description = description
 	query, _ := database.Connection.Prepare(sql)
-	_, err := query.Exec(name, description, id)
+	_, err := query.Exec(name, description, url, id)
 	return err
 }
 

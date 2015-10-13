@@ -58,6 +58,7 @@ func hasValidModificationDetails(details map[string]interface{}) *validity.Valid
 	rules := validity.ValidationRules{
 		"name":        rules["name"],
 		"description": rules["description"],
+		"url":         rules["url"],
 	}
 	return adapter.Validate(details, rules)
 }

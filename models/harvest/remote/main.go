@@ -3,19 +3,24 @@ package remote
 import (
 	"errors"
 
+	"github.com/cristian-sima/Wisply/models/harvest/remote/oai"
+	harvestRepository "github.com/cristian-sima/Wisply/models/harvest/remote/repository"
 	"github.com/cristian-sima/Wisply/models/repository"
-	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // New creates a new remote server based on the information provided by the local one
 // It is a `factory` pattern
-func New(localRepository *repository.Repository) (wisply.RepositoryInterface, error) {
-	var rem wisply.RepositoryInterface
+func New(localRepository *repository.Repository) (RepositoryInterface, error) {
+	var rem RepositoryInterface
+
+	basic := &harvestRepository.Repository{}
+
+	basic.SetLocalRepository(localRepository)
 
 	switch localRepository.Category {
 	case "EPrints":
 		{
-			rem = NewEPrints(localRepository)
+			rem = oai.NewEPrints(basic)
 		}
 	default:
 		return rem, errors.New("There is no such server like " + localRepository.Category)

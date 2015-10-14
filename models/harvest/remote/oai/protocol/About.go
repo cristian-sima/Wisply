@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // About is an optional and repeatable container to hold data about the metadata part of the record.
 //

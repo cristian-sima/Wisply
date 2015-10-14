@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // GetRecord is used to retrieve an individual metadata record from a repository.
 //

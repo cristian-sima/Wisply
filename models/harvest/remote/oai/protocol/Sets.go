@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // ListSets represents a list of Sets
 //

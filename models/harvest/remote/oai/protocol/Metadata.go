@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // Metadata is a single manifestation of the metadata from an item.
 //

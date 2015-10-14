@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // Identify is a verb used to retrieve information about a repository.
 //

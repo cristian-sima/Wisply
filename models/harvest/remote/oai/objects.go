@@ -1,11 +1,11 @@
-package remote
+package oai
 
 import (
 	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// OAIIdentification represents the identification for a OAI repository
-type OAIIdentification struct {
+// Identification represents the identification for a repository
+type Identification struct {
 	Name              string
 	URL               string
 	Granularity       string
@@ -16,86 +16,86 @@ type OAIIdentification struct {
 }
 
 // GetURL returns the URL
-func (repository *OAIIdentification) GetURL() string {
+func (repository *Identification) GetURL() string {
 	return repository.URL
 }
 
 // GetName returns the name
-func (repository *OAIIdentification) GetName() string {
+func (repository *Identification) GetName() string {
 	return repository.Name
 }
 
 // GetDeletedRecord returns the protocol for record deletion
-func (repository *OAIIdentification) GetDeletedRecord() string {
+func (repository *Identification) GetDeletedRecord() string {
 	return repository.RecordPolicy
 }
 
 // GetGranularity returns the granularity
-func (repository *OAIIdentification) GetGranularity() string {
+func (repository *Identification) GetGranularity() string {
 	return repository.Granularity
 }
 
 // GetProtocol returns teh protocol of repository
-func (repository *OAIIdentification) GetProtocol() string {
+func (repository *Identification) GetProtocol() string {
 	return repository.Protocol
 }
 
 // GetEarliestDatestamp retuns the last timestamp of the repository
-func (repository *OAIIdentification) GetEarliestDatestamp() string {
+func (repository *Identification) GetEarliestDatestamp() string {
 	return repository.EarliestDatestamp
 }
 
 // GetAdminEmails returns the list of admin emails for the repository
-func (repository *OAIIdentification) GetAdminEmails() []string {
+func (repository *Identification) GetAdminEmails() []string {
 	return repository.AdminEmails
 }
 
 // FORMATS
 
-// OAIFormat represents the identification for a OAI repository
-type OAIFormat struct {
+// Format represents the identification for a  repository
+type Format struct {
 	Prefix    string
 	Schema    string
 	Namespace string
 }
 
 // GetSchema returns the schema
-func (repository *OAIFormat) GetSchema() string {
+func (repository *Format) GetSchema() string {
 	return repository.Schema
 }
 
 // GetPrefix returns the prefix
-func (repository *OAIFormat) GetPrefix() string {
+func (repository *Format) GetPrefix() string {
 	return repository.Prefix
 }
 
 // GetNamespace returns the namespace
-func (repository *OAIFormat) GetNamespace() string {
+func (repository *Format) GetNamespace() string {
 	return repository.Namespace
 }
 
 // COLLECTIONS
 
-// OAICollection represents an OAI collection
-type OAICollection struct {
+// Collection represents an  collection
+type Collection struct {
 	Name string
 	Spec string
 }
 
 // GetName returns the name of the collection
-func (repository *OAICollection) GetName() string {
+func (repository *Collection) GetName() string {
 	return repository.Name
 }
 
 // GetSpec returns the id of the collection
-func (repository *OAICollection) GetSpec() string {
+func (repository *Collection) GetSpec() string {
 	return repository.Spec
 }
 
 // RESOURCES
 
-// OAIKeys encapsulate all the dublin core keys
-type OAIKeys struct {
+// Keys encapsulate all the dublin core keys
+type Keys struct {
 	Titles       []string `xml:"title"`
 	Creators     []string `xml:"creator"`
 	Subjects     []string `xml:"subject"`
@@ -114,120 +114,120 @@ type OAIKeys struct {
 }
 
 // GetTitles returns the Titles
-func (keys OAIKeys) GetTitles() []string {
+func (keys Keys) GetTitles() []string {
 	return keys.Titles
 }
 
 // GetCreators returns the Creators
-func (keys OAIKeys) GetCreators() []string {
+func (keys Keys) GetCreators() []string {
 	return keys.Creators
 }
 
 // GetSubjects returns the Subjects
-func (keys OAIKeys) GetSubjects() []string {
+func (keys Keys) GetSubjects() []string {
 	return keys.Subjects
 }
 
 // GetDescriptions returns the Descriptions
-func (keys OAIKeys) GetDescriptions() []string {
+func (keys Keys) GetDescriptions() []string {
 	return keys.Descriptions
 }
 
 // GetPublishers returns the Publishers
-func (keys OAIKeys) GetPublishers() []string {
+func (keys Keys) GetPublishers() []string {
 	return keys.Publishers
 }
 
 // GetContributors returns the Contributors
-func (keys OAIKeys) GetContributors() []string {
+func (keys Keys) GetContributors() []string {
 	return keys.Contributors
 }
 
 // GetDates returns the Dates
-func (keys OAIKeys) GetDates() []string {
+func (keys Keys) GetDates() []string {
 	return keys.Dates
 }
 
 // GetTypes returns the Types
-func (keys OAIKeys) GetTypes() []string {
+func (keys Keys) GetTypes() []string {
 	return keys.Types
 }
 
 // GetFormats returns the Formats
-func (keys OAIKeys) GetFormats() []string {
+func (keys Keys) GetFormats() []string {
 	return keys.Formats
 }
 
 // GetIdentifiers returns the Identifiers
-func (keys OAIKeys) GetIdentifiers() []string {
+func (keys Keys) GetIdentifiers() []string {
 	return keys.Identifiers
 }
 
 // GetSources returns the Sources
-func (keys OAIKeys) GetSources() []string {
+func (keys Keys) GetSources() []string {
 	return keys.Sources
 }
 
 // GetLanguages returns the Languages
-func (keys OAIKeys) GetLanguages() []string {
+func (keys Keys) GetLanguages() []string {
 	return keys.Languages
 }
 
 // GetRelations returns the Relations
-func (keys OAIKeys) GetRelations() []string {
+func (keys Keys) GetRelations() []string {
 	return keys.Relations
 }
 
 // GetCoverages returns the Coverages
-func (keys OAIKeys) GetCoverages() []string {
+func (keys Keys) GetCoverages() []string {
 	return keys.Coverages
 }
 
 // GetRights returns the Rights
-func (keys OAIKeys) GetRights() []string {
+func (keys Keys) GetRights() []string {
 	return keys.Rights
 }
 
-// OAIRecord represents an OAI record
-type OAIRecord struct {
+// Record represents an  record
+type Record struct {
 	Datestamp  string
 	Identifier string
-	Keys       OAIKeys
+	Keys       Keys
 }
 
 // GetTimestamp returns the datastamp of the record
-func (record OAIRecord) GetTimestamp() string {
+func (record Record) GetTimestamp() string {
 	return record.Datestamp
 }
 
 // GetIdentifier returns the identifier of the record
-func (record OAIRecord) GetIdentifier() string {
+func (record Record) GetIdentifier() string {
 	return record.Identifier
 }
 
 // GetKeys returns the keys of the record
-func (record OAIRecord) GetKeys() wisply.Keys {
+func (record Record) GetKeys() wisply.Keys {
 	return record.Keys
 }
 
-// OAIIdentifier represents an OAI identifier
-type OAIIdentifier struct {
+// Identifier represents an  identifier
+type Identifier struct {
 	Datestamp  string
 	Identifier string
 	Spec       []string
 }
 
 // GetTimestamp returns the datastamp of the record
-func (record *OAIIdentifier) GetTimestamp() string {
+func (record *Identifier) GetTimestamp() string {
 	return record.Datestamp
 }
 
 // GetIdentifier returns the identifier of the record
-func (record *OAIIdentifier) GetIdentifier() string {
+func (record *Identifier) GetIdentifier() string {
 	return record.Identifier
 }
 
 // GetSpec returns the specs for the identifier
-func (record *OAIIdentifier) GetSpec() []string {
+func (record *Identifier) GetSpec() []string {
 	return record.Spec
 }

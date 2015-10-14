@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // ListMetadataFormats holds the formats received from server
 //

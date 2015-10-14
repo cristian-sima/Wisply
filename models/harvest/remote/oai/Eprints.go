@@ -1,4 +1,4 @@
-package remote
+package oai
 
 import (
 	"encoding/xml"
@@ -7,17 +7,17 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cristian-sima/Wisply/models/harvest/remote/oai"
-	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/harvest/remote/oai/protocol"
+	"github.com/cristian-sima/Wisply/models/harvest/remote/repository"
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // EPrintsRepository is an Eprints remote repository
 type EPrintsRepository struct {
-	*Repository
+	*repository.Repository
 	finishToken  string
-	request      *oai.Request
-	lastResponse *oai.Response
+	request      *protocol.Request
+	lastResponse *protocol.Response
 }
 
 // ------------------------- GET
@@ -75,7 +75,7 @@ func (repository *EPrintsRepository) GetIdentification(content []byte) (*wisply.
 		return &idenfitication, errors.New("There was a problem getting the fields")
 	}
 
-	idenfitication = &OAIIdentification{
+	idenfitication = &Identification{
 		Name:              remoteIdentity.RepositoryName,
 		URL:               remoteIdentity.BaseURL,
 		Protocol:          remoteIdentity.ProtocolVersion,
@@ -101,7 +101,7 @@ func (repository *EPrintsRepository) GetFormats(content []byte) ([]wisply.Format
 	remoteFormats := response.ListMetadataFormats.MetadataFormat
 
 	for _, format := range remoteFormats {
-		format := OAIFormat{
+		format := Format{
 			Prefix:    format.MetadataPrefix,
 			Namespace: format.MetadataNamespace,
 			Schema:    format.Schema,
@@ -124,7 +124,7 @@ func (repository *EPrintsRepository) GetCollections(content []byte) ([]wisply.Co
 	remoteCollections := response.ListSets.Set
 
 	for _, collection := range remoteCollections {
-		collection := &OAICollection{
+		collection := &Collection{
 			Name: collection.SetName,
 			Spec: collection.SetSpec,
 		}
@@ -154,7 +154,7 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 		keys, err := repository.getKeys(record.Metadata.Body)
 
 		if err == nil {
-			record := OAIRecord{
+			record := Record{
 				Identifier: record.Header.Identifier,
 				Datestamp:  record.Header.DateStamp,
 				Keys:       keys,
@@ -170,9 +170,9 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 	return records, nil
 }
 
-func (repository *EPrintsRepository) getKeys(plainText []byte) (OAIKeys, error) {
+func (repository *EPrintsRepository) getKeys(plainText []byte) (Keys, error) {
 
-	keys := OAIKeys{}
+	keys := Keys{}
 
 	err := xml.Unmarshal(plainText, &keys)
 	if err != nil {
@@ -199,7 +199,7 @@ func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Id
 
 	for _, remoteIdentifier := range remoteIdentifiers {
 
-		identifier := &OAIIdentifier{
+		identifier := &Identifier{
 			Identifier: remoteIdentifier.Identifier,
 			Datestamp:  remoteIdentifier.DateStamp,
 			Spec:       remoteIdentifier.SetSpec,
@@ -254,13 +254,11 @@ func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
 
 // NewEPrints returns a repository of type Eprints
 func NewEPrints(rep *repository.Repository) wisply.RepositoryInterface {
-	req := &oai.Request{
-		BaseURL: rep.URL,
+	req := &protocol.Request{
+		BaseURL: rep.GetLocalRepository().URL,
 	}
 	return &EPrintsRepository{
-		Repository: &Repository{
-			repository: rep,
-		},
-		request: req,
+		Repository: rep,
+		request:    req,
 	}
 }

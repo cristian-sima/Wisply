@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // ListIdentifiers is an abbreviated verb form of ListRecords, retrieving only headers rather than records.
 //

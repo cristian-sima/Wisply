@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // Response encapsulates the information from a harvest request
 //

@@ -1,4 +1,4 @@
-package oai
+package protocol
 
 // Description is an extensible mechanism for communities to describe their repositories.
 //

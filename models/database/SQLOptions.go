@@ -8,7 +8,7 @@ import (
 // Temp is used to store temp data before it is verified
 type Temp struct {
 	LimitMin string
-	LimitMax string
+	Offset   string // the actual limit from the client
 	OrderBy  string
 	Limit    int // used to limit the maximum number of resources
 }
@@ -20,10 +20,10 @@ type SQLOptions struct {
 
 // GetLimit returns the SQL limit option
 func (options *SQLOptions) GetLimit() string {
-	if options.LimitMin == "" && options.LimitMax == "" {
+	if options.LimitMin == "" && options.Offset == "" {
 		return ""
 	}
-	return "LIMIT " + options.LimitMin + "," + options.LimitMax
+	return "LIMIT " + options.LimitMin + "," + options.Offset
 }
 
 // GetOrder returns the Order By option
@@ -46,14 +46,13 @@ func isValidOption(options Temp) bool {
 }
 
 func validateLimit(options Temp) bool {
-	isValid := areValidLimits(options.LimitMin, options.LimitMax)
+	isValid := areValidLimits(options.LimitMin, options.Offset)
 
 	if !isValid {
 		return false
 	}
 
-	min, _ := strconv.Atoi(options.LimitMin)
-	max, _ := strconv.Atoi(options.LimitMax)
+	number, _ := strconv.Atoi(options.Offset)
 
-	return (max-min <= options.Limit)
+	return (number <= options.Limit)
 }

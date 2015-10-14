@@ -27,6 +27,7 @@ func (controller *RepositoryController) List() {
 func (controller *RepositoryController) ShowTypes() {
 	controller.Data["institution"] = strings.TrimSpace(controller.GetString("institution"))
 	controller.TplNames = "site/admin/repository/add/category.tpl"
+	controller.SetCustomTitle("Add Repository")
 }
 
 // Add shows the form to add a new repository

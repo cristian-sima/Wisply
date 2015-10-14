@@ -3,8 +3,8 @@ package api
 import (
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/harvest"
-	"github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // Repository contains
@@ -18,7 +18,7 @@ func (controller *Repository) GetResources() {
 	ID := controller.Ctx.Input.Param(":id")
 
 	min := controller.Ctx.Input.Param(":min")
-	max := controller.Ctx.Input.Param(":max")
+	offset := controller.Ctx.Input.Param(":number")
 
 	repo, err := repository.NewRepository(ID)
 
@@ -27,7 +27,7 @@ func (controller *Repository) GetResources() {
 	} else {
 		options, err := database.NewSQLOptions(database.Temp{
 			LimitMin: min,
-			LimitMax: max,
+			Offset:   offset,
 			Limit:    100,
 		})
 

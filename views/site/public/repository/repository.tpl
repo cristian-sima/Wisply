@@ -82,6 +82,7 @@
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
+              <div id="repository-before-resources"></div>
               <div id="repository-resources"></div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
@@ -107,6 +108,7 @@
 var server = {}
 server.repository = {
   id : {{ .repository.ID }},
+  totalRecords: {{ .process.Records }},
 }
 </script>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />

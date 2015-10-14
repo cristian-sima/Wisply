@@ -1,6 +1,10 @@
 package wisply
 
-import "github.com/cristian-sima/Wisply/models/database"
+import (
+	"fmt"
+
+	"github.com/cristian-sima/Wisply/models/database"
+)
 
 // GetCollections returns the collections
 func GetCollections(repositoryID int) []*Collection {
@@ -21,8 +25,13 @@ func GetCollections(repositoryID int) []*Collection {
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	var list []*Record
 	sql := "SELECT record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource` AS record WHERE record.`repository`=? ORDER by record.id DESC " + options.GetLimit()
+
+	fmt.Println(sql)
 	rows, _ := database.Connection.Query(sql, repositoryID)
+
+	counter := 0
 	for rows.Next() {
+		counter++
 		record := &Record{}
 		rows.Scan(&record.ID, &record.identifier, &record.timestamp)
 		sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
@@ -36,5 +45,6 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		record.Keys = keys
 		list = append(list, record)
 	}
+	fmt.Println(counter)
 	return list
 }

@@ -1,6 +1,6 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+import "github.com/cristian-sima/Wisply/models/wisply"
 
 // IdentificationOperation encapsulates the methods for requesting information from the repository
 type IdentificationOperation struct {

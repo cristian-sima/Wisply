@@ -1,6 +1,6 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+import "github.com/cristian-sima/Wisply/models/wisply"
 
 // HarvestingCollections is the operation which collects the collections from a remote repository
 type HarvestingCollections struct {

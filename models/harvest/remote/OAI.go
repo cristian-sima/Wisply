@@ -1,7 +1,7 @@
 package remote
 
 import (
-	wisply "github.com/cristian-sima/Wisply/models/harvest/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // OAIIdentification represents the identification for a OAI repository

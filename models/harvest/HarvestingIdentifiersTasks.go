@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+	"github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 

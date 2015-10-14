@@ -3,7 +3,7 @@ package harvest
 import (
 	"fmt"
 
-	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // HarvestingIdentifiers is the operation which collects the identifiers from a remote repository

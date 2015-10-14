@@ -1,6 +1,6 @@
 package remote
 
-import "github.com/cristian-sima/Wisply/models/harvest/wisply"
+import "github.com/cristian-sima/Wisply/models/wisply"
 
 // RepositoryInterface ... defines the method to be implemented by a remote repository
 type RepositoryInterface interface {

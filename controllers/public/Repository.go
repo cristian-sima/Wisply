@@ -2,8 +2,8 @@ package public
 
 import (
 	"github.com/cristian-sima/Wisply/models/harvest"
-	"github.com/cristian-sima/Wisply/models/harvest/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // RepositoryController managers the operations for displaying repositories

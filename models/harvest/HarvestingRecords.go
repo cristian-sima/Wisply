@@ -3,7 +3,7 @@ package harvest
 import (
 	"fmt"
 
-	"github.com/cristian-sima/Wisply/models/harvest/wisply"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // HarvestingRecords is the operation which collects the records from a remote repository

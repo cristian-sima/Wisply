@@ -38,13 +38,12 @@ func (controller *RepositoryController) ShowRepository() {
 		controller.Data["identification"] = repo.GetIdentification()
 
 		if repo.HasBeenProcessed() {
+			process := harvest.NewProcess(repo.LastProcess)
 			controller.Data["collections"] = wisply.GetCollections(repo.ID)
-			controller.Data["process"] = harvest.NewProcess(repo.LastProcess)
+			controller.Data["process"] = process
+			controller.IndicateLastModification(process.Process.End)
 		}
 
-		// controller.Data["records"] = wisply.GetRecords(rep.ID, database.SQLOptions{
-		// 	Limit: "0, 15",
-		// })
 		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/repository/repository.tpl"
 	}

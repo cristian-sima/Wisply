@@ -13,7 +13,8 @@ import (
 type InsertFormatsTask struct {
 	Tasker
 	*Task
-	repository *repository.Repository
+	repository    *repository.Repository
+	formatsBuffer *database.SQLBuffer
 }
 
 // Insert saves the formats
@@ -60,30 +61,21 @@ func (task *InsertFormatsTask) clearTable() error {
 }
 
 func (task *InsertFormatsTask) insertData(formats []wisply.Formater) error {
-
-	ID := task.repository.ID
-
+	repositoryID := task.repository.ID
 	for _, format := range formats {
-		sqlColumns := "(`repository`, `md_schema`, `namespace`, `prefix`)"
-		sqlValues := "(?, ?, ?, ?)"
-		sql := "INSERT INTO `repository_format` " + sqlColumns + " VALUES " + sqlValues
-
-		query, err := database.Connection.Prepare(sql)
-
-		if err != nil {
-			return errors.New("Error while trying to insert into `repository_format` table: <br />" + err.Error())
-		}
-		query.Exec(ID, format.GetSchema(), format.GetNamespace(), format.GetPrefix())
+		task.formatsBuffer.AddRow(repositoryID, format.GetSchema(), format.GetNamespace(), format.GetPrefix())
 	}
-	return nil
+	return task.formatsBuffer.Exec()
 }
 
 func newInsertFormatsTask(operationHarvest Operationer, repository *repository.Repository) *InsertFormatsTask {
+	formatsBuffer := database.NewSQLBuffer("repository_format", "`repository`, `md_schema`, `namespace`, `prefix`")
 	return &InsertFormatsTask{
 		Task: &Task{
 			operation: operationHarvest,
 			Task:      newTask(operationHarvest.GetOperation(), "Insert Formats"),
 		},
-		repository: repository,
+		repository:    repository,
+		formatsBuffer: formatsBuffer,
 	}
 }

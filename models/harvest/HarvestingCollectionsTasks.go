@@ -61,13 +61,10 @@ func (task *InsertCollectionsTask) clearTable() error {
 }
 
 func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner) error {
-
-	ID := task.repository.ID
-
+	repositoryID := task.repository.ID
 	for _, collection := range collections {
-		task.collectionsBuffer.AddRow(ID, collection.GetName(), collection.GetSpec())
+		task.collectionsBuffer.AddRow(repositoryID, collection.GetName(), collection.GetSpec())
 	}
-
 	return task.collectionsBuffer.Exec()
 }
 

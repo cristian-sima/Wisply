@@ -10,18 +10,13 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// RecoverProcess gets the information about the current process and recovers it
-func RecoverProcess(process *Process, controller Controller) *Process {
-	process.controller = controller
-	return process
-}
-
 // CreateProcess creates a new harvest process
-func CreateProcess(ID string, controller Controller) *Process {
+func CreateProcess(repositoryID string, controller Controller) *Process {
 
 	process := &*action.CreateProcess("Harvest")
 
-	harvestProcess := buildProcess(ID, controller, process)
+	harvestProcess := buildProcess(repositoryID, process)
+	harvestProcess.controller = controller
 
 	harvestID := insertHarvestProcess(harvestProcess)
 
@@ -30,32 +25,18 @@ func CreateProcess(ID string, controller Controller) *Process {
 	return harvestProcess
 }
 
-func buildProcess(ID string, controller Controller, process *action.Process) *Process {
+func buildProcess(ID string, process *action.Process) *Process {
 
 	local, _ := repository.NewRepository(ID)
+	remoteServer, _ := remote.New(local)
 
 	harvestProcess := &Process{
 		Process:    process,
-		remote:     getRemoteServer(local),
-		controller: controller,
+		remote:     remoteServer,
 		repository: local,
 	}
 
 	return harvestProcess
-}
-
-func getRemoteServer(local *repository.Repository) remote.RepositoryInterface {
-
-	var rem remote.RepositoryInterface
-
-	switch local.Category {
-	case "EPrints":
-		{
-			rem = remote.NewEPrints(local)
-		}
-	}
-
-	return rem
 }
 
 func insertHarvestProcess(process *Process) int {
@@ -136,6 +117,8 @@ func NewProcess(processID int) *Process {
 		fmt.Println(err2)
 	}
 
+	remoteServer, _ := remote.New(local)
+
 	return &Process{
 		Formats:     formats,
 		Records:     records,
@@ -143,7 +126,7 @@ func NewProcess(processID int) *Process {
 		Identifiers: identifiers,
 		HarvestID:   harvestID,
 		repository:  local,
-		remote:      getRemoteServer(local),
+		remote:      remoteServer,
 		Process:     &*action.NewProcess(processID),
 	}
 }
@@ -208,4 +191,10 @@ func DeleteProcess(processID int) {
 		fmt.Println(err)
 	}
 	query.Exec(processID)
+}
+
+// RecoverProcess gets the information about the current process and recovers it
+func RecoverProcess(process *Process, controller Controller) *Process {
+	process.controller = controller
+	return process
 }

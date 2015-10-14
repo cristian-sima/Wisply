@@ -1,6 +1,4 @@
-package remote
-
-import "github.com/cristian-sima/Wisply/models/wisply"
+package wisply
 
 // RepositoryInterface ... defines the method to be implemented by a remote repository
 type RepositoryInterface interface {
@@ -8,19 +6,19 @@ type RepositoryInterface interface {
 	IsValidResponse(content []byte) error
 
 	Identify() ([]byte, error)
-	GetIdentification(content []byte) (*wisply.Identificationer, error)
+	GetIdentification(content []byte) (*Identificationer, error)
 
 	ListFormats() ([]byte, error)
-	GetFormats(content []byte) ([]wisply.Formater, error)
+	GetFormats(content []byte) ([]Formater, error)
 
 	ListCollections() ([]byte, error)
-	GetCollections(content []byte) ([]wisply.Collectioner, error)
+	GetCollections(content []byte) ([]Collectioner, error)
 
 	ListRecords(token string) ([]byte, error)
-	GetRecords(content []byte) ([]wisply.Recorder, error)
+	GetRecords(content []byte) ([]Recorder, error)
 
 	ListIdentifiers(token string) ([]byte, error)
-	GetIdentifiers(content []byte) ([]wisply.Identifier, error)
+	GetIdentifiers(content []byte) ([]Identifier, error)
 
 	// GetResumptionToken() string
 

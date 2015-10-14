@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cristian-sima/Wisply/models/harvest/remote/protocols/oai"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	"github.com/cristian-sima/Wisply/models/harvest/remote/oai"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // EPrintsRepository is an Eprints remote repository
@@ -253,7 +253,7 @@ func (repository *EPrintsRepository) IsValidResponse(content []byte) error {
 }
 
 // NewEPrints returns a repository of type Eprints
-func NewEPrints(rep *repository.Repository) RepositoryInterface {
+func NewEPrints(rep *repository.Repository) wisply.RepositoryInterface {
 	req := &oai.Request{
 		BaseURL: rep.URL,
 	}

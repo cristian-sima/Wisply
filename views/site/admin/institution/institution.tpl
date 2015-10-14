@@ -33,28 +33,28 @@
               </div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
-                <!-- Repositories -->
-                <a href="/institutions/{{ .institution.ID}}">Public page</a>
-                <br />
-                <br />
-                <a href="/admin/repositories/add/?institution={{ .institution.ID}}">
-                  <span class="glyphicon glyphicon-plus-sign text-success"> </span>
-                  Add repository
-                </a>
-                <br />
-                <br />
-                {{ if eq (not .repositories) true }}
-                <div class="text-muted">
-                  :( it does not have repositories
-                </div>
-                {{ else }}
-                <h4>Repositories ({{ .repositories | len }})</h4>
-                <div class="list-group" id="repositories">
+              <!-- Repositories -->
+              <a href="/institutions/{{ .institution.ID}}">Public page</a>
+              <br />
+              <br />
+              <a href="/admin/repositories/add/?institution={{ .institution.ID}}">
+                <span class="glyphicon glyphicon-plus-sign text-success"> </span>
+                Add repository
+              </a>
+              <br />
+              <br />
+              {{ if eq (not .repositories) true }}
+              <div class="text-muted">
+                :( it does not have repositories
+              </div>
+              {{ else }}
+              <h4>Repositories ({{ .repositories | len }})</h4>
+              <div class="list-group" id="repositories">
                 {{range $index, $repository := .repositories}}
-                  <a href="/admin/repositories/repository/{{ $repository.ID }}" class="list-group-item">
-                    <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $repository.Name }}</h4>
-                    <p class="list-group-item-text">{{ $repository.Description }}</p>
-                  </a>
+                <a href="/admin/repositories/repository/{{ $repository.ID }}" class="list-group-item">
+                  <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $repository.Name }}</h4>
+                  <p class="list-group-item-text">{{ $repository.Description }}</p>
+                </a>
                 {{ end }}
               </div>
               {{ end }}
@@ -63,23 +63,23 @@
         </div>
         <hr />
         <div>
-            <a href="/admin/institutions/institution/{{ .institution.ID }}/advance-options">Advance options</a>
+          <a href="/admin/institutions/institution/{{ .institution.ID }}/advance-options">Advance options</a>
         </div>
+      </div>
     </div>
-  </div>
-  <style>
-  .big-number {
-    font-size: 30px;
-  }
-  </style>
-  <script src="/static/js/admin/institution/list.js"></script>
-  <script>
-  $(document).ready(function(){
+    <style>
+    .big-number {
+      font-size: 30px;
+    }
+    </style>
+    <script src="/static/js/admin/institution/list.js"></script>
+    <script>
+    $(document).ready(function(){
       $(".institution-status").each(function(){
-          var el = $(this),
-           status = wisply.institutionsModule.GUI.getStatusColor(el.html())
-          el.html(status)
+        var el = $(this),
+        status = wisply.institutionsModule.GUI.getStatusColor(el.html())
+        el.html(status)
       });
       wisply.activateTooltip()
-  });
-  </script>
+    });
+    </script>

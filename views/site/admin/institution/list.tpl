@@ -23,37 +23,37 @@
           <div id="websocket-connection"></div>
         </div>
       </div>
-    {{ if .anything }}
-    <div class="table-responsive">
-      <table class="table table-striped table-hover " id="institution-list">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Web adddress</th>
-            <th>Auto Wiki</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{range $index, $element := .institutions}}
-          {{$safe := $element.Name|html}}
-          <tr>
-            <td><a href="/admin/institutions/institution/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
-            <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
-            <td>
-            {{ if eq $element.WikiID "NULL" }}
-            <span class="label label-danger">Disabled</label>
-            {{ else }}
-            <span class="label label-success">Enabled</label>
-            {{ end }}
-            </td>
-          </tr>
-          {{end }}
-        </tbody>
-      </table>
-    </div>
-    {{ else }}
-    There are no institution... :(
-    {{ end }}
-  </div>
-</div>
-<script src="/static/js/admin/institution/list.js"></script>
+      {{ if .anything }}
+      <div class="table-responsive">
+        <table class="table table-striped table-hover " id="institution-list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Web adddress</th>
+              <th>Auto Wiki</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range $index, $element := .institutions}}
+            {{$safe := $element.Name|html}}
+            <tr>
+              <td><a href="/admin/institutions/institution/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
+              <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
+              <td>
+                {{ if eq $element.WikiID "NULL" }}
+                <span class="label label-danger">Disabled</label>
+                  {{ else }}
+                  <span class="label label-success">Enabled</label>
+                    {{ end }}
+                  </td>
+                </tr>
+                {{end }}
+              </tbody>
+            </table>
+          </div>
+          {{ else }}
+          There are no institution... :(
+          {{ end }}
+        </div>
+      </div>
+      <script src="/static/js/admin/institution/list.js"></script>

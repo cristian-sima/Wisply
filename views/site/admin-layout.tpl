@@ -10,7 +10,7 @@
         <div class="col-xs-2 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
           {{ template "admin-menu" }}
         </div>
-       <div class="col-xs-12 col-sm-10">
+        <div class="col-xs-12 col-sm-10">
           {{.LayoutContent}}
         </div>
       </div>

@@ -12,7 +12,6 @@
       <script src="../bower_components/html5shiv/dist/html5shiv.js"></script>
       <script src="../bower_components/respond/dest/respond.min.js"></script>
     <![endif]-->
-
   </head>
   <body>
     <div class="navbar navbar-default navbar-fixed-top">

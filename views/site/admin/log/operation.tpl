@@ -9,55 +9,55 @@
   </div>
   <div class="panel-body">
     <span class="text-warning warning-notice">
-			<span class="glyphicon glyphicon-warning-sign"></span>
+      <span class="glyphicon glyphicon-warning-sign"></span>
       This page is not live updated.
-		</span>
+    </span>
     <h2>Operation #{{ .operation.Action.ID }}</h2>
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4">
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4">
-          <table class="table">
-              <tbody>
-                  <tr>
-                      <td><span class="glyphicon glyphicon-calendar"></span> Start:</td>
-                      <td>{{ .operation.GetStartDate }}</td>
-                  </tr>
-                  <tr>
-                      <td><span class="glyphicon glyphicon-calendar"></span> Finish:</td>
-                      <td><strong>{{ .operation.GetEndDate }}</strong></td>
-                  </tr>
-              </tbody>
-          </table>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><span class="glyphicon glyphicon-calendar"></span> Start:</td>
+              <td>{{ .operation.GetStartDate }}</td>
+            </tr>
+            <tr>
+              <td><span class="glyphicon glyphicon-calendar"></span> Finish:</td>
+              <td><strong>{{ .operation.GetEndDate }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="col-lg-4 col-md-4 col-sm-4">
-          <table class="table">
-              <tbody>
-                    <td>
-                      {{ if .operation.Action.IsRunning }}
-                      <span class="label label-warning">Working</span>
-                      {{ else }}
-                      <span class="label label-success">Finished</span>
-                      {{ end }}
-                    </td>
-                    <td>
-                      <strong>
-                        {{ if .operation.Action.IsRunning }}
-                        <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
-                        {{ else }}
-                        <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
-                        {{ end }}
-                    </strong>
-                  </td>
-              </tbody>
-          </table>
+        <table class="table">
+          <tbody>
+            <td>
+              {{ if .operation.Action.IsRunning }}
+              <span class="label label-warning">Working</span>
+              {{ else }}
+              <span class="label label-success">Finished</span>
+              {{ end }}
+            </td>
+            <td>
+              <strong>
+                {{ if .operation.Action.IsRunning }}
+                <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                {{ else }}
+                <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
+                {{ end }}
+              </strong>
+            </td>
+          </tbody>
+        </table>
       </div>
     </div>
     {{ $len := .tasks | len }}
     {{ if eq $len 0 }}
-      <div class="text-center">
-        There are no tasks for this operation
-      </div>
+    <div class="text-center">
+      There are no tasks for this operation
+    </div>
     {{ else }}
 
     <div class="print-div">
@@ -99,10 +99,10 @@
               </td>
               <td class="col-md-2">
                 {{ $len := $task.Explication | len }}
-                  {{ if gt $len 30 }}
-                  <a data-explication="{{ $task.Explication | html }}" class="see-full-explication" href="#">See full explication</a>
+                {{ if gt $len 30 }}
+                <a data-explication="{{ $task.Explication | html }}" class="see-full-explication" href="#">See full explication</a>
                 {{ else }}
-                  {{ $task.Explication }}
+                {{ $task.Explication }}
                 {{ end }}
               </td>
             </tr>
@@ -110,7 +110,7 @@
           </tbody>
         </table>
       </div>
-      </div>
+    </div>
     {{ end }}
   </div>
 </div>

@@ -14,7 +14,7 @@
           <h2>Delete this process</h2>
           <div class="well">
             <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the process can not be recovered.</span></h5><br />
-          <a data-id="{{ .process.Action.ID }}" href="#" class="btn btn-danger deleteProcessButton">Delete process from Wisply</a>
+            <a data-id="{{ .process.Action.ID }}" href="#" class="btn btn-danger deleteProcessButton">Delete process from Wisply</a>
           </div>
         </div>
       </div>

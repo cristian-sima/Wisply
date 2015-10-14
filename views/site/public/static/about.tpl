@@ -10,7 +10,7 @@
         </div>
         <section class="panel-body">
           <h1>About</h1>
-           Wisply tries to change the way the Web science resources are mapped.
+          Wisply tries to change the way the Web science resources are mapped.
           <article>
             <h2>Which is the problem?</h2>
             There are many institutions offering Web science courses in different forms and formats across the world. Initially, it is possible to categorise the nature of these offers, by manually investigating and recording the data. However, this is not a sustainable approach for the long term, because the process is increasingly complex. Not only this method is very costly, but, it is also inefficient, since the Web science is constantly changing. As a result of this, the outcome of the process is outdated compared to what is actually taught. In addition to this problem, there is no software on the market which can provide a map of the Web science in terms of resources and its fields of study.

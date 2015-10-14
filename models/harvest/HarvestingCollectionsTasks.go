@@ -45,9 +45,7 @@ func (task *InsertCollectionsTask) hasProblems(err error) {
 }
 
 func (task *InsertCollectionsTask) clearTable() error {
-
-	ID := task.repository.ID
-
+	repositoryID := task.repository.ID
 	sql := "DELETE from `repository_collection` WHERE repository=?"
 	query, err := database.Connection.Prepare(sql)
 
@@ -55,7 +53,7 @@ func (task *InsertCollectionsTask) clearTable() error {
 		return errors.New("Error while trying to clear the `repository_collection` table: <br />" + err.Error())
 	}
 
-	query.Exec(strconv.Itoa(ID))
+	query.Exec(strconv.Itoa(repositoryID))
 
 	return nil
 }

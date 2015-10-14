@@ -2,7 +2,6 @@
   <div class="row" >
     <div class="col-lg-12 col-md-12 col-sm-12" >
       <div class="panel panel-default">
-
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
@@ -15,9 +14,7 @@
             </li>
           </ul>
         </div>
-
         <div class="panel-body">
-
           <div class="row">
             <div class="col-lg-2 col-md-2 col-sm-2 text-center" >
               <span class="glyphicon glyphicon-equalizer institution-logo-default "></span>
@@ -41,32 +38,27 @@
               <div><i>{{ .repository.Category }}</i> repository</div>
             </div>
           </div>
-
           <div>
-              <br />
-              <br />
+            <br />
+            <br />
           </div>
-
           <!-- Things -->
-
           {{ if eq .repository.LastProcess 0 }}
-
           <div class="text-center text-muted">
             Wisply did not process this repository yet... :(
           </div>
           {{ else }}
-
           <div class="row">
             <!-- Statistics -->
             <div class="col-lg-2 col-md-2 col-sm-2 text-left" >
-                <table class="table">
-                  <tbody>
+              <table class="table">
+                <tbody>
                   <tr>
                     <td>
                       <span class="badge badge-info">{{ .process.Formats }}</span>
                     </td>
                     <td>
-                       formats
+                      formats
                     </td>
                   </tr>
                   <tr>
@@ -74,10 +66,10 @@
                       <span class="badge badge-info">{{ .process.Collections }}</span>
                     </td>
                     <td>
-                       collections
+                      collections
                     </td>
                   </tr>
-                    <tr>
+                  <tr>
                     <td>
                       <span class="badge badge-info">{{ .process.Records }}</span>
                     </td>
@@ -85,8 +77,8 @@
                       records
                     </td>
                   </tr>
-                  </tbody>
-                </table>
+                </tbody>
+              </table>
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
@@ -95,19 +87,17 @@
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Collections -->
               <div class="list-group" id="repositories">
-              {{range $index, $collection := .collections}}
+                {{range $index, $collection := .collections}}
                 <a href="#" class="list-group-item">
                   <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }}</h5>
                   <p class="list-group-item-text">{{ $collection.Description }}</p>
                 </a>
-              {{ end }}
+                {{ end }}
               </div>
             </div>
           </div>
-
           {{ end }}
         </div>
-
       </div>
     </div>
   </div>

@@ -266,7 +266,7 @@ func (process *Process) GetStatistics() (int, int, int, int) {
 }
 
 func (process *Process) updateStatistics(name string, number int) error {
-	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=? WHERE id=?")
+	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
 	if err != nil {
 		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
 		fmt.Println(err)

@@ -97,7 +97,6 @@ func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) err
 	}
 	err = operation.process.updateRecords(len(records))
 	return err
-
 }
 
 // constructor

@@ -13,7 +13,8 @@ import (
 type InsertCollectionsTask struct {
 	Tasker
 	*Task
-	repository *repository.Repository
+	repository        *repository.Repository
+	collectionsBuffer *database.SQLBuffer
 }
 
 // Insert clears the table and then inserts them
@@ -64,28 +65,20 @@ func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner)
 	ID := task.repository.ID
 
 	for _, collection := range collections {
-		sqlColumns := "(`repository`, `name`, `spec`)"
-		sqlValues := "(?, ?, ?)"
-		sql := "INSERT INTO `repository_collection` " + sqlColumns + " VALUES " + sqlValues
-
-		query, err := database.Connection.Prepare(sql)
-
-		if err != nil {
-			return errors.New("Error while trying to insert into `repository_collection` table: <br />" + err.Error())
-		}
-
-		query.Exec(ID, collection.GetName(), collection.GetSpec())
-
+		task.collectionsBuffer.AddRow(ID, collection.GetName(), collection.GetSpec())
 	}
-	return nil
+
+	return task.collectionsBuffer.Exec()
 }
 
 func newInsertCollectionsTask(operationHarvest Operationer, repository *repository.Repository) *InsertCollectionsTask {
+	collectionsBuffer := database.NewSQLBuffer("repository_collection", "`repository`, `name`, `spec`")
 	return &InsertCollectionsTask{
 		Task: &Task{
 			operation: operationHarvest,
 			Task:      newTask(operationHarvest.GetOperation(), "Insert Formats"),
 		},
-		repository: repository,
+		collectionsBuffer: collectionsBuffer,
+		repository:        repository,
 	}
 }

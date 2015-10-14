@@ -7,7 +7,7 @@ type Repository struct {
 	repository *repository.Repository
 }
 
-// GetRepository returns the reference to the local repository
-func (remote *Repository) GetRepository() *repository.Repository {
+// GetLocalRepository returns the reference to the local repository
+func (remote *Repository) GetLocalRepository() *repository.Repository {
 	return remote.repository
 }

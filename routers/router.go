@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 	admin "github.com/cristian-sima/Wisply/controllers/admin"
+	"github.com/cristian-sima/Wisply/controllers/api"
 	public "github.com/cristian-sima/Wisply/controllers/public"
 )
 
@@ -170,6 +171,25 @@ func init() {
 			adminLogNS,
 		)
 
+	// api
+	// ----------------------------- Repository ----------------------------------
+
+	apiRepositoryNS := beego.NSNamespace("/repository",
+		beego.NSNamespace("/resources/:id",
+			beego.NSNamespace("/get",
+				beego.NSRouter("/:min/:max", &api.Repository{}, "GET:GetResources"),
+			),
+		),
+	)
+
+	// api
+	// ----------------------------- API -------------------------------
+
+	apiNS :=
+		beego.NewNamespace("/api",
+			apiRepositoryNS,
+		)
+
 	// -------------------------------- REGISTER -----------------------------
 
 	// public
@@ -179,5 +199,6 @@ func init() {
 
 	// admin
 	beego.AddNamespace(adminNS)
+	beego.AddNamespace(apiNS)
 
 }

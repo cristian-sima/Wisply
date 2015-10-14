@@ -19,11 +19,11 @@
 
     <h1 class="page-title">Source: admin/harvest/list.js</h1>
 
+    
 
 
 
-
-
+    
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global $, Harvest, wisply, harvestHistory */
@@ -54,7 +54,6 @@ var HarvestList = function() {
 				harvestHistory.gui.activate();
 			});
 			$("#harvest-history-container").on('hidden.bs.modal', function() {
-				console.log("inchis");
 				harvestHistory.gui.disable();
 			});
 		}
@@ -97,7 +96,7 @@ var HarvestList = function() {
 			 * @param  {object} message The message from the server
 			 */
 			changeSingleStatus: function(message) {
-				this.GUI.changeStatus({
+				this.GUI.changeGUI({
 					ID: message.Repository,
 					Status: message.Value
 				});
@@ -124,19 +123,35 @@ var HarvestList = function() {
 				var repository, index;
 				for (index = 0; index &lt; repositories.length; index++) {
 					repository = repositories[index];
-					this.changeStatus(repository);
+					this.changeGUI(repository);
 				}
 				this.activateActionListeners();
 			},
 			/**
-			 * It changes the status for a single repository and activates the listeners for actions
+			 * It changes the status and action for a single repository and activates the listeners for actions
 			 * @param  {object} repository A reference to the object which contains the ID and the Status of the repository
 			 */
-			changeStatus: function(repository) {
+			changeGUI: function(repository) {
+				this.changeStatus(repository);
+				this.changeAction(repository);
+			},
+			/**
+			 * It changes the HTML status according to the repository status
+			 * @param  {object} repository The repository object
+			 */
+			changeStatus: function (repository) {
 				var htmlID = this.getHTMLID(repository.ID),
-					htmlSpan = this.getStatusColor(repository.Status),
-					action = this.getAction(repository);
-				this.list.find(htmlID).html(htmlSpan + action);
+					htmlSpan = this.getStatusColor(repository.Status);
+				this.list.find(htmlID).html(htmlSpan);
+			},
+			/**
+			 * It changes the action according to the status
+			 * @param  {object} repository The repository object
+			 */
+			changeAction: function (repository) {
+				var htmlID = this.getHTMLAction_ID(repository.ID),
+					htmlSpan = this.getAction(repository);
+				this.list.find(htmlID).html(htmlSpan);
 			},
 			/**
 			 * It activates the listeners for the status actions
@@ -153,29 +168,46 @@ var HarvestList = function() {
 				return wisply.repositoriesModule.GUI.getStatusColor(status);
 			},
 			/**
-			 * It returns the HTML code for the actions, based on the status
-			 * @param  {object} repository The repository object
-			 * @return {string} The HTML code for actions
-			 */
-			getAction: function(repository) {
-				var action = "";
-				switch (repository.Status) {
-					case "unverified":
-						action = "&lt;a href=''> &lt;span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Start now!' class='repositories-init-harvest glyphicon glyphicon-sort-by-attributes hover' >&lt;/span>&lt;/a>";
-						break;
-					case "verification-failed":
-						action = "&lt;a href=''> &lt;span data-toggle='tooltip' data-ID='" + repository.ID + "' data-placement='top' title='' data-original-title='Try again' class='repositories-init-harvest glyphicon glyphicon glyphicon-refresh hover' >&lt;/span>&lt;/a>";
-				}
-				return action;
-			},
-			/**
 			 * It returns the JQUERY ID of a repository
 			 * @param  {number} id The id of the repository
 			 * @return {string} The JQUERY ID of a repository
 			 */
 			getHTMLID: function(id) {
-				return "#rep-status-" + id;
-			}
+				return this.getID("status", id);
+			},
+			/**
+			 * It returns the ID of the action HTML element
+			 * @param  {number} id The ID of the repository
+			 */
+			getHTMLAction_ID: function(id) {
+				return this.getID("action", id);
+			},
+			/**
+			 * Returns the HTML id for an action
+			 * @param  {string} name The name of action
+			 * @param  {number} id   The ID of the repository
+			 */
+			getID: function (name, id) {
+				return "#rep-" + name + "-" + id;
+			},
+			/** It returns the HTML code for the actions, based on the status
+			 * @param  {object} repository The repository object
+			 * @return {string} The HTML code for actions
+			 */
+			getAction: function(repository) {
+				var action = "&lt;span class='text-muted'>Working&lt;/span>";
+				switch (repository.Status) {
+					case "ok":
+					case "unverified":
+						action = "&lt;a href=''> &lt;span data-toggle='tooltip' data-ID=" + repository.ID + " data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' >&lt;/span>&lt;/a>";
+						break;
+					case "problems":
+					case "verification-failed":
+						action = "&lt;a href='/admin/log/'>See log&lt;/a>";
+					break;
+				}
+				return action;
+			},
 		};
 	return {
 		DecisionManager: DecisionManager,
@@ -211,13 +243,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="Login.html">Login</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#paintIdentificationDetails">paintIdentificationDetails</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="PublicRepository.Manager.html">Manager</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="Login.html">Login</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="PublicRepository.html">PublicRepository</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Oct 12 2015 10:01:57 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Oct 14 2015 09:48:42 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

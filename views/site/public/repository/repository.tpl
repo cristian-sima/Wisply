@@ -89,44 +89,8 @@
                 </table>
             </div>
             <!-- Resources -->
-
             <div class="col-lg-6 col-md-6 col-sm-6" >
-            <table class="table">
-                <tbody>
-                    {{range $index, $record := .records}}
-
-                    <tr>
-                        <td>
-                          <h4>
-
-                            {{range $index, $title := $record.Keys.Get "title" }}
-                            {{ $title }}
-                            {{ end }}
-                          </h4>
-                          {{range $index, $description := $record.Keys.Get "description" }}
-                          {{ $description }}
-                          {{ end }}
-                          <div class="formats">
-                            {{range $index, $format := $record.Keys.Get "format" }}
-                            <span class="label label-default">
-                                {{ if eq $format "application/pdf" }}PDF{{ else }}
-                                {{  $format }}
-                                {{ end }}
-                            </span>&nbsp;
-                            {{ end }}
-                          </div>
-                          <div class="creators">
-                            <span class="text-muted">
-                              {{range $index, $creator := $record.Keys.Get "creator" }}
-                              {{ $creator }}
-                              {{ end }}
-                            </span>
-                          </div>
-                        </td>
-                    </tr>
-                    {{ end }}
-                </tbody>
-            </table>
+              <div id="repository-resources"></div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Collections -->
@@ -148,5 +112,12 @@
     </div>
   </div>
 </div>
+<script src="/static/js/admin/repository/list.js"></script>
+<script>
+var server = {}
+server.repository = {
+  id : {{ .repository.ID }},
+}
+</script>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
-<script src="/static/js/admin/institution/list.js"></script>
+<script src="/static/js/public/repository.js"></script>

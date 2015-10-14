@@ -22,7 +22,7 @@ type Repository struct {
 }
 
 // HasBeenProcessed checks if the repository has any process
-func (repository *Repository) HasBeenProcessed(processID int) bool {
+func (repository *Repository) HasBeenProcessed() bool {
 	return (repository.LastProcess != 0)
 }
 

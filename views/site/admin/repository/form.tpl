@@ -63,7 +63,7 @@
       <div class="form-group">
         <label for="repository-description" class="col-lg-2 control-label">Description</label>
         <div class="col-lg-10">
-          <textarea class="form-control" rows="3" name="repository-description" id="repository-description" maxlength="255" >{{ .repository.Description}}</textarea>
+          <textarea class="form-control" rows="3" name="repository-description" id="repository-description" maxlength="500" >{{ .repository.Description}}</textarea>
           <span class="help-block">This field may contain notes about the intitution.</span>
         </div>
       </div>

@@ -103,6 +103,11 @@
     </div>
   </div>
 </div>
+<style>
+.text-almost-invisible {
+  color:#D8D8D8;
+}
+</style>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>
 var server = {}

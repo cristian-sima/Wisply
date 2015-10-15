@@ -50,3 +50,22 @@ func (keys *RecordKeys) processKeys(name string, values []string) []string {
 	}
 	return values
 }
+
+func (keys *RecordKeys) ProcessFormats() map[string]int {
+	values := keys.get("format", false)
+	return Compress(wisplyFormat.ConvertFormats(values))
+}
+
+// Compress compacts and counts the values
+func Compress(values []string) map[string]int {
+	compressed := make(map[string]int)
+	for _, value := range values {
+		_, exists := compressed[value]
+		if !exists {
+			compressed[value] = 1
+		} else {
+			compressed[value]++
+		}
+	}
+	return compressed
+}

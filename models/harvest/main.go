@@ -132,18 +132,23 @@ func NewProcess(processID int) *Process {
 }
 
 // GetProcessesByRepository returns the processes of for the repository
-func GetProcessesByRepository(repositoryID int) []*Process {
+// 0 for showing all
+func GetProcessesByRepository(repositoryID, number int) []*Process {
 
 	var (
 		list                                       []*Process
 		processID, harvestID                       int
-		repID                                      string
+		repID, limit                               string
 		formats, collections, records, identifiers int
 	)
 
 	repID = strconv.Itoa(repositoryID)
 
-	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
+	if number != 0 {
+		limit = "LIMIT 0, " + strconv.Itoa(number)
+	}
+
+	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC " + limit
 	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {

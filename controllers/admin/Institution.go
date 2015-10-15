@@ -127,7 +127,7 @@ func (controller *InstitutionController) Delete() {
 		repositories := institution.GetRepositories()
 
 		for _, repository := range repositories {
-			processes := harvest.GetProcessesByRepository(repository.ID)
+			processes := harvest.GetProcessesByRepository(repository.ID, 0)
 			for _, process := range processes {
 				process.Delete()
 			}

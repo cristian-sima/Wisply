@@ -149,7 +149,7 @@ func (controller *RepositoryController) EmptyRepository() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		processes := harvest.GetProcessesByRepository(repository.ID)
+		processes := harvest.GetProcessesByRepository(repository.ID, 0)
 		for _, process := range processes {
 			process.Delete()
 		}
@@ -166,7 +166,7 @@ func (controller *RepositoryController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		processes := harvest.GetProcessesByRepository(repository.ID)
+		processes := harvest.GetProcessesByRepository(repository.ID, 0)
 		for _, process := range processes {
 			process.Delete()
 		}
@@ -203,6 +203,7 @@ func (controller *RepositoryController) ShowRepository() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		controller.Data["processes"] = harvest.GetProcessesByRepository(repository.ID, 5)
 		controller.Data["repository"] = repository
 		controller.Data["institution"] = repository.GetInstitution()
 		controller.Data["identification"] = repository.GetIdentification()

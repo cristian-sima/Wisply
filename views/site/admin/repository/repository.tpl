@@ -15,17 +15,59 @@
               <br />
             </div>
           </div>
-          <br /><br /><br />
+          <br />
+          {{ if eq (.processes | len) 0 }}
+          <span class="text-muted">No process for this repository</span>
+          {{ else }}
+          <h3>Last 5 processes:</h3>
           <div class="row text-center">
-            <div class="col-md-6">
-              <div><span class="label label-as-badge big-number label-success">75</span></div>
-              <div><h5 class="text-muted">collections</h5></div>
-            </div>
-            <div class="col-md-6">
-              <div><span class="label label-as-badge big-number label-success">4500</span></div>
-              <div><h5 class="text-muted">records</h5></div>
-            </div>
-          </div>
+                <div class="table-responsive col-md-12">
+                  <table id="list-processes" class="table table-bordered table-condensed">
+                    <thead>
+                      <tr>
+                        <th class="hidden-xs">#</th>
+                        <th><span class="glyphicon glyphicon-list-alt"></span></th>
+                        <th>State</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{range $index, $element := .processes}}
+                      <tr class="{{ $element.GetResult }}">
+                        <td class="col-md-1"><a href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
+                        <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
+                        <!-- start state -->
+                        <td class="col-md-1">
+                          {{ if $element.IsSuspended }}
+                          <a href="/admin/log/process/{{ $element.Action.ID }}"><span class="label label-warning">Suspended</span></a>
+                          {{ else }}
+                          {{ if $element.Action.IsRunning }}
+                          <span class="label label-info">Working</span>
+                          {{ else }}
+                          <span class="label label-success">Finished</span>
+                          {{ end }}
+                          {{ end }}
+                        </td>
+                        <!-- end state -->
+                        <td class="col-md-1.5">{{ $element.GetStartDate }}</td>
+                        <td class="col-md-1.5">{{ $element.GetEndDate }}</td>
+                        <td class="col-md-3">
+                          {{ if eq $element.GetDuration "..." }}
+                          <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                          {{ else }}
+                          {{ $element.GetDuration }}
+                          {{ end }}
+                        </td>
+
+                      </tr>
+                      {{end }}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+          {{ end }}
         </div>
         <div class="col-md-4">
           <div>

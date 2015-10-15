@@ -76,6 +76,44 @@ func (controller *RepositoryController) Modify() {
 	}
 }
 
+// ShowFilter shows the page for modifying the filter
+func (controller *RepositoryController) ShowFilter() {
+
+	var ID string
+
+	ID = controller.Ctx.Input.Param(":id")
+
+	repository, err := repository.NewRepository(ID)
+
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.GenerateXSRF()
+		controller.Data["repository"] = repository
+		controller.TplNames = "site/admin/repository/filter.tpl"
+	}
+}
+
+// ChangeFilter changes the filter
+func (controller *RepositoryController) ChangeFilter() {
+
+	ID := controller.Ctx.Input.Param(":id")
+
+	filter := strings.TrimSpace(controller.GetString("repository-filter"))
+
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		err := repository.SetFilter(filter)
+		if err != nil {
+			controller.Abort("databaseError")
+		} else {
+			controller.DisplaySuccessMessage("The filter has been modified!", "/admin/repositories/repository/"+strconv.Itoa(repository.ID))
+		}
+	}
+}
+
 // Update updates a repository in the database
 func (controller *RepositoryController) Update() {
 

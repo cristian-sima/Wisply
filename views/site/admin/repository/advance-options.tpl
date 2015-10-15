@@ -13,7 +13,15 @@
             <h2>Modify</h2>
             <div class="well">
               You can use this option to modify the details of the repository. <br/>
-              <a href="/admin/repositories/modify/{{ .repository.ID }}" class="btn btn-primary">Modify repository</a>
+              <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options/modify" class="btn btn-primary">Modify repository</a>
+            </div>
+          </div>
+          <div>
+            <h2>Filter</h2>
+            <div class="well">
+              You can filter what input you harvest or process.
+               <br/>
+              <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options/modify/filter" class="btn btn-primary">Modify filter</a>
             </div>
           </div>
           <div>

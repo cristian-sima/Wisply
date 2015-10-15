@@ -122,7 +122,7 @@ var Repositories = function () {
       };
 
       request = {
-        "url": '/admin/repositories/delete/' + repository.id,
+        "url": '/admin/repositories/repository/' + repository.id + "/delete",
         "success": successCallback,
         "error": errorCallback
       };

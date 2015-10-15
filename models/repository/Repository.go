@@ -58,6 +58,24 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	return problem, err
 }
 
+// SetFilter changes the filter of the repository
+func (repository *Repository) SetFilter(newFilter string) error {
+	sql := "UPDATE `repository` SET `filter`=? WHERE `id`=?"
+	query, _ := database.Connection.Prepare(sql)
+	_, err := query.Exec(newFilter, repository.ID)
+	return err
+}
+
+// GetFilter gets the filter
+func (repository *Repository) GetFilter() string {
+	var filter string
+	sql := "SELECT `filter` FROM `repository` WHERE `id` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.QueryRow(repository.ID).Scan(&filter)
+
+	return filter
+}
+
 // GetInstitution returns a reference to the institution which holds the repository
 func (repository *Repository) GetInstitution() *Institution {
 	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))

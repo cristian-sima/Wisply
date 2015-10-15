@@ -14,13 +14,9 @@ func (operation *HarvestingCollections) Start() {
 }
 
 func (operation *HarvestingCollections) tryToGet() {
-
 	rem := operation.process.GetRemoteServer()
-
 	task := newGetTask(operation, rem)
-
 	content, err := task.GetCollections()
-
 	if err != nil {
 		operation.failed()
 	} else {
@@ -32,7 +28,6 @@ func (operation *HarvestingCollections) tryToParse(page []byte) {
 	rem := operation.process.GetRemoteServer()
 	task := newParseTask(operation, rem)
 	collections, err := task.GetCollections(page)
-
 	if err != nil {
 		operation.failed()
 	} else {
@@ -47,7 +42,12 @@ func (operation *HarvestingCollections) insertCollections(collections []wisply.C
 	if err != nil {
 		operation.failed()
 	}
-	err = operation.process.updateCollections(len(collections))
+	oldCollections := operation.process.Collections
+	newCollections := len(collections)
+	difference := newCollections - oldCollections
+	if difference != 0 {
+		err = operation.process.updateCollections(difference)
+	}
 	if err != nil {
 		operation.failed()
 	} else {

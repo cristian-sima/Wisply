@@ -74,6 +74,11 @@ func insertHarvestProcess(process *Process) int {
 		fmt.Println(err)
 	}
 
+	process.Formats = formats
+	process.Collections = collections
+	process.Records = records
+	process.Identifiers = identifiers
+
 	return harvestID
 }
 

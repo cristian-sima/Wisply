@@ -15,13 +15,9 @@ func (operation *HarvestingFormats) Start() {
 }
 
 func (operation *HarvestingFormats) tryToGet() {
-
 	rem := operation.GetRemote()
-
 	task := newGetTask(operation, rem)
-
 	content, err := task.GetFormats()
-
 	if err != nil {
 		operation.failed()
 	} else {
@@ -31,7 +27,6 @@ func (operation *HarvestingFormats) tryToGet() {
 
 func (operation *HarvestingFormats) tryToParse(content []byte) {
 	rem := operation.GetRemote()
-
 	task := newParseTask(operation, rem)
 	formats, err := task.GetFormats(content)
 	if err != nil {
@@ -48,7 +43,12 @@ func (operation *HarvestingFormats) insertFormats(formats []wisply.Formater) {
 	if err != nil {
 		operation.failed()
 	}
-	err = operation.process.updateFormats(len(formats))
+	oldFormats := operation.process.Formats
+	newFormats := len(formats)
+	difference := newFormats - oldFormats
+	if difference != 0 {
+		err = operation.process.updateFormats(difference)
+	}
 	if err != nil {
 		operation.failed()
 	} else {

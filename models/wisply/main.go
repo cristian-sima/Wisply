@@ -6,6 +6,65 @@ import (
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
+// ClearRepository deletes all the resources, formats, collections, identifiers, emails and the identificaiton details
+func ClearRepository(repositoryID int) {
+	deleteResources(repositoryID)
+	deleteFormats(repositoryID)
+	deleteCollections(repositoryID)
+	deleteEmails(repositoryID)
+	deleteIdentification(repositoryID)
+	deleteIdentifiers(repositoryID)
+	updateRepository(repositoryID)
+}
+
+func updateRepository(repositoryID int) {
+	sql := "UPDATE `repository` SET `lastProcess`=0, `status`='unverified' WHERE `id`=?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteResources(repositoryID int) {
+	sql := "DELETE FROM `repository_resource` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteFormats(repositoryID int) {
+	sql := "DELETE FROM `repository_format` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteCollections(repositoryID int) {
+	sql := "DELETE FROM `repository_collection` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteEmails(repositoryID int) {
+	sql := "DELETE FROM `repository_email` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteIdentification(repositoryID int) {
+	sql := "DELETE FROM `repository_identification` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteKeys(repositoryID int) {
+	sql := "DELETE FROM `repository_key` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
+func deleteIdentifiers(repositoryID int) {
+	sql := "DELETE FROM `identifier` WHERE `repository` = ?"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
+}
+
 // GetCollections returns the collections
 func GetCollections(repositoryID int) []*Collection {
 	var list []*Collection

@@ -181,18 +181,6 @@ func GetProcessToken(ID int, name string) string {
 	return token
 }
 
-// DeleteProcess deletes a process
-func DeleteProcess(processID int) {
-	sql := "DELETE FROM `process_harvest` WHERE process=?"
-	query, err := database.Connection.Prepare(sql)
-
-	if err != nil {
-		fmt.Println("Error when deleting the harvest process:")
-		fmt.Println(err)
-	}
-	query.Exec(processID)
-}
-
 // RecoverProcess gets the information about the current process and recovers it
 func RecoverProcess(process *Process, controller Controller) *Process {
 	process.controller = controller

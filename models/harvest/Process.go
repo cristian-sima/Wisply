@@ -339,7 +339,7 @@ func (process *Process) tellController(simple *Message) {
 
 // Delete deletes the harvest process and calls its parent method
 func (process *Process) Delete() {
-	DeleteProcess(process.ID)
+	process.Process.Delete()
 }
 
 // Recover loads the process in memory and starts executing the last stage

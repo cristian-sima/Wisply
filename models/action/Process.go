@@ -171,7 +171,7 @@ func (process *Process) GetOperations() []*Operation {
 // DeleteLog the entire log
 func DeleteLog() {
 
-	sql := "TRUNCATE TABLE `process`"
+	sql := "DELETE FROM `process`"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Delete 1 error for process:")
@@ -179,33 +179,6 @@ func DeleteLog() {
 	}
 	query.Exec()
 
-	// operations
-
-	sql = "TRUNCATE TABLE `operation`"
-	query, err = database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println("Delete 2 error for process:")
-		fmt.Println(err)
-	}
-	query.Exec()
-
-	sql = "TRUNCATE TABLE `process_harvest`"
-	query, err = database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println("Delete 4 error for process:")
-		fmt.Println(err)
-	}
-	query.Exec()
-
-	// tasks
-
-	sql = "TRUNCATE TABLE `task`"
-	query, err = database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println("Delete 3 error for process:")
-		fmt.Println(err)
-	}
-	query.Exec()
 }
 
 // Delete deletes the process along with the tasks and operations
@@ -215,26 +188,6 @@ func (process *Process) Delete() {
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Delete 1 error for process:")
-		fmt.Println(err)
-	}
-	query.Exec(process.Action.ID)
-
-	// operations
-
-	sql = "DELETE FROM `operation` WHERE process=?"
-	query, err = database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println("Delete 2 error for process:")
-		fmt.Println(err)
-	}
-	query.Exec(process.Action.ID)
-
-	// tasks
-
-	sql = "DELETE FROM `task` WHERE process=?"
-	query, err = database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println("Delete 3 error for process:")
 		fmt.Println(err)
 	}
 	query.Exec(process.Action.ID)

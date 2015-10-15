@@ -5,6 +5,7 @@ import (
 
 	action "github.com/cristian-sima/Wisply/models/action"
 	harvest "github.com/cristian-sima/Wisply/models/harvest"
+	"github.com/cristian-sima/Wisply/models/repository"
 )
 
 // LogController manages the operations for showing the logs
@@ -37,6 +38,7 @@ func (controller *LogController) ShowLogAdvanceOptions() {
 // DeleteEntireLog deletes the entire log
 func (controller *LogController) DeleteEntireLog() {
 	action.DeleteLog()
+	repository.ResetAllRepositories()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
@@ -50,12 +52,6 @@ func (controller *LogController) DeleteProcess() {
 
 // DeleteProcess deletes the process
 func (controller *LogController) deleteProcess(process *action.Process) {
-
-	switch process.Content {
-	case "Harvest":
-		harvest.DeleteProcess(process.Action.ID)
-		break
-	}
 
 	process.Delete()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"

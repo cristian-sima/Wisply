@@ -13,12 +13,8 @@
         {{ $description }}
         {{ end }}
         <div class="formats">
-          {{range $index, $format := $record.Keys.Get "format" }}
-          <span class="label label-default">
-            {{ if eq $format "application/pdf" }}PDF{{ else }}
-            {{  $format }}
-            {{ end }}
-          </span>&nbsp;
+          {{range $index, $format := $record.Keys.Nice "format" }}
+          <span class="label label-default">{{$format}}</span>&nbsp;
           {{ end }}
         </div>
         <div class="creators">

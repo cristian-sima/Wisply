@@ -21,10 +21,33 @@ type Institution struct {
 
 // Delete removes the institution from database
 func (institution *Institution) Delete() error {
+
+	err := institution.deleteRepositories()
+
+	if err != nil {
+		return err
+	}
+
+	// delete institution
 	sql := "DELETE from `institution` WHERE id=?"
-	query, err := database.Database.Prepare(sql)
-	query.Exec(strconv.Itoa(institution.ID))
+	query, err := database.Connection.Prepare(sql)
+	query.Exec(institution.ID)
+
 	return err
+}
+
+func (institution *Institution) deleteRepositories() error {
+	// delete repostiories
+	repositories := institution.GetRepositories()
+
+	for _, repository := range repositories {
+
+		err := repository.Delete()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // Modify changes the details of the institution
@@ -42,11 +65,11 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 // GetRepositories returns the list of repositories
 func (institution *Institution) GetRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description, status, institution FROM repository WHERE institution = ?"
-	rows, _ := database.Database.Query(sql, institution.ID)
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM repository WHERE institution = ?"
+	rows, _ := database.Connection.Query(sql, institution.ID)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL, &repository.LastProcess)
 		list = append(list, repository)
 	}
 	return list
@@ -63,7 +86,7 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	sql := "UPDATE `institution` SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=? WHERE id=?"
 	institution.Name = name
 	institution.Description = description
-	query, _ := database.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(name, description, logoURL, wikiURL, wikiID, id)
 	return err
 }

@@ -111,6 +111,7 @@ Wisply provides several utilities which you can use during the development proce
 * **Test Wisply** - It shows a command promt with the result of testing Wisply. In case the tests were not good, the user can type `y` to re-test Wisply, or type any other character to exit.
 *  **Start goconvey** - It is a shortcut to start the [goconvey](https://github.com/smartystreets/goconvey) server. It can be used for a more detailed testing (you need to install this first).
 *  **CommitSQL** - When it is executed it exports the entire SQL database scheme (without data) to the file `util/ubuntu/install/src/sql/Wisply.sql`. Thus, it can be used to quickly update the database schema.
+*  **SQLShoot** - It is like CommitSQL, but it exports only the data. I can be used to take a photo of current data, which must be preserved.
 * **GenerateJsDoc** - A shortcut to the JSDoc generated which generates the HTML documentation for JavaScript code. (Please edit the `conf.json` and change the paths to yours)
 
 

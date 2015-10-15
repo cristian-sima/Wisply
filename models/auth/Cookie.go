@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Cookie It represents a connection cookie
@@ -33,7 +33,7 @@ type LoginCookie struct {
 // IsGood creates a Token from the id and hashed token and calls its IsValid method
 func (cookie *LoginCookie) IsGood() bool {
 
-	if wisply.Database == nil {
+	if database.Connection == nil {
 		return false
 	}
 

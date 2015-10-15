@@ -56,8 +56,7 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				harvestHistory.log("There is already a process on server.");
-				this.initExistingProcess(message.Value.Manager);
+				window.location="/admin/repositories";
 			} else {
 				harvestHistory.log("We start a new process");
 				this.initNewProcess();
@@ -152,46 +151,12 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(identification) {
 			this.manager.repository.Identification = identification;
-			this.paintIdentificationDetails(identification);
 			this.manager.firedStageFinished();
-		},
-		/**
-		 * It disables the possibility to modify the URL
-		 */
-		paintIdentificationDetails: function(data) {
-			/**
-			 * It returns the HTML table for an object
-			 * @param  {object} data The object
-			 * @return {string} HTML table for the object's data
-			 */
-			function paint(data) {
-				var html = '<div id="harvesting-counters"></div>';
-				html += '<ul class="list-group text-left">';
-				for (var property in data) {
-					if (data.hasOwnProperty(property)) {
-						if (property === "Description") {
-							continue;
-						} else if (typeof data[property] === 'object') {
-							html += '<li class="list-group-item"> ' + property;
-							html += paint(data[property]);
-							html += '</li>';
-						} else {
-							html += "  <li class='list-group-item'>";
-							html += property + ": <strong>" + data[property] + "</strong>";
-							html += "</li>";
-						}
-					}
-				}
-				html += "</ul>";
-				return html;
-			}
-			var html = "";
-			html += paint(data);
-			this.manager.GUI.showCurrent(html);
 		}
 	}, {
 		id: 5,
 		name: "Harvesting...",
+		lastTime: 0,
 		/**
 		 * It saves the reference of manager
 		 * @param  {Harvest.StageManager} manager The reference to the stage manager
@@ -207,29 +172,8 @@ var HarvestProcess = function() {
 		init: function() {
 			if (this.manager.existingProcessActions) {
 				this.manager.stages[4].perform(this.manager);
-				this.manager.stages[4].paintIdentificationDetails(this.manager.repository.Identification);
 			}
 			this.showCounters();
-			if (this.manager.existingProcessActions) {
-				this.loadServerCounters();
-			}
-		},
-		loadServerCounters: function() {
-			var serverCounter, serverType, clientCounter;
-			for (serverType in this.manager.existingProcessActions) {
-				if (this.manager.existingProcessActions.hasOwnProperty(serverType)) {
-					serverCounter = this.manager.existingProcessActions[serverType];
-					clientCounter = this.getCounter(serverCounter.Type);
-					clientCounter.start(serverCounter.Number);
-					if (serverCounter.Finished) {
-						clientCounter.finish();
-					}
-					if (serverCounter.IsCurrent) {
-						this.setCurrentCounter(serverCounter.Type);
-					}
-				}
-			}
-			delete this.manager.existingProcessActions;
 		},
 		showCounters: function() {
 			this.counters = [
@@ -250,7 +194,7 @@ var HarvestProcess = function() {
 					type: "identifiers",
 				}),
 			];
-			this.setCurrentCounter("formats");
+			this.manager.GUI.showCurrent('<div id="harvesting-counters"></div>');
 			this.manager.GUI.drawCounters(this.counters, "harvesting-counters");
 		},
 		/**
@@ -265,25 +209,16 @@ var HarvestProcess = function() {
 		 * @param  {object} result The message from the server
 		 */
 		analyse: function(result) {
-			switch (result.Operation) {
-				case "start":
-					harvestHistory.log("Harvesting " + result.Type + " started!");
-					this.setCurrentCounter(result.Type);
-					this.currentCounter.start(result.Count);
-					break;
-				case "update":
-					harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
-					this.currentCounter.update(result.Count);
-					break;
-				case "finish":
-					harvestHistory.log("Harvesting " + result.Type + " finished!");
-					this.currentCounter.finish();
-					break;
-				case "harvesting-done":
-					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
-					this.end();
-					break;
-			}
+
+				harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
+				if(!this.currentCounter || this.currentCounter.type != result.Operation) {
+					console.log("Start");
+					this.setCurrentCounter(result.Operation);
+					this.currentCounter.start(result.Number);
+				}
+				else {
+				  this.getCounter(result.Operation).update(result.Number);
+				}
 		},
 		/**
 		 * It updates the counter
@@ -293,7 +228,7 @@ var HarvestProcess = function() {
 			var i, counter;
 			for (i = 0; i < this.counters.length; i++) {
 				counter = this.counters[i];
-				if (counter.type === requested) {
+				if (counter.type === requested.toLowerCase()) {
 					return counter;
 				}
 			}
@@ -428,39 +363,36 @@ var HarvestProcess = function() {
 			decide: function(message) {
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
-						case "status-changed":
+						case "repository-status-changed":
 							this.stage.repository.status = message.Value;
 							this.stage.GUI.updateRepositoryStatus();
-							if (message.Value === "verifying") {
-								this.stage.performStage(3);
-							} else if (message.Value === "initializing") {
-								this.stage.firedStageFinished();
+							switch(message.Value) {
+								case "verifying":
+									this.stage.performStage(3);
+								break;
+									case "initializing":
+									this.stage.firedStageFinished();
+									this.stage.firedStageFinished();
+								break;
+								case "verification-failed":
+									this.stage.GUI.showCurrent("The verification failed");
+									this.stage.pause();
+									this.stage.stages[3].enableModifyURL();
+								break;
+								case "verified":
+									this.stage.firedStageFinished();
+								break;
 							}
 							break;
+						case "harvest-update":
+							this.stage.stages[5].analyse(message.Value);
+						break;
 						case "existing-process-on-server":
 							this.stage.currentStage.analyse(message);
 							break;
-						case "verification-finished":
-							if (message.Value === "failed") {
-								this.stage.GUI.showCurrent("The verification failed");
-								this.stage.pause();
-								this.stage.stages[3].enableModifyURL();
-							} else {
-								this.stage.firedStageFinished();
-							}
-							break;
-						case "harvesting":
-							var result = message.Value;
-							if (result.IsOk === false) {
-								this.getCounter().showError();
-								this.stage.stop();
-							} else {
-								this.stage.currentStage.analyse(result);
-							}
-							break;
-						case "identification-details":
-							this.stage.stages[4].analyse(message.Value);
-							break;
+						case "process-finished":
+							this.stage.firedStageFinished();
+						break;
 					}
 				}
 			},

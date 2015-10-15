@@ -7,9 +7,9 @@
             <li><a href="/">Home</a></li>
             <li><a href="/institutions">Institutions</a></li>
             <li class="active">{{ .institution.Name }}
-            {{ if .currentAccount.IsAdministrator  }}
-                  <a href="/admin/institutions/institution/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a>
-            {{ end }}
+              {{ if .currentAccount.IsAdministrator  }}
+              <a href="/admin/institutions/institution/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a>
+              {{ end }}
             </li>
           </ul>
         </div>
@@ -40,13 +40,13 @@
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-sm-4" >
-                  <!-- Repositories -->
-                  <div class="list-group" id="repositories">
+                <!-- Repositories -->
+                <div class="list-group" id="repositories">
                   {{range $index, $repository := .repositories}}
-                    <a href="/repository/{{ $repository.ID }}" class="list-group-item">
-                      <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $repository.Name }}</h4>
-                      <p class="list-group-item-text">{{ $repository.Description }}</p>
-                    </a>
+                  <a href="/repository/{{ $repository.ID }}" class="list-group-item">
+                    <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $repository.Name }}</h4>
+                    <p class="list-group-item-text">{{ $repository.Description }}</p>
+                  </a>
                   {{ end }}
                 </div>
               </div>
@@ -60,5 +60,5 @@
       font-size: 13em;
     }
     </style>
-    <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" />
+    <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet"  property='stylesheet' />
     <script src="/static/js/admin/institution/list.js"></script>

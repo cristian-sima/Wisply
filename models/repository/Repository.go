@@ -2,11 +2,10 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	wisply "github.com/cristian-sima/Wisply/models/database"
+	database "github.com/cristian-sima/Wisply/models/database"
 )
 
 // Repository represents a repository for rerepositorys
@@ -18,12 +17,31 @@ type Repository struct {
 	Status      string
 	Institution int
 	Category    string
+	PublicURL   string
+	LastProcess int
+}
+
+// HasBeenProcessed checks if the repository has any process
+func (repository *Repository) HasBeenProcessed() bool {
+	return (repository.LastProcess != 0)
+}
+
+// SetLastProcess changes the ID of last harvesting process
+func (repository *Repository) SetLastProcess(processID int) error {
+	sql := "UPDATE `repository` SET lastProcess=? WHERE id=?"
+	query, _ := database.Connection.Prepare(sql)
+	_, err := query.Exec(processID, repository.ID)
+	return err
 }
 
 // Delete removes the repository from database
 func (repository *Repository) Delete() error {
+
+	// delete all things
+
+	// delete repository
 	sql := "DELETE from `repository` WHERE id=?"
-	query, err := wisply.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.Exec(strconv.Itoa(repository.ID))
 	return err
 }
@@ -43,20 +61,20 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 // GetInstitution returns a reference to the institution which holds the repository
 func (repository *Repository) GetInstitution() *Institution {
 	institution, _ := NewInstitution(strconv.Itoa(repository.Institution))
-	fmt.Println(institution)
 	return institution
 }
 
 func (repository *Repository) updateDatabase(repositoryDetails map[string]interface{}) error {
 	name := repositoryDetails["name"].(string)
 	description := repositoryDetails["description"].(string)
+	url := repositoryDetails["url"].(string)
 	id := strconv.Itoa(repository.ID)
 
-	sql := "UPDATE `repository` SET name=?, description=? WHERE id=?"
+	sql := "UPDATE `repository` SET name=?, description=?, url=? WHERE id=?"
 	repository.Name = name
 	repository.Description = description
-	query, _ := wisply.Database.Prepare(sql)
-	_, err := query.Exec(name, description, id)
+	query, _ := database.Connection.Prepare(sql)
+	_, err := query.Exec(name, description, url, id)
 	return err
 }
 
@@ -72,7 +90,7 @@ func (repository *Repository) ModifyURL(URL string) error {
 	repository.URL = URL
 
 	sql := "UPDATE `repository` SET URL=? WHERE id=?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(URL, id)
 	return err
 }
@@ -87,7 +105,7 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 	id := strconv.Itoa(repository.ID)
 
 	sql := "UPDATE `repository` SET status=? WHERE id=?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(newStatus, id)
 
 	repository.Status = newStatus
@@ -101,16 +119,12 @@ func (repository *Repository) GetIdentification() *Identification {
 	identification := &Identification{}
 
 	sql := "SELECT id, repository, protocol_version, earliest_datestamp, delete_policy, granularity FROM repository_identification WHERE repository = ?"
-	query, _ := wisply.Database.Prepare(sql)
+	query, _ := database.Connection.Prepare(sql)
 	query.QueryRow(repository.ID).Scan(&identification.ID, &identification.Repository, &identification.Protocol, &identification.EarliestDatestamp, &identification.RecordPolicy, &identification.Granularity)
 
 	emailsSQL := "SELECT `email` FROM `repository_email` WHERE `repository` = ?"
-	smt, _ := wisply.Database.Prepare(emailsSQL)
-	rows, errEmails := smt.Query(repository.ID)
-
-	if errEmails != nil {
-		fmt.Println(errEmails)
-	}
+	smt, _ := database.Connection.Prepare(emailsSQL)
+	rows, _ := smt.Query(repository.ID)
 
 	for rows.Next() {
 		email := ""

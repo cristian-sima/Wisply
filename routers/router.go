@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 	admin "github.com/cristian-sima/Wisply/controllers/admin"
+	"github.com/cristian-sima/Wisply/controllers/api"
 	public "github.com/cristian-sima/Wisply/controllers/public"
 )
 
@@ -64,6 +65,9 @@ func init() {
 	adminRepositoryNS := beego.NSNamespace("/repositories",
 		beego.NSRouter("", &admin.RepositoryController{}, "*:List"),
 		beego.NSNamespace("/add",
+			beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowTypes"),
+		),
+		beego.NSNamespace("/newRepository",
 			beego.NSRouter("", &admin.RepositoryController{}, "GET:Add"),
 			beego.NSRouter("", &admin.RepositoryController{}, "POST:Insert"),
 		),
@@ -98,6 +102,12 @@ func init() {
 		beego.NSNamespace("/delete",
 			beego.NSRouter(":id", &admin.InstitutionController{}, "POST:Delete"),
 		),
+		beego.NSNamespace("/institution",
+			beego.NSNamespace("/:id",
+				beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowInstitution"),
+				beego.NSRouter("/advance-options", &admin.RepositoryController{}, "GET:ShowAdvanceInstitutionOptions"),
+			),
+		),
 	)
 
 	// admin
@@ -108,10 +118,30 @@ func init() {
 			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
 			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
 		),
-		beego.NSNamespace("/event-log",
-			beego.NSRouter("", &admin.HarvestController{}, "Get:ShowEventLog"),
-			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
+		beego.NSNamespace("/recover",
+			beego.NSRouter(":id", &admin.HarvestController{}, "POST:RecoverProcess"),
 		),
+		beego.NSNamespace("/finish",
+			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ForceFinishProcess"),
+		),
+	)
+
+	// admin
+	// ----------------------------- Log -----------------------------------
+
+	adminLogNS := beego.NSNamespace("/log",
+		beego.NSRouter("", &admin.LogController{}, "*:ShowGeneralPage"),
+		beego.NSNamespace("/process",
+			beego.NSRouter(":process", &admin.LogController{}, "*:ShowProcess"),
+			beego.NSNamespace(":process/operation",
+				beego.NSRouter(":operation", &admin.LogController{}, "*:ShowOperation"),
+			),
+			beego.NSRouter(":process/history", &admin.LogController{}, "*:ShowProgressHistory"),
+			beego.NSRouter(":process/advance-options", &admin.LogController{}, "*:ShowProcessAdvanceOptions"),
+			beego.NSRouter("/delete/:process", &admin.LogController{}, "POST:DeleteProcess"),
+		),
+		beego.NSRouter("/advance-options", &admin.LogController{}, "*:ShowLogAdvanceOptions"),
+		beego.NSRouter("/delete", &admin.LogController{}, "POST:DeleteEntireLog"),
 	)
 
 	// admin
@@ -138,6 +168,26 @@ func init() {
 			adminRepositoryNS,
 			adminInstitutionsNS,
 			adminHarvestNS,
+			adminLogNS,
+		)
+
+	// api
+	// ----------------------------- Repository ----------------------------------
+
+	apiRepositoryNS := beego.NSNamespace("/repository",
+		beego.NSNamespace("/resources/:id",
+			beego.NSNamespace("/get",
+				beego.NSRouter("/:min/:number", &api.Repository{}, "GET:GetResources"),
+			),
+		),
+	)
+
+	// api
+	// ----------------------------- API -------------------------------
+
+	apiNS :=
+		beego.NewNamespace("/api",
+			apiRepositoryNS,
 		)
 
 	// -------------------------------- REGISTER -----------------------------
@@ -149,5 +199,6 @@ func init() {
 
 	// admin
 	beego.AddNamespace(adminNS)
+	beego.AddNamespace(apiNS)
 
 }

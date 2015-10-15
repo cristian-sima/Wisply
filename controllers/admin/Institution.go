@@ -2,7 +2,10 @@ package admin
 
 import "strings"
 
-import repository "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/harvest"
+	repository "github.com/cristian-sima/Wisply/models/repository"
+)
 
 // InstitutionController manages the operations for institutions
 type InstitutionController struct {
@@ -121,12 +124,46 @@ func (controller *InstitutionController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		repositories := institution.GetRepositories()
+
+		for _, repository := range repositories {
+			processes := harvest.GetProcessesByRepository(repository.ID)
+			for _, process := range processes {
+				process.Delete()
+			}
+		}
+
 		databaseError := institution.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
 			controller.DisplaySuccessMessage("The institution ["+institution.Name+"] has been deleted. Well done!", "/admin/institutions/")
 		}
+	}
+}
+
+// ShowInstitution shows the administrative page for an institution
+func (controller *RepositoryController) ShowInstitution() {
+	ID := controller.Ctx.Input.Param(":id")
+	institution, err := repository.NewInstitution(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["institution"] = institution
+		controller.Data["repositories"] = institution.GetRepositories()
+		controller.TplNames = "site/admin/institution/institution.tpl"
+	}
+}
+
+// ShowAdvanceInstitutionOptions displays the page with further options such as modify or delete
+func (controller *RepositoryController) ShowAdvanceInstitutionOptions() {
+	ID := controller.Ctx.Input.Param(":id")
+	institution, err := repository.NewInstitution(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		controller.Data["institution"] = institution
+		controller.TplNames = "site/admin/institution/advance-options.tpl"
 	}
 }
 

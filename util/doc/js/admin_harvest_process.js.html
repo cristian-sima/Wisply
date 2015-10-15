@@ -84,8 +84,7 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				harvestHistory.log("There is already a process on server.");
-				this.initExistingProcess(message.Value.Manager);
+				window.location="/admin/repositories";
 			} else {
 				harvestHistory.log("We start a new process");
 				this.initNewProcess();
@@ -180,46 +179,12 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(identification) {
 			this.manager.repository.Identification = identification;
-			this.paintIdentificationDetails(identification);
 			this.manager.firedStageFinished();
-		},
-		/**
-		 * It disables the possibility to modify the URL
-		 */
-		paintIdentificationDetails: function(data) {
-			/**
-			 * It returns the HTML table for an object
-			 * @param  {object} data The object
-			 * @return {string} HTML table for the object's data
-			 */
-			function paint(data) {
-				var html = '&lt;div id="harvesting-counters">&lt;/div>';
-				html += '&lt;ul class="list-group text-left">';
-				for (var property in data) {
-					if (data.hasOwnProperty(property)) {
-						if (property === "Description") {
-							continue;
-						} else if (typeof data[property] === 'object') {
-							html += '&lt;li class="list-group-item"> ' + property;
-							html += paint(data[property]);
-							html += '&lt;/li>';
-						} else {
-							html += "  &lt;li class='list-group-item'>";
-							html += property + ": &lt;strong>" + data[property] + "&lt;/strong>";
-							html += "&lt;/li>";
-						}
-					}
-				}
-				html += "&lt;/ul>";
-				return html;
-			}
-			var html = "";
-			html += paint(data);
-			this.manager.GUI.showCurrent(html);
 		}
 	}, {
 		id: 5,
 		name: "Harvesting...",
+		lastTime: 0,
 		/**
 		 * It saves the reference of manager
 		 * @param  {Harvest.StageManager} manager The reference to the stage manager
@@ -235,29 +200,8 @@ var HarvestProcess = function() {
 		init: function() {
 			if (this.manager.existingProcessActions) {
 				this.manager.stages[4].perform(this.manager);
-				this.manager.stages[4].paintIdentificationDetails(this.manager.repository.Identification);
 			}
 			this.showCounters();
-			if (this.manager.existingProcessActions) {
-				this.loadServerCounters();
-			}
-		},
-		loadServerCounters: function() {
-			var serverCounter, serverType, clientCounter;
-			for (serverType in this.manager.existingProcessActions) {
-				if (this.manager.existingProcessActions.hasOwnProperty(serverType)) {
-					serverCounter = this.manager.existingProcessActions[serverType];
-					clientCounter = this.getCounter(serverCounter.Type);
-					clientCounter.start(serverCounter.Number);
-					if (serverCounter.Finished) {
-						clientCounter.finish();
-					}
-					if (serverCounter.IsCurrent) {
-						this.setCurrentCounter(serverCounter.Type);
-					}
-				}
-			}
-			delete this.manager.existingProcessActions;
 		},
 		showCounters: function() {
 			this.counters = [
@@ -278,7 +222,7 @@ var HarvestProcess = function() {
 					type: "identifiers",
 				}),
 			];
-			this.setCurrentCounter("formats");
+			this.manager.GUI.showCurrent('&lt;div id="harvesting-counters">&lt;/div>');
 			this.manager.GUI.drawCounters(this.counters, "harvesting-counters");
 		},
 		/**
@@ -293,25 +237,16 @@ var HarvestProcess = function() {
 		 * @param  {object} result The message from the server
 		 */
 		analyse: function(result) {
-			switch (result.Operation) {
-				case "start":
-					harvestHistory.log("Harvesting " + result.Type + " started!");
-					this.setCurrentCounter(result.Type);
-					this.currentCounter.start(result.Count);
-					break;
-				case "update":
-					harvestHistory.log("Server told me that Wisply harvested " + result.Count + " " + result.Type);
-					this.currentCounter.update(result.Count);
-					break;
-				case "finish":
-					harvestHistory.log("Harvesting " + result.Type + " finished!");
-					this.currentCounter.finish();
-					break;
-				case "harvesting-done":
-					harvestHistory.log("Yuhuu. I finish harvesting for " + this.mananger.repository.Name);
-					this.end();
-					break;
-			}
+
+				harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
+				if(!this.currentCounter || this.currentCounter.type != result.Operation) {
+					console.log("Start");
+					this.setCurrentCounter(result.Operation);
+					this.currentCounter.start(result.Number);
+				}
+				else {
+				  this.getCounter(result.Operation).update(result.Number);
+				}
 		},
 		/**
 		 * It updates the counter
@@ -321,7 +256,7 @@ var HarvestProcess = function() {
 			var i, counter;
 			for (i = 0; i &lt; this.counters.length; i++) {
 				counter = this.counters[i];
-				if (counter.type === requested) {
+				if (counter.type === requested.toLowerCase()) {
 					return counter;
 				}
 			}
@@ -456,39 +391,36 @@ var HarvestProcess = function() {
 			decide: function(message) {
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
-						case "status-changed":
+						case "repository-status-changed":
 							this.stage.repository.status = message.Value;
 							this.stage.GUI.updateRepositoryStatus();
-							if (message.Value === "verifying") {
-								this.stage.performStage(3);
-							} else if (message.Value === "initializing") {
-								this.stage.firedStageFinished();
+							switch(message.Value) {
+								case "verifying":
+									this.stage.performStage(3);
+								break;
+									case "initializing":
+									this.stage.firedStageFinished();
+									this.stage.firedStageFinished();
+								break;
+								case "verification-failed":
+									this.stage.GUI.showCurrent("The verification failed");
+									this.stage.pause();
+									this.stage.stages[3].enableModifyURL();
+								break;
+								case "verified":
+									this.stage.firedStageFinished();
+								break;
 							}
 							break;
+						case "harvest-update":
+							this.stage.stages[5].analyse(message.Value);
+						break;
 						case "existing-process-on-server":
 							this.stage.currentStage.analyse(message);
 							break;
-						case "verification-finished":
-							if (message.Value === "failed") {
-								this.stage.GUI.showCurrent("The verification failed");
-								this.stage.pause();
-								this.stage.stages[3].enableModifyURL();
-							} else {
-								this.stage.firedStageFinished();
-							}
-							break;
-						case "harvesting":
-							var result = message.Value;
-							if (result.IsOk === false) {
-								this.getCounter().showError();
-								this.stage.stop();
-							} else {
-								this.stage.currentStage.analyse(result);
-							}
-							break;
-						case "identification-details":
-							this.stage.stages[4].analyse(message.Value);
-							break;
+						case "process-finished":
+							this.stage.firedStageFinished();
+						break;
 					}
 				}
 			},
@@ -782,13 +714,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Login.html">Login</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#paintIdentificationDetails">paintIdentificationDetails</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="PublicRepository.Manager.html">Manager</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="Login.html">Login</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="PublicRepository.html">PublicRepository</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Tue Oct 06 2015 12:47:44 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Oct 14 2015 09:48:42 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -1,80 +1,105 @@
 package harvest
 
-import "fmt"
-
 import (
-	history "github.com/cristian-sima/Wisply/models/event"
+	action "github.com/cristian-sima/Wisply/models/action"
+	"github.com/cristian-sima/Wisply/models/harvest/remote"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// WisplyController represents a controller
-type WisplyController interface {
-	Notify(*Message)
-}
-
-// WisplyProcessInterface ... defines the methods which must be implemented by a process
-type WisplyProcessInterface interface {
+// Operationer ... defines the set of methods which should be implemented by the harvest operations
+type Operationer interface {
 	Start()
-	ManagerFinished()
+	GetOperation() *action.Operation
 }
 
-// Operation represents the basic operation
-type operation struct {
-	history       *history.Manager
-	operationName string
-	operationType string
-	local         *repository.Repository
+// Operation represents an operation
+type Operation struct {
+	Operationer
+	*action.Operation
+	process *Process // it is the harvest process
 }
 
-func (operation *operation) record(message string, repository int) {
-	event := history.Event{
-		Content:       message,
-		Repository:    repository,
-		OperationType: operation.operationType,
-		OperationName: operation.operationName,
+// Start notifies the controller that it is starting
+func (operation *Operation) Start() {
+	// TODO notify controller
+}
+
+// Finish calls its finish parents method
+func (operation *Operation) Finish() {
+	operation.Operation.Finish()
+}
+
+// Finish calls its finish parents method
+func (operation *Operation) succedded() {
+	operation.Operation.Finish()
+
+	msg := action.Message{
+		Name:  "Finish",
+		Value: operation.GetResult(),
 	}
-	operation.history.Record(&event)
+
+	operation.TellProcess(msg)
 }
 
-// WisplyProcess is a basic process. A process does a series of actions using managers
-type WisplyProcess struct {
-	operation
-	controller *WisplyController
+// ChangeRepositoryStatus tells the controller to change the status of the local repository
+func (operation *Operation) ChangeRepositoryStatus(status string) {
+	operation.process.ChangeRepositoryStatus(status)
 }
 
-func (process *WisplyProcess) log(message string) {
-	fmt.Println(process.operation.operationType + " " + process.operation.operationName + ": " + message)
+// GetRepository returns a reference to the local repository
+func (operation *Operation) GetRepository() *repository.Repository {
+	return operation.process.GetRepository()
 }
 
-// GetController returns the reference to the controller which manages the process
-func (process *WisplyProcess) GetController() *WisplyController {
-	return process.controller
+// GetRemote returns a reference to the remote repository
+func (operation *Operation) GetRemote() remote.RepositoryInterface {
+	return operation.process.GetRemoteServer()
 }
 
-// SetName sets the name of a process
-func (process *WisplyProcess) SetName(name string) {
-	process.operationType = "Process"
-	process.operationName = name
+// GetOperation returns the operation
+func (operation *Operation) GetOperation() *action.Operation {
+	return operation.Operation
 }
 
-// ManagerInterface ... defines the set of methods which must be implemented by a harvest manager
-type ManagerInterface interface {
-	Start()
-	End()
-	Save()
+func newOperation(process *action.Process, content string) *action.Operation {
+	return &*process.CreateOperation(content)
 }
 
-// WisplyManager represents a general manager
-type WisplyManager struct {
-	process *WisplyProcess
+// HarvestingOperation is the operation which harvest something
+type HarvestingOperation struct {
+	*Operation
 }
 
-// GetProcess returns the proces of the manager
-func (manager *WisplyManager) GetProcess() *WisplyProcess {
-	return manager.process
+func (operation *HarvestingOperation) failed() {
+	operation.ChangeResult("danger")
+
+	msg := action.Message{
+		Name: "operation-failed",
+	}
+
+	operation.Operation.Finish()
+	operation.TellProcess(msg)
 }
 
-// SetProcess sets the process
-func (manager *WisplyManager) SetProcess(process *WisplyProcess) {
-	manager.process = process
+func (operation *HarvestingOperation) getCurrentToken() string {
+	token := operation.process.GetToken("identifiers")
+	if token == "" {
+		lastProcess := operation.GetRepository().LastProcess
+		token = GetProcessToken(lastProcess, "identifiers")
+	}
+	return token
+}
+
+func (operation *HarvestingOperation) succeeded() {
+	operation.succedded()
+}
+
+// constructor
+func newHarvestingOperation(harvestProcess *Process, name string) *HarvestingOperation {
+	return &HarvestingOperation{
+		Operation: &Operation{
+			process:   harvestProcess,
+			Operation: newOperation(harvestProcess.Process, "Harvest "+name),
+		},
+	}
 }

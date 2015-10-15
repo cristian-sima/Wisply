@@ -15,8 +15,8 @@ type Model struct {
 // GetAllInstitutions returns an array of Institution with all institutions
 func (model *Model) GetAllInstitutions() []Institution {
 	var list []Institution
-	sql := "SELECT id, name, url, description, logoURL, wikiURL, wikiID FROM institution"
-	rows, _ := database.Database.Query(sql)
+	sql := "SELECT `id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID` FROM `institution`"
+	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		institution := Institution{}
 		rows.Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description, &institution.LogoURL, &institution.WikiURL, &institution.WikiID)
@@ -44,7 +44,7 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 	wikiID := institutionDetails["wikiID"].(string)
 
 	sql := "INSERT INTO `institution` (`name`, `description`, `url`, `logoURL`, `wikiURL`, `wikiID`) VALUES (?, ?, ?, ?, ?, ?)"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.Exec(name, description, url, logoURL, wikiURL, wikiID)
 
 	if err != nil {
@@ -58,11 +58,11 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 // GetAllRepositories returns an array of Repository with all repositories
 func (model *Model) GetAllRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT id, name, url, description, status, institution, category FROM repository"
-	rows, _ := database.Database.Query(sql)
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM `repository`"
+	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
-		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
+		rows.Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL, &repository.LastProcess)
 		list = append(list, repository)
 	}
 	return list
@@ -73,7 +73,7 @@ func (model *Model) GetAllStatus() []Repository {
 	var list []Repository
 
 	sql := "SELECT id, status FROM repository"
-	rows, _ := database.Database.Query(sql)
+	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
 		rows.Scan(&repository.ID, &repository.Status)
@@ -93,7 +93,7 @@ func NewInstitution(ID string) (*Institution, error) {
 
 	fieldsList := "`id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID`"
 	sql := "SELECT " + fieldsList + " FROM institution WHERE id = ?"
-	query, err := database.Database.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 
 	query.QueryRow(ID).Scan(&institution.ID, &institution.Name, &institution.URL, &institution.Description, &institution.LogoURL, &institution.WikiURL, &institution.WikiID)
 
@@ -112,12 +112,12 @@ func NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, name, url, description, status, institution, category FROM repository WHERE id = ?"
-	query, err := database.Database.Prepare(sql)
-	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category)
+	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM repository WHERE id = ?"
+	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return repository, errors.New("No repository like that")
 	}
+	query.QueryRow(ID).Scan(&repository.ID, &repository.Name, &repository.URL, &repository.Description, &repository.Status, &repository.Institution, &repository.Category, &repository.PublicURL, &repository.LastProcess)
 	return repository, nil
 }
 
@@ -145,10 +145,11 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 	description := repositoryDetails["description"].(string)
 	url := repositoryDetails["url"].(string)
 	institutionID := repositoryDetails["institution"].(string)
-	category := "EPrints"
-	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`, category) VALUES (?, ?, ?, ?, ?)"
-	query, err := database.Database.Prepare(sql)
-	query.Exec(name, description, url, institutionID, category)
+	category := repositoryDetails["category"].(string)
+	publicURL := repositoryDetails["public-url"].(string)
+	sql := "INSERT INTO `repository` (`name`, `description`, `url`, `institution`, `category`, `public_url`) VALUES (?, ?, ?, ?, ?, ?)"
+	query, err := database.Connection.Prepare(sql)
+	query.Exec(name, description, url, institutionID, category, publicURL)
 	if err != nil {
 		problem.Message = "No repository like that"
 		return problem, errors.New("Error")
@@ -160,7 +161,7 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 // CountRepositories returns the number of repositories
 func CountRepositories() int {
 	var number int
-	query, _ := database.Database.Prepare("SELECT count(*) FROM repository")
+	query, _ := database.Connection.Prepare("SELECT count(*) FROM repository")
 	query.QueryRow().Scan(&number)
 	return number
 }

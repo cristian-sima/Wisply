@@ -1,19 +1,19 @@
 <link rel="stylesheet" href="/static/3rd_party/others/css/keys.css" property='stylesheet'>
 <div class="page-header">
   <div class="row">
-     <div class="col-lg-4 col-md-5 col-sm-5">
-        <div class="panel panel-default" >
-           <div class="panel-heading">
-              <h3 class="panel-title">How can we help you?</h3>
-           </div>
-           <div class="panel-body">
-              <ul>
-                <li><a class="scroll" href="#FAQ">FAQ</a></li>
-                <li><a class="scroll" href="#legal-aspects">Legal aspects</a></li>
-              </ul>
-           </div>
+    <div class="col-lg-4 col-md-5 col-sm-5">
+      <div class="panel panel-default" >
+        <div class="panel-heading">
+          <h3 class="panel-title">How can we help you?</h3>
         </div>
-     </div>
+        <div class="panel-body">
+          <ul>
+            <li><a class="scroll" href="#FAQ">FAQ</a></li>
+            <li><a class="scroll" href="#legal-aspects">Legal aspects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="col-lg-8 col-md-7 col-sm-7">
       <div class="panel panel-default">
         <div class="panel-heading" style="padding-bottom:0px">
@@ -29,10 +29,10 @@
 
           <section>
             <h2 id="#FAQ">FAQ</h2>
-              <ol>
-                <li><a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?</a>
-                </li>
-              </ol>
+            <ol>
+              <li><a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?</a>
+              </li>
+            </ol>
             <section id="help-answers">
               <h2>Answers</h2>
               <article id="help-answers-1" class="well">

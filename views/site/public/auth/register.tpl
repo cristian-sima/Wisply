@@ -45,17 +45,17 @@
                 </div>
               </fieldset>
             </form>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            Go back to the <a href="/auth/login"> Login</a> form.<br />
-            <!--Do you need to recover your details? <a href="/auth/recover">Recover</a>-->
+        <div class="form-group">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              Go back to the <a href="/auth/login"> Login</a> form.<br />
+              <!--Do you need to recover your details? <a href="/auth/recover">Recover</a>-->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<script src="/static/js/static/auth/register.js"></script>
+  <script src="/static/js/static/auth/register.js"></script>

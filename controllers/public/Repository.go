@@ -1,6 +1,10 @@
 package public
 
-import repository "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/harvest"
+	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
+)
 
 // RepositoryController managers the operations for displaying repositories
 type RepositoryController struct {
@@ -23,16 +27,23 @@ func (controller *RepositoryController) List() {
 // ShowRepository shows the details regarding a repository
 func (controller *RepositoryController) ShowRepository() {
 	ID := controller.Ctx.Input.Param(":id")
-	rep, err := repository.NewRepository(ID)
-	institution := rep.GetInstitution()
-	identification := rep.GetIdentification()
+	repo, err := repository.NewRepository(ID)
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		controller.SetCustomTitle(rep.Name)
-		controller.Data["repository"] = rep
-		controller.Data["institution"] = institution
-		controller.Data["identification"] = identification
+		controller.Data["repository"] = repo
+		controller.SetCustomTitle(repo.Name)
+
+		controller.Data["institution"] = repo.GetInstitution()
+		controller.Data["identification"] = repo.GetIdentification()
+
+		if repo.HasBeenProcessed() {
+			process := harvest.NewProcess(repo.LastProcess)
+			controller.Data["collections"] = wisply.GetCollections(repo.ID)
+			controller.Data["process"] = process
+			controller.IndicateLastModification(process.Process.End)
+		}
+
 		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/repository/repository.tpl"
 	}

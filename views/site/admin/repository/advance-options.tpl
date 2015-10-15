@@ -7,24 +7,24 @@
       <li class="active">Advance options</li>
     </ul></div>
     <div class="panel-body">
-        <div class="row" >
-          <div class="col-md-12">
-            <div>
-              <h2>Modify</h2>
-              <div class="well">
-                You can use this option to modify the details of the repository. It is impossible to modify the Base URL
-                <a href="/admin/repositories/modify/{{ .repository.ID }}" class="btn btn-primary">Modify repository</a>
-              </div>
+      <div class="row" >
+        <div class="col-md-12">
+          <div>
+            <h2>Modify</h2>
+            <div class="well">
+              You can use this option to modify the details of the repository. <br/>
+              <a href="/admin/repositories/modify/{{ .repository.ID }}" class="btn btn-primary">Modify repository</a>
             </div>
-            <div>
-              <h2>Delete</h2>
-              <div class="well">
-                Please note that the repository can not be recovered.
-                <a data-id="" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository</a>
-              </div>
+          </div>
+          <div>
+            <h2>Delete</h2>
+            <div class="well">
+              <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the repository can not be recovered.</span></h5><br />
+              <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository from Wisply</a>
             </div>
           </div>
         </div>
+      </div>
     </div>
   </div>
   <style>

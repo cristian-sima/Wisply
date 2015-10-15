@@ -5,7 +5,6 @@ import (
 	"time"
 
 	auth "github.com/cristian-sima/Wisply/models/auth"
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // WisplyController inherits the MessageController
@@ -14,7 +13,6 @@ type WisplyController struct {
 	MessageController
 	AccountConnected bool
 	Account          *auth.Account
-	Model            wisply.Model
 }
 
 // GenerateXSRF generates and sends to template the XSRF code

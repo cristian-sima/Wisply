@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/websocket"
 )
@@ -46,13 +45,13 @@ func (hub *Hub) CreateConnection(response http.ResponseWriter, request *http.Req
 
 // SendMessage sends only one message to a single connection
 func (hub *Hub) SendMessage(message *Message, connection *Connection) {
-	hub.log("--> Hub: I send to a single connection the message: ")
+	// hub.log("--> Hub: I send to a single connection the message: ")
 	hub.sendWebsocket(message, connection)
 }
 
 // SendGroupMessage sends a message to a GROUP of connections
 func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
-	hub.log("I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
+	// hub.log("I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
 	for _, connection := range group {
 		hub.sendWebsocket(message, connection)
 	}
@@ -60,8 +59,10 @@ func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
 
 // BroadcastMessage sends a message to ALL the connection from the hub
 func (hub *Hub) BroadcastMessage(message *Message) {
-	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
-	hub.broadcast <- message
+	// 	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
+	if hub.broadcast != nil {
+		hub.broadcast <- message
+	}
 }
 
 // Run starts the main chanel. It registers, unregisters and broadcasts messages
@@ -83,12 +84,18 @@ func (hub *Hub) Run() {
 
 // log prints a message in a nice format
 func (hub *Hub) log(message string) {
-	fmt.Println("--> Hub: " + message)
+	// fmt.Println("--> Hub: " + message)
 }
 
 // sendWebsocket converts the message to a websocket and sends it to the connection
 func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
-	fmt.Println(message)
+
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Hub error ignored:")
+		}
+	}()
+
 	ws, err := json.Marshal(&message)
 	if err != nil {
 		hub.log("I got an error when I tried to compress the websocket message into json at sendWebsocket[ at line 94]. Here is the error:")
@@ -96,8 +103,9 @@ func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
 	}
 	select {
 	case connection.send <- ws:
-		hub.log("Websocket sent")
+		//	hub.log("Websocket sent")
 	default:
+		fmt.Println("a ajuns aici")
 		close(connection.send)
 		delete(hub.connections, connection)
 	}

@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -15,19 +16,26 @@ type RepositoryController struct {
 
 // List shows all the repositories
 func (controller *RepositoryController) List() {
-	var exists bool
 	list := controller.model.GetAllRepositories()
-	exists = (len(list) != 0)
-	controller.Data["anything"] = exists
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.SetCustomTitle("Admin - Repositories")
 	controller.TplNames = "site/admin/repository/list.tpl"
 }
 
+// ShowTypes displays the types which are available
+func (controller *RepositoryController) ShowTypes() {
+	controller.Data["institution"] = strings.TrimSpace(controller.GetString("institution"))
+	controller.TplNames = "site/admin/repository/add/category.tpl"
+	controller.SetCustomTitle("Add Repository")
+}
+
 // Add shows the form to add a new repository
 func (controller *RepositoryController) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
+	selected, _ := strconv.Atoi(strings.TrimSpace(controller.GetString("institution")))
+	controller.Data["selectedInstitution"] = selected
+	controller.Data["category"] = strings.TrimSpace(controller.GetString("category"))
 	controller.SetCustomTitle("Add Repository")
 	controller.showAddForm()
 }
@@ -40,6 +48,8 @@ func (controller *RepositoryController) Insert() {
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
 	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
+	repositoryDetails["public-url"] = strings.TrimSpace(controller.GetString("repository-public-url"))
+	repositoryDetails["category"] = strings.TrimSpace(controller.GetString("repository-category"))
 
 	problems, err := controller.model.InsertNewRepository(repositoryDetails)
 	if err != nil {
@@ -61,11 +71,8 @@ func (controller *RepositoryController) Modify() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		repositoryDetails := map[string]string{
-			"Name":        repository.Name,
-			"Description": repository.Description,
-		}
-		controller.showModifyForm(repositoryDetails)
+		controller.Data["repository"] = repository
+		controller.showModifyForm()
 	}
 }
 
@@ -80,6 +87,7 @@ func (controller *RepositoryController) Update() {
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
 	repositoryDetails["description"] = strings.TrimSpace(controller.GetString("repository-description"))
 	repositoryDetails["institution"] = strings.TrimSpace(controller.GetString("repository-institution"))
+	repositoryDetails["url"] = strings.TrimSpace(controller.GetString("repository-URL"))
 
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
@@ -102,6 +110,10 @@ func (controller *RepositoryController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		processes := harvest.GetProcessesByRepository(repository.ID)
+		for _, process := range processes {
+			process.Delete()
+		}
 		databaseError := repository.Delete()
 		if databaseError != nil {
 			controller.Abort("databaseError")
@@ -111,11 +123,7 @@ func (controller *RepositoryController) Delete() {
 	}
 }
 
-func (controller *RepositoryController) showModifyForm(repository map[string]string) {
-	controller.Data["repositoryName"] = repository["Name"]
-	controller.Data["repositoryUrl"] = repository["Url"]
-	controller.Data["repositoryDescription"] = repository["Description"]
-	controller.Data["repositoryInstitution"] = repository["Institution"]
+func (controller *RepositoryController) showModifyForm() {
 	controller.showForm("Modify", "Modify this repository")
 }
 

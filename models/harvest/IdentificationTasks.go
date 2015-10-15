@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // InsertIdentificationTask represents a task that inserts the identification into database
@@ -19,7 +19,6 @@ type InsertIdentificationTask struct {
 // Insert inserts the identification details
 func (task *InsertIdentificationTask) Insert(identification *wisply.Identificationer) error {
 	err := task.clearTables()
-
 	if err != nil {
 		task.ChangeResult("danger")
 		task.Finish(err.Error())
@@ -30,26 +29,19 @@ func (task *InsertIdentificationTask) Insert(identification *wisply.Identificati
 }
 
 func (task *InsertIdentificationTask) clearTables() error {
-
 	ID := task.repository.ID
-
 	sql := "DELETE from `repository_identification` WHERE repository=?"
 	query, err1 := database.Connection.Prepare(sql)
-
 	if err1 != nil {
 		return errors.New("Error while trying to clear the repository_identification table: <br />" + err1.Error())
 	}
-
 	query.Exec(strconv.Itoa(ID))
-
 	sql2 := "DELETE from `repository_email` WHERE repository=?"
 	query2, err2 := database.Connection.Prepare(sql2)
-
 	if err2 != nil {
 		return errors.New("Error while trying to clear the repository_email table: <br />" + err2.Error())
 	}
 	query2.Exec(strconv.Itoa(ID))
-
 	return nil
 }
 
@@ -68,19 +60,14 @@ func (task *InsertIdentificationTask) insertData(identification *wisply.Identifi
 	}
 	task.Finish("Success")
 	return nil
-
 }
 
 func (task *InsertIdentificationTask) insertEmails(emails []string) error {
-
 	ID := strconv.Itoa(task.repository.ID)
-
 	for _, email := range emails {
-
 		sqlColumns := "(`repository`, `email`)"
 		sqlValues := "(?, ?)"
 		sql := "INSERT INTO `repository_email` " + sqlColumns + " VALUES " + sqlValues
-
 		query, err := database.Connection.Prepare(sql)
 		if err != nil {
 			return errors.New("There was problem while trying to insert the email addresses: " + err.Error())
@@ -93,9 +80,7 @@ func (task *InsertIdentificationTask) insertEmails(emails []string) error {
 func (task *InsertIdentificationTask) insertDetails(identification *wisply.Identificationer) error {
 
 	modifyName := "UPDATE `repository` SET `name`=? WHERE `id` = ?"
-
 	query1, err1 := database.Connection.Prepare(modifyName)
-
 	if err1 != nil {
 		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err1.Error())
 	}

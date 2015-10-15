@@ -18,18 +18,7 @@ func (operation *HarvestingRecords) Start() {
 }
 
 func (operation *HarvestingRecords) start() {
-	// err := operation.clear()
-	// if err != nil {
-	// 	operation.failed()
-	// } else {
 	operation.multiRequest()
-	// }
-}
-
-func (operation *HarvestingRecords) clear() error {
-	rem := operation.Operation.GetRepository()
-	task := newInsertRecordsTask(operation, rem)
-	return task.Clear()
 }
 
 func (operation *HarvestingRecords) multiRequest() {
@@ -41,6 +30,7 @@ func (operation *HarvestingRecords) multiRequest() {
 	operation.process.SaveToken("records", token)
 	hasMoreRecords = true // in order to enter in the loop
 	initNumberOfRecors := operation.process.Records
+
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)
 		if err == nil {
@@ -54,6 +44,7 @@ func (operation *HarvestingRecords) multiRequest() {
 			operation.process.SaveToken("records", lastToken)
 		}
 	}
+
 	if err != nil {
 		operation.failed()
 	} else {
@@ -61,19 +52,20 @@ func (operation *HarvestingRecords) multiRequest() {
 	}
 }
 
+func (operation *HarvestingRecords) clear() error {
+	rem := operation.Operation.GetRepository()
+	task := newInsertRecordsTask(operation, rem)
+	return task.Clear()
+}
+
 func (operation *HarvestingRecords) tryToGet(token string) error {
-
 	rem := operation.GetRemote()
-
 	task := newGetTask(operation, rem)
-
 	content, err := task.GetRecords(token)
-
 	if err != nil {
 		return err
 	}
 	return operation.tryToParse(content)
-
 }
 
 func (operation *HarvestingRecords) tryToParse(page []byte) error {

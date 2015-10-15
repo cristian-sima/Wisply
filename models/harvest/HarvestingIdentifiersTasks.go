@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // InsertIdentifiersTask represents a task that inserts the identifiers into database
@@ -20,33 +20,24 @@ type InsertIdentifiersTask struct {
 
 // Insert clears the tables and inserts the identifiers
 func (task *InsertIdentifiersTask) Insert(identifiers []wisply.Identifier) error {
-
 	err := task.insertIdentifiers(identifiers)
-
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
-
 	// execute buffers
-
 	err = task.identifiersBuffer.Exec()
-
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
-
 	err = task.setsBuffer.Exec()
-
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
-
 	number := strconv.Itoa(len(identifiers))
 	task.Finish(number + " identifiers inserted")
-
 	return nil
 }
 
@@ -57,31 +48,21 @@ func (task *InsertIdentifiersTask) hasProblems(err error) {
 
 // Clear deletes all identifiers and sets
 func (task *InsertIdentifiersTask) Clear() error {
-
 	ID := task.repository.ID
-
 	sql := "DELETE from `identifier` WHERE repository=?"
 	query, err := database.Connection.Prepare(sql)
-
 	if err != nil {
 		return errors.New("Error while trying to clear the `identifier` table: <br />" + err.Error())
 	}
-
 	query.Exec(ID)
-
 	// clear sets
-
 	sql = "DELETE from `identifier_set` WHERE repository=?"
 	query, err = database.Connection.Prepare(sql)
-
 	if err != nil {
 		return errors.New("Error while trying to clear the `identifier_set` table: <br />" + err.Error())
 	}
-
 	task.Finish("All the previous identifiers and sets have been deleted")
-
 	_, err = query.Exec(ID)
-
 	return err
 }
 
@@ -110,7 +91,6 @@ func (task *InsertIdentifiersTask) insertIdentifier(identifier wisply.Identifier
 func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) error {
 	ID := task.repository.ID
 	task.identifiersBuffer.AddRow(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
-
 	return nil
 }
 

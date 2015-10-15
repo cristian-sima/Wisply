@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
 	"github.com/cristian-sima/Wisply/models/repository"
+	wisply "github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // InsertCollectionsTask represents a task that inserts the collections into database
@@ -19,23 +19,18 @@ type InsertCollectionsTask struct {
 
 // Insert clears the table and then inserts them
 func (task *InsertCollectionsTask) Insert(collections []wisply.Collectioner) error {
-
 	err := task.clearTable()
-
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
 	err = task.insertData(collections)
-
 	if err != nil {
 		task.hasProblems(err)
 		return err
 	}
-
 	number := strconv.Itoa(len(collections))
 	task.Finish(number + " collections inserted")
-
 	return nil
 }
 

@@ -12,16 +12,11 @@ import (
 
 // CreateProcess creates a new harvest process
 func CreateProcess(repositoryID string, controller Controller) *Process {
-
 	process := &*action.CreateProcess("Harvest")
-
 	harvestProcess := buildProcess(repositoryID, process)
 	harvestProcess.controller = controller
-
 	harvestID := insertHarvestProcess(harvestProcess)
-
 	harvestProcess.HarvestID = harvestID
-
 	return harvestProcess
 }
 

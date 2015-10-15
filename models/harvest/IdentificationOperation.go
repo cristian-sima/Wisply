@@ -15,14 +15,9 @@ func (operation *IdentificationOperation) Start() {
 }
 
 func (operation *IdentificationOperation) tryToGet() {
-
 	rem := operation.process.GetRemoteServer()
-
-	// create a task to request the server
 	task := newGetTask(operation, rem)
-
 	content, err := task.Identify()
-
 	if err != nil {
 		operation.failed()
 	} else {
@@ -31,13 +26,9 @@ func (operation *IdentificationOperation) tryToGet() {
 }
 
 func (operation *IdentificationOperation) tryToParse(page []byte) {
-
 	rem := operation.process.GetRemoteServer()
-
 	task := newParseTask(operation, rem)
-
 	response, err := task.GetIdentification(page)
-
 	if err != nil {
 		operation.failed()
 	} else {

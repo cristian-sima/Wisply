@@ -13,6 +13,7 @@ type SQLBuffer struct {
 	questions string
 	table     string
 	columns   string
+	internalError error
 }
 
 // AddRow adds a new row to the buffer

@@ -3,7 +3,6 @@ package oai
 import (
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -18,6 +17,7 @@ type EPrintsRepository struct {
 	finishToken  string
 	request      *protocol.Request
 	lastResponse *protocol.Response
+	filter       filter
 }
 
 // ------------------------- GET
@@ -159,14 +159,14 @@ func (repository *EPrintsRepository) GetRecords(content []byte) ([]wisply.Record
 				Datestamp:  record.Header.DateStamp,
 				Keys:       keys,
 			}
-			records = append(records, record)
+			if repository.filter.isRecordAllowed(record) {
+				records = append(records, record)
+			}
 		}
 	}
-
 	if len(remoteRecords) != 0 {
 		repository.prepareFinishToken()
 	}
-
 	return records, nil
 }
 
@@ -237,8 +237,6 @@ func (repository *EPrintsRepository) prepareFinishToken() {
 
 	record := resp.ListRecords.Records[len(resp.ListRecords.Records)-1]
 	identifier := record.Header.Identifier
-	fmt.Println("identifier")
-	fmt.Println(identifier)
 
 	elements := strings.Split(identifier, ":")
 
@@ -260,5 +258,6 @@ func NewEPrints(rep *repository.Repository) wisply.RepositoryInterface {
 	return &EPrintsRepository{
 		Repository: rep,
 		request:    req,
+		filter:     newFilter(rep.GetLocalRepository().GetFilter()),
 	}
 }

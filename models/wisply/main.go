@@ -27,6 +27,9 @@ func deleteResources(repositoryID int) {
 	sql := "DELETE FROM `repository_resource` WHERE `repository` = ?"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec(repositoryID)
+	sql = "DELETE FROM `resource_key` WHERE `repository` = ?"
+	query, _ = database.Connection.Prepare(sql)
+	query.Exec(repositoryID)
 }
 
 func deleteFormats(repositoryID int) {

@@ -229,25 +229,69 @@ func (process *Process) ChangeCurrentOperation(operation Operationer) {
 // UpdateFormats updates the number of formats
 func (process *Process) updateFormats(number int) error {
 	process.Formats = process.Formats + number
-	return process.updateStatistics("formats", process.Formats)
+	return process.updateStatistics("formats", number)
 }
 
 // UpdateCollections updates the number of collections
 func (process *Process) updateCollections(number int) error {
 	process.Collections = process.Collections + number
-	return process.updateStatistics("collections", process.Collections)
+	return process.updateStatistics("collections", number)
 }
 
 // UpdateRecords updates the number of records
 func (process *Process) updateRecords(number int) error {
 	process.Records = process.Records + number
-	return process.updateStatistics("records", process.Records)
+	return process.updateStatistics("records", number)
 }
 
 // updateIdentifiers updates the number of identifiers
 func (process *Process) updateIdentifiers(number int) error {
 	process.Identifiers = process.Identifiers + number
-	return process.updateStatistics("identifiers", process.Identifiers)
+	return process.updateStatistics("identifiers", number)
+}
+
+func (process *Process) updateStatistics(name string, number int) error {
+	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
+	if err != nil {
+		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(number, process.HarvestID)
+	if err == nil {
+		process.broadcastStatistics(name)
+	}
+	return err
+}
+
+// broadcastStatistics tells the controller the number of "name" items where name is the parameter
+func (process *Process) broadcastStatistics(name string) {
+	var number int
+	switch name {
+	case "records":
+		number = process.Records
+		break
+	case "formats":
+		number = process.Formats
+		break
+	case "collections":
+		number = process.Collections
+		break
+	case "identifiers":
+		number = process.Identifiers
+		break
+	}
+	value := &struct {
+		Operation string
+		Number    int
+	}{
+		Operation: name,
+		Number:    number,
+	}
+	process.tellController(&Message{
+		Name:  "harvest-update",
+		Value: value,
+	})
 }
 
 // GetStatistics returns the number of formats, collections, records, identifiers
@@ -263,30 +307,6 @@ func (process *Process) GetStatistics() (int, int, int, int) {
 	query.QueryRow(process.HarvestID).Scan(&formats, &collections, &records, &identifiers)
 
 	return formats, collections, records, identifiers
-}
-
-func (process *Process) updateStatistics(name string, number int) error {
-	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
-	if err != nil {
-		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
-		fmt.Println(err)
-		return err
-	}
-	_, err = stmt.Exec(number, process.HarvestID)
-	if err == nil {
-		type content struct {
-			Operation string
-			Number    int
-		}
-		process.tellController(&Message{
-			Name: "harvest-update",
-			Value: &content{
-				Operation: name,
-				Number:    number,
-			},
-		})
-	}
-	return err
 }
 
 // ChangeRepositoryStatus changes the status of local repository

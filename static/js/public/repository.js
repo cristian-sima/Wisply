@@ -25,6 +25,10 @@ var PublicRepository = function() {
 			parameter: "-",
 			insideVerb: "|",
 		};
+		this.category = {
+			name : "University structure = Faculty of Humanities: School of Humanities: History",
+			id: 1,
+		};
 	};
 	Manager.prototype =
 		/** @lends PublicRepository.Manager */
@@ -116,28 +120,34 @@ var PublicRepository = function() {
 						}
 					});
 				}
-				initButtons();
+			initButtons();
 			},
 			/**
 			 * It shows the next resources
 			 * @param  {event} event The event which has been generated when the button has been clicked
 			 */
 			showNext: function() {
-				var newMin;
-				newMin = parseInt(this.min, 10) + this.resourcePerPage;
-				this.changeMin(newMin);
-				this.goUp();
-				this.updateHash();
+				var instance = this;
+				if (instance.min + instance.resourcePerPage < parseInt(instance.repository.totalRecords, 10)) {
+					var newMin;
+					newMin = parseInt(this.min, 10) + this.resourcePerPage;
+					this.changeMin(newMin);
+					this.goUp();
+					this.updateHash();
+				}
 			},
 			/**
 			 * It gets the previous resources
 			 */
 			showPrevious: function() {
-				var newMin;
-				newMin = parseInt(this.min, 10) - this.resourcePerPage;
-				this.changeMin(newMin);
-				this.goUp();
-				this.updateHash();
+				var instance = this;
+				if (instance.min >= instance.resourcePerPage) {
+					var newMin;
+					newMin = parseInt(this.min, 10) - this.resourcePerPage;
+					this.changeMin(newMin);
+					this.goUp();
+					this.updateHash();
+				}
 			},
 			/**
 			 * It changes the min value (The value from which the resources are displayed)
@@ -164,6 +174,12 @@ var PublicRepository = function() {
 				function getList() {
 					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcePerPage;
 				}
+				function getCategory() {
+					if(instance.category) {
+						return "category" + instance.delimitator.insideVerb + instance.category.id;
+					}
+					return "";
+				}
 				/**
 				 * It returns a string which holds all the verbs
 				 * @return {string} All the verbs as a string
@@ -171,6 +187,7 @@ var PublicRepository = function() {
 				function getVerbs() {
 					var verbs = [];
 					verbs.push(getList());
+					verbs.push(getCategory());
 					return verbs.join(instance.delimitator.verb);
 				}
 				window.location.hash = getVerbs();
@@ -215,6 +232,13 @@ var PublicRepository = function() {
 				this.verbs = extractVerbs(hash);
 				this.updateListVerb();
 				this.getResources();
+			},
+
+			removeCategory: function() {
+				var instance = this;
+				instance.min = 0;
+				instance.category = undefined;
+				instance.updateHash();
 			},
 			/**
 			 * It returns a verb from the list of verbs
@@ -290,14 +314,62 @@ var PublicRepository = function() {
 						$(".next, .previous").show();
 				}
 
+				function updateTop() {
+					function getShowing() {
+						var start = instance.min, difference,
+							end = instance.min + instance.resourcePerPage,
+							text = "", html = "";
+
+						if ((start === 0)) {
+							if (instance.category) {
+								text = "Showing first " + instance.resourcePerPage + " resources of a total number of " + instance.repository.totalRecords;
+							} else {
+								text = "Last resources:";
+							}
+						} if(start + instance.resourcePerPage >= instance.repository.totalRecords ) {
+							difference = instance.repository.totalRecords - start;
+							text = "Showing last " +  difference + " resources of total " + instance.repository.totalRecords + "";
+						} else {
+							text = "Showing " +  instance.resourcePerPage + " resources from " + start + " to " + end + " of " + instance.repository.totalRecords + "";
+						}
+						 html += "<span class='text-muted'>";
+						 html += text;
+						 html += "</span>";
+						 return html;
+					}
+					function getCategory() {
+						var text = "";
+						if (instance.category) {
+							text = '<span class="label label-info">' + instance.category.name + '</span> <a data-toggle="tooltip" data-id="' + instance.category.id + '" id="remove-category" href="#" data-original-title="Remove category"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
+						} else {
+							text = "";
+						}
+						return text;
+					}
+					var html = "";
+					html += "<div>";
+					html += "<div>" + getShowing() + "</div>";
+					html += "<div id='category'>" + getCategory() + "</div>";
+					html += "<br /></div>";
+					$("#repository-top").html(html);
+				}
+				function initCategory() {
+					$("#remove-category").click(function(event) {
+						event.preventDefault();
+						instance.removeCategory();
+					});
+				}
+				updateTop();
 				updateButtons();
 				showButtons();
+				wisply.activateTooltip();
+				initCategory();
 			},
 			/**
 			 * It takes the user up to the list of resources
 			 */
 			goUp: function() {
-				var listPosition = parseInt($("#repository-before-resources").offset().top, 10) - 70;
+				var listPosition = parseInt($("#repository-before-resources").offset().top, 10) - 160;
 				$('html, body').animate({
 					scrollTop: listPosition,
 				}, 100);

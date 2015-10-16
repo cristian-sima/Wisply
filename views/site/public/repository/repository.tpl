@@ -55,14 +55,6 @@
                 <tbody>
                   <tr>
                     <td>
-                      <span class="badge badge-info">{{ .process.Formats }}</span>
-                    </td>
-                    <td>
-                      formats
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
                       <span class="badge badge-info">{{ .process.Collections }}</span>
                     </td>
                     <td>
@@ -82,12 +74,16 @@
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
-              <div id="repository-top"></div>
-              <div id="repository-before-resources"></div>
+              <div id="repository-top">
+
+              </div>
+              <div id="repository-before-resources">
+              </span>
+            </div>
               <div id="repository-resources"></div>
               <ul class="pager">
-                <li class="previous" ><a href="#">← Older</a></li>
-                <li class="next"><a href="#">Newer →</a></li>
+                <li class="previous" style="display:none"><a href="#">← Older</a></li>
+                <li class="next" style="display:none"><a href="#">Newer →</a></li>
               </ul>
               <div id="repository-bottom"></div>
             </div>

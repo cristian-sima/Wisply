@@ -2,7 +2,6 @@ package oai
 
 import (
 	"encoding/json"
-	"fmt"
 	"regexp"
 )
 
@@ -17,10 +16,12 @@ type structure struct {
 }
 
 type filter struct {
-	data     structure
-	isActive bool
+	data                      structure
+	isActive                  bool
+	rejectedRecordsIdentifier []string
 }
 
+// It checks if the keys of the records are the same as the filter one
 func (filter *filter) isRecordAllowed(record Record) bool {
 	if !filter.isActive {
 		return true
@@ -30,7 +31,20 @@ func (filter *filter) isRecordAllowed(record Record) bool {
 		regex := filter.data.Harvest.Records.Reject.Identifier + "(?s)"
 		matched, _ := regexp.MatchString(regex, value)
 		if matched {
-			fmt.Println("Filter rejected: " + key)
+			filter.rejectedRecordsIdentifier = append(filter.rejectedRecordsIdentifier, record.Identifier)
+			return false
+		}
+	}
+	return true
+}
+
+// It checks if a record with that identifier is present in the rejected list
+func (filter *filter) isIdentifierAllowed(identifier Identifier) bool {
+	if !filter.isActive {
+		return true
+	}
+	for _, element := range filter.rejectedRecordsIdentifier {
+		if element == identifier.Identifier {
 			return false
 		}
 	}

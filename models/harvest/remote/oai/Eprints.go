@@ -199,12 +199,14 @@ func (repository *EPrintsRepository) GetIdentifiers(content []byte) ([]wisply.Id
 
 	for _, remoteIdentifier := range remoteIdentifiers {
 
-		identifier := &Identifier{
+		identifier := Identifier{
 			Identifier: remoteIdentifier.Identifier,
 			Datestamp:  remoteIdentifier.DateStamp,
 			Spec:       remoteIdentifier.SetSpec,
 		}
-		identifiers = append(identifiers, identifier)
+		if repository.filter.isIdentifierAllowed(identifier) {
+			identifiers = append(identifiers, &identifier)
+		}
 	}
 
 	return identifiers, nil

@@ -1,4 +1,3 @@
-<div id="repository-top"></div>
 <table class="table">
   <tbody>
     {{range $index, $record := .records}}
@@ -42,9 +41,3 @@
     {{ end }}
   </tbody>
 </table>
-<ul class="pager">
-  <li class="previous" ><a href="#">← Older</a></li>
-  <li class="next"><a href="#">Newer →</a></li>
-</ul>
-
-<div id="repository-bottom"></div>

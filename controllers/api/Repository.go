@@ -47,8 +47,7 @@ func (controller *Repository) GetResources() {
 				controller.Data["collections"] = wisply.GetCollections(repo.ID)
 				controller.Data["process"] = harvest.NewProcess(repo.LastProcess)
 			}
-
-			controller.TplNames = "site/api/html/repository.tpl"
+			controller.TplNames = "site/api/repository/resources/html.tpl"
 		}
 	}
 }

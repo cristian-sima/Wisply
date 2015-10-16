@@ -49,13 +49,15 @@ var PublicRepository = function() {
 						"key": "Ctrl+left",
 						"callback": function() {
 							wisply.publicRepositoryModule.manager.showPrevious();
-						}
+						},
+						"description": "Receives the next page of resources",
 					}, {
 						"type": "keyup",
 						"key": "Ctrl+right",
 						"callback": function() {
 							wisply.publicRepositoryModule.manager.showNext();
-						}
+						},
+						"description": "Receives the previous page of resources",
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
@@ -80,6 +82,7 @@ var PublicRepository = function() {
 			 * It shows the wisply loading button
 			 */
 			showLoading: function() {
+				$(".next, .previous").hide();
 				$("#repository-resources").html('<div class="text-center">' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
@@ -272,11 +275,23 @@ var PublicRepository = function() {
 					}
 				}
 
+				/**
+				 * It updates the next and previous button
+				 */
 				function updateButtons() {
 					updatePreviousButton();
 					updateNextButton();
 				}
+
+				/**
+				 * It shows the buttons
+				 */
+				function showButtons() {
+						$(".next, .previous").show();
+				}
+
 				updateButtons();
+				showButtons();
 			},
 			/**
 			 * It takes the user up to the list of resources

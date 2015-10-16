@@ -65,7 +65,7 @@
             </article>
             <article id="accessibility-answers-2" class="well">
               <h3>Do you provide shortcuts?</h3>
-              Yes, you can use shortcuts. <br />This is a list of useful shortcuts:
+              Yes, we do. <br />This is a list of useful shortcuts:
               <ul>
                 <li> All pages
                   <ul class="light-keys">
@@ -73,7 +73,7 @@
                       <kbd>ALT</kbd> + <kbd>A</kbd> - Wisply goes to accessibility page
                     </li>
                     <li>
-                      <kbd>ALT</kbd> + <kbd>H</kbd> - Wisply goes to home page
+                      <kbd>ALT</kbd> + <kbd>W</kbd> - Wisply goes to home page
                     </li>
                     <li>
                       <kbd>ALT</kbd> + <kbd>C</kbd> - Wisply goes contact page
@@ -87,7 +87,22 @@
                     </li>
                   </ul>
                 </li>
+                <li> Repository page
+                  <ul class="light-keys">
+                    <li>
+                      <kbd>CTRL</kbd> + <kbd>LEFT</kbd> - Wisply gets the previous page
+                    </li>
+                    <li>
+                      <kbd>CTRL</kbd> + <kbd>RIGHT</kbd> - Wisply gets the next page
+                    </li>
+                  </ul>
+                </li>
               </ul>
+              <br />
+              <div class="alert alert-dismissible alert-info">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Protip!</strong> On every page you can find the key shortcuts by pressing <kbd>ALT</kbd> + <kbd>H</kbd> (remember H for Help) 
+              </div>
             </article>
           </section>
         </section>

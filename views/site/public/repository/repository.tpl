@@ -82,8 +82,14 @@
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
+              <div id="repository-top"></div>
               <div id="repository-before-resources"></div>
               <div id="repository-resources"></div>
+              <ul class="pager">
+                <li class="previous" ><a href="#">← Older</a></li>
+                <li class="next"><a href="#">Newer →</a></li>
+              </ul>
+              <div id="repository-bottom"></div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Collections -->

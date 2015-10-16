@@ -39,7 +39,8 @@ var Connection = function () {
         "key": "Alt+l",
         "callback": function () {
           wisply.connection.logout();
-        }
+        },
+        "description": "It logs you out",
       }];
       wisply.shortcutManager.activate(shortcuts);
     },

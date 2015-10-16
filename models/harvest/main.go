@@ -26,9 +26,10 @@ func buildProcess(ID string, process *action.Process) *Process {
 	remoteServer, _ := remote.New(local)
 
 	harvestProcess := &Process{
-		Process:    process,
-		remote:     remoteServer,
-		repository: local,
+		Process:          process,
+		remote:           remoteServer,
+		repository:       local,
+		notifyController: true,
 	}
 
 	return harvestProcess
@@ -160,14 +161,13 @@ func GetProcessesByRepository(repositoryID, number int) []*Process {
 		rows.Scan(&harvestID, &processID, &formats, &collections, &records, &identifiers)
 		rep, _ := repository.NewRepository(repID)
 		process := Process{
-			Formats:          formats,
-			Records:          records,
-			Collections:      collections,
-			Identifiers:      identifiers,
-			HarvestID:        harvestID,
-			repository:       rep,
-			notifyController: true,
-			Process:          action.NewProcess(processID),
+			Formats:     formats,
+			Records:     records,
+			Collections: collections,
+			Identifiers: identifiers,
+			HarvestID:   harvestID,
+			repository:  rep,
+			Process:     action.NewProcess(processID),
 		}
 		list = append(list, &process)
 	}

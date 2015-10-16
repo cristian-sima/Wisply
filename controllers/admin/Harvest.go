@@ -47,8 +47,6 @@ func (controller *HarvestController) RecoverProcess() {
 	harvestProcess := harvest.NewProcessByID(intID)
 	repID := harvestProcess.GetRepository().ID
 	delete(CurrentSessions, repID)
-	// the process must be finished
-
 	harvest.RecoverProcess(harvestProcess, controller)
 	process := &session{
 		Process: harvestProcess,
@@ -153,6 +151,7 @@ func run() {
 	for {
 		select {
 		case message := <-conduit:
+			fmt.Println("Controller message")
 			session, ok := CurrentSessions[message.GetRepository()]
 			if ok {
 				switch message.GetName() {

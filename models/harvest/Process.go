@@ -189,10 +189,10 @@ func (process *Process) delete() {
 }
 
 func (process *Process) processFails() {
+	process.ChangeRepositoryStatus("problems")
 	process.ChangeResult("warning")
 	process.delete()
 	process.Suspend()
-	process.ChangeRepositoryStatus("problems")
 }
 
 //
@@ -340,6 +340,7 @@ func (process *Process) SaveToken(name string, token string) {
 
 func (process *Process) tellController(simple *Message) {
 
+	fmt.Println(process.notifyController)
 	if process.notifyController && process.controller != nil && process.controller.GetConduit() != nil {
 
 		channel := process.controller.GetConduit()

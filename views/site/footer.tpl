@@ -13,7 +13,7 @@
           <a href="https://twitter.com/wisplyOfficial" target="_blank">Twitter</a>
         </li>
         <li>
-          <a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub</a>
+          <a href="/api">API & Developers</a>
         </li>
         <li>
           <a href="/help">Help</a>

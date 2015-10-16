@@ -72,7 +72,7 @@ var PublicRepository = function() {
 				var instance = this;
 				this.showLoading();
 				$.ajax({
-					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage,
+					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage + ".html",
 					success: function(html) {
 						instance.fired_NewResources(html);
 					}

@@ -178,22 +178,23 @@ func init() {
 			adminLogNS,
 		)
 
-	// api
-	// ----------------------------- Repository ----------------------------------
+		// api
+		// ----------------------------- Repository ----------------------------------
 
 	apiRepositoryNS := beego.NSNamespace("/repository",
 		beego.NSNamespace("/resources/:id",
 			beego.NSNamespace("/get",
-				beego.NSRouter("/:min/:number", &api.Repository{}, "GET:GetResources"),
+				beego.NSRouter("/:min/:number\\.:format", &api.Repository{}, "GET:GetResources"),
 			),
 		),
 	)
-
+	
 	// api
 	// ----------------------------- API -------------------------------
 
 	apiNS :=
 		beego.NewNamespace("/api",
+			beego.NSRouter("", &api.Static{}, "GET:ShowHomePage"),
 			apiRepositoryNS,
 		)
 

@@ -1,8 +1,9 @@
 package api
 
 import (
+	"encoding/json"
+
 	"github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/harvest"
 	"github.com/cristian-sima/Wisply/models/repository"
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
@@ -34,20 +35,27 @@ func (controller *Repository) GetResources() {
 		if err != nil {
 			controller.Abort("databaseError")
 		} else {
+			records := wisply.GetRecords(repo.ID, options)
 
-			controller.Data["repository"] = repo
-			controller.SetCustomTitle(repo.Name)
+			switch controller.Ctx.Input.Param(":format") {
+			case "html":
+				controller.Data["records"] = records
+				controller.TplNames = "site/api/repository/resources/html.tpl"
+				break
+			case "json":
 
-			controller.Data["institution"] = repo.GetInstitution()
-			controller.Data["identification"] = repo.GetIdentification()
-
-			controller.Data["records"] = wisply.GetRecords(repo.ID, options)
-
-			if repo.HasBeenProcessed() {
-				controller.Data["collections"] = wisply.GetCollections(repo.ID)
-				controller.Data["process"] = harvest.NewProcess(repo.LastProcess)
+				jsonRecords, _ := json.Marshal(struct {
+					Records []*wisply.Record `json:"Records"`
+				}{
+					Records: records,
+				})
+				controller.Data["jsonRecords"] = jsonRecords
+				controller.TplNames = "site/api/repository/resources/json.tpl"
+				break
+			default:
+				controller.TplNames = "site/api/problem.tpl"
+				break
 			}
-			controller.TplNames = "site/api/repository/resources/html.tpl"
 		}
 	}
 }

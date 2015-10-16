@@ -55,6 +55,10 @@ func (buffer *SQLBuffer) Exec() error {
 		return buffer.internalError
 	}
 
+	if buffer.memory == nil {
+		return nil
+	}
+
 	sqlStr := "INSERT INTO `" + buffer.table + "` (" + buffer.columns + ")" + " VALUES "
 	sqlStr += buffer.questions
 

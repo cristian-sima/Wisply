@@ -332,7 +332,138 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line58">line 58</a>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".confirmEmpty"><span class="type-signature">(static) </span>confirmEmpty<span class="signature">(repository)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It is called when the user wants to clear a repository. It asks for confirmation
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>repository</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Repository</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The reference to the repository object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -463,7 +594,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line104">line 104</a>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -494,14 +625,14 @@
 
     
 
-    <h4 class="name" id=".getDialogMessage"><span class="type-signature">(static) </span>getDialogMessage<span class="signature">(repository)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id=".empty"><span class="type-signature">(static) </span>empty<span class="signature">(repository)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It returns the object which contain the arguments for the confirmation dialog
+    It clears the contents of a repository
 </div>
 
 
@@ -594,7 +725,298 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line68">line 68</a>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line182">line 182</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getDeleteDialogMessage"><span class="type-signature">(static) </span>getDeleteDialogMessage<span class="signature">(type)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    It returns the object which contain the arguments for the confirmation dialog
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type of action: "delete", "clear"</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://bootboxjs.com/">http://bootboxjs.com/</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The arguements for dialog
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".getEmptyDialogMessage"><span class="type-signature">(static) </span>getEmptyDialogMessage<span class="signature">(type)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    It returns the object which contain the arguments for the confirmation dialog
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type of action: "delete", "clear"</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="admin_repository_list.js.html">admin/repository/list.js</a>, <a href="admin_repository_list.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -753,7 +1175,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Oct 15 2015 13:13:27 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Fri Oct 16 2015 10:32:49 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

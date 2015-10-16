@@ -18,6 +18,7 @@ type Process struct {
 	remote                                     remote.RepositoryInterface
 	controller                                 Controller
 	Records, Formats, Identifiers, Collections int
+	notifyController                           bool
 }
 
 // Start starts the process
@@ -339,7 +340,7 @@ func (process *Process) SaveToken(name string, token string) {
 
 func (process *Process) tellController(simple *Message) {
 
-	if process.controller != nil && process.controller.GetConduit() != nil {
+	if process.notifyController && process.controller != nil && process.controller.GetConduit() != nil {
 
 		channel := process.controller.GetConduit()
 

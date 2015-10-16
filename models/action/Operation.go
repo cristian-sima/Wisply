@@ -28,7 +28,7 @@ func (operation *Operation) TellProcess(message Message) {
 	var channel = operation.Process.GetOperationConduit()
 
 	if channel == nil {
-		fmt.Println("No channel for process")
+		panic("No channel for process")
 	} else {
 		msg := OperationMessage{
 			Message:   &message,

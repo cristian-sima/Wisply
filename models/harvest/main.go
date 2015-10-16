@@ -160,13 +160,14 @@ func GetProcessesByRepository(repositoryID, number int) []*Process {
 		rows.Scan(&harvestID, &processID, &formats, &collections, &records, &identifiers)
 		rep, _ := repository.NewRepository(repID)
 		process := Process{
-			Formats:     formats,
-			Records:     records,
-			Collections: collections,
-			Identifiers: identifiers,
-			HarvestID:   harvestID,
-			repository:  rep,
-			Process:     action.NewProcess(processID),
+			Formats:          formats,
+			Records:          records,
+			Collections:      collections,
+			Identifiers:      identifiers,
+			HarvestID:        harvestID,
+			repository:       rep,
+			notifyController: true,
+			Process:          action.NewProcess(processID),
 		}
 		list = append(list, &process)
 	}

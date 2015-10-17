@@ -2,6 +2,7 @@ package harvest
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
@@ -211,6 +212,7 @@ func (task *UpdateNumberOfRecordsTask) Perform() error {
 func (task *UpdateNumberOfRecordsTask) update() error {
 	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set` WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
 	sql := "UPDATE `repository_collection` SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
+	fmt.Println(sql)
 	_, err := database.Connection.Query(sql)
 	return err
 }

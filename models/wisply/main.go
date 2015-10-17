@@ -42,21 +42,18 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows *sql.Rows
 		err  error
 	)
-	fieldList := "record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource`"
-	fmt.Println("Collection is ")
-	fmt.Println("[" + options.Where["collection"] + "]")
+	fieldList := "record.`id`, record.`identifier`, record.`datestamp`"
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
-		sql := "SELECT record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
+		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
 		rows, err = database.Connection.Query(sql, repositoryID)
-		fmt.Println("all")
 	} else {
-		sql := "SELECT " + fieldList + " AS record INNER JOIN `identifier_set` ON record.identifier = identifier_set.identifier WHERE `identifier_set`.setSpec = ? ORDER BY record.id DESC " + options.GetLimit()
-		rows, err = database.Connection.Query(sql, options.Where["collection"])
+		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()
 		fmt.Println(sql)
-		fmt.Println("collection")
+		rows, err = database.Connection.Query(sql, options.Where["collection"])
 	}
+
 	if err != nil {
 		fmt.Println("error with the records sql")
 		fmt.Println(err)

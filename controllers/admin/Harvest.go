@@ -147,11 +147,9 @@ func (controller *HarvestController) decideManyRepositories(message *ws.Message,
 
 func run() {
 	fmt.Println("Running the controller!! ...")
-
 	for {
 		select {
 		case message := <-conduit:
-			fmt.Println("Controller message")
 			session, ok := CurrentSessions[message.GetRepository()]
 			if ok {
 				switch message.GetName() {

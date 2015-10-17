@@ -48,7 +48,7 @@ func (operation *HarvestingRecords) multiRequest() {
 	if err != nil {
 		operation.failed()
 	} else {
-		operation.updateCollections()
+		operation.succedded()
 	}
 }
 
@@ -90,17 +90,6 @@ func (operation *HarvestingRecords) insertRecords(records []wisply.Recorder) err
 	}
 	err = operation.process.updateRecords(len(records))
 	return err
-}
-
-func (operation *HarvestingRecords) updateCollections() {
-	repository := operation.Operation.GetRepository()
-	task := newUpdateNumberOfRecordsTask(operation, repository)
-	err := task.Perform()
-	if err != nil {
-		operation.failed()
-	} else {
-		operation.succedded()
-	}
 }
 
 // constructor

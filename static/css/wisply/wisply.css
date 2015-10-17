@@ -35,6 +35,10 @@ Author     Cristian Sima
   cursor:pointer;
 }
 
+.hover:hover{
+   text-decoration: underline;
+}
+
 /* collapsed sidebar styles */
 @media screen and (max-width: 767px) {
   .row-offcanvas {

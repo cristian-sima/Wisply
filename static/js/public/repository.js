@@ -116,7 +116,7 @@ var PublicRepository = function() {
 			 * It shows the wisply loading button
 			 */
 			showLoading: function() {
-				$(".next, .previous, #repository-top").hide();
+				$("#repository-top").hide();
 				$("#repository-resources").html('<div class="text-center"><br /><br /><br />' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
@@ -284,6 +284,7 @@ var PublicRepository = function() {
 			setCollection: function(id) {
 				var collection = this.repository.getCollection(id);
 				this.collection = collection;
+				this.min = 0;
 				this.goUp();
 				this.updateHash();
 			},
@@ -386,20 +387,24 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the previous button. Otherwise, it enables it
 				 */
 				function updatePreviousButton() {
-					if (manager.min < manager.resourcePerPage) {
+					if (manager.getCurrentTotalNumber() === 0 || manager.min < manager.resourcePerPage) {
 						$(".previous").addClass("disabled");
+						$(".previous").hide();
 					} else {
 						$(".previous").removeClass("disabled");
+						$(".previous").show();
 					}
 				}
 				/**
 				 * If there are no more resources, it disables the next button. Otherwise, it enables it
 				 */
 				function updateNextButton() {
-					if (manager.min + manager.resourcePerPage >= parseInt(manager.getCurrentTotalNumber(), 10)) {
+					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcePerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
 						$(".next").addClass("disabled");
+						$(".next").hide();
 					} else {
 						$(".next").removeClass("disabled");
+						$(".next").show();
 					}
 				}
 				/**
@@ -413,7 +418,7 @@ var PublicRepository = function() {
 				 * It shows the buttons
 				 */
 				function showElements() {
-					$(".next, .previous, #repository-top").show();
+					$("#repository-top").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -429,18 +434,23 @@ var PublicRepository = function() {
 							end = manager.min + manager.resourcePerPage,
 							text = "",
 							html = "";
-						if ((start === 0)) {
-							if (manager.collection) {
-								text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
-							} else {
-								text = "Last resources:";
-							}
+						if(manager.getCurrentTotalNumber() === 0) {
+								text = "There are no resources.";
 						}
-						if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
-							difference = manager.getCurrentTotalNumber() - start;
-							text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
-						} else {
-							text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
+						else {
+							if ((start === 0)) {
+								if (manager.collection) {
+									text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
+								} else {
+									text = "Last resources:";
+								}
+							}
+							if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
+								difference = manager.getCurrentTotalNumber() - start;
+								text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+							} else {
+								text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
+							}
 						}
 						html += "<span class='text-muted'>";
 						html += text;
@@ -613,7 +623,7 @@ var PublicRepository = function() {
 							} else {
 								text = "Hide all";
 							}
-							htmlLeft = "<a class='hover link show-all-collections'>" + text + "</a>";
+							htmlLeft = "<span href='' class='hover link show-all-collections text-muted'>" + text + "</span>";
 						}
 						return htmlLeft;
 					}
@@ -625,7 +635,7 @@ var PublicRepository = function() {
 						} else {
 							text = "Hide empty";
 						}
-						htmlRight = "<a class='hover link hide-empty-collections'>" + text + "</a>";
+						htmlRight = "<span href='' class='hover link hide-empty-collections text-muted'>" + text + "</span>";
 						return htmlRight;
 					}
 					var div = "";
@@ -655,10 +665,12 @@ var PublicRepository = function() {
 						});
 					}
 					function activateTop() {
-						$(".show-all-collections").click(function() {
+						$(".show-all-collections").click(function(event) {
+							event.preventDefault();
 							instance.toggleAllCollections();
 						});
-						$(".hide-empty-collections").click(function() {
+						$(".hide-empty-collections").click(function(event) {
+							event.preventDefault();
 							instance.toggleEmptyCollections();
 						});
 					}

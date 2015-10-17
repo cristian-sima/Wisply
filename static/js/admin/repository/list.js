@@ -129,7 +129,13 @@ var Repositories = function () {
         label: "Clear",
         className: "btn-danger",
         callback: function () {
+          var msg;
           wisply.repositoriesManager.empty(repository);
+          msg = "<div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of suger) :) <br />" + wisply.getLoadingImage("big") + "</div>";
+          wisply.message.dialog({
+            title: "Clearing repository...",
+            message: msg,
+          });
         }
       };
       buttons = {

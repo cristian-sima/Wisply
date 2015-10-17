@@ -84,10 +84,25 @@ var PublicRepository = function() {
 			 * It loads the resources from server according to the current settings
 			 */
 			getResources: function() {
-				var instance = this;
+				var instance = this,
+					collection = getCollection();
+				/**
+				 * Returns the ID of the current collection or an empty string if there are no collections
+				 * @return {number} The ID of current collection
+				 */
+				function getCollection() {
+					if(instance.collection) {
+						return instance.collection.Spec;
+					}
+					return "";
+				}
 				this.showLoading();
 				$.ajax({
-					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage + ".html",
+					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage,
+					data: {
+						"collection": getCollection(),
+						"format": "html",
+					},
 					success: function(html) {
 						instance.fired_NewResources(html);
 					}

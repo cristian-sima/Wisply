@@ -184,11 +184,11 @@ func init() {
 	apiRepositoryNS := beego.NSNamespace("/repository",
 		beego.NSNamespace("/resources/:id",
 			beego.NSNamespace("/get",
-				beego.NSRouter("/:min/:number\\.:format", &api.Repository{}, "GET:GetResources"),
+				beego.NSRouter("/:min/:number", &api.Repository{}, "GET:GetResources"),
 			),
 		),
 	)
-	
+
 	// api
 	// ----------------------------- API -------------------------------
 

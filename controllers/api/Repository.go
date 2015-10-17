@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
@@ -17,11 +18,10 @@ type Repository struct {
 func (controller *Repository) GetResources() {
 
 	ID := controller.Ctx.Input.Param(":id")
-
 	min := controller.Ctx.Input.Param(":min")
 	offset := controller.Ctx.Input.Param(":number")
-
 	repo, err := repository.NewRepository(ID)
+	collection := strings.TrimSpace(controller.GetString("collection"))
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -30,6 +30,9 @@ func (controller *Repository) GetResources() {
 			LimitMin: min,
 			Offset:   offset,
 			Limit:    100,
+			Where: map[string]string{
+				"collection": collection,
+			},
 		})
 
 		if err != nil {
@@ -37,7 +40,7 @@ func (controller *Repository) GetResources() {
 		} else {
 			records := wisply.GetRecords(repo.ID, options)
 
-			switch controller.Ctx.Input.Param(":format") {
+			switch strings.TrimSpace(controller.GetString("format")) {
 			case "html":
 				controller.Data["records"] = records
 				controller.TplNames = "site/api/repository/resources/html.tpl"

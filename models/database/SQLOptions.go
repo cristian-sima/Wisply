@@ -11,6 +11,7 @@ type Temp struct {
 	Offset   string // the actual limit from the client
 	OrderBy  string
 	Limit    int // used to limit the maximum number of resources
+	Where    map[string]string
 }
 
 // SQLOptions represents a valid SQL option object

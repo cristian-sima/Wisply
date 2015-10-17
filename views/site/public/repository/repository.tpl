@@ -61,8 +61,8 @@
             </div>
               <div id="repository-resources"></div>
               <ul class="pager">
-                <li class="previous" style="display:none"><a href="#">← Older</a></li>
-                <li class="next" style="display:none"><a href="#">Newer →</a></li>
+                <li class="previous" style="display:none"><a href="#">← Previous</a></li>
+                <li class="next" style="display:none"><a href="#">Next →</a></li>
               </ul>
               <div id="repository-bottom"></div>
             </div>
@@ -95,6 +95,16 @@ server.repository.getCollection = function (requestedID) {
   for(i=0; i < this.collections.length; i++) {
     collection = this.collections[i];
     if(parseInt(collection.ID, 10) === parseInt(requestedID, 10) ) {
+      return collection;
+    }
+  }
+  return false;
+};
+server.repository.getBySpec = function (requestedSet) {
+  var i, collection;
+  for(i=0; i < this.collections.length; i++) {
+    collection = this.collections[i];
+    if(collection.Spec === requestedSet ) {
       return collection;
     }
   }

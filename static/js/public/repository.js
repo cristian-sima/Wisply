@@ -8,14 +8,14 @@
  */
 var PublicRepository = function() {
 	'use strict';
-	String.prototype.count=function(s1) {
-	  return (this.length - this.replace(new RegExp(s1,"g"), '').length) / s1.length;
+	String.prototype.count = function(s1) {
+		return (this.length - this.replace(new RegExp(s1, "g"), '').length) / s1.length;
 	};
 	if (typeof String.prototype.startsWith != 'function') {
-	  // see below for better implementation!
-	  String.prototype.startsWith = function (str){
-	    return this.indexOf(str) === 0;
-	  };
+		// see below for better implementation!
+		String.prototype.startsWith = function(str) {
+			return this.indexOf(str) === 0;
+		};
 	}
 	/**
 	 * The constructor sets the default values
@@ -116,7 +116,7 @@ var PublicRepository = function() {
 			 * It shows the wisply loading button
 			 */
 			showLoading: function() {
-				$("#repository-top").hide();
+				$("#repository-top, .next, .previous").hide();
 				$("#repository-resources").html('<div class="text-center"><br /><br /><br />' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
@@ -434,10 +434,9 @@ var PublicRepository = function() {
 							end = manager.min + manager.resourcePerPage,
 							text = "",
 							html = "";
-						if(manager.getCurrentTotalNumber() === 0) {
-								text = "There are no resources.";
-						}
-						else {
+						if (manager.getCurrentTotalNumber() === 0) {
+							text = "There are no resources.";
+						} else {
 							if ((start === 0)) {
 								if (manager.collection) {
 									text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
@@ -447,7 +446,15 @@ var PublicRepository = function() {
 							}
 							if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
 								difference = manager.getCurrentTotalNumber() - start;
-								text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+								if (difference === manager.getCurrentTotalNumber()) {
+									if(difference === 1) {
+										text = "There is only one resource";
+									} else {
+										text = "There are only " + difference + " resources";
+									}
+								} else {
+									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+								}
 							} else {
 								text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
 							}
@@ -462,9 +469,45 @@ var PublicRepository = function() {
 					 * @return {string} The description for collections
 					 */
 					function getCollection() {
+						function getLabels() {
+							function getLabel(collection) {
+								var text = "", tooltip="", name = collection.Name;
+								if(elements.length != 1) {
+									if (name.length > 20) {
+										name = name.substring(0, 20) + "...";
+										tooltip = 'data-toggle="tooltip" data-original-title="' + collection.Name + '"';
+									}
+								}
+								text = '<span ' + tooltip + ' data-id="' + collection.ID + '" class="hover label label-info set-collection">' + name + '</span> ';
+								return text;
+							}
+
+							function getLast() {
+								var text = "";
+								text = '<a data-toggle="tooltip" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
+								return text;
+							}
+							var labelText = "",
+								currentSpec, parentSpec = "",
+								i, parent, elements, currentSet = manager.collection.Spec,
+								set;
+							elements = currentSet.split(":");
+							for (i = 0; i < elements.length; i++) {
+								set = elements[i];
+								currentSpec = parentSpec + set;
+								parent = manager.repository.getBySpec(currentSpec);
+								labelText += getLabel(parent);
+								parentSpec = currentSpec + ":";
+								if (i < elements.length - 1) {
+									labelText += " <span class='text-muted glyphicon glyphicon-menu-right'></span> ";
+								}
+							}
+							labelText += getLast();
+							return labelText;
+						}
 						var text = "";
 						if (manager.collection) {
-							text = '<span class="label label-info">' + manager.collection.Name + '</span> <a data-toggle="tooltip" data-id="' + manager.collection.id + '" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
+							text += getLabels();
 						} else {
 							text = "<br />";
 						}
@@ -476,6 +519,7 @@ var PublicRepository = function() {
 					html += "<div id='collection'>" + getCollection() + "</div>";
 					html += "<br /></div>";
 					$("#repository-top").html(html);
+					manager.sideGUI.activateCollection();
 				}
 				/**
 				 * It sets a listener for the remove collection button
@@ -524,25 +568,27 @@ var PublicRepository = function() {
 						function getLevel(collection) {
 							return parseInt(collection.Spec.count(":"), 10) + 1;
 						}
+
 						function isDirectChildrenOf(parent, child) {
-							return child.Spec.startsWith(parent.Spec) &&
-								 (getLevel(parent) + 1) === getLevel(child);
+							return child.Spec.startsWith(parent.Spec) && (getLevel(parent) + 1) === getLevel(child);
 						}
+
 						function removeEmpty(collections) {
 							var i, toReturn = [];
-							for (i=0; i < collections.length; i++) {
-								if(parseInt(collections[i].NumberOfResources, 10) !== 0) {
+							for (i = 0; i < collections.length; i++) {
+								if (parseInt(collections[i].NumberOfResources, 10) !== 0) {
 									toReturn.push(collections[i]);
 								}
 							}
 							return toReturn;
 						}
+
 						function getNextLevel(collections, currentCollection) {
 							var toProcess = [],
 								level = getLevel(currentCollection),
 								i,
 								checkCollection;
-							for (i=0; i < collections.length; i++) {
+							for (i = 0; i < collections.length; i++) {
 								checkCollection = collections[i];
 								if (isDirectChildrenOf(currentCollection, checkCollection)) {
 									toProcess.push(checkCollection);
@@ -558,20 +604,18 @@ var PublicRepository = function() {
 						} else {
 							toProcess = getNextLevel(allCollections, currentCollection);
 						}
-
 						// remove empty
-						if(instance.hideEmptyCollections) {
+						if (instance.hideEmptyCollections) {
 							toProcess = removeEmpty(toProcess);
 						}
-
-						return toProcess.sort(function(a, b){
-							if(a.Name < b.Name) {
+						return toProcess.sort(function(a, b) {
+							if (a.Name < b.Name) {
 								return -1;
 							}
-					    if(a.Name > b.Name) {
+							if (a.Name > b.Name) {
 								return 1;
 							}
-					    return 0;
+							return 0;
 						});
 					}
 
@@ -604,7 +648,7 @@ var PublicRepository = function() {
 						for (i = 0; i < collections.length; i++) {
 							html += getCollection(collections[i]);
 						}
-						if(html === "") {
+						if (html === "") {
 							html = "<div class='text-center text-muted'>No collection available.</div>";
 						}
 						return html;
@@ -618,7 +662,7 @@ var PublicRepository = function() {
 						var htmlLeft = "";
 						if (instance.manager.collection) {
 							var text = "";
-							if(!instance.showAll) {
+							if (!instance.showAll) {
 								text = "Show all";
 							} else {
 								text = "Hide all";
@@ -629,9 +673,10 @@ var PublicRepository = function() {
 					}
 
 					function getRight() {
-						var text = "", htmlRight = "";
-						if(instance.hideEmptyCollections) {
-							text = "Disply empty";
+						var text = "",
+							htmlRight = "";
+						if (instance.hideEmptyCollections) {
+							text = "Display empty";
 						} else {
 							text = "Hide empty";
 						}
@@ -654,16 +699,6 @@ var PublicRepository = function() {
 				}
 
 				function activate() {
-					/**
-					 * It sets a listener for each collection button
-					 */
-					function activateCollection() {
-						$(".set-collection").click(function(event) {
-							event.preventDefault();
-							var id = $(this).data("id");
-							instance.manager.setCollection(id);
-						});
-					}
 					function activateTop() {
 						$(".show-all-collections").click(function(event) {
 							event.preventDefault();
@@ -675,11 +710,22 @@ var PublicRepository = function() {
 						});
 					}
 					activateTop();
-					activateCollection();
+					instance.activateCollection();
 				}
 				div = getHTML();
 				this.element.html(div);
 				activate();
+			},
+			/**
+			 * It sets a listener for each collection button
+			 */
+			activateCollection: function() {
+				var instance = this;
+				$(".set-collection").click(function(event) {
+					event.preventDefault();
+					var id = $(this).data("id");
+					instance.manager.setCollection(id);
+				});
 			},
 			toggleAllCollections: function() {
 				this.showAll = !this.showAll;

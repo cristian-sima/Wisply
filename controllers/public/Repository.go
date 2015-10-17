@@ -1,6 +1,8 @@
 package public
 
 import (
+	"encoding/json"
+
 	"github.com/cristian-sima/Wisply/models/harvest"
 	"github.com/cristian-sima/Wisply/models/repository"
 	"github.com/cristian-sima/Wisply/models/wisply"
@@ -39,7 +41,10 @@ func (controller *RepositoryController) ShowRepository() {
 
 		if repo.HasBeenProcessed() {
 			process := harvest.NewProcess(repo.LastProcess)
-			controller.Data["collections"] = wisply.GetCollections(repo.ID)
+			collections := wisply.GetCollections(repo.ID)
+			controller.Data["collections"] = collections
+			collectionsJSON, _ := json.Marshal(collections)
+			controller.Data["collectionsJSON"] = string(collectionsJSON)
 			controller.Data["process"] = process
 			controller.IndicateLastModification(process.Process.End)
 		}

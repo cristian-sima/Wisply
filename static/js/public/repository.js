@@ -25,10 +25,6 @@ var PublicRepository = function() {
 			parameter: "-",
 			insideVerb: "|",
 		};
-		this.category = {
-			name : "University structure = Faculty of Humanities: School of Humanities: History",
-			id: 1,
-		};
 	};
 	Manager.prototype =
 		/** @lends PublicRepository.Manager */
@@ -38,8 +34,10 @@ var PublicRepository = function() {
 			 */
 			init: function() {
 				var instance = this;
-
 				function initHash() {
+					// distroy the main hashchange
+					$(window).unbind("hashchange");
+					// add a listener for this manager
 					$(window).on('hashchange', function() {
 						instance.hashChanged();
 					});
@@ -48,7 +46,8 @@ var PublicRepository = function() {
 				 * It adds the keys' shortcuts
 				 */
 				function initKeys() {
-					var shortcuts = [{
+					var instance,
+						shortcuts = [{
 						"type": "keyup",
 						"key": "Ctrl+left",
 						"callback": function() {
@@ -65,8 +64,20 @@ var PublicRepository = function() {
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
+				/**
+				 * It sets a listener for each collection button
+				 */
+				function initCollections() {
+					$(".set-collection").click(function(event) {
+							event.preventDefault();
+							var id = $(this).data("id");
+							instance.setCollection(id);
+					});
+				}
 				initHash();
 				initKeys();
+				initCollections();
+				this.updateGUI();
         this.hashChanged();
 			},
 			/**
@@ -174,9 +185,13 @@ var PublicRepository = function() {
 				function getList() {
 					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcePerPage;
 				}
-				function getCategory() {
-					if(instance.category) {
-						return "category" + instance.delimitator.insideVerb + instance.category.id;
+				/**
+				 * It returns the description of the verb collection
+				 * @return {string} The description of the verb collection
+				 */
+				function getCollection() {
+					if(instance.collection) {
+						return "collection" + instance.delimitator.insideVerb + instance.collection.ID;
 					}
 					return "";
 				}
@@ -187,7 +202,7 @@ var PublicRepository = function() {
 				function getVerbs() {
 					var verbs = [];
 					verbs.push(getList());
-					verbs.push(getCategory());
+					verbs.push(getCollection());
 					return verbs.join(instance.delimitator.verb);
 				}
 				window.location.hash = getVerbs();
@@ -233,11 +248,20 @@ var PublicRepository = function() {
 				this.updateListVerb();
 				this.getResources();
 			},
-
-			removeCategory: function() {
+			/**
+			 * It gets the object of the collection, it sets it, goes up and updates the hash
+			 * @param  {number} id The ID of the collection
+			 */
+			setCollection: function(id) {
+					var collection = this.repository.getCollection(id);
+					this.collection = collection;
+					this.goUp();
+					this.updateHash();
+			},
+			removeCollection: function() {
 				var instance = this;
 				instance.min = 0;
-				instance.category = undefined;
+				instance.collection = undefined;
 				instance.updateHash();
 			},
 			/**
@@ -298,7 +322,6 @@ var PublicRepository = function() {
 						$(".next").removeClass("disabled");
 					}
 				}
-
 				/**
 				 * It updates the next and previous button
 				 */
@@ -306,22 +329,26 @@ var PublicRepository = function() {
 					updatePreviousButton();
 					updateNextButton();
 				}
-
 				/**
 				 * It shows the buttons
 				 */
 				function showButtons() {
 						$(".next, .previous").show();
 				}
-
+				/**
+				 * It updates the description of the top DIV.
+				 */
 				function updateTop() {
+					/**
+					 * It returns the description for the list of repositories
+					 * @return {string} The description for the list of repositories
+					 */
 					function getShowing() {
 						var start = instance.min, difference,
 							end = instance.min + instance.resourcePerPage,
 							text = "", html = "";
-
 						if ((start === 0)) {
-							if (instance.category) {
+							if (instance.collection) {
 								text = "Showing first " + instance.resourcePerPage + " resources of a total number of " + instance.repository.totalRecords;
 							} else {
 								text = "Last resources:";
@@ -337,33 +364,40 @@ var PublicRepository = function() {
 						 html += "</span>";
 						 return html;
 					}
-					function getCategory() {
+					/**
+					 * It returns the description for collections
+					 * @return {string} The description for collections
+					 */
+					function getCollection() {
 						var text = "";
-						if (instance.category) {
-							text = '<span class="label label-info">' + instance.category.name + '</span> <a data-toggle="tooltip" data-id="' + instance.category.id + '" id="remove-category" href="#" data-original-title="Remove category"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
+						if (instance.collection) {
+							text = '<span class="label label-info">' + instance.collection.Name + '</span> <a data-toggle="tooltip" data-id="' + instance.collection.id + '" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
 						} else {
-							text = "";
+							text = "<br />";
 						}
 						return text;
 					}
 					var html = "";
 					html += "<div>";
 					html += "<div>" + getShowing() + "</div>";
-					html += "<div id='category'>" + getCategory() + "</div>";
+					html += "<div id='collection'>" + getCollection() + "</div>";
 					html += "<br /></div>";
 					$("#repository-top").html(html);
 				}
-				function initCategory() {
-					$("#remove-category").click(function(event) {
+				/**
+				 * It sets a listener for the remove collection button
+				 */
+				function initCollection() {
+					$("#remove-collection").click(function(event) {
 						event.preventDefault();
-						instance.removeCategory();
+						instance.removeCollection();
 					});
 				}
 				updateTop();
 				updateButtons();
 				showButtons();
 				wisply.activateTooltip();
-				initCategory();
+				initCollection();
 			},
 			/**
 			 * It takes the user up to the list of resources
@@ -381,20 +415,6 @@ var PublicRepository = function() {
 			changeResources: function(html) {
 				$("#repository-resources").html(html);
 			},
-			/**
-			 * It changes the content of the UP DIV which holds the options
-			 * @param  {string} html The new HTML code for the DIV
-			 */
-			updateTop: function(html) {
-				$("#repository-top").html(html);
-			},
-			/**
-			 * It changes the content of the BOTTOM DIV which holds the options
-			 * @param  {string} html The new HTML code for the DIV
-			 */
-			updateBottom: function(html) {
-				$("#repository-bottom").html(html);
-			}
 		};
 	/**
 	 * It checks if a string is int

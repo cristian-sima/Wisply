@@ -91,7 +91,7 @@
               <!-- Collections -->
               <div class="list-group" id="repositories">
                 {{range $index, $collection := .collections}}
-                <a href="#" class="list-group-item">
+                <a data-id="{{ $collection.ID }}" class="hover list-group-item set-collection">
                   <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }}</h5>
                   <p class="list-group-item-text">{{ $collection.Description }}</p>
                 </a>
@@ -112,11 +112,22 @@
 </style>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>
-var server = {}
+var server = {};
 server.repository = {
   id : {{ .repository.ID }},
   totalRecords: {{ .process.Records }},
-}
+  collections: JSON.parse({{ .collectionsJSON }}),
+};
+server.repository.getCollection = function (requestedID) {
+  var i, collection;
+  for(i=0; i < this.collections.length; i++) {
+    collection = this.collections[i];
+    if(collection.ID === requestedID) {
+      return collection;
+    }
+  }
+  return false;
+};
 </script>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
 <script src="/static/js/public/repository.js"></script>

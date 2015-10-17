@@ -90,21 +90,20 @@ func (task *InsertIdentifiersTask) insertIdentifier(identifier wisply.Identifier
 
 func (task *InsertIdentifiersTask) insertData(identifier wisply.Identifier) error {
 	ID := task.repository.ID
-	task.identifiersBuffer.AddRow(ID, identifier.GetIdentifier(), identifier.GetTimestamp())
+	task.identifiersBuffer.AddRow(identifier.GetIdentifier(), identifier.GetTimestamp(), ID)
 	return nil
 }
 
 func (task *InsertIdentifiersTask) insertSets(identifier string, sets []string) error {
 	for _, set := range sets {
-		ID := task.repository.ID
-		task.setsBuffer.AddRow(ID, identifier, set)
+		task.setsBuffer.AddRow(identifier, set, task.repository.ID)
 	}
 	return nil
 }
 
 func newInsertIdentifiersTask(operationHarvest Operationer, repository *repository.Repository) *InsertIdentifiersTask {
-	identifiersBuffer := database.NewSQLBuffer("identifier", "`repository`, `identifier`, `datestamp`")
-	setsBuffer := database.NewSQLBuffer("identifier", "`repository`, `identifier`, `datestamp`")
+	identifiersBuffer := database.NewSQLBuffer("identifier", "`identifier`, `value`, `repository`")
+	setsBuffer := database.NewSQLBuffer("identifier_set", "`identifier`, `setSpec`, `repository`")
 
 	return &InsertIdentifiersTask{
 		Task: &Task{

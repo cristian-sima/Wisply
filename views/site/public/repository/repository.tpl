@@ -51,32 +51,11 @@
           <div class="row">
             <!-- Statistics -->
             <div class="col-lg-2 col-md-2 col-sm-2 text-left" >
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>
-                      <span class="badge badge-info">{{ .process.Collections }}</span>
-                    </td>
-                    <td>
-                      collections
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span class="badge badge-info">{{ .process.Records }}</span>
-                    </td>
-                    <td>
-                      records
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
-              <div id="repository-top">
-
-              </div>
+              <div id="repository-top"></div>
               <div id="repository-before-resources">
               </span>
             </div>
@@ -89,14 +68,7 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Collections -->
-              <div class="list-group" id="repositories">
-                {{range $index, $collection := .collections}}
-                <a data-id="{{ $collection.ID }}" class="hover list-group-item set-collection">
-                  <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }} <span class="badge">{{ $collection.NumberOfResources }}</span></h5>
-                  <p class="list-group-item-text">{{ $collection.Description }}</p>
-                </a>
-                {{ end }}
-              </div>
+              <div class="list-group" id="repository-side"></div>
             </div>
           </div>
           {{ end }}

@@ -25,6 +25,8 @@ var PublicRepository = function() {
 			parameter: "-",
 			insideVerb: "|",
 		};
+		this.topGUI = new TopGUI(this);
+		this.sideGUI = new SideGUI(this);
 	};
 	Manager.prototype =
 		/** @lends PublicRepository.Manager */
@@ -34,6 +36,7 @@ var PublicRepository = function() {
 			 */
 			init: function() {
 				var instance = this;
+
 				function initHash() {
 					// distroy the main hashchange
 					$(window).unbind("hashchange");
@@ -46,8 +49,7 @@ var PublicRepository = function() {
 				 * It adds the keys' shortcuts
 				 */
 				function initKeys() {
-					var instance,
-						shortcuts = [{
+					var shortcuts = [{
 						"type": "keyup",
 						"key": "Ctrl+left",
 						"callback": function() {
@@ -64,34 +66,27 @@ var PublicRepository = function() {
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
-				/**
-				 * It sets a listener for each collection button
-				 */
-				function initCollections() {
-					$(".set-collection").click(function(event) {
-							event.preventDefault();
-							var id = $(this).data("id");
-							instance.setCollection(id);
-					});
-				}
 				initHash();
 				initKeys();
-				initCollections();
+				this.initGUI();
 				this.updateGUI();
-        this.hashChanged();
+				this.hashChanged();
+			},
+			initGUI: function() {
+				this.topGUI.init();
+				this.sideGUI.init();
 			},
 			/**
 			 * It loads the resources from server according to the current settings
 			 */
 			getResources: function() {
-				var instance = this,
-					collection = getCollection();
+				var instance = this;
 				/**
 				 * Returns the ID of the current collection or an empty string if there are no collections
 				 * @return {number} The ID of current collection
 				 */
 				function getCollection() {
-					if(instance.collection) {
+					if (instance.collection) {
 						return instance.collection.Spec;
 					}
 					return "";
@@ -146,7 +141,7 @@ var PublicRepository = function() {
 						}
 					});
 				}
-			initButtons();
+				initButtons();
 			},
 			/**
 			 * It shows the next resources
@@ -205,7 +200,7 @@ var PublicRepository = function() {
 				 * @return {string} The description of the verb collection
 				 */
 				function getCollection() {
-					if(instance.collection) {
+					if (instance.collection) {
 						return "collection" + instance.delimitator.insideVerb + instance.collection.ID;
 					}
 					return "";
@@ -227,7 +222,7 @@ var PublicRepository = function() {
 			 * @return {number} The current total number
 			 */
 			getCurrentTotalNumber: function() {
-				if(this.collection) {
+				if (this.collection) {
 					return this.collection.NumberOfResources;
 				}
 				return this.repository.totalResources;
@@ -278,10 +273,10 @@ var PublicRepository = function() {
 			 * @param  {number} id The ID of the collection
 			 */
 			setCollection: function(id) {
-					var collection = this.repository.getCollection(id);
-					this.collection = collection;
-					this.goUp();
-					this.updateHash();
+				var collection = this.repository.getCollection(id);
+				this.collection = collection;
+				this.goUp();
+				this.updateHash();
 			},
 			removeCollection: function() {
 				var instance = this;
@@ -310,13 +305,15 @@ var PublicRepository = function() {
 			 */
 			updateVerbs: function() {
 				var instance = this;
+
 				function updateList() {
-						var verb = instance.getVerb("list");
+					var verb = instance.getVerb("list");
 					if (verb) {
 						instance.changeMin(verb.parameters[0]);
 						instance.changeResourcesPerPage(verb.parameters[1]);
 					}
 				}
+
 				function updateCollection() {
 					var verb = instance.getVerb("collection");
 					if (verb) {
@@ -338,12 +335,49 @@ var PublicRepository = function() {
 			 * It updates the next and previous buttons
 			 */
 			updateGUI: function() {
-				var instance = this;
+				this.topGUI.update();
+				this.sideGUI.update();
+			},
+			/**
+			 * It takes the user up to the list of resources
+			 */
+			goUp: function() {
+				var listPosition = parseInt($("#repository-before-resources").offset().top, 10) - 160;
+				$('html, body').animate({
+					scrollTop: listPosition,
+				}, 100);
+			},
+			/**
+			 * It changes the content of the DIV which holds the list of resources
+			 * @param  {string} html The new HTML code for the DIV
+			 */
+			changeResources: function(html) {
+				$("#repository-resources").html(html);
+			},
+		};
+	/**
+	 * Contains the functionality for top GUI
+	 * @memberof PublicRepository
+	 * @class TopGUI
+	 * @classdesc It encapsulets the functionality for top GUI
+	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 */
+	var TopGUI = function TopGUI(manager) {
+		this.element = $("#repository-top");
+		this.manager = manager;
+	};
+	TopGUI.prototype =
+		/** @lends PublicRepository.TopGUI */
+		{
+			init: function() {},
+			update: function() {
+				var gui = this,
+					manager = gui.manager;
 				/**
 				 * If there are no more resources, it disables the previous button. Otherwise, it enables it
 				 */
 				function updatePreviousButton() {
-					if (instance.min < instance.resourcePerPage) {
+					if (manager.min < manager.resourcePerPage) {
 						$(".previous").addClass("disabled");
 					} else {
 						$(".previous").removeClass("disabled");
@@ -353,7 +387,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the next button. Otherwise, it enables it
 				 */
 				function updateNextButton() {
-					if (instance.min + instance.resourcePerPage >= parseInt(instance.getCurrentTotalNumber(), 10)) {
+					if (manager.min + manager.resourcePerPage >= parseInt(manager.getCurrentTotalNumber(), 10)) {
 						$(".next").addClass("disabled");
 					} else {
 						$(".next").removeClass("disabled");
@@ -370,7 +404,7 @@ var PublicRepository = function() {
 				 * It shows the buttons
 				 */
 				function showElements() {
-						$(".next, .previous, #repository-top").show();
+					$(".next, .previous, #repository-top").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -381,25 +415,28 @@ var PublicRepository = function() {
 					 * @return {string} The description for the list of repositories
 					 */
 					function getShowing() {
-						var start = instance.min, difference,
-							end = instance.min + instance.resourcePerPage,
-							text = "", html = "";
+						var start = manager.min,
+							difference,
+							end = manager.min + manager.resourcePerPage,
+							text = "",
+							html = "";
 						if ((start === 0)) {
-							if (instance.collection) {
-								text = "Showing first " + instance.resourcePerPage + " resources of a total number of " + instance.getCurrentTotalNumber();
+							if (manager.collection) {
+								text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
 							} else {
 								text = "Last resources:";
 							}
-						} if(start + instance.resourcePerPage >= instance.getCurrentTotalNumber() ) {
-							difference = instance.getCurrentTotalNumber() - start;
-							text = "Showing last " +  difference + " resources of total " + instance.getCurrentTotalNumber() + "";
-						} else {
-							text = "Showing " +  instance.resourcePerPage + " resources from " + start + " to " + end + " of " + instance.getCurrentTotalNumber() + "";
 						}
-						 html += "<span class='text-muted'>";
-						 html += text;
-						 html += "</span>";
-						 return html;
+						if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
+							difference = manager.getCurrentTotalNumber() - start;
+							text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+						} else {
+							text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
+						}
+						html += "<span class='text-muted'>";
+						html += text;
+						html += "</span>";
+						return html;
 					}
 					/**
 					 * It returns the description for collections
@@ -407,8 +444,8 @@ var PublicRepository = function() {
 					 */
 					function getCollection() {
 						var text = "";
-						if (instance.collection) {
-							text = '<span class="label label-info">' + instance.collection.Name + '</span> <a data-toggle="tooltip" data-id="' + instance.collection.id + '" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
+						if (manager.collection) {
+							text = '<span class="label label-info">' + manager.collection.Name + '</span> <a data-toggle="tooltip" data-id="' + manager.collection.id + '" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
 						} else {
 							text = "<br />";
 						}
@@ -427,7 +464,7 @@ var PublicRepository = function() {
 				function initCollection() {
 					$("#remove-collection").click(function(event) {
 						event.preventDefault();
-						instance.removeCollection();
+						manager.removeCollection();
 					});
 				}
 				updateTop();
@@ -435,23 +472,128 @@ var PublicRepository = function() {
 				showElements();
 				wisply.activateTooltip();
 				initCollection();
+			}
+		};
+	/**
+	 * Contains the functionality for side GUI
+	 * @memberof PublicRepository
+	 * @class SideGUI
+	 * @classdesc It encapsulets the functionality for side GUI
+	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 */
+	var SideGUI = function SideGUI(manager) {
+		this.element = $("#repository-side");
+		this.manager = manager;
+		this.showAll = false;
+	};
+	SideGUI.prototype =
+		/** @lends PublicRepository.SideGUI */
+		{
+			init: function() {},
+			update: function() {
+				var instance = this,
+					div = "";
+				/**
+				 * Returns the HTML code for the current collections
+				 * @return {string} HTML code
+				 */
+				function getCollectionsHTML() {
+					var collectionsToProcess;
+
+					function getCollectionsToProcess() {
+						var allCollections = instance.manager.repository.collections,
+							toProcess,
+							currentCollection = instance.manager.collection;
+						if (!currentCollection || instance.showAll) {
+							toProcess = allCollections;
+						} else {
+							//toProces = getNextLevel(allCollections, currentCollection);
+							toProcess = allCollections;
+						}
+						return toProcess;
+					}
+
+					function getCollections(collections) {
+						function getCollection(collection) {
+							var collectionHTML = "";
+
+							function getDescription(description) {
+								return '<p class="list-group-item-text">' + description + '</p>';
+							}
+
+							function getRightDiv(collection) {
+								return '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right"><span class="text-right badge"> ' + collection.NumberOfResources + "</span></div>";
+							}
+
+							function getLeftDiv(collection) {
+								return '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"><span class="h6">' + collection.Name + '</span></div>';
+							}
+							collectionHTML += '<a data-id="' + collection.ID + '" class="hover list-group-item set-collection">';
+							collectionHTML += '<div class="row list-group-item-heading">';
+							collectionHTML += getLeftDiv(collection);
+							collectionHTML += getRightDiv(collection);
+							collectionHTML += getDescription(collection.Description);
+							collectionHTML += '</div>';
+							collectionHTML += '</a>';
+							return collectionHTML;
+						}
+						var html = "",
+							i;
+						for (i = 0; i < collections.length; i++) {
+							html += getCollection(collections[i]);
+						}
+						return html;
+					}
+					collectionsToProcess = getCollectionsToProcess();
+					return getCollections(collectionsToProcess);
+				}
+
+				function getTopDiv() {
+					function getLeft() {
+						var html = "";
+						return html;
+					}
+
+					function getRight() {
+						var html = "";
+						return html;
+					}
+					var div = "";
+					div += "<div class='row'>";
+					div += "<div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left'>" + getLeft() + "</div>";
+					div += "<div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right'>" + getRight() + "</div>";
+					div += "</div>";
+					return div;
+				}
+
+				function getHTML() {
+					var div = "";
+					div += getTopDiv();
+					div += getCollectionsHTML();
+					return div;
+				}
+
+				function activate() {
+					/**
+					 * It sets a listener for each collection button
+					 */
+					function activateCollection() {
+						$(".set-collection").click(function(event) {
+							event.preventDefault();
+							var id = $(this).data("id");
+							instance.manager.setCollection(id);
+						});
+					}
+					activateCollection();
+				}
+				div = getHTML();
+				this.element.html(div);
+				activate();
 			},
-			/**
-			 * It takes the user up to the list of resources
-			 */
-			goUp: function() {
-				var listPosition = parseInt($("#repository-before-resources").offset().top, 10) - 160;
-				$('html, body').animate({
-					scrollTop: listPosition,
-				}, 100);
-			},
-			/**
-			 * It changes the content of the DIV which holds the list of resources
-			 * @param  {string} html The new HTML code for the DIV
-			 */
-			changeResources: function(html) {
-				$("#repository-resources").html(html);
-			},
+			showAllCollections: function() {
+				this.showAll = true;
+				this.update();
+			}
 		};
 	/**
 	 * It checks if a string is int

@@ -260,34 +260,19 @@ func (process *Process) updateStatistics(name string, number int) error {
 	}
 	_, err = stmt.Exec(number, process.HarvestID)
 	if err == nil {
-		process.broadcastStatistics(name)
+		process.broadcastStatistics(name, number)
 	}
 	return err
 }
 
 // broadcastStatistics tells the controller the number of "name" items where name is the parameter
-func (process *Process) broadcastStatistics(name string) {
-	var number int
-	switch name {
-	case "records":
-		number = process.Records
-		break
-	case "formats":
-		number = process.Formats
-		break
-	case "collections":
-		number = process.Collections
-		break
-	case "identifiers":
-		number = process.Identifiers
-		break
-	}
+func (process *Process) broadcastStatistics(name string, newValue int) {
 	value := &struct {
 		Operation string
 		Number    int
 	}{
 		Operation: name,
-		Number:    number,
+		Number:    newValue,
 	}
 	process.tellController(&Message{
 		Name:  "harvest-update",

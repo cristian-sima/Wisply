@@ -27,23 +27,54 @@ var Wisply = function() {
 			"type": "keyup",
 			"key": "Alt+a",
 			"callback": function() {
-				wisply.goTo("/accessibility");
+				/**
+				 * It loads the accessibility javascript file and shows the bar
+				 */
+				function createScript() {
+					var jf;
+					jf = document.createElement('script');
+					jf.src = 'https://core.atbar.org/atbar/en/latest/atbar.min.js';
+					jf.type = 'text/javascript';
+					jf.id = 'ToolBar';
+					document.getElementsByTagName('head')[0].appendChild(jf);
+				}
+				/**
+				 * It moves the Wisply navigation bar 41px down. (it prevents overlaping with the bar). Also, it sets a listener for closing button, such that the bar goes back to original position
+				 */
+				function moveWisply() {
+					$(".navbar-fixed-top").css({"top": "41px"});
+					setTimeout( function() {
+						$("#at-btn-atkit-unload").click(function() {
+									setTimeout( function() {
+											$(".navbar-fixed-top").css({"top": "0px"});
+										}, 100);
+					});
+					}, 200);
+				}
+				/**
+				 * It loads the bar and moves wisply
+				 */
+				function showAccessibilityBar() {
+						createScript();
+						moveWisply();
+				}
+				showAccessibilityBar();
 			},
-			description: "It goes you to accessibility page",
+			description: "Show the accessibility bar",
 		}, {
 			"type": "keyup",
 			"key": "Alt+w",
 			"callback": function() {
 				wisply.goTo("/");
 			},
-			description: "It goes you to the home page",
+			description: "Load the home page",
 		}, {
 			"type": "keyup",
 			"key": "Alt+c",
 			"callback": function() {
 				wisply.goTo("/contact");
 			},
-			description: "It goes you to contact page",
+			description: "Load the contact page",
 		}, {
 			"type": "keyup",
 			"key": "Alt+h",
@@ -51,7 +82,7 @@ var Wisply = function() {
 				var description = wisply.shortcutManager.getDescription();
 				wisply.message.show("Key Shortcuts on this page", description);
 			},
-			description: "It goes you to contact page",
+			description: "Show the list of key shortcuts",
 		}];
 	}
 	ShortcutManager.prototype =

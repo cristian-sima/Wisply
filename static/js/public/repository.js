@@ -8,6 +8,15 @@
  */
 var PublicRepository = function() {
 	'use strict';
+	String.prototype.count=function(s1) {
+	  return (this.length - this.replace(new RegExp(s1,"g"), '').length) / s1.length;
+	};
+	if (typeof String.prototype.startsWith != 'function') {
+	  // see below for better implementation!
+	  String.prototype.startsWith = function (str){
+	    return this.indexOf(str) === 0;
+	  };
+	}
 	/**
 	 * The constructor sets the default values
 	 * @memberof PublicRepository
@@ -485,6 +494,7 @@ var PublicRepository = function() {
 		this.element = $("#repository-side");
 		this.manager = manager;
 		this.showAll = false;
+		this.hideEmptyCollections = true;
 	};
 	SideGUI.prototype =
 		/** @lends PublicRepository.SideGUI */
@@ -501,16 +511,58 @@ var PublicRepository = function() {
 					var collectionsToProcess;
 
 					function getCollectionsToProcess() {
+						function getLevel(collection) {
+							return parseInt(collection.Spec.count(":"), 10) + 1;
+						}
+						function isDirectChildrenOf(parent, child) {
+							return child.Spec.startsWith(parent.Spec) &&
+								 (getLevel(parent) + 1) === getLevel(child);
+						}
+						function removeEmpty(collections) {
+							var i, toReturn = [];
+							for (i=0; i < collections.length; i++) {
+								if(parseInt(collections[i].NumberOfResources, 10) !== 0) {
+									toReturn.push(collections[i]);
+								}
+							}
+							return toReturn;
+						}
+						function getNextLevel(collections, currentCollection) {
+							var toProcess = [],
+								level = getLevel(currentCollection),
+								i,
+								checkCollection;
+							for (i=0; i < collections.length; i++) {
+								checkCollection = collections[i];
+								if (isDirectChildrenOf(currentCollection, checkCollection)) {
+									toProcess.push(checkCollection);
+								}
+							}
+							return toProcess;
+						}
 						var allCollections = instance.manager.repository.collections,
 							toProcess,
 							currentCollection = instance.manager.collection;
 						if (!currentCollection || instance.showAll) {
 							toProcess = allCollections;
 						} else {
-							//toProces = getNextLevel(allCollections, currentCollection);
-							toProcess = allCollections;
+							toProcess = getNextLevel(allCollections, currentCollection);
 						}
-						return toProcess;
+
+						// remove empty
+						if(instance.hideEmptyCollections) {
+							toProcess = removeEmpty(toProcess);
+						}
+
+						return toProcess.sort(function(a, b){
+							if(a.Name < b.Name) {
+								return -1;
+							}
+					    if(a.Name > b.Name) {
+								return 1;
+							}
+					    return 0;
+						});
 					}
 
 					function getCollections(collections) {
@@ -542,6 +594,9 @@ var PublicRepository = function() {
 						for (i = 0; i < collections.length; i++) {
 							html += getCollection(collections[i]);
 						}
+						if(html === "") {
+							html = "<div class='text-center text-muted'>No collection available.</div>";
+						}
 						return html;
 					}
 					collectionsToProcess = getCollectionsToProcess();
@@ -550,13 +605,28 @@ var PublicRepository = function() {
 
 				function getTopDiv() {
 					function getLeft() {
-						var html = "";
-						return html;
+						var htmlLeft = "";
+						if (instance.manager.collection) {
+							var text = "";
+							if(!instance.showAll) {
+								text = "Show all";
+							} else {
+								text = "Hide all";
+							}
+							htmlLeft = "<a class='hover link show-all-collections'>" + text + "</a>";
+						}
+						return htmlLeft;
 					}
 
 					function getRight() {
-						var html = "";
-						return html;
+						var text = "", htmlRight = "";
+						if(instance.hideEmptyCollections) {
+							text = "Disply empty";
+						} else {
+							text = "Hide empty";
+						}
+						htmlRight = "<a class='hover link hide-empty-collections'>" + text + "</a>";
+						return htmlRight;
 					}
 					var div = "";
 					div += "<div class='row'>";
@@ -584,14 +654,27 @@ var PublicRepository = function() {
 							instance.manager.setCollection(id);
 						});
 					}
+					function activateTop() {
+						$(".show-all-collections").click(function() {
+							instance.toggleAllCollections();
+						});
+						$(".hide-empty-collections").click(function() {
+							instance.toggleEmptyCollections();
+						});
+					}
+					activateTop();
 					activateCollection();
 				}
 				div = getHTML();
 				this.element.html(div);
 				activate();
 			},
-			showAllCollections: function() {
-				this.showAll = true;
+			toggleAllCollections: function() {
+				this.showAll = !this.showAll;
+				this.update();
+			},
+			toggleEmptyCollections: function() {
+				this.hideEmptyCollections = !this.hideEmptyCollections;
 				this.update();
 			}
 		};

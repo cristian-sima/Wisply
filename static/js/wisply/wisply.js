@@ -211,7 +211,15 @@ var Wisply = function() {
 			 */
 			dialog: function(args) {
 				bootbox.dialog(args);
-			}
+			},
+			tellToWait: function (title) {
+				var msg;
+				msg = "<div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of sugar) :) <br />" + wisply.getLoadingImage("big") + "</div>";
+				this.dialog({
+					title: title,
+					message: msg,
+				});
+			},
 		};
 	/**
 	 * The constructor creates a message and a shortcut objects

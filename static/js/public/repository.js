@@ -112,8 +112,8 @@ var PublicRepository = function() {
 			 * It shows the wisply loading button
 			 */
 			showLoading: function() {
-				$(".next, .previous").hide();
-				$("#repository-resources").html('<div class="text-center">' + wisply.getLoadingImage("medium") + '</div>');
+				$(".next, .previous, #repository-top").hide();
+				$("#repository-resources").html('<div class="text-center"><br /><br /><br />' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
 			 * Is is called when resources has came from the server. It shows them, activate the listeners and update the GUI
@@ -154,7 +154,7 @@ var PublicRepository = function() {
 			 */
 			showNext: function() {
 				var instance = this;
-				if (instance.min + instance.resourcePerPage < parseInt(instance.repository.totalRecords, 10)) {
+				if (instance.min + instance.resourcePerPage < parseInt(instance.getCurrentTotalNumber(), 10)) {
 					var newMin;
 					newMin = parseInt(this.min, 10) + this.resourcePerPage;
 					this.changeMin(newMin);
@@ -223,6 +223,16 @@ var PublicRepository = function() {
 				window.location.hash = getVerbs();
 			},
 			/**
+			 * The current total number is the total number of the resources inside a collection, or the total number of resources from the repository in case there is no repository selected
+			 * @return {number} The current total number
+			 */
+			getCurrentTotalNumber: function() {
+				if(this.collection) {
+					return this.collection.NumberOfResources;
+				}
+				return this.repository.totalResources;
+			},
+			/**
 			 * It is called when the hash of the page has been changed. It gets all the verbs from the hash and updates the page
 			 */
 			hashChanged: function() {
@@ -260,7 +270,7 @@ var PublicRepository = function() {
 					return elements;
 				}
 				this.verbs = extractVerbs(hash);
-				this.updateListVerb();
+				this.updateVerbs();
 				this.getResources();
 			},
 			/**
@@ -298,12 +308,24 @@ var PublicRepository = function() {
 			/**
 			 * It updates the "list" verb
 			 */
-			updateListVerb: function() {
-				var verb = this.getVerb("list");
-				if (verb) {
-					this.changeMin(verb.parameters[0]);
-					this.changeResourcesPerPage(verb.parameters[1]);
+			updateVerbs: function() {
+				var instance = this;
+				function updateList() {
+						var verb = instance.getVerb("list");
+					if (verb) {
+						instance.changeMin(verb.parameters[0]);
+						instance.changeResourcesPerPage(verb.parameters[1]);
+					}
 				}
+				function updateCollection() {
+					var verb = instance.getVerb("collection");
+					if (verb) {
+						var collection = instance.repository.getCollection(verb.parameters[0]);
+						instance.collection = collection;
+					}
+				}
+				updateList();
+				updateCollection();
 			},
 			/**
 			 * It changes the number of resources displayed per page
@@ -331,7 +353,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the next button. Otherwise, it enables it
 				 */
 				function updateNextButton() {
-					if (instance.min + instance.resourcePerPage >= parseInt(instance.repository.totalRecords, 10)) {
+					if (instance.min + instance.resourcePerPage >= parseInt(instance.getCurrentTotalNumber(), 10)) {
 						$(".next").addClass("disabled");
 					} else {
 						$(".next").removeClass("disabled");
@@ -347,8 +369,8 @@ var PublicRepository = function() {
 				/**
 				 * It shows the buttons
 				 */
-				function showButtons() {
-						$(".next, .previous").show();
+				function showElements() {
+						$(".next, .previous, #repository-top").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -364,15 +386,15 @@ var PublicRepository = function() {
 							text = "", html = "";
 						if ((start === 0)) {
 							if (instance.collection) {
-								text = "Showing first " + instance.resourcePerPage + " resources of a total number of " + instance.repository.totalRecords;
+								text = "Showing first " + instance.resourcePerPage + " resources of a total number of " + instance.getCurrentTotalNumber();
 							} else {
 								text = "Last resources:";
 							}
-						} if(start + instance.resourcePerPage >= instance.repository.totalRecords ) {
-							difference = instance.repository.totalRecords - start;
-							text = "Showing last " +  difference + " resources of total " + instance.repository.totalRecords + "";
+						} if(start + instance.resourcePerPage >= instance.getCurrentTotalNumber() ) {
+							difference = instance.getCurrentTotalNumber() - start;
+							text = "Showing last " +  difference + " resources of total " + instance.getCurrentTotalNumber() + "";
 						} else {
-							text = "Showing " +  instance.resourcePerPage + " resources from " + start + " to " + end + " of " + instance.repository.totalRecords + "";
+							text = "Showing " +  instance.resourcePerPage + " resources from " + start + " to " + end + " of " + instance.getCurrentTotalNumber() + "";
 						}
 						 html += "<span class='text-muted'>";
 						 html += text;
@@ -410,7 +432,7 @@ var PublicRepository = function() {
 				}
 				updateTop();
 				updateButtons();
-				showButtons();
+				showElements();
 				wisply.activateTooltip();
 				initCollection();
 			},

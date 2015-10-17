@@ -15,21 +15,16 @@ func GetCollections(repositoryID int) []*Collection {
 		name string
 	)
 
-	sql := "SELECT `id`, `spec`, `name`, `description` FROM `repository_collection` WHERE `repository` = ?"
+	sql := "SELECT `id`, `spec`, `name`, `description`, `numberOfRecords` FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
 	rows, _ := database.Connection.Query(sql, repositoryID)
 	for rows.Next() {
 		collection := &Collection{
 			Repository: repositoryID,
 		}
-
-		rows.Scan(&collection.ID, &collection.Spec, &name, &collection.Description)
-
+		rows.Scan(&collection.ID, &collection.Spec, &name, &collection.Description, &collection.NumberOfResources)
 		elements := strings.Split(name, ":")
-
 		collection.Name = elements[len(elements)-1]
-
 		collection.Name = strings.Replace(collection.Name, "=", "-", -1)
-
 		list = append(list, collection)
 	}
 	return list
@@ -48,19 +43,17 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		err  error
 	)
 	fieldList := "record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource`"
-
 	fmt.Println("Collection is ")
-
 	fmt.Println("[" + options.Where["collection"] + "]")
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
-		sql := "SELECT record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource` AS record WHERE record.`repository`=? ORDER by record.id DESC " + options.GetLimit()
+		sql := "SELECT record.`id`, record.`identifier`, record.`datestamp` FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
 		rows, err = database.Connection.Query(sql, repositoryID)
 		fmt.Println("all")
 	} else {
-		sql := "SELECT " + fieldList + " AS record INNER JOIN `identifier_set` ON record.identifier = identifier_set.identifier WHERE `identifier_set`.setSpec LIKE ? ORDER by record.id DESC " + options.GetLimit()
-		rows, err = database.Connection.Query(sql, "%"+options.Where["collection"]+"%")
+		sql := "SELECT " + fieldList + " AS record INNER JOIN `identifier_set` ON record.identifier = identifier_set.identifier WHERE `identifier_set`.setSpec = ? ORDER BY record.id DESC " + options.GetLimit()
+		rows, err = database.Connection.Query(sql, options.Where["collection"])
 		fmt.Println(sql)
 		fmt.Println("collection")
 	}

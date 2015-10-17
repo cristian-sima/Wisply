@@ -92,7 +92,7 @@
               <div class="list-group" id="repositories">
                 {{range $index, $collection := .collections}}
                 <a data-id="{{ $collection.ID }}" class="hover list-group-item set-collection">
-                  <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }}</h5>
+                  <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }} <span class="badge">{{ $collection.NumberOfResources }}</span></h5>
                   <p class="list-group-item-text">{{ $collection.Description }}</p>
                 </a>
                 {{ end }}
@@ -115,14 +115,14 @@
 var server = {};
 server.repository = {
   id : {{ .repository.ID }},
-  totalRecords: {{ .process.Records }},
+  totalResources: {{ .process.Records }},
   collections: JSON.parse({{ .collectionsJSON }}),
 };
 server.repository.getCollection = function (requestedID) {
   var i, collection;
   for(i=0; i < this.collections.length; i++) {
     collection = this.collections[i];
-    if(collection.ID === requestedID) {
+    if(parseInt(collection.ID, 10) === parseInt(requestedID, 10) ) {
       return collection;
     }
   }

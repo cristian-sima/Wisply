@@ -458,39 +458,72 @@ var PublicRepository = function() {
 					 * It returns the description for the list of repositories
 					 * @return {string} The description for the list of repositories
 					 */
-					function getShowing() {
-						var start = manager.min,
-							difference,
-							end = manager.min + manager.resourcePerPage,
-							text = "",
+					function getListDescription() {
+						/**
+						 * It returns the description of the list when there are repositories
+						 * @return {string} The HTML description of the list
+						 */
+						function getListText() {
+							/**
+							 * It shows when the start is zero
+							 * @return {string} The description when start is zero
+							 */
+							function getStartZero() {
+								function describeCollection() {
+									var text, total = manager.getCurrentTotalNumber();
+									if(total < manager.resourcePerPage) {
+										if (total  === 1) {
+											text = "This collection contains only one resource";
+										} else {
+											text = "Showing all " + total + " resources";
+										}
+									} else {
+										text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
+									}
+									return text;
+								}
+								var text = "";
+								if (manager.collection) {
+									text = describeCollection();
+								} else {
+									text = "Last resources on " + manager.repository.name + ":";
+								}
+								return text;
+							}
+							/**
+							 * It shows when the start is not zero
+							 * @return {string} The description when start is not zero
+							 */
+							function getStartNotZero() {
+								var text = "";
+								if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
+									difference = manager.getCurrentTotalNumber() - start;
+									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+								} else {
+									text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of a total number of " + manager.getCurrentTotalNumber() + "";
+								}
+								return text;
+							}
+							var text = "",
+								start = manager.min,
+								difference,
+								end = manager.min + manager.resourcePerPage;
+							if ((start === 0)) {
+								text += getStartZero();
+							} else {
+								text += getStartNotZero();
+							}
+							return text;
+						}
+						var listText = "",
 							html = "";
 						if (manager.getCurrentTotalNumber() === 0) {
-							text = "There are no resources.";
+							listText += "There are no resources.";
 						} else {
-							if ((start === 0)) {
-								if (manager.collection) {
-									text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
-								} else {
-									text = "Last resources:";
-								}
-							}
-							if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
-								difference = manager.getCurrentTotalNumber() - start;
-								if (difference === manager.getCurrentTotalNumber()) {
-									if (difference === 1) {
-										text = "There is only one resource";
-									} else {
-										text = "There are only " + difference + " resources";
-									}
-								} else {
-									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
-								}
-							} else {
-								text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
-							}
+							listText += getListText();
 						}
 						html += "<span class='text-muted'>";
-						html += text;
+						html += listText;
 						html += "</span>";
 						return html;
 					}
@@ -559,8 +592,8 @@ var PublicRepository = function() {
 					}
 					var html = "";
 					html += "<div>";
-					html += "<div>" + getShowing() + "</div>";
 					html += "<div id='collection'>" + getCollection() + "</div>";
+					html += "<div>" + getListDescription() + "</div>";
 					html += "<br /></div>";
 					$("#repository-top").html(html);
 					manager.sideGUI.activateCollection();
@@ -657,7 +690,6 @@ var PublicRepository = function() {
 						 */
 						function getNextLevel(collections, currentCollection) {
 							var toProcess = [],
-								level = getLevel(currentCollection),
 								i,
 								checkCollection;
 							for (i = 0; i < collections.length; i++) {
@@ -869,15 +901,21 @@ var PublicRepository = function() {
 			/** @lends PublicRepository.BottomGUI */
 			{
 				/**
-				 * Does thing. It is present for consistency
+				 * It activates the listeners for the bottom GUI
 				 */
 				init: function() {
 					var instance = this;
+					/**
+					 * It sets a listener for the more option button
+					 */
 					function initShowMore() {
 						$(".show-more-options").click(function(){
 							instance.toggleShowMoreOptions();
 						});
 					}
+					/**
+					 * It sets a listener for the resource per page select
+					 */
 					function initResourcesPerPage() {
 						$(".change-resources-per-page").on('change', function(){
 							instance.manager.changeResourcesPerPage(this.value);
@@ -935,6 +973,9 @@ var PublicRepository = function() {
 					this.element.html(bottomGUIHTML);
 					this.init();
 				},
+				/**
+				 * It shows/hides the div which contains more options
+				 */
 				toggleShowMoreOptions: function() {
 					this.showMoreOptions = !this.showMoreOptions;
 					this.update();

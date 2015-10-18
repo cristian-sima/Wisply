@@ -92,6 +92,7 @@ var server = {};
 server.repository = {
   id : {{ .repository.ID }},
   totalResources: {{ .process.Records }},
+  name: "{{ .repository.Name }}",
   collections: JSON.parse({{ .collectionsJSON }}),
 };
 server.repository.getCollection = function (requestedID) {

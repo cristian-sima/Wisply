@@ -19,12 +19,12 @@ type InsertCollectionsTask struct {
 
 // Insert clears the table and then inserts them
 func (task *InsertCollectionsTask) Insert(collections []wisply.Collectioner) error {
-	err := task.clearTable()
-	if err != nil {
-		task.hasProblems(err)
-		return err
-	}
-	err = task.insertData(collections)
+	// err := task.clearTable()
+	// if err != nil {
+	// 	task.hasProblems(err)
+	// 	return err
+	// }
+	err := task.insertData(collections)
 	if err != nil {
 		task.hasProblems(err)
 		return err

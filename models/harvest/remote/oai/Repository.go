@@ -38,7 +38,9 @@ func (repository *Repository) ListFormats() ([]byte, error) {
 }
 
 // ListCollections returns the content of the request which requests the sets
-func (repository *Repository) ListCollections() ([]byte, error) {
+func (repository *Repository) ListCollections(token string) ([]byte, error) {
+	repository.request.Clear()
+	repository.request.ResumptionToken = token
 	return repository.request.GetSets()
 }
 
@@ -120,6 +122,9 @@ func (repository *Repository) GetCollections(content []byte) ([]wisply.Collectio
 	if err != nil {
 		return collections, err
 	}
+
+	// cache the last response
+	repository.lastResponse = response
 
 	remoteCollections := response.ListSets.Set
 

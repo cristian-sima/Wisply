@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Manager</title>
+    <title>JSDoc: Class: SideGUI</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Manager</h1>
+    <h1 class="page-title">Class: SideGUI</h1>
 
     
 
@@ -29,9 +29,9 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="Accounts.html">Accounts</a>.</span>Manager</h2>
+            <span class="ancestors"><a href="PublicRepository.html">PublicRepository</a>.</span>SideGUI</h2>
         
-            <div class="class-description">It encapsulets the functions for accounts.</div>
+            <div class="class-description">It encapsulets the functionality for side GUI</div>
         
     
 </header>
@@ -45,14 +45,14 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Manager"><span class="type-signature"></span>new Manager<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SideGUI"><span class="type-signature"></span>new SideGUI<span class="signature">(manager)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    The constructor activates the listeners
+    Contains the functionality for side GUI
 </div>
 
 
@@ -61,6 +61,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>manager</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="PublicRepository.Manager.html">PublicRepository.Manager</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Is a reference to the manager</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -96,7 +145,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_account_list.js.html">admin/account/list.js</a>, <a href="admin_account_list.js.html#line23">line 23</a>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line573">line 573</a>
     </li></ul></dd>
     
 
@@ -145,14 +194,14 @@
 
     
 
-    <h4 class="name" id=".confirmDelete"><span class="type-signature">(static) </span>confirmDelete<span class="signature">(account)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".activateCollection"><span class="type-signature">(static) </span>activateCollection<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    It requests the user to confirm
+    It sets a listener for each collection button
 </div>
 
 
@@ -161,55 +210,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>account</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Account</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The Account object to be deleted</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -245,7 +245,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_account_list.js.html">admin/account/list.js</a>, <a href="admin_account_list.js.html#line47">line 47</a>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line822">line 822</a>
     </li></ul></dd>
     
 
@@ -268,290 +268,6 @@
 
 
 
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".delete"><span class="type-signature">(static) </span>delete<span class="signature">(account)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    It delets a user
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>account</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Account</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The account to be deleted</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_account_list.js.html">admin/account/list.js</a>, <a href="admin_account_list.js.html#line91">line 91</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".getDialogMessage"><span class="type-signature">(static) </span>getDialogMessage<span class="signature">(account)</span><span class="type-signature"> &rarr; {object}</span></h4>
-
-    
-
-
-
-<div class="description">
-    It returns the arguements of the confimation message
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>account</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Account</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The Account object to be deleted</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_account_list.js.html">admin/account/list.js</a>, <a href="admin_account_list.js.html#line56">line 56</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The arguements of the confimation message
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -567,7 +283,7 @@
 
 
 <div class="description">
-    It activates the listener for all delete buttons
+    Does thing. It is present for consistency
 </div>
 
 
@@ -611,7 +327,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="admin_account_list.js.html">admin/account/list.js</a>, <a href="admin_account_list.js.html#line40">line 40</a>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line592">line 592</a>
     </li></ul></dd>
     
 
@@ -626,10 +342,251 @@
 
 
 
-<h5>Fires:</h5>
-<ul>
-    <li><a href="AccountsManager.html#event:confirmDelete">AccountsManager#event:confirmDelete</a></li>
-</ul>
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toggleAllCollections"><span class="type-signature">(static) </span>toggleAllCollections<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It shows/hides all the collections
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line833">line 833</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toggleEmptyCollections"><span class="type-signature">(static) </span>toggleEmptyCollections<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It shows/hides the empty collections
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line840">line 840</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".update"><span class="type-signature">(static) </span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    It updates the GUI
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="public_repository.js.html">public/repository.js</a>, <a href="public_repository.js.html#line596">line 596</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
 
 
 
@@ -664,7 +621,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 10:00:56 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 10:00:58 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

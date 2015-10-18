@@ -8,11 +8,12 @@
  */
 var PublicRepository = function() {
 	'use strict';
+	// credits http://stackoverflow.com/a/881147/2415167
 	String.prototype.count = function(s1) {
 		return (this.length - this.replace(new RegExp(s1, "g"), '').length) / s1.length;
 	};
+	// credits http://stackoverflow.com/a/646643/2415167
 	if (typeof String.prototype.startsWith != 'function') {
-		// see below for better implementation!
 		String.prototype.startsWith = function(str) {
 			return this.indexOf(str) === 0;
 		};
@@ -45,7 +46,9 @@ var PublicRepository = function() {
 			 */
 			init: function() {
 				var instance = this;
-
+				/**
+				 * It removes the old listener for change hash and sets one which calls hashChanged method
+				 */
 				function initHash() {
 					// distroy the main hashchange
 					$(window).unbind("hashchange");
@@ -81,6 +84,9 @@ var PublicRepository = function() {
 				this.updateGUI();
 				this.hashChanged();
 			},
+			/**
+			 * It calls the GUIs' init method
+			 */
 			initGUI: function() {
 				this.topGUI.init();
 				this.sideGUI.init();
@@ -113,7 +119,7 @@ var PublicRepository = function() {
 				});
 			},
 			/**
-			 * It shows the wisply loading button
+			 * It shows the top div, the buttons and sets the wisply loading logo
 			 */
 			showLoading: function() {
 				$("#repository-top, .next, .previous").hide();
@@ -288,6 +294,9 @@ var PublicRepository = function() {
 				this.goUp();
 				this.updateHash();
 			},
+			/**
+			 * It removes the collection and sets the min to 0
+			 */
 			removeCollection: function() {
 				var instance = this;
 				instance.min = 0;
@@ -315,7 +324,9 @@ var PublicRepository = function() {
 			 */
 			updateVerbs: function() {
 				var instance = this;
-
+				/**
+				 * It gets the min and resourcesPerPage from the verb and passes them to the manager
+				 */
 				function updateList() {
 					var verb = instance.getVerb("list");
 					if (verb) {
@@ -323,7 +334,9 @@ var PublicRepository = function() {
 						instance.changeResourcesPerPage(verb.parameters[1]);
 					}
 				}
-
+				/**
+				 * It changes the collection from the verb to the manager
+				 */
 				function updateCollection() {
 					var verb = instance.getVerb("collection");
 					if (verb) {
@@ -379,7 +392,13 @@ var PublicRepository = function() {
 	TopGUI.prototype =
 		/** @lends PublicRepository.TopGUI */
 		{
+			/**
+			 * Does nothing. It is here for cosistency (the other GUI has an init method)
+			 */
 			init: function() {},
+			/**
+			 * It updates the Top GUI elements
+			 */
 			update: function() {
 				var gui = this,
 					manager = gui.manager;
@@ -447,7 +466,7 @@ var PublicRepository = function() {
 							if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
 								difference = manager.getCurrentTotalNumber() - start;
 								if (difference === manager.getCurrentTotalNumber()) {
-									if(difference === 1) {
+									if (difference === 1) {
 										text = "There is only one resource";
 									} else {
 										text = "There are only " + difference + " resources";
@@ -469,19 +488,33 @@ var PublicRepository = function() {
 					 * @return {string} The description for collections
 					 */
 					function getCollection() {
+						/**
+						 * It transforsm the parents of the current category into labels
+						 * @return {string} HTML code containing the labels for the category's parents
+						 */
 						function getLabels() {
+							/**
+							 * It returns the HTML label for a given collection. In case the collection's name is longer than 20 characters, it cuts it to 20, appends "..." and shows a tooltip
+							 * @param  {object} collection The collection which will be transformed into a tooltip
+							 * @return {string} The HTML label for the collection
+							 */
 							function getLabel(collection) {
-								var text = "", tooltip="", name = collection.Name;
-								if(elements.length != 1) {
-									if (name.length > 20) {
-										name = name.substring(0, 20) + "...";
+								var text = "",
+									tooltip = "",
+									name = collection.Name,
+									maxCharacters = 20;
+								if (elements.length != 1) {
+									if (name.length > maxCharacters) {
+										name = name.substring(0, maxCharacters) + "...";
 										tooltip = 'data-toggle="tooltip" data-original-title="' + collection.Name + '"';
 									}
 								}
 								text = '<span ' + tooltip + ' data-id="' + collection.ID + '" class="hover label label-info set-collection">' + name + '</span> ';
 								return text;
 							}
-
+							/**
+							 * It returns the HTML for remove collection button
+							 */
 							function getLast() {
 								var text = "";
 								text = '<a data-toggle="tooltip" id="remove-collection" href="#" data-original-title="Remove collection"><span class="text-danger glyphicon glyphicon-remove"></span></a>';
@@ -499,7 +532,7 @@ var PublicRepository = function() {
 								labelText += getLabel(parent);
 								parentSpec = currentSpec + ":";
 								if (i < elements.length - 1) {
-									labelText += " <span class='text-muted glyphicon glyphicon-menu-right'></span> ";
+									labelText += "<span class='text-muted glyphicon glyphicon-menu-right'></span> ";
 								}
 							}
 							labelText += getLast();
@@ -553,7 +586,13 @@ var PublicRepository = function() {
 	SideGUI.prototype =
 		/** @lends PublicRepository.SideGUI */
 		{
+			/**
+			 * Does thing. It is present for consistency
+			 */
 			init: function() {},
+			/**
+			 * It updates the GUI
+			 */
 			update: function() {
 				var instance = this,
 					div = "";
@@ -563,16 +602,33 @@ var PublicRepository = function() {
 				 */
 				function getCollectionsHTML() {
 					var collectionsToProcess;
-
+					/**
+					 * It returns the collections to be processed. In case there is a current collection, it retunrs the first children of it. Otherwise, if there is no collection selected, it returns all of them. Also, it trims the empty ones (if the hideEmptyCollections is true)
+					 * @return {array} Collections to be processed
+					 */
 					function getCollectionsToProcess() {
+						/**
+						 * Returns the level of a collection. The level is the number of ":" plus one inside the Spec
+						 * @param  {object} collection The collection
+						 * @return {string} The level of collection
+						 */
 						function getLevel(collection) {
 							return parseInt(collection.Spec.count(":"), 10) + 1;
 						}
-
+						/**
+						 * It checks if the child is a direct children of a parent collection. It is a direct children if the child level plus one equals the parent and the child's Spec starts with parent's one
+						 * @param  {object}  parent The parent collection
+						 * @param  {object}  child  The child collection
+						 * @return {Boolean} True fi the child is a direct children of the parent
+						 */
 						function isDirectChildrenOf(parent, child) {
 							return child.Spec.startsWith(parent.Spec) && (getLevel(parent) + 1) === getLevel(child);
 						}
-
+						/**
+						 * It returns a list of collections which are not empty. An empty collection has no resources
+						 * @param  {array} collections The collection to be processed
+						 * @return {array} The collections array, without the empty collections
+						 */
 						function removeEmpty(collections) {
 							var i, toReturn = [];
 							for (i = 0; i < collections.length; i++) {
@@ -582,7 +638,12 @@ var PublicRepository = function() {
 							}
 							return toReturn;
 						}
-
+						/**
+						 * It returns the array of collections which are direct children of a parent collection
+						 * @param  {array} collections       All the collections
+						 * @param  {object} currentCollection The parent collection
+						 * @return {array}
+						 */
 						function getNextLevel(collections, currentCollection) {
 							var toProcess = [],
 								level = getLevel(currentCollection),
@@ -618,19 +679,40 @@ var PublicRepository = function() {
 							return 0;
 						});
 					}
-
+					/**
+					 * It retunrs the HTML code for am array of collections
+					 * @param  {array} collections The array of collections
+					 * @return {string} The HTML code for the array
+					 */
 					function getCollections(collections) {
+						/**
+						 * It returns the HTML code for the collection
+						 * @param  {object} collection The collection to be processed
+						 * @return {string}
+						 */
 						function getCollection(collection) {
 							var collectionHTML = "";
-
+							/**
+							 * It returns the HTML description of the collection
+							 * @param  {string} description The value of description
+							 * @return {string} The HTML description of the collection
+							 */
 							function getDescription(description) {
 								return '<p class="list-group-item-text">' + description + '</p>';
 							}
-
+							/**
+							 * It returns the div which holds the number of resources
+							 * @param  {object} collection The collection
+							 * @return {string} The HTML code for the DIV which holds the number of resources
+							 */
 							function getRightDiv(collection) {
 								return '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right"><span class="text-right badge"> ' + collection.NumberOfResources + "</span></div>";
 							}
-
+							/**
+							 * It returns the div which holds the name of collection
+							 * @param  {object} collection The collection
+							 * @return {string} The HTML code for the DIV which holds the name of collection
+							 */
 							function getLeftDiv(collection) {
 								return '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"><span class="h6">' + collection.Name + '</span></div>';
 							}
@@ -656,8 +738,15 @@ var PublicRepository = function() {
 					collectionsToProcess = getCollectionsToProcess();
 					return getCollections(collectionsToProcess);
 				}
-
+				/**
+				 * It returns the HTML for the top DIV. This DIV may contain options regarding the collections
+				 * @return {string} The HTML code for the top DIV
+				 */
 				function getTopDiv() {
+					/**
+					 * It returns the HTML code for the "show all" button
+					 * @return {string} HTML code for the "show all"
+					 */
 					function getLeft() {
 						var htmlLeft = "";
 						if (instance.manager.collection) {
@@ -671,7 +760,10 @@ var PublicRepository = function() {
 						}
 						return htmlLeft;
 					}
-
+					/**
+					 * It returns the HTML code for the "Disply empty" button
+					 * @return {string} The HTML code for the "Disply empty"
+					 */
 					function getRight() {
 						var text = "",
 							htmlRight = "";
@@ -690,15 +782,23 @@ var PublicRepository = function() {
 					div += "</div>";
 					return div;
 				}
-
+				/**
+				 * It returns the HTML code for the entire sideGUI
+				 * @return {string} HTML code for the entire sideGUI
+				 */
 				function getHTML() {
 					var div = "";
 					div += getTopDiv();
 					div += getCollectionsHTML();
 					return div;
 				}
-
+				/**
+				 * It activates all the listeners for the sideGUI
+				 */
 				function activate() {
+					/**
+					 * It activates the listeners for "Show all" and "Hide empty" buttons
+					 */
 					function activateTop() {
 						$(".show-all-collections").click(function(event) {
 							event.preventDefault();
@@ -727,10 +827,16 @@ var PublicRepository = function() {
 					instance.manager.setCollection(id);
 				});
 			},
+			/**
+			 * It shows/hides all the collections
+			 */
 			toggleAllCollections: function() {
 				this.showAll = !this.showAll;
 				this.update();
 			},
+			/**
+			 * It shows/hides the empty collections
+			 */
 			toggleEmptyCollections: function() {
 				this.hideEmptyCollections = !this.hideEmptyCollections;
 				this.update();

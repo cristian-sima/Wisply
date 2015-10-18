@@ -27,11 +27,6 @@ func (options *SQLOptions) GetLimit() string {
 	return "LIMIT " + options.LimitMin + "," + options.Offset
 }
 
-// GetOrder returns the Order By option
-func (options *SQLOptions) GetOrder() string {
-	return options.OrderBy
-}
-
 // NewSQLOptions validates and create a valid SQLOptions object
 func NewSQLOptions(options Temp) (SQLOptions, error) {
 	valid := SQLOptions{}

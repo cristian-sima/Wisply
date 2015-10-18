@@ -1,11 +1,11 @@
-<table class="table">
+<table class="table" id="listOfRecords">
   <tbody>
     {{range $index, $record := .records}}
     <tr>
       <td>
           {{ if eq ($record.Keys.Get "relation" | len) 1 }}
             {{range $index, $relation := $record.Keys.Get "relation" }}
-              <a class="showTheater"  href="{{ $relation }}">
+              <a class="resource" href="{{ $relation }}">
                 <h4>
               {{range $index, $title := $record.Keys.Get "title" }}
               {{ $title }}

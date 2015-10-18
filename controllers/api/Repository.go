@@ -22,6 +22,7 @@ func (controller *Repository) GetResources() {
 	offset := controller.Ctx.Input.Param(":number")
 	repo, err := repository.NewRepository(ID)
 	collection := strings.TrimSpace(controller.GetString("collection"))
+	orderBy := strings.TrimSpace(controller.GetString("orderBy"))
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -30,6 +31,7 @@ func (controller *Repository) GetResources() {
 			LimitMin: min,
 			Offset:   offset,
 			Limit:    100,
+			OrderBy:  orderBy,
 			Where: map[string]string{
 				"collection": collection,
 			},

@@ -85,6 +85,9 @@
   width: 50px;
   background-color: #f9f9f9;
 }
+a.resource:focus{
+  outline: 0px auto transparent;
+}
 </style>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>

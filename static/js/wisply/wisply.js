@@ -80,7 +80,8 @@ var Wisply = function() {
 			"key": "Alt+h",
 			"callback": function() {
 				var description = wisply.shortcutManager.getDescription();
-				wisply.message.show("Key Shortcuts on this page", description);
+				wisply.message.show("Key shortcuts available on this page", description);
+				wisply.activateTooltip();
 			},
 			description: "Show the list of key shortcuts",
 		}];
@@ -126,13 +127,32 @@ var Wisply = function() {
 				 * @return {string} The HTML description of the keys
 				 */
 				function getKeysHTML(keys) {
+					function getKey(key) {
+						var htmlKey = "";
+						htmlKey = key;
+						switch(key) {
+							case "UP":
+								htmlKey = "<span class='glyphicon glyphicon-arrow-right'></span>";
+							break;
+							case "DOWN":
+								htmlKey = "<span class='glyphicon glyphicon-arrow-down'></span>";
+							break;
+							case "LEFT":
+								htmlKey = "<span class='glyphicon glyphicon-arrow-left'></span>";
+							break;
+							case "RIGHT":
+								htmlKey = "<span class='glyphicon glyphicon-arrow-right'></span>";
+							break;
+						}
+						return htmlKey;
+					}
 					var keysHTML = [],
 						elements, index;
 					elements = keys.toUpperCase().split("+");
 					for (index = 0; index < elements.length; index++) {
-						keysHTML.push("<kbd>" + elements[index] + "</kbd>");
+						keysHTML.push("<kbd>" + getKey(elements[index]) + "</kbd>");
 					}
-					return keysHTML.join(" + ");
+					return keysHTML.join(" <span class='text-muted'>+</span> ");
 				}
 				/**
 				 * It returns an HTML description of the shortcut
@@ -140,18 +160,35 @@ var Wisply = function() {
 				 * @return {string} A description of the shortcut
 				 */
 				function describeShortcut(shortcut) {
+					/**
+					 * If the showWarning is true, it returns a warning icon which informs that the shortcut is overwritting the default functionality of the browser
+					 * @param  {bool} showWarning If to show or not the warning
+					 * @return {string} The warning icon or empty string
+					 */
+					function getWarning(showWarning) {
+						if(showWarning) {
+							return "<span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='left'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'></span> ";
+						}
+						return "";
+					}
 					var html = "";
-					html += "<div>";
-					html += getKeysHTML(shortcut.key) + "&nbsp;-&nbsp;" + shortcut.description;
-					html += "</div>";
+					html += "<tr><td>";
+					html += getWarning(shortcut.overwrites);
+					html += getKeysHTML(shortcut.key);
+					html += "</td><td>";
+					html += "&nbsp;&nbsp;";
+					html += shortcut.description;
+					html += "</td></tr>";
 					return html;
 				}
 				var shortcut, html;
 				html = "";
+				html = "<table class='table table-hover'><tbody>";
 				for (var i = 0; i < this.memory.length; i++) {
 					shortcut = this.memory[i];
 					html += describeShortcut(shortcut);
 				}
+				html += "</tbody></table>";
 				return html;
 			}
 		};

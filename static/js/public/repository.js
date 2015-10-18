@@ -28,13 +28,14 @@ var PublicRepository = function() {
 	var Manager = function Manager(currentRepository) {
 		this.repository = currentRepository;
 		this.min = 0;
-		this.resourcePerPage = 15;
+		this.resourcesPerPage = 15;
 		// They are used to extract the verbs and parameters from the hash
 		this.delimitator = {
 			verb: "*",
 			parameter: "-",
 			insideVerb: "|",
 		};
+		this.resourceFocused = -1;
 		this.topGUI = new TopGUI(this);
 		this.sideGUI = new SideGUI(this);
 		this.bottomGUI = new BottomGUI(this);
@@ -76,6 +77,26 @@ var PublicRepository = function() {
 							wisply.publicRepositoryModule.manager.showNext();
 						},
 						"description": "Receives the previous page of resources",
+					}, {
+						"type": "keyup",
+						"key": "Down",
+						"callback": function() {
+							instance.focus(instance.resourceFocused + 1);
+						},
+						"description": function() {
+							return "Focuses the first resource or focuses the next resource.";
+						}(),
+						"overwrites": true,
+					}, {
+						"type": "keyup",
+						"key": "Up",
+						"callback": function() {
+							instance.focus(instance.resourceFocused - 1);
+						},
+						"description": function() {
+							return "Focuses the previous resource.";
+						}(),
+						"overwrites": true,
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
@@ -94,6 +115,25 @@ var PublicRepository = function() {
 				this.bottomGUI.init();
 			},
 			/**
+			 * It focuses the index resource
+			 * @param  {number} index The index is from 0 to n-1 resourcesPerPage
+			 */
+			focus: function(index) {
+				if (index + 1 >= this.resourcesPerPage) {
+					index = this.resourcesPerPage - 1;
+				}
+				if (index > -1) {
+					this.resourceFocused = index;
+					$("#listOfRecords").find("a").eq(index).focus();
+				}
+			},
+			/**
+			 * It resets the focus item. Private method
+			 */
+			_resetFocus: function () {
+				this.resourceFocused = -1;
+			},
+			/**
 			 * It loads the resources from server according to the current settings
 			 */
 			getResources: function() {
@@ -110,7 +150,7 @@ var PublicRepository = function() {
 				}
 				this.showLoading();
 				$.ajax({
-					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage,
+					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcesPerPage,
 					data: {
 						"collection": getCollection(),
 						"format": "html",
@@ -124,7 +164,7 @@ var PublicRepository = function() {
 			 * It shows the top div, the buttons and sets the wisply loading logo
 			 */
 			showLoading: function() {
-				$("#repository-top, .next, .previous, #repository-bottom").hide();
+				$("#repository-top, .next, .previous, #repository-bottom, #repository-side").hide();
 				$("#repository-resources").html('<div class="text-center"><br /><br /><br />' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
@@ -135,6 +175,7 @@ var PublicRepository = function() {
 				this.changeResources(html);
 				this.activateListeners();
 				this.updateGUI();
+				this._resetFocus();
 			},
 			/**
 			 * It activates the listenrs for the next and previous buttons
@@ -166,32 +207,35 @@ var PublicRepository = function() {
 			 */
 			showNext: function() {
 				var instance = this;
-				if (instance.min + instance.resourcePerPage < parseInt(instance.getCurrentTotalNumber(), 10)) {
+				if (instance.min + instance.resourcesPerPage < parseInt(instance.getCurrentTotalNumber(), 10)) {
 					var newMin;
-					newMin = parseInt(this.min, 10) + this.resourcePerPage;
-					this.changeMin(newMin);
-					this.goUp();
-					this.updateHash();
+					newMin = parseInt(this.min, 10) + this.resourcesPerPage;
+					this.changeStart(newMin);
 				}
+			},
+			showLastPage: function () {
+				var total = this.getCurrentTotalNumber(),
+					resourcesPerPage = this.resourcesPerPage,
+				 	numberOfPages = Math.round(total/resourcesPerPage),
+					newStart = (numberOfPages - 1) * resourcesPerPage;
+				this.changeStart(newStart);
 			},
 			/**
 			 * It gets the previous resources
 			 */
 			showPrevious: function() {
 				var instance = this;
-				if (instance.min >= instance.resourcePerPage) {
+				if (instance.min >= instance.resourcesPerPage) {
 					var newMin;
-					newMin = parseInt(this.min, 10) - this.resourcePerPage;
-					this.changeMin(newMin);
-					this.goUp();
-					this.updateHash();
+					newMin = parseInt(this.min, 10) - this.resourcesPerPage;
+					this.changeStart(newMin);
 				}
 			},
 			/**
-			 * It changes the min value (The value from which the resources are displayed)
+			 * It changes the min value (The value from which the resources are displayed). It is a private method
 			 * @param  {string} newValue The new value
 			 */
-			changeMin: function(newValue) {
+			_changeStart: function(newValue) {
 				var value = 0;
 				if ((!isInt(newValue)) || !newValue || newValue === "" || parseInt(newValue, 10) < 0) {
 					value = 0;
@@ -199,6 +243,15 @@ var PublicRepository = function() {
 					value = newValue;
 				}
 				this.min = parseInt(value, 10);
+			},
+			/**
+			 * It changes the min value (The value from which the resources are displayed). It goes up and updates the hash.
+			 * @param  {string} newValue The new value
+			 */
+			changeStart: function(newValue) {
+				this._changeStart(newValue);
+				this.goUp();
+				this.updateHash();
 			},
 			/**
 			 * It updates the hash of the page
@@ -210,7 +263,7 @@ var PublicRepository = function() {
 				 * @return {string} The string for the "list" verb
 				 */
 				function getList() {
-					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcePerPage;
+					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcesPerPage;
 				}
 				/**
 				 * It returns the description of the verb collection
@@ -332,7 +385,7 @@ var PublicRepository = function() {
 				function updateList() {
 					var verb = instance.getVerb("list");
 					if (verb) {
-						instance.changeMin(verb.parameters[0]);
+						instance._changeStart(verb.parameters[0]);
 						instance._changeResourcesPerPage(verb.parameters[1]);
 					}
 				}
@@ -354,7 +407,7 @@ var PublicRepository = function() {
 			 * @param  {number} newValue The new value
 			 */
 			_changeResourcesPerPage: function(newValue) {
-				this.resourcePerPage = parseInt(newValue, 10);
+				this.resourcesPerPage = parseInt(newValue, 10);
 			},
 			/**
 			 * It can be used to change the number of resources displayed per page. It updates the hash
@@ -417,7 +470,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the previous button. Otherwise, it enables it
 				 */
 				function updatePreviousButton() {
-					if (manager.getCurrentTotalNumber() === 0 || manager.min < manager.resourcePerPage) {
+					if (manager.getCurrentTotalNumber() === 0 || manager.min < manager.resourcesPerPage) {
 						$(".previous").addClass("disabled");
 						$(".previous").hide();
 					} else {
@@ -429,7 +482,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the next button. Otherwise, it enables it
 				 */
 				function updateNextButton() {
-					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcePerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
+					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcesPerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
 						$(".next").addClass("disabled");
 						$(".next").hide();
 					} else {
@@ -448,7 +501,7 @@ var PublicRepository = function() {
 				 * It shows the buttons
 				 */
 				function showElements() {
-					$("#repository-top, #repository-bottom").show();
+					$("#repository-top, #repository-bottom, #repository-side").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -471,14 +524,14 @@ var PublicRepository = function() {
 							function getStartZero() {
 								function describeCollection() {
 									var text, total = manager.getCurrentTotalNumber();
-									if(total < manager.resourcePerPage) {
+									if(total < manager.resourcesPerPage) {
 										if (total  === 1) {
 											text = "This collection contains only one resource";
 										} else {
 											text = "Showing all " + total + " resources";
 										}
 									} else {
-										text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
+										text = "Showing first " + manager.resourcesPerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
 									}
 									return text;
 								}
@@ -496,18 +549,18 @@ var PublicRepository = function() {
 							 */
 							function getStartNotZero() {
 								var text = "";
-								if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
+								if (start + manager.resourcesPerPage >= manager.getCurrentTotalNumber()) {
 									difference = manager.getCurrentTotalNumber() - start;
 									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
 								} else {
-									text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of a total number of " + manager.getCurrentTotalNumber() + "";
+									text = "Showing " + manager.resourcesPerPage + " resources from " + start + " to " + end + " of a total number of " + manager.getCurrentTotalNumber() + "";
 								}
 								return text;
 							}
 							var text = "",
 								start = manager.min,
 								difference,
-								end = manager.min + manager.resourcePerPage;
+								end = manager.min + manager.resourcesPerPage;
 							if ((start === 0)) {
 								text += getStartZero();
 							} else {
@@ -921,8 +974,19 @@ var PublicRepository = function() {
 							instance.manager.changeResourcesPerPage(this.value);
 						});
 					}
+					function initButtons() {
+						$(".show-first-resources").click(function(event) {
+							event.preventDefault();
+							instance.manager.changeStart(0);
+						});
+						$(".show-last-resources").click(function(event) {
+							event.preventDefault();
+							instance.manager.showLastPage();
+						});
+					}
 					initShowMore();
 					initResourcesPerPage();
+					initButtons();
 				},
 				/**
 				 * It updates the bottom GUI
@@ -956,14 +1020,48 @@ var PublicRepository = function() {
 									selectHTML += "</select>";
 									return selectHTML;
 								}
-								var perPageHTML = "", number = instance.manager.resourcePerPage;
+								var perPageHTML = "", number = instance.manager.resourcesPerPage;
 								perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
 								return perPageHTML;
+							}
+							function getButtons() {
+								function getFirst() {
+									var text = "",
+										total = instance.manager.getCurrentTotalNumber(),
+										start = instance.manager.min,
+										resourcesPerPage = instance.manager.resourcesPerPage;
+									if(total < resourcesPerPage || (start === 0)) {
+										text = "";
+									} else {
+										text =  '<li class="previous"><a href="#" class="show-first-resources">← First page</a></li>';
+									}
+									return text;
+								}
+								function getLast() {
+									var text = "",
+										total = instance.manager.getCurrentTotalNumber(),
+										start = instance.manager.min,
+										resourcesPerPage = instance.manager.resourcesPerPage;
+									if(start + resourcesPerPage >= total) {
+										text = "";
+									} else {
+										text =  '<li class="next"><a href="#" class="show-last-resources">Last page →</a></li>';
+									}
+									return text;
+								}
+								var buttonsHTML = "";
+								buttonsHTML += "<ul class='pager'>";
+								buttonsHTML += getFirst();
+								buttonsHTML += getLast();
+								buttonsHTML += "</ul>";
+								return buttonsHTML;
 							}
 							var text = "", visibility;
 							visibility = (!instance.showMoreOptions?"style='display:none'":"");
 							text += "<div " + visibility + " class='well' >";
 							text += getResourcesPerPage();
+							text += "<hr />";
+							text += getButtons();
 							text += "</div>";
 							return text;
 					}

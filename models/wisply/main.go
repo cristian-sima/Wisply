@@ -47,6 +47,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
 		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
+		fmt.Println(sql)
 		rows, err = database.Connection.Query(sql, repositoryID)
 	} else {
 		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()

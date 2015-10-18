@@ -31,8 +31,7 @@ var Wisply = function() {
 				 * It loads the accessibility javascript file and shows the bar
 				 */
 				function createScript() {
-					var jf;
-					jf = document.createElement('script');
+					var jf = document.createElement('script');
 					jf.src = 'https://core.atbar.org/atbar/en/latest/atbar.min.js';
 					jf.type = 'text/javascript';
 					jf.id = 'ToolBar';
@@ -42,21 +41,25 @@ var Wisply = function() {
 				 * It moves the Wisply navigation bar 41px down. (it prevents overlaping with the bar). Also, it sets a listener for closing button, such that the bar goes back to original position
 				 */
 				function moveWisply() {
-					$(".navbar-fixed-top").css({"top": "41px"});
-					setTimeout( function() {
-						$("#at-btn-atkit-unload").click(function() {
-									setTimeout( function() {
-											$(".navbar-fixed-top").css({"top": "0px"});
-										}, 100);
+					$(".navbar-fixed-top").css({
+						"top": "41px"
 					});
+					setTimeout(function() {
+						$("#at-btn-atkit-unload").click(function() {
+							setTimeout(function() {
+								$(".navbar-fixed-top").css({
+									"top": "0px"
+								});
+							}, 100);
+						});
 					}, 200);
 				}
 				/**
 				 * It loads the bar and moves wisply
 				 */
 				function showAccessibilityBar() {
-						createScript();
-						moveWisply();
+					createScript();
+					moveWisply();
 				}
 				showAccessibilityBar();
 			},
@@ -109,8 +112,8 @@ var Wisply = function() {
 				function bind(shortcut) {
 					$(document).bind(shortcut.type, shortcut.key, shortcut.callback);
 				}
-				var shortcut;
-				for (var i = 0; i < shortcuts.length; i++) {
+				var shortcut, i;
+				for (i = 0; i < shortcuts.length; i++) {
 					shortcut = shortcuts[i];
 					bind(shortcut);
 					this.memory.push(shortcut);
@@ -133,27 +136,22 @@ var Wisply = function() {
 					 * @return {string} The HTML of the key
 					 */
 					function getKey(key) {
-						var htmlKey = "";
-						htmlKey = key;
-						switch(key) {
-							case "UP":
-								htmlKey = "<span class='glyphicon glyphicon-arrow-up'></span>";
-							break;
-							case "DOWN":
-								htmlKey = "<span class='glyphicon glyphicon-arrow-down'></span>";
-							break;
-							case "LEFT":
-								htmlKey = "<span class='glyphicon glyphicon-arrow-left'></span>";
-							break;
-							case "RIGHT":
-								htmlKey = "<span class='glyphicon glyphicon-arrow-right'></span>";
-							break;
+						var htmlKey = "",
+							defaultKeys = {
+								"UP": "<span class='glyphicon glyphicon-arrow-up'></span>",
+								"DOWN": "<span class='glyphicon glyphicon-arrow-down'></span>",
+								"LEFT": "<span class='glyphicon glyphicon-arrow-left'></span>",
+								"RIGHT": "<span class='glyphicon glyphicon-arrow-right'></span>",
+							};
+						if (defaultKeys[key]) {
+							htmlKey = defaultKeys[key];
+						} else {
+							htmlKey = key;
 						}
 						return htmlKey;
 					}
-					var keysHTML = [],
-						elements, index;
-					elements = keys.toUpperCase().split("+");
+					var keysHTML = [], index,
+						elements = keys.toUpperCase().split("+");
 					for (index = 0; index < elements.length; index++) {
 						keysHTML.push("<kbd>" + getKey(elements[index]) + "</kbd>");
 					}
@@ -171,28 +169,37 @@ var Wisply = function() {
 					 * @return {string} The warning icon or empty string
 					 */
 					function getWarning(showWarning) {
-						if(showWarning) {
-							return "<span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='left'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'></span>&nbsp;&nbsp;";
+						var text = "";
+						if (showWarning) {
+							text = "<span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='top'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'></span>&nbsp;&nbsp;";
 						}
-						return "";
+						return text;
 					}
-					var html = "";
-					html += "<tr><td>";
-					html += getWarning(shortcut.overwrites);
+					var html = "<tr><td>";
 					html += getKeysHTML(shortcut.key);
 					html += "</td><td>";
-					html += "&nbsp;&nbsp;";
-					html += shortcut.description;
+					html += "&nbsp;&nbsp;" + shortcut.description + "&nbsp;&nbsp;" + getWarning(shortcut.overwrites);
 					html += "</td></tr>";
 					return html;
 				}
-				var shortcut, html;
-				html = "";
-				html = "<table class='table table-hover'><tbody>";
-				for (var i = 0; i < this.memory.length; i++) {
-					shortcut = this.memory[i];
-					html += describeShortcut(shortcut);
+				/**
+				 * It returns the HTML code which describes the shortcuts
+				 * @param  {array} shortcuts The shortcuts
+				 * @return {string} HTML code which describes the shortcuts
+				 */
+				function describeShortcuts(shortcuts) {
+					var shortcut,
+						text = "";
+					for (i = 0; i < shortcuts.length; i++) {
+						shortcut = shortcuts[i];
+						text += describeShortcut(shortcut);
+					}
+					return text;
 				}
+				var i,
+					html = "";
+				html = "<table class='table table-hover'><tbody>";
+				html += describeShortcuts(this.memory);
 				html += "</tbody></table>";
 				return html;
 			}
@@ -254,7 +261,7 @@ var Wisply = function() {
 			dialog: function(args) {
 				bootbox.dialog(args);
 			},
-			tellToWait: function (title) {
+			tellToWait: function(title) {
 				var msg;
 				msg = "<div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of sugar) :) <br />" + wisply.getLoadingImage("big") + "</div>";
 				this.dialog({
@@ -320,16 +327,21 @@ var Wisply = function() {
 						}
 						return dest;
 					}
-					if (hashTagActive != this.hash) { //this will prevent if the user click several times the same link to freeze the scroll.
+					/**
+					 * It changes the hash
+					 * @param  {event} object The event which has been generated
+					 */
+					function changeHash(object) {
 						event.preventDefault();
-						//calculate destination place
-						var dest = getDestinationPlace(this);
-						//go to destination
+						var dest = getDestinationPlace(object);
 						$('html,body').animate({
 							scrollTop: dest - 80
 						}, 500, 'swing');
-						hashTagActive = this.hash;
-						window.location.hash = this.hash;
+						hashTagActive = object.hash;
+						window.location.hash = object.hash;
+					}
+					if (hashTagActive != this.hash) { //this will prevent if the user click several times the same link to freeze the scroll.
+						changeHash(this);
 					} else {
 						preventNavOverlap();
 					}
@@ -369,12 +381,9 @@ var Wisply = function() {
 				$('[data-toggle="tooltip"]').tooltip();
 			},
 			getXSRF: function() {
-				var xsrf,
-					xsrflist,
-					value;
-				xsrf = $.cookie("_xsrf");
-				xsrflist = xsrf.split("|");
-				value = base64_decode(xsrflist[0]);
+				var xsrf = $.cookie("_xsrf"),
+					xsrflist = xsrf.split("|"),
+					value = base64_decode(xsrflist[0]);
 				return value;
 			},
 			/**
@@ -398,8 +407,7 @@ var Wisply = function() {
 			 */
 			showLoading: function(idElement, size) {
 				var element = $(idElement),
-					HTML;
-				HTML = this.getLoadingImage(size);
+					HTML = this.getLoadingImage(size);
 				element.html(HTML);
 			},
 			/**
@@ -411,22 +419,15 @@ var Wisply = function() {
 				/**
 				 * It returns the dimension in pixels acording to string type
 				 * @param  {string} size The demension of the image. It can be small (for 20px), medium (for 55px) and large (for 110px)
-				 * @return {int}      The dimension in pixels
+				 * @return {number}      The dimension in pixels
 				 */
 				function getDimension(size) {
-					var px = 0;
-					switch (size) {
-						case "small":
-							px = 20;
-							break;
-						case "medium":
-							px = 55;
-							break;
-						case "big":
-							px = 110;
-							break;
-					}
-					return px;
+					var sizes = {
+						"small": 20,
+						"medium": 55,
+						"big": 110,
+					};
+					return sizes[size];
 				}
 				/**
 				 * It returns the HTML code for the loading element
@@ -459,7 +460,7 @@ var Wisply = function() {
 			}
 		};
 	return {
-		App: App
+		App: App,
 	};
 };
 $(document).ready(function() {

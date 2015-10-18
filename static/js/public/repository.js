@@ -100,6 +100,7 @@ var PublicRepository = function() {
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
+
 				function initButtons() {
 					$(".next").click(function(event) {
 						event.preventDefault();
@@ -691,7 +692,6 @@ var PublicRepository = function() {
 				 * @return {string} HTML code
 				 */
 				function getCollectionsHTML() {
-					var collectionsToProcess;
 					/**
 					 * It returns the collections to be processed. In case there is a current collection, it retunrs the first children of it. Otherwise, if there is no collection selected, it returns all of them. Also, it trims the empty ones (if the hideEmptyCollections is true)
 					 * @return {array} Collections to be processed
@@ -746,27 +746,43 @@ var PublicRepository = function() {
 							}
 							return toProcess;
 						}
-						var allCollections = instance.manager.repository.collections,
-							toProcess,
-							currentCollection = instance.manager.collection;
-						if (!currentCollection || instance.showAll) {
-							toProcess = allCollections;
-						} else {
-							toProcess = getNextLevel(allCollections, currentCollection);
+						/**
+						 * It sorts an array of collection by Name ASC
+						 * @param  {collections} collections The array of collections to be sorted
+						 * @return {array} The sorted array
+						 */
+						function sortCollections(collections) {
+							var algorithm = function(a, b) {
+								if (a.Name < b.Name) {
+									return -1;
+								}
+								if (a.Name > b.Name) {
+									return 1;
+								}
+								return 0;
+							};
+							return collections.sort(algorithm);
 						}
+						function decideWhichCollections() {
+							var allCollections = instance.manager.repository.collections,
+								toProcess,
+								currentCollection = instance.manager.collection;
+							if (!currentCollection || instance.showAll) {
+								toProcess = allCollections;
+							} else {
+								toProcess = getNextLevel(allCollections, currentCollection);
+							}
+							return toProcess;
+						}
+						var	toProcess;
+
+						toProcess = decideWhichCollections();
+
 						// remove empty
 						if (instance.hideEmptyCollections) {
 							toProcess = removeEmpty(toProcess);
 						}
-						return toProcess.sort(function(a, b) {
-							if (a.Name < b.Name) {
-								return -1;
-							}
-							if (a.Name > b.Name) {
-								return 1;
-							}
-							return 0;
-						});
+						return sortCollections(toProcess);
 					}
 					/**
 					 * It retunrs the HTML code for am array of collections
@@ -824,6 +840,7 @@ var PublicRepository = function() {
 						}
 						return html;
 					}
+					var collectionsToProcess;
 					collectionsToProcess = getCollectionsToProcess();
 					return getCollections(collectionsToProcess);
 				}

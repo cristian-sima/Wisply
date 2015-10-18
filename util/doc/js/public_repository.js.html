@@ -128,8 +128,24 @@ var PublicRepository = function() {
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
+
+				function initButtons() {
+					$(".next").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showNext();
+						}
+					});
+					$(".previous").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showPrevious();
+						}
+					});
+				}
 				initHash();
 				initKeys();
+				initButtons();
 				this.initGUI();
 				this.updateGUI();
 				this.hashChanged();
@@ -201,33 +217,8 @@ var PublicRepository = function() {
 			 */
 			fired_NewResources: function(html) {
 				this.changeResources(html);
-				this.activateListeners();
 				this.updateGUI();
 				this._resetFocus();
-			},
-			/**
-			 * It activates the listenrs for the next and previous buttons
-			 */
-			activateListeners: function() {
-				var instance = this;
-				/**
-				 * It sets the listenes for next and previous buttons. In case they have a disabled attribute, it does not call their listeners
-				 */
-				function initButtons() {
-					$(".next").click(function(event) {
-						event.preventDefault();
-						if (!$(this).hasClass("disabled")) {
-							instance.showNext();
-						}
-					});
-					$(".previous").click(function(event) {
-						event.preventDefault();
-						if (!$(this).hasClass("disabled")) {
-							instance.showPrevious();
-						}
-					});
-				}
-				initButtons();
 			},
 			/**
 			 * It shows the next resources
@@ -434,19 +425,19 @@ var PublicRepository = function() {
 				updateCollection();
 			},
 			/**
-			 * It changes the number of resources displayed per page. It is a private method
-			 * @param  {number} newValue The new value
-			 */
-			_changeResourcesPerPage: function(newValue) {
-				this.resourcesPerPage = parseInt(newValue, 10);
-			},
-			/**
 			 * It can be used to change the number of resources displayed per page. It updates the hash
 			 * @param  {number} newValue The new value
 			 */
 			changeResourcesPerPage: function(newValue) {
 				this._changeResourcesPerPage(newValue);
 				this.updateHash();
+			},
+			/**
+			 * It changes the number of resources displayed per page. It is a private method
+			 * @param  {number} newValue The new value
+			 */
+			_changeResourcesPerPage: function(newValue) {
+				this.resourcesPerPage = parseInt(newValue, 10);
 			},
 			/**
 			 * It updates the next and previous buttons
@@ -729,7 +720,6 @@ var PublicRepository = function() {
 				 * @return {string} HTML code
 				 */
 				function getCollectionsHTML() {
-					var collectionsToProcess;
 					/**
 					 * It returns the collections to be processed. In case there is a current collection, it retunrs the first children of it. Otherwise, if there is no collection selected, it returns all of them. Also, it trims the empty ones (if the hideEmptyCollections is true)
 					 * @return {array} Collections to be processed
@@ -784,27 +774,43 @@ var PublicRepository = function() {
 							}
 							return toProcess;
 						}
-						var allCollections = instance.manager.repository.collections,
-							toProcess,
-							currentCollection = instance.manager.collection;
-						if (!currentCollection || instance.showAll) {
-							toProcess = allCollections;
-						} else {
-							toProcess = getNextLevel(allCollections, currentCollection);
+						/**
+						 * It sorts an array of collection by Name ASC
+						 * @param  {collections} collections The array of collections to be sorted
+						 * @return {array} The sorted array
+						 */
+						function sortCollections(collections) {
+							var algorithm = function(a, b) {
+								if (a.Name &lt; b.Name) {
+									return -1;
+								}
+								if (a.Name > b.Name) {
+									return 1;
+								}
+								return 0;
+							};
+							return collections.sort(algorithm);
 						}
+						function decideWhichCollections() {
+							var allCollections = instance.manager.repository.collections,
+								toProcess,
+								currentCollection = instance.manager.collection;
+							if (!currentCollection || instance.showAll) {
+								toProcess = allCollections;
+							} else {
+								toProcess = getNextLevel(allCollections, currentCollection);
+							}
+							return toProcess;
+						}
+						var	toProcess;
+
+						toProcess = decideWhichCollections();
+
 						// remove empty
 						if (instance.hideEmptyCollections) {
 							toProcess = removeEmpty(toProcess);
 						}
-						return toProcess.sort(function(a, b) {
-							if (a.Name &lt; b.Name) {
-								return -1;
-							}
-							if (a.Name > b.Name) {
-								return 1;
-							}
-							return 0;
-						});
+						return sortCollections(toProcess);
 					}
 					/**
 					 * It retunrs the HTML code for am array of collections
@@ -862,6 +868,7 @@ var PublicRepository = function() {
 						}
 						return html;
 					}
+					var collectionsToProcess;
 					collectionsToProcess = getCollectionsToProcess();
 					return getCollections(collectionsToProcess);
 				}
@@ -1182,7 +1189,7 @@ $(document).ready(function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 15:19:46 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 22:20:57 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

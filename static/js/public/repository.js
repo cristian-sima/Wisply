@@ -100,8 +100,23 @@ var PublicRepository = function() {
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
+				function initButtons() {
+					$(".next").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showNext();
+						}
+					});
+					$(".previous").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showPrevious();
+						}
+					});
+				}
 				initHash();
 				initKeys();
+				initButtons();
 				this.initGUI();
 				this.updateGUI();
 				this.hashChanged();
@@ -173,33 +188,8 @@ var PublicRepository = function() {
 			 */
 			fired_NewResources: function(html) {
 				this.changeResources(html);
-				this.activateListeners();
 				this.updateGUI();
 				this._resetFocus();
-			},
-			/**
-			 * It activates the listenrs for the next and previous buttons
-			 */
-			activateListeners: function() {
-				var instance = this;
-				/**
-				 * It sets the listenes for next and previous buttons. In case they have a disabled attribute, it does not call their listeners
-				 */
-				function initButtons() {
-					$(".next").click(function(event) {
-						event.preventDefault();
-						if (!$(this).hasClass("disabled")) {
-							instance.showNext();
-						}
-					});
-					$(".previous").click(function(event) {
-						event.preventDefault();
-						if (!$(this).hasClass("disabled")) {
-							instance.showPrevious();
-						}
-					});
-				}
-				initButtons();
 			},
 			/**
 			 * It shows the next resources
@@ -406,19 +396,19 @@ var PublicRepository = function() {
 				updateCollection();
 			},
 			/**
-			 * It changes the number of resources displayed per page. It is a private method
-			 * @param  {number} newValue The new value
-			 */
-			_changeResourcesPerPage: function(newValue) {
-				this.resourcesPerPage = parseInt(newValue, 10);
-			},
-			/**
 			 * It can be used to change the number of resources displayed per page. It updates the hash
 			 * @param  {number} newValue The new value
 			 */
 			changeResourcesPerPage: function(newValue) {
 				this._changeResourcesPerPage(newValue);
 				this.updateHash();
+			},
+			/**
+			 * It changes the number of resources displayed per page. It is a private method
+			 * @param  {number} newValue The new value
+			 */
+			_changeResourcesPerPage: function(newValue) {
+				this.resourcesPerPage = parseInt(newValue, 10);
 			},
 			/**
 			 * It updates the next and previous buttons

@@ -3,18 +3,12 @@
     {{range $index, $record := .records}}
     <tr>
       <td>
-          {{ if eq ($record.Keys.Get "relation" | len) 1 }}
-            {{range $index, $relation := $record.Keys.Get "relation" }}
-              <a class="resource" href="{{ $relation }}">
-                <h4>
-              {{range $index, $title := $record.Keys.Get "title" }}
-              {{ $title }}
-              {{ end }}
-            </h4>
+          <a class="resource" href="{{ $record.Keys.GetURL }}">
+              <h4>
+            {{range $index, $title := $record.Keys.Get "title" }}
+            {{ $title }}
             {{ end }}
-          {{ else }}
-          Multirelation
-          {{ end }}
+          </h4>
           </a>
         {{range $index, $description := $record.Keys.Get "identifier" }}
         <!-- <span class="label label-info">{{ $description }} </span><br /> -->

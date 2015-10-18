@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"time"
 
-	auth "github.com/cristian-sima/Wisply/models/auth"
+	"github.com/cristian-sima/Wisply/models/auth"
 )
 
 // WisplyController inherits the MessageController
@@ -87,3 +87,9 @@ func (controller *WisplyController) IndicateLastModification(timestamp int64) {
 func (controller *WisplyController) SetCustomTitle(title string) {
 	controller.Data["customTitle"] = title
 }
+
+//
+// // Finish closes the connection to database
+// func (controller *WisplyController) Finish() {
+// 	database.Connection.Close()
+// }

@@ -137,7 +137,7 @@ var Wisply = function() {
 						htmlKey = key;
 						switch(key) {
 							case "UP":
-								htmlKey = "<span class='glyphicon glyphicon-arrow-right'></span>";
+								htmlKey = "<span class='glyphicon glyphicon-arrow-up'></span>";
 							break;
 							case "DOWN":
 								htmlKey = "<span class='glyphicon glyphicon-arrow-down'></span>";

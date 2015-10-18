@@ -127,6 +127,11 @@ var Wisply = function() {
 				 * @return {string} The HTML description of the keys
 				 */
 				function getKeysHTML(keys) {
+					/**
+					 * It changes for some keys the word to an icon (e.g. arrows)
+					 * @param  {string} key The key as a string
+					 * @return {string} The HTML of the key
+					 */
 					function getKey(key) {
 						var htmlKey = "";
 						htmlKey = key;
@@ -167,7 +172,7 @@ var Wisply = function() {
 					 */
 					function getWarning(showWarning) {
 						if(showWarning) {
-							return "<span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='left'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'></span> ";
+							return "<span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='left'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'></span>&nbsp;&nbsp;";
 						}
 						return "";
 					}

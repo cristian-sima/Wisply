@@ -130,7 +130,7 @@ var PublicRepository = function() {
 			/**
 			 * It resets the focus item. Private method
 			 */
-			_resetFocus: function () {
+			_resetFocus: function() {
 				this.resourceFocused = -1;
 			},
 			/**
@@ -213,10 +213,13 @@ var PublicRepository = function() {
 					this.changeStart(newMin);
 				}
 			},
-			showLastPage: function () {
+			/**
+			 * It shows the last page for the repository
+			 */
+			showLastPage: function() {
 				var total = this.getCurrentTotalNumber(),
 					resourcesPerPage = this.resourcesPerPage,
-				 	numberOfPages = Math.round(total/resourcesPerPage),
+					numberOfPages = Math.round(total / resourcesPerPage),
 					newStart = (numberOfPages - 1) * resourcesPerPage;
 				this.changeStart(newStart);
 			},
@@ -524,8 +527,8 @@ var PublicRepository = function() {
 							function getStartZero() {
 								function describeCollection() {
 									var text, total = manager.getCurrentTotalNumber();
-									if(total < manager.resourcesPerPage) {
-										if (total  === 1) {
+									if (total < manager.resourcesPerPage) {
+										if (total === 1) {
 											text = "This collection contains only one resource";
 										} else {
 											text = "Showing all " + total + " resources";
@@ -938,147 +941,184 @@ var PublicRepository = function() {
 				this.update();
 			}
 		};
-		/**
-		 * Contains the functionality for bottom GUI
-		 * @memberof PublicRepository
-		 * @class BottomGUI
-		 * @classdesc It encapsulets the functionality for bottom GUI
-		 * @param {PublicRepository.Manager} manager Is a reference to the manager
-		 */
-		var BottomGUI = function BottomGUI(manager) {
-			this.element = $("#repository-bottom");
-			this.manager = manager;
-			this.showMoreOptions = false;
-		};
-		BottomGUI.prototype =
-			/** @lends PublicRepository.BottomGUI */
-			{
+	/**
+	 * Contains the functionality for bottom GUI
+	 * @memberof PublicRepository
+	 * @class BottomGUI
+	 * @classdesc It encapsulets the functionality for bottom GUI
+	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 */
+	var BottomGUI = function BottomGUI(manager) {
+		this.element = $("#repository-bottom");
+		this.manager = manager;
+		this.showMoreOptions = false;
+	};
+	BottomGUI.prototype =
+		/** @lends PublicRepository.BottomGUI */
+		{
+			/**
+			 * It activates the listeners for the bottom GUI
+			 */
+			init: function() {
+				var instance = this;
 				/**
-				 * It activates the listeners for the bottom GUI
+				 * It sets a listener for the more option button
 				 */
-				init: function() {
-					var instance = this;
-					/**
-					 * It sets a listener for the more option button
-					 */
-					function initShowMore() {
-						$(".show-more-options").click(function(){
-							instance.toggleShowMoreOptions();
-						});
-					}
-					/**
-					 * It sets a listener for the resource per page select
-					 */
-					function initResourcesPerPage() {
-						$(".change-resources-per-page").on('change', function(){
-							instance.manager.changeResourcesPerPage(this.value);
-						});
-					}
-					function initButtons() {
-						$(".show-first-resources").click(function(event) {
-							event.preventDefault();
-							instance.manager.changeStart(0);
-						});
-						$(".show-last-resources").click(function(event) {
-							event.preventDefault();
-							instance.manager.showLastPage();
-						});
-					}
-					initShowMore();
-					initResourcesPerPage();
-					initButtons();
-				},
-				/**
-				 * It updates the bottom GUI
-				 */
-				update: function() {
-					var instance = this;
-					function getMoreOptions() {
-						var advanceHTML = "", text = "";
-						if(instance.showMoreOptions) {
-							text = "<span class='glyphicon glyphicon-remove'></span> Hide options";
-						} else {
-							text = "Show more options";
-						}
-						advanceHTML = "<span class='show-more-options hover text-muted'>" + text + "</span>";
-						return advanceHTML;
-					}
-					function getOptions() {
-							function getResourcesPerPage() {
-								function getSelectHTML(currentNumber) {
-									var selectHTML = "", options = [5, 15, 25, 50, 100], i, number, selected;
-									selectHTML += "<select class='change-resources-per-page'>";
-									for(i=0; i < options.length; i++) {
-										number = options[i];
-										if(parseInt(number, 10) === parseInt(currentNumber, 10)) {
-											selected = "selected";
-										} else {
-											selected = "";
-										}
-										selectHTML += "<option " + selected +  ">" + number + "</option>";
-									}
-									selectHTML += "</select>";
-									return selectHTML;
-								}
-								var perPageHTML = "", number = instance.manager.resourcesPerPage;
-								perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
-								return perPageHTML;
-							}
-							function getButtons() {
-								function getFirst() {
-									var text = "",
-										total = instance.manager.getCurrentTotalNumber(),
-										start = instance.manager.min,
-										resourcesPerPage = instance.manager.resourcesPerPage;
-									if(total < resourcesPerPage || (start === 0)) {
-										text = "";
-									} else {
-										text =  '<li class="previous"><a href="#" class="show-first-resources">← First page</a></li>';
-									}
-									return text;
-								}
-								function getLast() {
-									var text = "",
-										total = instance.manager.getCurrentTotalNumber(),
-										start = instance.manager.min,
-										resourcesPerPage = instance.manager.resourcesPerPage;
-									if(start + resourcesPerPage >= total) {
-										text = "";
-									} else {
-										text =  '<li class="next"><a href="#" class="show-last-resources">Last page →</a></li>';
-									}
-									return text;
-								}
-								var buttonsHTML = "";
-								buttonsHTML += "<ul class='pager'>";
-								buttonsHTML += getFirst();
-								buttonsHTML += getLast();
-								buttonsHTML += "</ul>";
-								return buttonsHTML;
-							}
-							var text = "", visibility;
-							visibility = (!instance.showMoreOptions?"style='display:none'":"");
-							text += "<div " + visibility + " class='well' >";
-							text += getResourcesPerPage();
-							text += "<hr />";
-							text += getButtons();
-							text += "</div>";
-							return text;
-					}
-					var bottomGUIHTML = "<hr />";
-					bottomGUIHTML += getMoreOptions();
-					bottomGUIHTML += getOptions();
-					this.element.html(bottomGUIHTML);
-					this.init();
-				},
-				/**
-				 * It shows/hides the div which contains more options
-				 */
-				toggleShowMoreOptions: function() {
-					this.showMoreOptions = !this.showMoreOptions;
-					this.update();
+				function initShowMore() {
+					$(".show-more-options").click(function() {
+						instance.toggleShowMoreOptions();
+					});
 				}
-			};
+				/**
+				 * It sets a listener for the resource per page select
+				 */
+				function initResourcesPerPage() {
+					$(".change-resources-per-page").on('change', function() {
+						instance.manager.changeResourcesPerPage(this.value);
+					});
+				}
+				/**
+				 * It activates the listeners for last and first buttons
+				 */
+				function initButtons() {
+					$(".show-first-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.changeStart(0);
+					});
+					$(".show-last-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.showLastPage();
+					});
+				}
+				initShowMore();
+				initResourcesPerPage();
+				initButtons();
+			},
+			/**
+			 * It updates the bottom GUI
+			 */
+			update: function() {
+				var instance = this;
+				/**
+				 * It returns the HTML code for the "show more options" button
+				 * @return {string} The HTML code for the "show more options" button
+				 */
+				function getMoreOptions() {
+					var advanceHTML = "",
+						text = "";
+					if (instance.showMoreOptions) {
+						text = "<span class='glyphicon glyphicon-remove'></span> Hide options";
+					} else {
+						text = "Show more options";
+					}
+					advanceHTML = "<span class='show-more-options hover text-muted'>" + text + "</span>";
+					return advanceHTML;
+				}
+				/**
+				 * It returns the HTML for the options
+				 * @return {string} The HTML for the options
+				 */
+				function getOptions() {
+					/**
+					 * It returns the HTML for resources per page option
+					 * @return {string} The HTML for resources per page option
+					 */
+					function getResourcesPerPage() {
+						/**
+						 * It returns the HTML for the select object
+						 * @param  {number} currentNumber The current number of resources
+						 * @return {string} The HTML for the select object
+						 */
+						function getSelectHTML(currentNumber) {
+							var selectHTML = "",
+								options = [5, 15, 25, 50, 100],
+								i, number, selected;
+							selectHTML += "<select class='change-resources-per-page'>";
+							for (i = 0; i < options.length; i++) {
+								number = options[i];
+								if (parseInt(number, 10) === parseInt(currentNumber, 10)) {
+									selected = "selected";
+								} else {
+									selected = "";
+								}
+								selectHTML += "<option " + selected + ">" + number + "</option>";
+							}
+							selectHTML += "</select>";
+							return selectHTML;
+						}
+						var perPageHTML = "",
+							number = instance.manager.resourcesPerPage;
+						perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
+						return perPageHTML;
+					}
+					/**
+					 * Returns the HTMl code for the buttons
+					 * @return {string} The HTML code for the buttons
+					 */
+					function getButtons() {
+						/**
+						 * It returns the HTML code for the first page button
+						 * @return {string} The HTML code for the first page button
+						 */
+						function getFirst() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (total < resourcesPerPage || (start === 0)) {
+								text = "";
+							} else {
+								text = '<li class="previous"><a href="#" class="show-first-resources">← First page</a></li>';
+							}
+							return text;
+						}
+						/**
+						 * It returns the code for the last page button
+						 * @return {string} The HTML code for the last page button
+						 */
+						function getLast() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (start + resourcesPerPage >= total) {
+								text = "";
+							} else {
+								text = '<li class="next"><a href="#" class="show-last-resources">Last page →</a></li>';
+							}
+							return text;
+						}
+						var buttonsHTML = "";
+						buttonsHTML += "<ul class='pager'>";
+						buttonsHTML += getFirst();
+						buttonsHTML += getLast();
+						buttonsHTML += "</ul>";
+						return buttonsHTML;
+					}
+					var text = "",
+						visibility;
+					visibility = (!instance.showMoreOptions ? "style='display:none'" : "");
+					text += "<div " + visibility + " class='well' >";
+					text += getResourcesPerPage();
+					text += "<hr />";
+					text += getButtons();
+					text += "</div>";
+					return text;
+				}
+				var bottomGUIHTML = "<hr />";
+				bottomGUIHTML += getMoreOptions();
+				bottomGUIHTML += getOptions();
+				this.element.html(bottomGUIHTML);
+				this.init();
+			},
+			/**
+			 * It shows/hides the div which contains more options
+			 */
+			toggleShowMoreOptions: function() {
+				this.showMoreOptions = !this.showMoreOptions;
+				this.update();
+			}
+		};
 	/**
 	 * It checks if a string is int
 	 * @param  {string}  value The value of the string

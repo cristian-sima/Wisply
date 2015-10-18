@@ -56,15 +56,17 @@ var PublicRepository = function() {
 	var Manager = function Manager(currentRepository) {
 		this.repository = currentRepository;
 		this.min = 0;
-		this.resourcePerPage = 15;
+		this.resourcesPerPage = 15;
 		// They are used to extract the verbs and parameters from the hash
 		this.delimitator = {
 			verb: "*",
 			parameter: "-",
 			insideVerb: "|",
 		};
+		this.resourceFocused = -1;
 		this.topGUI = new TopGUI(this);
 		this.sideGUI = new SideGUI(this);
+		this.bottomGUI = new BottomGUI(this);
 	};
 	Manager.prototype =
 		/** @lends PublicRepository.Manager */
@@ -103,6 +105,26 @@ var PublicRepository = function() {
 							wisply.publicRepositoryModule.manager.showNext();
 						},
 						"description": "Receives the previous page of resources",
+					}, {
+						"type": "keyup",
+						"key": "Down",
+						"callback": function() {
+							instance.focus(instance.resourceFocused + 1);
+						},
+						"description": function() {
+							return "Focuses the first resource or focuses the next resource.";
+						}(),
+						"overwrites": true,
+					}, {
+						"type": "keyup",
+						"key": "Up",
+						"callback": function() {
+							instance.focus(instance.resourceFocused - 1);
+						},
+						"description": function() {
+							return "Focuses the previous resource.";
+						}(),
+						"overwrites": true,
 					}];
 					wisply.shortcutManager.activate(shortcuts);
 				}
@@ -118,6 +140,26 @@ var PublicRepository = function() {
 			initGUI: function() {
 				this.topGUI.init();
 				this.sideGUI.init();
+				this.bottomGUI.init();
+			},
+			/**
+			 * It focuses the index resource
+			 * @param  {number} index The index is from 0 to n-1 resourcesPerPage
+			 */
+			focus: function(index) {
+				if (index + 1 >= this.resourcesPerPage) {
+					index = this.resourcesPerPage - 1;
+				}
+				if (index > -1) {
+					this.resourceFocused = index;
+					$("#listOfRecords").find("a").eq(index).focus();
+				}
+			},
+			/**
+			 * It resets the focus item. Private method
+			 */
+			_resetFocus: function() {
+				this.resourceFocused = -1;
 			},
 			/**
 			 * It loads the resources from server according to the current settings
@@ -136,7 +178,7 @@ var PublicRepository = function() {
 				}
 				this.showLoading();
 				$.ajax({
-					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcePerPage,
+					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcesPerPage,
 					data: {
 						"collection": getCollection(),
 						"format": "html",
@@ -150,7 +192,7 @@ var PublicRepository = function() {
 			 * It shows the top div, the buttons and sets the wisply loading logo
 			 */
 			showLoading: function() {
-				$("#repository-top, .next, .previous").hide();
+				$("#repository-top, .next, .previous, #repository-bottom, #repository-side").hide();
 				$("#repository-resources").html('&lt;div class="text-center">&lt;br />&lt;br />&lt;br />' + wisply.getLoadingImage("medium") + '&lt;/div>');
 			},
 			/**
@@ -161,6 +203,7 @@ var PublicRepository = function() {
 				this.changeResources(html);
 				this.activateListeners();
 				this.updateGUI();
+				this._resetFocus();
 			},
 			/**
 			 * It activates the listenrs for the next and previous buttons
@@ -192,32 +235,38 @@ var PublicRepository = function() {
 			 */
 			showNext: function() {
 				var instance = this;
-				if (instance.min + instance.resourcePerPage &lt; parseInt(instance.getCurrentTotalNumber(), 10)) {
+				if (instance.min + instance.resourcesPerPage &lt; parseInt(instance.getCurrentTotalNumber(), 10)) {
 					var newMin;
-					newMin = parseInt(this.min, 10) + this.resourcePerPage;
-					this.changeMin(newMin);
-					this.goUp();
-					this.updateHash();
+					newMin = parseInt(this.min, 10) + this.resourcesPerPage;
+					this.changeStart(newMin);
 				}
+			},
+			/**
+			 * It shows the last page for the repository
+			 */
+			showLastPage: function() {
+				var total = this.getCurrentTotalNumber(),
+					resourcesPerPage = this.resourcesPerPage,
+					numberOfPages = Math.round(total / resourcesPerPage),
+					newStart = (numberOfPages - 1) * resourcesPerPage;
+				this.changeStart(newStart);
 			},
 			/**
 			 * It gets the previous resources
 			 */
 			showPrevious: function() {
 				var instance = this;
-				if (instance.min >= instance.resourcePerPage) {
+				if (instance.min >= instance.resourcesPerPage) {
 					var newMin;
-					newMin = parseInt(this.min, 10) - this.resourcePerPage;
-					this.changeMin(newMin);
-					this.goUp();
-					this.updateHash();
+					newMin = parseInt(this.min, 10) - this.resourcesPerPage;
+					this.changeStart(newMin);
 				}
 			},
 			/**
-			 * It changes the min value (The value from which the resources are displayed)
+			 * It changes the min value (The value from which the resources are displayed). It is a private method
 			 * @param  {string} newValue The new value
 			 */
-			changeMin: function(newValue) {
+			_changeStart: function(newValue) {
 				var value = 0;
 				if ((!isInt(newValue)) || !newValue || newValue === "" || parseInt(newValue, 10) &lt; 0) {
 					value = 0;
@@ -225,6 +274,15 @@ var PublicRepository = function() {
 					value = newValue;
 				}
 				this.min = parseInt(value, 10);
+			},
+			/**
+			 * It changes the min value (The value from which the resources are displayed). It goes up and updates the hash.
+			 * @param  {string} newValue The new value
+			 */
+			changeStart: function(newValue) {
+				this._changeStart(newValue);
+				this.goUp();
+				this.updateHash();
 			},
 			/**
 			 * It updates the hash of the page
@@ -236,7 +294,7 @@ var PublicRepository = function() {
 				 * @return {string} The string for the "list" verb
 				 */
 				function getList() {
-					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcePerPage;
+					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcesPerPage;
 				}
 				/**
 				 * It returns the description of the verb collection
@@ -358,8 +416,8 @@ var PublicRepository = function() {
 				function updateList() {
 					var verb = instance.getVerb("list");
 					if (verb) {
-						instance.changeMin(verb.parameters[0]);
-						instance.changeResourcesPerPage(verb.parameters[1]);
+						instance._changeStart(verb.parameters[0]);
+						instance._changeResourcesPerPage(verb.parameters[1]);
 					}
 				}
 				/**
@@ -376,11 +434,19 @@ var PublicRepository = function() {
 				updateCollection();
 			},
 			/**
-			 * It changes the number of resources displayed per page
+			 * It changes the number of resources displayed per page. It is a private method
+			 * @param  {number} newValue The new value
+			 */
+			_changeResourcesPerPage: function(newValue) {
+				this.resourcesPerPage = parseInt(newValue, 10);
+			},
+			/**
+			 * It can be used to change the number of resources displayed per page. It updates the hash
 			 * @param  {number} newValue The new value
 			 */
 			changeResourcesPerPage: function(newValue) {
-				this.resourcePerPage = parseInt(newValue, 10);
+				this._changeResourcesPerPage(newValue);
+				this.updateHash();
 			},
 			/**
 			 * It updates the next and previous buttons
@@ -388,6 +454,7 @@ var PublicRepository = function() {
 			updateGUI: function() {
 				this.topGUI.update();
 				this.sideGUI.update();
+				this.bottomGUI.update();
 			},
 			/**
 			 * It takes the user up to the list of resources
@@ -434,7 +501,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the previous button. Otherwise, it enables it
 				 */
 				function updatePreviousButton() {
-					if (manager.getCurrentTotalNumber() === 0 || manager.min &lt; manager.resourcePerPage) {
+					if (manager.getCurrentTotalNumber() === 0 || manager.min &lt; manager.resourcesPerPage) {
 						$(".previous").addClass("disabled");
 						$(".previous").hide();
 					} else {
@@ -446,7 +513,7 @@ var PublicRepository = function() {
 				 * If there are no more resources, it disables the next button. Otherwise, it enables it
 				 */
 				function updateNextButton() {
-					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcePerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
+					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcesPerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
 						$(".next").addClass("disabled");
 						$(".next").hide();
 					} else {
@@ -465,7 +532,7 @@ var PublicRepository = function() {
 				 * It shows the buttons
 				 */
 				function showElements() {
-					$("#repository-top").show();
+					$("#repository-top, #repository-bottom, #repository-side").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -475,39 +542,72 @@ var PublicRepository = function() {
 					 * It returns the description for the list of repositories
 					 * @return {string} The description for the list of repositories
 					 */
-					function getShowing() {
-						var start = manager.min,
-							difference,
-							end = manager.min + manager.resourcePerPage,
-							text = "",
+					function getListDescription() {
+						/**
+						 * It returns the description of the list when there are repositories
+						 * @return {string} The HTML description of the list
+						 */
+						function getListText() {
+							/**
+							 * It shows when the start is zero
+							 * @return {string} The description when start is zero
+							 */
+							function getStartZero() {
+								function describeCollection() {
+									var text, total = manager.getCurrentTotalNumber();
+									if (total &lt; manager.resourcesPerPage) {
+										if (total === 1) {
+											text = "This collection contains only one resource";
+										} else {
+											text = "Showing all " + total + " resources";
+										}
+									} else {
+										text = "Showing first " + manager.resourcesPerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
+									}
+									return text;
+								}
+								var text = "";
+								if (manager.collection) {
+									text = describeCollection();
+								} else {
+									text = "Last resources on " + manager.repository.name + ":";
+								}
+								return text;
+							}
+							/**
+							 * It shows when the start is not zero
+							 * @return {string} The description when start is not zero
+							 */
+							function getStartNotZero() {
+								var text = "";
+								if (start + manager.resourcesPerPage >= manager.getCurrentTotalNumber()) {
+									difference = manager.getCurrentTotalNumber() - start;
+									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+								} else {
+									text = "Showing " + manager.resourcesPerPage + " resources from " + start + " to " + end + " of a total number of " + manager.getCurrentTotalNumber() + "";
+								}
+								return text;
+							}
+							var text = "",
+								start = manager.min,
+								difference,
+								end = manager.min + manager.resourcesPerPage;
+							if ((start === 0)) {
+								text += getStartZero();
+							} else {
+								text += getStartNotZero();
+							}
+							return text;
+						}
+						var listText = "",
 							html = "";
 						if (manager.getCurrentTotalNumber() === 0) {
-							text = "There are no resources.";
+							listText += "There are no resources.";
 						} else {
-							if ((start === 0)) {
-								if (manager.collection) {
-									text = "Showing first " + manager.resourcePerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
-								} else {
-									text = "Last resources:";
-								}
-							}
-							if (start + manager.resourcePerPage >= manager.getCurrentTotalNumber()) {
-								difference = manager.getCurrentTotalNumber() - start;
-								if (difference === manager.getCurrentTotalNumber()) {
-									if (difference === 1) {
-										text = "There is only one resource";
-									} else {
-										text = "There are only " + difference + " resources";
-									}
-								} else {
-									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
-								}
-							} else {
-								text = "Showing " + manager.resourcePerPage + " resources from " + start + " to " + end + " of " + manager.getCurrentTotalNumber() + "";
-							}
+							listText += getListText();
 						}
 						html += "&lt;span class='text-muted'>";
-						html += text;
+						html += listText;
 						html += "&lt;/span>";
 						return html;
 					}
@@ -576,8 +676,8 @@ var PublicRepository = function() {
 					}
 					var html = "";
 					html += "&lt;div>";
-					html += "&lt;div>" + getShowing() + "&lt;/div>";
 					html += "&lt;div id='collection'>" + getCollection() + "&lt;/div>";
+					html += "&lt;div>" + getListDescription() + "&lt;/div>";
 					html += "&lt;br />&lt;/div>";
 					$("#repository-top").html(html);
 					manager.sideGUI.activateCollection();
@@ -674,7 +774,6 @@ var PublicRepository = function() {
 						 */
 						function getNextLevel(collections, currentCollection) {
 							var toProcess = [],
-								level = getLevel(currentCollection),
 								i,
 								checkCollection;
 							for (i = 0; i &lt; collections.length; i++) {
@@ -871,6 +970,184 @@ var PublicRepository = function() {
 			}
 		};
 	/**
+	 * Contains the functionality for bottom GUI
+	 * @memberof PublicRepository
+	 * @class BottomGUI
+	 * @classdesc It encapsulets the functionality for bottom GUI
+	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 */
+	var BottomGUI = function BottomGUI(manager) {
+		this.element = $("#repository-bottom");
+		this.manager = manager;
+		this.showMoreOptions = false;
+	};
+	BottomGUI.prototype =
+		/** @lends PublicRepository.BottomGUI */
+		{
+			/**
+			 * It activates the listeners for the bottom GUI
+			 */
+			init: function() {
+				var instance = this;
+				/**
+				 * It sets a listener for the more option button
+				 */
+				function initShowMore() {
+					$(".show-more-options").click(function() {
+						instance.toggleShowMoreOptions();
+					});
+				}
+				/**
+				 * It sets a listener for the resource per page select
+				 */
+				function initResourcesPerPage() {
+					$(".change-resources-per-page").on('change', function() {
+						instance.manager.changeResourcesPerPage(this.value);
+					});
+				}
+				/**
+				 * It activates the listeners for last and first buttons
+				 */
+				function initButtons() {
+					$(".show-first-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.changeStart(0);
+					});
+					$(".show-last-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.showLastPage();
+					});
+				}
+				initShowMore();
+				initResourcesPerPage();
+				initButtons();
+			},
+			/**
+			 * It updates the bottom GUI
+			 */
+			update: function() {
+				var instance = this;
+				/**
+				 * It returns the HTML code for the "show more options" button
+				 * @return {string} The HTML code for the "show more options" button
+				 */
+				function getMoreOptions() {
+					var advanceHTML = "",
+						text = "";
+					if (instance.showMoreOptions) {
+						text = "&lt;span class='glyphicon glyphicon-remove'>&lt;/span> Hide options";
+					} else {
+						text = "Show more options";
+					}
+					advanceHTML = "&lt;span class='show-more-options hover text-muted'>" + text + "&lt;/span>";
+					return advanceHTML;
+				}
+				/**
+				 * It returns the HTML for the options
+				 * @return {string} The HTML for the options
+				 */
+				function getOptions() {
+					/**
+					 * It returns the HTML for resources per page option
+					 * @return {string} The HTML for resources per page option
+					 */
+					function getResourcesPerPage() {
+						/**
+						 * It returns the HTML for the select object
+						 * @param  {number} currentNumber The current number of resources
+						 * @return {string} The HTML for the select object
+						 */
+						function getSelectHTML(currentNumber) {
+							var selectHTML = "",
+								options = [5, 15, 25, 50, 100],
+								i, number, selected;
+							selectHTML += "&lt;select class='change-resources-per-page'>";
+							for (i = 0; i &lt; options.length; i++) {
+								number = options[i];
+								if (parseInt(number, 10) === parseInt(currentNumber, 10)) {
+									selected = "selected";
+								} else {
+									selected = "";
+								}
+								selectHTML += "&lt;option " + selected + ">" + number + "&lt;/option>";
+							}
+							selectHTML += "&lt;/select>";
+							return selectHTML;
+						}
+						var perPageHTML = "",
+							number = instance.manager.resourcesPerPage;
+						perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
+						return perPageHTML;
+					}
+					/**
+					 * Returns the HTMl code for the buttons
+					 * @return {string} The HTML code for the buttons
+					 */
+					function getButtons() {
+						/**
+						 * It returns the HTML code for the first page button
+						 * @return {string} The HTML code for the first page button
+						 */
+						function getFirst() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (total &lt; resourcesPerPage || (start === 0)) {
+								text = "";
+							} else {
+								text = '&lt;li class="previous">&lt;a href="#" class="show-first-resources">← First page&lt;/a>&lt;/li>';
+							}
+							return text;
+						}
+						/**
+						 * It returns the code for the last page button
+						 * @return {string} The HTML code for the last page button
+						 */
+						function getLast() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (start + resourcesPerPage >= total) {
+								text = "";
+							} else {
+								text = '&lt;li class="next">&lt;a href="#" class="show-last-resources">Last page →&lt;/a>&lt;/li>';
+							}
+							return text;
+						}
+						var buttonsHTML = "";
+						buttonsHTML += "&lt;ul class='pager'>";
+						buttonsHTML += getFirst();
+						buttonsHTML += getLast();
+						buttonsHTML += "&lt;/ul>";
+						return buttonsHTML;
+					}
+					var text = "",
+						visibility;
+					visibility = (!instance.showMoreOptions ? "style='display:none'" : "");
+					text += "&lt;div " + visibility + " class='well' >";
+					text += getResourcesPerPage();
+					text += "&lt;hr />";
+					text += getButtons();
+					text += "&lt;/div>";
+					return text;
+				}
+				var bottomGUIHTML = "&lt;hr />";
+				bottomGUIHTML += getMoreOptions();
+				bottomGUIHTML += getOptions();
+				this.element.html(bottomGUIHTML);
+				this.init();
+			},
+			/**
+			 * It shows/hides the div which contains more options
+			 */
+			toggleShowMoreOptions: function() {
+				this.showMoreOptions = !this.showMoreOptions;
+				this.update();
+			}
+		};
+	/**
 	 * It checks if a string is int
 	 * @param  {string}  value The value of the string
 	 * @return {Boolean} True if the string is an int, false otherwise
@@ -899,13 +1176,13 @@ $(document).ready(function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="PublicRepository.Manager.html">Manager</a></li><li><a href="PublicRepository.SideGUI.html">SideGUI</a></li><li><a href="PublicRepository.TopGUI.html">TopGUI</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="Login.html">Login</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="PublicRepository.html">PublicRepository</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="Administration.Admin.html">Admin</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="Login.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="PublicRepository.BottomGUI.html">BottomGUI</a></li><li><a href="PublicRepository.Manager.html">Manager</a></li><li><a href="PublicRepository.SideGUI.html">SideGUI</a></li><li><a href="PublicRepository.TopGUI.html">TopGUI</a></li><li><a href="Register.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="AccountsManager.html#event:confirmDelete">confirmDelete</a></li><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="Administration.html">Administration</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%25250DIt%252520holds%252520the%252520functionality%252520to%252520see%252520a%252520live%252520list%252520of%252520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="Login.html">Login</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="PublicRepository.html">PublicRepository</a></li><li><a href="Register.html">Register</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 10:00:55 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sun Oct 18 2015 15:19:46 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -37,6 +37,7 @@ var PublicRepository = function() {
 		};
 		this.topGUI = new TopGUI(this);
 		this.sideGUI = new SideGUI(this);
+		this.bottomGUI = new BottomGUI(this);
 	};
 	Manager.prototype =
 		/** @lends PublicRepository.Manager */
@@ -90,6 +91,7 @@ var PublicRepository = function() {
 			initGUI: function() {
 				this.topGUI.init();
 				this.sideGUI.init();
+				this.bottomGUI.init();
 			},
 			/**
 			 * It loads the resources from server according to the current settings
@@ -122,7 +124,7 @@ var PublicRepository = function() {
 			 * It shows the top div, the buttons and sets the wisply loading logo
 			 */
 			showLoading: function() {
-				$("#repository-top, .next, .previous").hide();
+				$("#repository-top, .next, .previous, #repository-bottom").hide();
 				$("#repository-resources").html('<div class="text-center"><br /><br /><br />' + wisply.getLoadingImage("medium") + '</div>');
 			},
 			/**
@@ -331,7 +333,7 @@ var PublicRepository = function() {
 					var verb = instance.getVerb("list");
 					if (verb) {
 						instance.changeMin(verb.parameters[0]);
-						instance.changeResourcesPerPage(verb.parameters[1]);
+						instance._changeResourcesPerPage(verb.parameters[1]);
 					}
 				}
 				/**
@@ -348,11 +350,19 @@ var PublicRepository = function() {
 				updateCollection();
 			},
 			/**
-			 * It changes the number of resources displayed per page
+			 * It changes the number of resources displayed per page. It is a private method
+			 * @param  {number} newValue The new value
+			 */
+			_changeResourcesPerPage: function(newValue) {
+				this.resourcePerPage = parseInt(newValue, 10);
+			},
+			/**
+			 * It can be used to change the number of resources displayed per page. It updates the hash
 			 * @param  {number} newValue The new value
 			 */
 			changeResourcesPerPage: function(newValue) {
-				this.resourcePerPage = parseInt(newValue, 10);
+				this._changeResourcesPerPage(newValue);
+				this.updateHash();
 			},
 			/**
 			 * It updates the next and previous buttons
@@ -360,6 +370,7 @@ var PublicRepository = function() {
 			updateGUI: function() {
 				this.topGUI.update();
 				this.sideGUI.update();
+				this.bottomGUI.update();
 			},
 			/**
 			 * It takes the user up to the list of resources
@@ -437,7 +448,7 @@ var PublicRepository = function() {
 				 * It shows the buttons
 				 */
 				function showElements() {
-					$("#repository-top").show();
+					$("#repository-top, #repository-bottom").show();
 				}
 				/**
 				 * It updates the description of the top DIV.
@@ -842,6 +853,93 @@ var PublicRepository = function() {
 				this.update();
 			}
 		};
+		/**
+		 * Contains the functionality for bottom GUI
+		 * @memberof PublicRepository
+		 * @class BottomGUI
+		 * @classdesc It encapsulets the functionality for bottom GUI
+		 * @param {PublicRepository.Manager} manager Is a reference to the manager
+		 */
+		var BottomGUI = function BottomGUI(manager) {
+			this.element = $("#repository-bottom");
+			this.manager = manager;
+			this.showMoreOptions = false;
+		};
+		BottomGUI.prototype =
+			/** @lends PublicRepository.BottomGUI */
+			{
+				/**
+				 * Does thing. It is present for consistency
+				 */
+				init: function() {
+					var instance = this;
+					function initShowMore() {
+						$(".show-more-options").click(function(){
+							instance.toggleShowMoreOptions();
+						});
+					}
+					function initResourcesPerPage() {
+						$(".change-resources-per-page").on('change', function(){
+							instance.manager.changeResourcesPerPage(this.value);
+						});
+					}
+					initShowMore();
+					initResourcesPerPage();
+				},
+				/**
+				 * It updates the bottom GUI
+				 */
+				update: function() {
+					var instance = this;
+					function getMoreOptions() {
+						var advanceHTML = "", text = "";
+						if(instance.showMoreOptions) {
+							text = "<span class='glyphicon glyphicon-remove'></span> Hide options";
+						} else {
+							text = "Show more options";
+						}
+						advanceHTML = "<span class='show-more-options hover text-muted'>" + text + "</span>";
+						return advanceHTML;
+					}
+					function getOptions() {
+							function getResourcesPerPage() {
+								function getSelectHTML(currentNumber) {
+									var selectHTML = "", options = [5, 15, 25, 50, 100], i, number, selected;
+									selectHTML += "<select class='change-resources-per-page'>";
+									for(i=0; i < options.length; i++) {
+										number = options[i];
+										if(parseInt(number, 10) === parseInt(currentNumber, 10)) {
+											selected = "selected";
+										} else {
+											selected = "";
+										}
+										selectHTML += "<option " + selected +  ">" + number + "</option>";
+									}
+									selectHTML += "</select>";
+									return selectHTML;
+								}
+								var perPageHTML = "", number = instance.manager.resourcePerPage;
+								perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
+								return perPageHTML;
+							}
+							var text = "", visibility;
+							visibility = (!instance.showMoreOptions?"style='display:none'":"");
+							text += "<div " + visibility + " class='well' >";
+							text += getResourcesPerPage();
+							text += "</div>";
+							return text;
+					}
+					var bottomGUIHTML = "<hr />";
+					bottomGUIHTML += getMoreOptions();
+					bottomGUIHTML += getOptions();
+					this.element.html(bottomGUIHTML);
+					this.init();
+				},
+				toggleShowMoreOptions: function() {
+					this.showMoreOptions = !this.showMoreOptions;
+					this.update();
+				}
+			};
 	/**
 	 * It checks if a string is int
 	 * @param  {string}  value The value of the string

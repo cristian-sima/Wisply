@@ -81,6 +81,10 @@
 .text-almost-invisible {
   color:#D8D8D8;
 }
+.change-resources-per-page {
+  width: 50px;
+  background-color: #f9f9f9;
+}
 </style>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>

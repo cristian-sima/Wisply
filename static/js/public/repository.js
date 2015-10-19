@@ -1112,11 +1112,15 @@ var PublicRepository = function() {
 					text += "</div>";
 					return text;
 				}
-				var bottomGUIHTML = "<hr />";
-				bottomGUIHTML += getMoreOptions();
-				bottomGUIHTML += getOptions();
-				this.element.html(bottomGUIHTML);
-				this.init();
+				if(instance.manager.getCurrentTotalNumber() !== 0) {
+					var bottomGUIHTML = "<hr />";
+					bottomGUIHTML += getMoreOptions();
+					bottomGUIHTML += getOptions();
+					this.element.html(bottomGUIHTML);
+					this.init();
+				} else {
+					this.element.html("");
+				}
 			},
 			/**
 			 * It shows/hides the div which contains more options

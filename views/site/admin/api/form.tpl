@@ -27,6 +27,12 @@
 						</select>
 					</div>
 				</div>
+				<div class="form-group">
+					<label for="table-description" class="col-lg-2 control-label">Description</label>
+					<div class="col-lg-10">
+						<textarea type="text" class="form-control" name="table-description" id="table-description" placeholder="Description" required pattern=".{3,1000}" title="The name has 3 up to 1000 characters!">{{ .currentTable.Description }}</textarea>
+					</div>
+				</div>
 					<div class="form-group">
 						<div class="col-lg-10 col-lg-offset-2">
 							<input type="submit" id="institution-submit-button" class="btn btn-primary" value="Add" /> <a href="/admin/api" class="btn btn-default">Cancel</a> </div>

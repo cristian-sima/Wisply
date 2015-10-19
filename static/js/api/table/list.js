@@ -64,7 +64,7 @@ var APITableList = function() {
 				 */
 				successCallback = function() {
 					box.modal("hide");
-					window.location.href = "/static/web/robots.txt";
+					window.location.href = '/api/table/download/' + table.name;
 				};
 				/**
 				 * It is called when there has been problems
@@ -75,7 +75,7 @@ var APITableList = function() {
 					wisply.message.showError("There was a problem with your request :(");
 				};
 				request = {
-					"url": '/api/table/download/' + table.name,
+					"url": '/api/table/generate/' + table.name,
 					"success": successCallback,
 					"error": errorCallback
 				};

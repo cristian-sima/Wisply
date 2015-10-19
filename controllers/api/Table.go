@@ -3,9 +3,12 @@ package api
 import (
 	"io"
 	"os"
+	"time"
 
 	"github.com/cristian-sima/Wisply/models/api"
 )
+
+var validNumberOfHours = 3600 * 24
 
 // Table holds all the methods for downloading the Wisply tables
 type Table struct {
@@ -37,6 +40,24 @@ func (controller *Table) setHeadersDownload(filename string) {
 
 }
 
+// GenerateTable generates the table if there is no table or it is too old
+func (controller *Table) GenerateTable() {
+	tableName := controller.Ctx.Input.Param(":name")
+	filename := tableName + "." + "csv"
+	fullPath := "cache/api/tables/"
+	file, err := controller.getTable(fullPath + "/" + filename)
+	if err != nil {
+		api.GenerateTableFile(tableName)
+	} else {
+		if controller.checkFileIsStillValid(fullPath + "/" + filename) {
+			controller.closeFile(file)
+			controller.deleteFile(fullPath + "/" + filename)
+			api.GenerateTableFile(tableName)
+		}
+	}
+	controller.ShowBlankPage()
+}
+
 // DownloadTable downloads a table
 func (controller *Table) DownloadTable() {
 	tableName := controller.Ctx.Input.Param(":name")
@@ -52,12 +73,23 @@ func (controller *Table) DownloadTable() {
 		)
 		file, err = controller.getTable(fullPath + "/" + filename)
 		if err == nil {
-			file = api.GenerateTableFile(tableName)
-		}
-		if file != nil {
-			controller.downloadTable(file, fullPath)
+			controller.setHeadersDownload("Table " + tableName + ".csv")
+			controller.readFile(file, fullPath)
+			controller.closeFile(file)
+		} else {
+			controller.ShowBlankPage()
 		}
 	}
+
+}
+
+func (controller *Table) checkFileIsStillValid(path string) bool {
+	info, _ := os.Stat(path)
+	duration := time.Since(info.ModTime()).Seconds()
+	if int(duration) >= validNumberOfHours {
+		return true
+	}
+	return false
 }
 
 func (controller *Table) getTable(path string) (*os.File, error) {
@@ -68,26 +100,20 @@ func (controller *Table) getTable(path string) (*os.File, error) {
 	return file, nil
 }
 
-// func (controller *Table) generateTable() bool {
-//   file, err := os.Open(fullPath + "/" + filename)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// }
-
-func (controller *Table) downloadTable(file *os.File, fullPath string) {
-
-	controller.setHeadersDownload(file.Name())
-	file, err := os.Open(fullPath + "/" + file.Name())
-	if err != nil {
-		panic(err)
+func (controller *Table) deleteFile(path string) {
+	if err := os.Remove(path); err != nil {
+		panic("Closing error: " + err.Error())
 	}
-	// close fi on exit and check for its returned error
-	defer func() {
-		if err := file.Close(); err != nil {
-			panic(err)
-		}
-	}()
+}
+
+func (controller *Table) closeFile(file *os.File) {
+	if err := file.Close(); err != nil {
+		panic("Closing error: " + err.Error())
+	}
+}
+
+func (controller *Table) readFile(file *os.File, fullPath string) {
+
 	// make a buffer to keep chunks that are read
 	buffer := make([]byte, 1024)
 	body := []byte{}

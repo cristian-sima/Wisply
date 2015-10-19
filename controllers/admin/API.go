@@ -26,11 +26,16 @@ func (controller *APIController) RemoveAllowedTable() {
 
 // InsertNewTable inserts the new table name into the list
 func (controller *APIController) InsertNewTable() {
-	tableName := strings.TrimSpace(controller.GetString("table-name"))
-	if !api.IsAllowedTable(tableName) {
+	name := strings.TrimSpace(controller.GetString("table-name"))
+	description := strings.TrimSpace(controller.GetString("table-description"))
+	table := api.Table{
+		Name:        name,
+		Description: description,
+	}
+	if api.AreValidDetails(table) {
 		controller.DisplaySimpleError("This table name is restricted.")
 	} else {
-		err := api.InsertNewTable(tableName)
+		err := api.InsertNewTable(table)
 		if err != nil {
 			controller.DisplaySimpleError(err.Error())
 		} else {

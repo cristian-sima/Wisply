@@ -217,6 +217,7 @@ func init() {
 			beego.NSRouter("", &api.Static{}, "GET:ShowHomePage"),
 			beego.NSNamespace("/table/",
 				beego.NSRouter("list", &api.Table{}, "GET:ShowList"),
+				beego.NSRouter("generate/:name", &api.Table{}, "*:GenerateTable"),
 				beego.NSRouter("download/:name", &api.Table{}, "*:DownloadTable"),
 			),
 			apiRepositoryNS,

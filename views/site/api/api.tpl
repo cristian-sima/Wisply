@@ -14,17 +14,27 @@
               <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Image" />
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
-              <br /><br /><Br />
+              <br />
               <blockquote>
+                <h3>Open data</h3>
                 Wisply is making available all possible data in <a target="_blank" href="http://theodi.org/">open data</a> format.
+              </blockquote>
+              <br />
+              <blockquote>
+                <h3>Open source</h3>
+                If you want to understand how Wisply is spinning the wheels, you may want to go to our <a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub page</a>.
               </blockquote>
             </div>
           </div>
-        <article>
-          <h2>Entire tables</h2>
-          You can download the entire tables which Wisply is using. The list of available tables is <a href="/api/table/list">here</a>.
-        </article>
+          <hr />
+            <br />
+          <section>
+          <article>
+            <h4>Download data sets and tables</h4>
+            You can download the entire tables which Wisply is using. The list is available <a href="/api/table/list">here</a>.
+          </article>
+        </section>
+        </div>
       </div>
     </div>
   </div>
-</div>

@@ -16,6 +16,8 @@ func init() {
 }
 
 func main() {
+	beego.DirectoryIndex = true
+	beego.StaticDir["/beeapi"] = "beeapi"
 	beego.Errorhandler("404", loadPageNotFound)
 	beego.Errorhandler("databaseError", loadDatabaseError)
 	beego.Run()

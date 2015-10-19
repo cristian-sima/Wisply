@@ -1,3 +1,8 @@
+// Package routers contains all the addresses of the application
+// @APIVersion 1.0.0
+// @Title mobile API
+// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
+// @Contact cs25g13@soton.ac.uk
 package routers
 
 import (
@@ -166,6 +171,20 @@ func init() {
 	)
 
 	// admin
+	// ----------------------------- Admin API ----------------------------------
+
+	adminAPINS := beego.NSNamespace("/api",
+		beego.NSRouter("", &admin.APIController{}, "*:ShowHomePage"),
+		beego.NSNamespace("/add",
+			beego.NSRouter("", &admin.APIController{}, "GET:ShowAddForm"),
+			beego.NSRouter("", &admin.APIController{}, "POST:InsertNewTable"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter("", &admin.APIController{}, "POST:RemoveAllowedTable"),
+		),
+	)
+
+	// admin
 	// ----------------------------- Admin -------------------------------
 
 	adminNS :=
@@ -176,6 +195,7 @@ func init() {
 			adminInstitutionsNS,
 			adminHarvestNS,
 			adminLogNS,
+			adminAPINS,
 		)
 
 		// api

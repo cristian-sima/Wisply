@@ -24,6 +24,9 @@
           </ul>
         </aside>
         <section class="panel-body">
+          <blockquote>
+            Wisply is making available all possible data in <a target="_blank" href="http://theodi.org/">open data</a> format.
+          </blockquote>
           <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Image" />
         </section>
       </div>

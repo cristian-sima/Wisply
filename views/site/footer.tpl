@@ -26,6 +26,7 @@
             <ul class="dropdown-menu" aria-labelledby="moreOptionsFooter">
               <li><a href="/accessibility">Accessibility</a></li>
               <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/contact">Contact</a></li>
             </ul>
           </div>
         </li>

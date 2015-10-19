@@ -10,13 +10,20 @@ import (
 var sensitiveTableList = []string{"account", "account_token", "api_table_settings"}
 
 // GenerateTableFile creates the sql table
-func GenerateTableFile(tableName string) {
+func GenerateTableFile(tableName, format string) {
+	switch format {
+	case "csv":
+		generateCSVFile(tableName)
+		break
+	}
+}
 
+func generateCSVFile(tableName string) {
 	columns := ""
 
 	sqlCol := `SELECT  GROUP_CONCAT(COLUMN_NAME SEPARATOR ',')
-		FROM INFORMATION_SCHEMA.COLUMNS
-		WHERE TABLE_SCHEMA='wisply' AND TABLE_NAME='` + tableName + `'`
+	FROM INFORMATION_SCHEMA.COLUMNS
+	WHERE TABLE_SCHEMA='wisply' AND TABLE_NAME='` + tableName + `'`
 	rows, err := database.Connection.Prepare(sqlCol)
 	rows.QueryRow().Scan(&columns)
 
@@ -33,13 +40,13 @@ func GenerateTableFile(tableName string) {
 	stringColumns = stringColumns[:len(stringColumns)-1]
 
 	sql := `SELECT ` + stringColumns + `
-		UNION ALL
-		SELECT ` + columns + `
-		FROM ` + tableName + `
-		INTO OUTFILE 'W:/go-workspace/src/github.com/cristian-sima/Wisply/cache/api/tables/` + tableName + `.csv'
-		FIELDS TERMINATED BY ','
-		ENCLOSED BY '"'
-		LINES TERMINATED BY '\n';`
+	UNION ALL
+	SELECT ` + columns + `
+	FROM ` + tableName + `
+	INTO OUTFILE 'W:/go-workspace/src/github.com/cristian-sima/Wisply/cache/api/tables/` + tableName + `.csv'
+	FIELDS TERMINATED BY ','
+	ENCLOSED BY '"'
+	LINES TERMINATED BY '\n';`
 
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {
@@ -101,6 +108,29 @@ func GetAllowedTables() []Table {
 		list = append(list, table)
 	}
 	return list
+}
+
+// NewTable creates a new table by ID
+func NewTable(ID string) (*Table, error) {
+	table := &Table{}
+	sql := "SELECT `id`, `name`, `description` FROM `api_table_settings` WHERE id=? "
+	query, err := database.Connection.Prepare(sql)
+	if err != nil {
+		return table, err
+	}
+	query.QueryRow(ID).Scan(&table.ID, &table.Name, &table.Description)
+	return table, nil
+}
+
+// ModifyDetails changes the details of the table
+func ModifyDetails(table *Table, newDescription string) error {
+	sql := "UPDATE `api_table_settings` SET `description`=? WHERE `id`=? "
+	query, err1 := database.Connection.Prepare(sql)
+	if err1 != nil {
+		return err1
+	}
+	_, err2 := query.Exec(newDescription, table.ID)
+	return err2
 }
 
 // GetWisplyTablesNamesNotAllowed returns the list of wisply tables which can be downloaded, but are not yet on the list

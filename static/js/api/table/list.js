@@ -39,6 +39,10 @@ var APITableList = function() {
 			 */
 			init: function() {
 				var instance = this;
+				$(".table-name").each(function(){
+						var object = $(this);
+						object.html(object.html().replace("_", " "));
+				});
 				$(".download-table").click(function(event) {
 					var name,	id,	table, object;
 					event.preventDefault();

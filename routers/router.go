@@ -182,6 +182,10 @@ func init() {
 		beego.NSNamespace("/delete",
 			beego.NSRouter("", &admin.APIController{}, "POST:RemoveAllowedTable"),
 		),
+		beego.NSNamespace("/modify/:id",
+			beego.NSRouter("", &admin.APIController{}, "GET:ShowModifyForm"),
+			beego.NSRouter("", &admin.APIController{}, "POST:ModifyTable"),
+		),
 	)
 
 	// admin

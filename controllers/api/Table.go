@@ -27,32 +27,31 @@ func (controller *Table) ShowList() {
 
 // DownloadTable starts the process of downloading the table
 func (controller *Table) setHeadersDownload(filename string) {
-
 	controller.Ctx.Output.Header("Content-Description", "File Transfer")
 	controller.Ctx.Output.Header("Content-Type", "application/octet-stream")
-
 	controller.Ctx.Output.Header("Content-Disposition", "attachment; filename="+filename)
-
 	controller.Ctx.Output.Header("Content-Transfer-Encoding", "binary")
 	controller.Ctx.Output.Header("Expires", "0")
 	controller.Ctx.Output.Header("Cache-Control", "must-revalidate")
 	controller.Ctx.Output.Header("Pragma", "public")
-
 }
 
 // GenerateTable generates the table if there is no table or it is too old
 func (controller *Table) GenerateTable() {
+
+	format := "csv"
+
 	tableName := controller.Ctx.Input.Param(":name")
-	filename := tableName + "." + "csv"
+	filename := tableName + "." + format
 	fullPath := "cache/api/tables/"
 	file, err := controller.getTable(fullPath + "/" + filename)
 	if err != nil {
-		api.GenerateTableFile(tableName)
+		api.GenerateTableFile(tableName, format)
 	} else {
 		if controller.checkFileIsStillValid(fullPath + "/" + filename) {
 			controller.closeFile(file)
 			controller.deleteFile(fullPath + "/" + filename)
-			api.GenerateTableFile(tableName)
+			api.GenerateTableFile(tableName, format)
 		}
 	}
 	controller.ShowBlankPage()
@@ -60,8 +59,11 @@ func (controller *Table) GenerateTable() {
 
 // DownloadTable downloads a table
 func (controller *Table) DownloadTable() {
+
+	format := "csv"
+
 	tableName := controller.Ctx.Input.Param(":name")
-	filename := tableName + "." + "csv"
+	filename := tableName + "." + format
 	fullPath := "cache/api/tables/"
 
 	if !api.IsAllowedTable(tableName) {
@@ -73,7 +75,7 @@ func (controller *Table) DownloadTable() {
 		)
 		file, err = controller.getTable(fullPath + "/" + filename)
 		if err == nil {
-			controller.setHeadersDownload("Table " + tableName + ".csv")
+			controller.setHeadersDownload("Table " + tableName + "." + format)
 			controller.readFile(file, fullPath)
 			controller.closeFile(file)
 		} else {

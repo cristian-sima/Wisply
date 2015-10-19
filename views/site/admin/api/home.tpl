@@ -26,7 +26,8 @@
           <tr>
             <th class="hidden-xs">#</th>
             <th>Table</th>
-            <th>Action</th>
+            <th>Delete</th>
+            <th>Modify</th>
           </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@
                 <input type="submit" class="btn btn-primary" value="Remove" />
               </form>
             </td>
+            <td><a href="/admin/api/modify/{{ $table.ID }}">Modify</a></td>
           </tr>
           {{end }}
         </tbody>

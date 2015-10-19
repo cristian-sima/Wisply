@@ -26,21 +26,26 @@
             <table id="list-accounts" class="table table-striped table-hover ">
               <thead>
                 <tr>
-                  <th class="col-md-1" >#</th>
+                  <th class="col-md-1">#</th>
                   <th class="col-md-4">Table</th>
-                  <th class="col-md-5">Description</th>
-                  <th class="col-md-2 text-center">Action</th>
+                  <th class="col-md-7">Explication</th>
                 </tr>
               </thead>
               <tbody>
                 {{range $index, $table := .tables}}
                 <tr>
-                  <td class="col-md-1">{{ $table.ID }}</td>
-                  <td class="col-md-4">{{ $table.Name }}</td>
-                  <td class="col-md-5">{{ $table.Description }}</td>
-                  <td class="col-md-2 text-center">
-                      <input type="button" data-name="{{ $table.Name }}" class="btn btn-primary download-table" data-id="{{ $table.ID }}" value="Download" />
+                  <td class="col-md-1">{{ $table.ID }} </td>
+                  <td class="col-md-4">
+                    <h2 class="table-name" >{{ $table.Name }}</h2>
+                    <h5 class="text-muted">{{ $table.Name }}</h5>
+                    <br />
+                    <button data-name="{{ $table.Name }}" data-id="{{ $table.ID }}" type="button" class="btn btn-primary download-table" aria-label="Left Align">
+                      <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download
+                    </button>
+                    <br />
+                    <br />
                   </td>
+                  <td class="col-md-7">{{ $table.GetDescription }}</td>
                 </tr>
                 {{end }}
               </tbody>
@@ -52,4 +57,9 @@
     </div>
   </div>
 </div>
+<style>
+.table-name {
+  text-transform: capitalize;
+}
+</style>
 <script src="/static/js/api/table/list.js"></script>

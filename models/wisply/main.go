@@ -3,7 +3,9 @@ package wisply
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
+	"time"
 
 	"github.com/cristian-sima/Wisply/models/database"
 )
@@ -32,6 +34,7 @@ func GetCollections(repositoryID int) []*Collection {
 
 // GetRecords returns all the records
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
+	start := time.Now()
 	var list []*Record
 
 	// select from identifier
@@ -42,7 +45,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows *sql.Rows
 		err  error
 	)
-	fieldList := "record.`id`, record.`identifier`, record.`datestamp`"
+	fieldList := "record.`identifier`, record.`id`, record.`datestamp`"
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
@@ -50,9 +53,17 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		fmt.Println(sql)
 		rows, err = database.Connection.Query(sql, repositoryID)
 	} else {
-		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()
-		fmt.Println(sql)
+
+		//sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()
+
+		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
+
+		// sql := "SELECT DISTINCT `identifier_set`.`identifier`, `repository_resource`.`id`, `repository_resource`.`datestamp` FROM `identifier_set` INNER JOIN `repository_resource` ON `repository_resource`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
+
 		rows, err = database.Connection.Query(sql, options.Where["collection"])
+
+		fmt.Println(sql)
+		fmt.Println()
 	}
 
 	if err != nil {
@@ -64,9 +75,22 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	for rows.Next() {
 		counter++
 		record := &Record{}
-		rows.Scan(&record.ID, &record.identifier, &record.timestamp)
+		rows.Scan(&record.identifier, &record.ID, &record.timestamp)
+
+		if record.ID == 0 {
+
+			sql := "SELECT `id`, `datestamp` FROM `repository_resource` WHERE identifier = ?"
+			query, err := database.Connection.Prepare(sql)
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			query.QueryRow(record.identifier).Scan(&record.ID, &record.timestamp)
+		}
 		sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
 		rows2, _ := database.Connection.Query(sql2, record.identifier)
+
 		keys := &RecordKeys{}
 		for rows2.Next() {
 			var name, value string
@@ -76,6 +100,8 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		record.Keys = keys
 		list = append(list, record)
 	}
+	elapsed := time.Since(start)
+	log.Printf("Has taken %s", elapsed)
 	return list
 }
 

@@ -59,13 +59,10 @@ func (controller *Table) GenerateTable() {
 
 // DownloadTable downloads a table
 func (controller *Table) DownloadTable() {
-
 	format := "csv"
-
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
 	fullPath := "cache/api/tables/"
-
 	if !api.IsAllowedTable(tableName) {
 		controller.DisplaySimpleError("This table name is restricted.")
 	} else {
@@ -75,14 +72,14 @@ func (controller *Table) DownloadTable() {
 		)
 		file, err = controller.getTable(fullPath + "/" + filename)
 		if err == nil {
-			controller.setHeadersDownload("Table " + tableName + "." + format)
+			info, _ := os.Stat(fullPath + "/" + filename)
+			controller.setHeadersDownload("Table " + tableName + " (" + info.ModTime().String() + ")." + format)
 			controller.readFile(file, fullPath)
 			controller.closeFile(file)
 		} else {
 			controller.ShowBlankPage()
 		}
 	}
-
 }
 
 func (controller *Table) checkFileIsStillValid(path string) bool {
@@ -115,7 +112,6 @@ func (controller *Table) closeFile(file *os.File) {
 }
 
 func (controller *Table) readFile(file *os.File, fullPath string) {
-
 	// make a buffer to keep chunks that are read
 	buffer := make([]byte, 1024)
 	body := []byte{}

@@ -12,20 +12,24 @@
         <div class="panel-body">
           <h2>Wisply tables</h2>
           <br />
-          The tables are updated every day.
+          The tables are updated daily.
           <br />
-          Wisply makes available the tables in CSV format.
+          Wisply makes the tables available in CSV format.
           <br />
           In case you need them in other format, you may want to use <a href="http://www.convertcsv.com/" target="_blank"> this online tool</a>.
           <br />
           <br />
           <div>
-
               <span class="text-warning">
                 <span class="glyphicon glyphicon-star"></span>
                 <span class="glyphicon glyphicon-star"></span>
                 <span class="glyphicon glyphicon-star"></span>
-              </span> open data.
+                <span class="star-muted">
+                  <span class="glyphicon glyphicon-star"></span>
+                  <span class="glyphicon glyphicon-star"></span>
+                </span>
+              </span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <a data-toggle="tooltip" data-popover="true" data-content="Tim Berners-Lee, the inventor of the Web and Linked Data initiator, suggested a 5-star deployment scheme for Open Data. The scheme measures how well data is integrated into the web. <a href='http://5stardata.info/en/'>Read more</a>" data-html=true><span class="glyphicon glyphicon-info-sign"></span></a>
           </div>
           <br />
@@ -70,6 +74,9 @@
 <style>
 .table-name {
   text-transform: capitalize;
+}
+.star-muted {
+  color: #ECECEC;
 }
 </style>
 <script src="/static/js/api/table/list.js"></script>

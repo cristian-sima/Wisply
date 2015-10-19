@@ -27,13 +27,19 @@
             </div>
           </div>
           <hr />
-            <br />
+          <br />
           <section>
-          <article>
-            <h4>Download data sets and tables</h4>
-            You can download the entire tables which Wisply is using. The list is available <a href="/api/table/list">here</a>.
-          </article>
-        </section>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Download data sets and tables</h3>
+              </div>
+              <div class="panel-body">
+                <br />
+                You can download the entire tables which Wisply is using. The list is available <a href="/api/table/list" class="btn btn-primary btn-xs">here</a>
+                <br />
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>

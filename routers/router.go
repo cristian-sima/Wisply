@@ -215,6 +215,10 @@ func init() {
 	apiNS :=
 		beego.NewNamespace("/api",
 			beego.NSRouter("", &api.Static{}, "GET:ShowHomePage"),
+			beego.NSNamespace("/table/",
+				beego.NSRouter("list", &api.Table{}, "GET:ShowList"),
+				beego.NSRouter("download/:name", &api.Table{}, "*:DownloadTable"),
+			),
 			apiRepositoryNS,
 		)
 

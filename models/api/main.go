@@ -1,8 +1,40 @@
 package api
 
-import "github.com/cristian-sima/Wisply/models/database"
+import (
+	"fmt"
+	"os"
+
+	"github.com/cristian-sima/Wisply/models/database"
+)
 
 var sensitiveTableList = []string{"account", "account_token", "api_table_settings"}
+
+// GenerateTableFile creates the sql table
+func GenerateTableFile(tableName string) *os.File {
+
+	path := "cache/api/table/" + tableName + ".csv"
+	// generate
+	sql := `SELECT id, name
+		FROM account
+		INTO OUTFILE '` + path + `'
+		FIELDS TERMINATED BY ','
+		ENCLOSED BY '"'
+		LINES TERMINATED BY '\n';`
+	query, err := database.Connection.Prepare(sql)
+	query.Exec(tableName)
+
+	if err != nil {
+		fmt.Println("Error sql")
+		fmt.Println(err)
+	}
+
+	// get the file
+	file, err := os.Open(path)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return file
+}
 
 // GetAllWisplyTables returns the list of all the tables which MAY BE downloaded
 func GetAllWisplyTables() []string {

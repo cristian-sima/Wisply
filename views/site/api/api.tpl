@@ -1,21 +1,6 @@
 <div class="page-header">
   <div class="row">
-    <div class="col-lg-4 col-md-5 col-sm-5">
-      <div class="panel panel-info" >
-        <div class="panel-heading">
-          <h3 class="panel-title">API & Developers</h3>
-        </div>
-        <div class="panel-body">
-          <ul>
-            <li><a class="scroll" href="#cookie-policy">Introduction</a></li>
-            <li><a class="scroll" href="#what-cookies-do-we-use">What cookies do we use?</a></li>
-            <li><a class="scroll" href="#does-anyone-else-use-cookies-on-Wisply">Does anyone else use cookies on Wisply</a></li>
-            <li><a class="scroll" href="#can-I-delete-the-cookies">Can I delete the cookies</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-8 col-md-7 col-sm-7">
+    <div class="col-lg-12 col-md-12 col-sm-12">
       <div class="panel panel-default">
         <aside class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
@@ -24,11 +9,21 @@
           </ul>
         </aside>
         <section class="panel-body">
-          <blockquote>
-            Wisply is making available all possible data in <a target="_blank" href="http://theodi.org/">open data</a> format.
-          </blockquote>
-          <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Image" />
-        </section>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Image" />
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <br /><br /><Br />
+              <blockquote>
+                Wisply is making available all possible data in <a target="_blank" href="http://theodi.org/">open data</a> format.
+              </blockquote>
+            </div>
+          </div>
+        <article>
+          <h2>Entire tables</h2>
+          You can download the entire tables which Wisply is using. The list of available tables is <a href="/api/table/list">here</a>.
+        </article>
       </div>
     </div>
   </div>

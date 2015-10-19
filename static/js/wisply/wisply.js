@@ -256,15 +256,22 @@ var Wisply = function() {
 			/**
 			 * It represents an adapter for the bootbox alert function. It shows a dialog message
 			 * @param  {object} args The arguments for the dialog
+			 * @return {object} The bootbox element which holds the message
 			 * @see {@link http://bootboxjs.com/|Bootbox official website}
 			 */
 			dialog: function(args) {
-				bootbox.dialog(args);
+				return bootbox.dialog(args);
 			},
+			/**
+			 * It shows a waiting message
+			 * @param  {string} title The title of the message
+			 * @return {object} The bootbox element which holds the message
+			 * @see {@link http://bootboxjs.com/|Bootbox official website}
+			 */
 			tellToWait: function(title) {
 				var msg;
 				msg = "<div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of sugar) :) <br />" + wisply.getLoadingImage("big") + "</div>";
-				this.dialog({
+				return this.dialog({
 					title: title,
 					message: msg,
 				});

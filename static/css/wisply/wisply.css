@@ -134,7 +134,8 @@ h6 {
 }
 
 .tt-hint {
-  color: #999
+  color: #999;
+  top: 5px;
 }
 
 .tt-menu {
@@ -154,7 +155,6 @@ h6 {
 
 .tt-suggestion {
   padding: 3px 20px;
-  font-size: 18px;
   line-height: 24px;
 }
 
@@ -180,4 +180,13 @@ h6 {
 
 .empty-message {
   margin: 10px;
+}
+
+.search-header {
+  margin-left:20px;
+}
+
+.search-logo {
+    max-width: 70px;
+    max-height: 70px;
 }

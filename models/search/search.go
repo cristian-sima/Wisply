@@ -12,6 +12,10 @@ type search struct {
 	category string
 }
 
+func (search *search) likeText() string {
+	return "%" + search.text + "%"
+}
+
 // constructor
 // newSearch creates a new search
 func newSearch(text string, channel chan string) *search {

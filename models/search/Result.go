@@ -5,6 +5,7 @@ package search
 type ResultItem struct {
 	Title string
 	URL   string
+	Data  interface{}
 }
 
 // Result encapsulates a list of results for a category

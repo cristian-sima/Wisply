@@ -37,10 +37,10 @@ func (task *GetTask) GetFormats() ([]byte, error) {
 
 // GetCollections returns the collections of the remote repository
 // It waits for the answer and it modifies it state according to it
-func (task *GetTask) GetCollections() ([]byte, error) {
+func (task *GetTask) GetCollections(token string) ([]byte, error) {
 	task.addContent("Get Collections")
-	body, err := task.remote.ListCollections()
-	task.finishRequest(err, "Request performed")
+	body, err := task.remote.ListCollections(token)
+	task.finishRequest(err, "Request performed. Token: ["+token+"]")
 	return body, err
 }
 

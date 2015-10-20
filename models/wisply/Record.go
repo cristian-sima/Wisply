@@ -2,7 +2,7 @@ package wisply
 
 // Record is the wisply record
 type Record struct {
-	ID         int
+	ID         int `json:"ID"`
 	identifier string
 	timestamp  string
 	Keys       *RecordKeys

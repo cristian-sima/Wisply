@@ -1,3 +1,8 @@
+// Package routers contains all the addresses of the application
+// @APIVersion 1.0.0
+// @Title mobile API
+// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
+// @Contact cs25g13@soton.ac.uk
 package routers
 
 import (
@@ -84,6 +89,9 @@ func init() {
 					),
 				),
 			),
+			beego.NSNamespace("/empty",
+				beego.NSRouter("", &admin.RepositoryController{}, "POST:EmptyRepository"),
+			),
 			beego.NSNamespace("/delete",
 				beego.NSRouter("", &admin.RepositoryController{}, "POST:Delete"),
 			),
@@ -163,6 +171,24 @@ func init() {
 	)
 
 	// admin
+	// ----------------------------- Admin API ----------------------------------
+
+	adminAPINS := beego.NSNamespace("/api",
+		beego.NSRouter("", &admin.APIController{}, "*:ShowHomePage"),
+		beego.NSNamespace("/add",
+			beego.NSRouter("", &admin.APIController{}, "GET:ShowAddForm"),
+			beego.NSRouter("", &admin.APIController{}, "POST:InsertNewTable"),
+		),
+		beego.NSNamespace("/delete",
+			beego.NSRouter("", &admin.APIController{}, "POST:RemoveAllowedTable"),
+		),
+		beego.NSNamespace("/modify/:id",
+			beego.NSRouter("", &admin.APIController{}, "GET:ShowModifyForm"),
+			beego.NSRouter("", &admin.APIController{}, "POST:ModifyTable"),
+		),
+	)
+
+	// admin
 	// ----------------------------- Admin -------------------------------
 
 	adminNS :=
@@ -173,10 +199,11 @@ func init() {
 			adminInstitutionsNS,
 			adminHarvestNS,
 			adminLogNS,
+			adminAPINS,
 		)
 
-	// api
-	// ----------------------------- Repository ----------------------------------
+		// api
+		// ----------------------------- Repository ----------------------------------
 
 	apiRepositoryNS := beego.NSNamespace("/repository",
 		beego.NSNamespace("/resources/:id",
@@ -191,6 +218,12 @@ func init() {
 
 	apiNS :=
 		beego.NewNamespace("/api",
+			beego.NSRouter("", &api.Static{}, "GET:ShowHomePage"),
+			beego.NSNamespace("/table/",
+				beego.NSRouter("list", &api.Table{}, "GET:ShowList"),
+				beego.NSRouter("generate/:name", &api.Table{}, "*:GenerateTable"),
+				beego.NSRouter("download/:name", &api.Table{}, "*:DownloadTable"),
+			),
 			apiRepositoryNS,
 		)
 

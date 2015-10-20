@@ -18,6 +18,9 @@
     <a href="/admin/accounts" > Accounts </a>
   </li>
   <li>
+    <a href="/admin/api" > API Settings</a>
+  </li>
+  <li>
     <a href="/admin/log" > Log </a>
   </li>
 </ul>

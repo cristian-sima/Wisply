@@ -18,6 +18,7 @@ type Process struct {
 	remote                                     remote.RepositoryInterface
 	controller                                 Controller
 	Records, Formats, Identifiers, Collections int
+	notifyController                           bool
 }
 
 // Start starts the process
@@ -188,10 +189,10 @@ func (process *Process) delete() {
 }
 
 func (process *Process) processFails() {
+	process.ChangeRepositoryStatus("problems")
 	process.ChangeResult("warning")
 	process.delete()
 	process.Suspend()
-	process.ChangeRepositoryStatus("problems")
 }
 
 //
@@ -229,25 +230,54 @@ func (process *Process) ChangeCurrentOperation(operation Operationer) {
 // UpdateFormats updates the number of formats
 func (process *Process) updateFormats(number int) error {
 	process.Formats = process.Formats + number
-	return process.updateStatistics("formats", process.Formats)
+	return process.updateStatistics("formats", number)
 }
 
 // UpdateCollections updates the number of collections
 func (process *Process) updateCollections(number int) error {
 	process.Collections = process.Collections + number
-	return process.updateStatistics("collections", process.Collections)
+	return process.updateStatistics("collections", number)
 }
 
 // UpdateRecords updates the number of records
 func (process *Process) updateRecords(number int) error {
 	process.Records = process.Records + number
-	return process.updateStatistics("records", process.Records)
+	return process.updateStatistics("records", number)
 }
 
 // updateIdentifiers updates the number of identifiers
 func (process *Process) updateIdentifiers(number int) error {
 	process.Identifiers = process.Identifiers + number
-	return process.updateStatistics("identifiers", process.Identifiers)
+	return process.updateStatistics("identifiers", number)
+}
+
+func (process *Process) updateStatistics(name string, number int) error {
+	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
+	if err != nil {
+		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
+		fmt.Println(err)
+		return err
+	}
+	_, err = stmt.Exec(number, process.HarvestID)
+	if err == nil {
+		process.broadcastStatistics(name, number)
+	}
+	return err
+}
+
+// broadcastStatistics tells the controller the number of "name" items where name is the parameter
+func (process *Process) broadcastStatistics(name string, newValue int) {
+	value := &struct {
+		Operation string
+		Number    int
+	}{
+		Operation: name,
+		Number:    newValue,
+	}
+	process.tellController(&Message{
+		Name:  "harvest-update",
+		Value: value,
+	})
 }
 
 // GetStatistics returns the number of formats, collections, records, identifiers
@@ -263,30 +293,6 @@ func (process *Process) GetStatistics() (int, int, int, int) {
 	query.QueryRow(process.HarvestID).Scan(&formats, &collections, &records, &identifiers)
 
 	return formats, collections, records, identifiers
-}
-
-func (process *Process) updateStatistics(name string, number int) error {
-	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
-	if err != nil {
-		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
-		fmt.Println(err)
-		return err
-	}
-	_, err = stmt.Exec(number, process.HarvestID)
-	if err == nil {
-		type content struct {
-			Operation string
-			Number    int
-		}
-		process.tellController(&Message{
-			Name: "harvest-update",
-			Value: &content{
-				Operation: name,
-				Number:    number,
-			},
-		})
-	}
-	return err
 }
 
 // ChangeRepositoryStatus changes the status of local repository
@@ -319,7 +325,7 @@ func (process *Process) SaveToken(name string, token string) {
 
 func (process *Process) tellController(simple *Message) {
 
-	if process.controller != nil && process.controller.GetConduit() != nil {
+	if process.notifyController && process.controller != nil && process.controller.GetConduit() != nil {
 
 		channel := process.controller.GetConduit()
 
@@ -339,7 +345,7 @@ func (process *Process) tellController(simple *Message) {
 
 // Delete deletes the harvest process and calls its parent method
 func (process *Process) Delete() {
-	DeleteProcess(process.ID)
+	process.Process.Delete()
 }
 
 // Recover loads the process in memory and starts executing the last stage

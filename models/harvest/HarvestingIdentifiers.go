@@ -52,7 +52,7 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 	if err != nil {
 		operation.failed()
 	} else {
-		operation.succeeded()
+		operation.updateCollections()
 	}
 }
 
@@ -88,6 +88,17 @@ func (operation *HarvestingIdentifiers) insertIdentifiers(identifiers []wisply.I
 	}
 	err = operation.process.updateIdentifiers(len(identifiers))
 	return err
+}
+
+func (operation *HarvestingIdentifiers) updateCollections() {
+	repository := operation.Operation.GetRepository()
+	task := newUpdateNumberOfRecordsTask(operation, repository)
+	err := task.Perform()
+	if err != nil {
+		operation.failed()
+	} else {
+		operation.succedded()
+	}
 }
 
 // constructor

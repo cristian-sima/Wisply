@@ -25,9 +25,6 @@
           <a href="/webscience">Web science</a>
         </li>
         <li>
-          <a href="/contact">Contact</a>
-        </li>
-        <li>
           <a href="/institutions">Institutions</a>
         </li>
       </ul>

@@ -15,15 +15,15 @@ var (
 )
 
 // CurrentSessions contains information about all the running sessions
-var CurrentSessions = make(map[int]*Session)
+var CurrentSessions = make(map[int]*session)
 
 // Session is an object that contains a process and the user connected to it
-type Session struct {
+type session struct {
 	Connections []*ws.Connection `json:"-"`
 	Process     *harvest.Process `json:"Manager"`
 }
 
-func (process *Session) addConnection(connection *ws.Connection) {
+func (process *session) addConnection(connection *ws.Connection) {
 	process.Connections = append(process.Connections, connection)
 }
 
@@ -41,43 +41,29 @@ type HarvestController struct {
 
 // RecoverProcess tries to recover a process
 func (controller *HarvestController) RecoverProcess() {
-
 	ID := controller.Ctx.Input.Param(":id")
-
 	// check if it is running
 	intID, _ := strconv.Atoi(ID)
 	harvestProcess := harvest.NewProcessByID(intID)
-
 	repID := harvestProcess.GetRepository().ID
-
-	_, processExists := CurrentSessions[repID]
-
-	// the process must be finished
-	if !processExists {
-		delete(CurrentSessions, repID)
-
-		harvest.RecoverProcess(harvestProcess, controller)
-		process := &Session{
-			Process: harvestProcess,
-		}
-		CurrentSessions[repID] = process
-
-		go harvestProcess.Recover()
+	delete(CurrentSessions, repID)
+	harvest.RecoverProcess(harvestProcess, controller)
+	process := &session{
+		Process: harvestProcess,
 	}
+	CurrentSessions[repID] = process
+	go harvestProcess.Recover()
+
 	controller.TplNames = "site/admin/harvest/init.tpl"
 }
 
 // ForceFinishProcess terminates a process in an error state
 func (controller *HarvestController) ForceFinishProcess() {
-
 	ID := controller.Ctx.Input.Param(":id")
-
 	// check if it is running
 	intID, _ := strconv.Atoi(ID)
 	harvestProcess := harvest.NewProcessByID(intID)
-
 	harvestProcess.ForceFinish()
-
 	controller.TplNames = "site/admin/harvest/init.tpl"
 }
 
@@ -122,10 +108,6 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 // ChangeRepositoryBaseURL verifies if an address can be reached
 func (controller *HarvestController) decideOneRepository(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
-	case "change-url":
-		{
-			controller.ChangeRepositoryBaseURL(message)
-		}
 	case "start-progress":
 		{
 			controller.CreateNewProcess(message, connection)
@@ -139,25 +121,18 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 
 // CreateNewProcess starts the initializing proccess
 func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
-
 	_, processExists := CurrentSessions[message.Repository]
-
 	if !processExists {
 		ID := message.Repository
 		delete(CurrentSessions, ID)
-
 		harvestProcess := harvest.CreateProcess(strconv.Itoa(ID), controller)
-		process := &Session{
+		process := &session{
 			Process: harvestProcess,
 		}
 		process.addConnection(connection)
 		CurrentSessions[ID] = process
-
 		go harvestProcess.Start()
 	}
-	//  else {
-	// 	existingProcess.addConnection(connection)
-	// }
 }
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
@@ -170,32 +145,12 @@ func (controller *HarvestController) decideManyRepositories(message *ws.Message,
 	}
 }
 
-// ChangeRepositoryBaseURL verifies if an address can be reached
-func (controller *HarvestController) ChangeRepositoryBaseURL(message *ws.Message) {
-	newURL := message.Value.(string)
-	repository, _ := repository.NewRepository(strconv.Itoa(message.Repository))
-	if newURL != repository.URL {
-		repository.ModifyURL(newURL)
-	}
-	msg := ws.Message{
-		Name:       "url-changed",
-		Repository: repository.ID,
-		Value:      newURL,
-	}
-
-	hub.BroadcastMessage(&msg)
-}
-
 func run() {
 	fmt.Println("Running the controller!! ...")
-
 	for {
 		select {
 		case message := <-conduit:
-			fmt.Println("Controller: I received this name : " + message.GetName())
-
 			session, ok := CurrentSessions[message.GetRepository()]
-
 			if ok {
 				switch message.GetName() {
 				case "repository-status-changed", "identification-details", "event-notice":

@@ -1,8 +1,10 @@
 package api
 
 import (
+	"encoding/json"
+	"strings"
+
 	"github.com/cristian-sima/Wisply/models/database"
-	"github.com/cristian-sima/Wisply/models/harvest"
 	"github.com/cristian-sima/Wisply/models/repository"
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
@@ -16,11 +18,11 @@ type Repository struct {
 func (controller *Repository) GetResources() {
 
 	ID := controller.Ctx.Input.Param(":id")
-
 	min := controller.Ctx.Input.Param(":min")
 	offset := controller.Ctx.Input.Param(":number")
-
 	repo, err := repository.NewRepository(ID)
+	collection := strings.TrimSpace(controller.GetString("collection"))
+	orderBy := strings.TrimSpace(controller.GetString("orderBy"))
 
 	if err != nil {
 		controller.Abort("databaseError")
@@ -29,26 +31,36 @@ func (controller *Repository) GetResources() {
 			LimitMin: min,
 			Offset:   offset,
 			Limit:    100,
+			OrderBy:  orderBy,
+			Where: map[string]string{
+				"collection": collection,
+			},
 		})
 
 		if err != nil {
 			controller.Abort("databaseError")
 		} else {
+			records := wisply.GetRecords(repo.ID, options)
 
-			controller.Data["repository"] = repo
-			controller.SetCustomTitle(repo.Name)
+			switch strings.TrimSpace(controller.GetString("format")) {
+			case "html":
+				controller.Data["records"] = records
+				controller.TplNames = "site/api/repository/resources/html.tpl"
+				break
+			case "json":
 
-			controller.Data["institution"] = repo.GetInstitution()
-			controller.Data["identification"] = repo.GetIdentification()
-
-			controller.Data["records"] = wisply.GetRecords(repo.ID, options)
-
-			if repo.HasBeenProcessed() {
-				controller.Data["collections"] = wisply.GetCollections(repo.ID)
-				controller.Data["process"] = harvest.NewProcess(repo.LastProcess)
+				jsonRecords, _ := json.Marshal(struct {
+					Records []*wisply.Record `json:"Records"`
+				}{
+					Records: records,
+				})
+				controller.Data["jsonRecords"] = jsonRecords
+				controller.TplNames = "site/api/repository/resources/json.tpl"
+				break
+			default:
+				controller.TplNames = "site/api/problem.tpl"
+				break
 			}
-
-			controller.TplNames = "site/api/html/repository.tpl"
 		}
 	}
 }

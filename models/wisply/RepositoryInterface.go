@@ -11,7 +11,7 @@ type RepositoryInterface interface {
 	ListFormats() ([]byte, error)
 	GetFormats(content []byte) ([]Formater, error)
 
-	ListCollections() ([]byte, error)
+	ListCollections(token string) ([]byte, error)
 	GetCollections(content []byte) ([]Collectioner, error)
 
 	ListRecords(token string) ([]byte, error)

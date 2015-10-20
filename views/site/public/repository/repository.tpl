@@ -51,50 +51,24 @@
           <div class="row">
             <!-- Statistics -->
             <div class="col-lg-2 col-md-2 col-sm-2 text-left" >
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <td>
-                      <span class="badge badge-info">{{ .process.Formats }}</span>
-                    </td>
-                    <td>
-                      formats
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span class="badge badge-info">{{ .process.Collections }}</span>
-                    </td>
-                    <td>
-                      collections
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span class="badge badge-info">{{ .process.Records }}</span>
-                    </td>
-                    <td>
-                      records
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+
             </div>
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
-              <div id="repository-before-resources"></div>
+              <div id="repository-top"></div>
+              <div id="repository-before-resources">
+              </span>
+            </div>
               <div id="repository-resources"></div>
+              <ul class="pager">
+                <li class="previous" style="display:none"><a href="#">← Previous</a></li>
+                <li class="next" style="display:none"><a href="#">Next →</a></li>
+              </ul>
+              <div id="repository-bottom"></div>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Collections -->
-              <div class="list-group" id="repositories">
-                {{range $index, $collection := .collections}}
-                <a href="#" class="list-group-item">
-                  <h5 class="list-group-item-heading"><span class="glyphicon glyphicon-equalizer"></span> {{ $collection.Name }}</h5>
-                  <p class="list-group-item-text">{{ $collection.Description }}</p>
-                </a>
-                {{ end }}
-              </div>
+              <div class="list-group" id="repository-side"></div>
             </div>
           </div>
           {{ end }}
@@ -107,14 +81,43 @@
 .text-almost-invisible {
   color:#D8D8D8;
 }
+.change-resources-per-page {
+  width: 50px;
+  background-color: #f9f9f9;
+}
+a.resource:focus{
+  outline: 0px auto transparent;
+}
 </style>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>
-var server = {}
+var server = {};
 server.repository = {
   id : {{ .repository.ID }},
-  totalRecords: {{ .process.Records }},
-}
+  totalResources: {{ .process.Records }},
+  name: "{{ .repository.Name }}",
+  collections: JSON.parse({{ .collectionsJSON }}),
+};
+server.repository.getCollection = function (requestedID) {
+  var i, collection;
+  for(i=0; i < this.collections.length; i++) {
+    collection = this.collections[i];
+    if(parseInt(collection.ID, 10) === parseInt(requestedID, 10) ) {
+      return collection;
+    }
+  }
+  return false;
+};
+server.repository.getBySpec = function (requestedSet) {
+  var i, collection;
+  for(i=0; i < this.collections.length; i++) {
+    collection = this.collections[i];
+    if(collection.Spec === requestedSet ) {
+      return collection;
+    }
+  }
+  return false;
+};
 </script>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
 <script src="/static/js/public/repository.js"></script>

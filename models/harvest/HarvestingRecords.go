@@ -14,10 +14,6 @@ type HarvestingRecords struct {
 // Start gets the collections
 func (operation *HarvestingRecords) Start() {
 	operation.Operation.Start()
-	operation.start()
-}
-
-func (operation *HarvestingRecords) start() {
 	operation.multiRequest()
 }
 
@@ -29,7 +25,7 @@ func (operation *HarvestingRecords) multiRequest() {
 	token := operation.getCurrentToken()
 	operation.process.SaveToken("records", token)
 	hasMoreRecords = true // in order to enter in the loop
-	initNumberOfRecors := operation.process.Records
+	initNumberOfRecords := operation.process.Records
 
 	for hasMoreRecords && (err == nil) {
 		err = operation.tryToGet(token)
@@ -38,17 +34,16 @@ func (operation *HarvestingRecords) multiRequest() {
 		}
 		if hasMoreRecords {
 			operation.process.SaveToken("records", token)
-		} else if operation.process.Records != initNumberOfRecors {
+		} else if operation.process.Records != initNumberOfRecords {
 			lastToken := operation.GetRemote().GetFinishToken()
 			fmt.Println("finishing token: " + lastToken)
 			operation.process.SaveToken("records", lastToken)
 		}
 	}
-
 	if err != nil {
 		operation.failed()
 	} else {
-		operation.succeeded()
+		operation.succedded()
 	}
 }
 

@@ -1,9 +1,11 @@
 package wisply
 
+// Collection is used to group resources
 type Collection struct {
-	ID          int
-	Spec        string
-	Name        string
-	Description string
-	Repository  int
+	ID                int    `json:"ID"`
+	Spec              string `json:"Spec"`
+	Name              string `json:"Name"`
+	Description       string `json:"Description"`
+	Repository        int    `json:"Repository"`
+	NumberOfResources int    `json:"NumberOfResources"`
 }

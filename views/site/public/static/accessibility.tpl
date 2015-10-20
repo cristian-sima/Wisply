@@ -16,6 +16,23 @@
             <p>The power of the Web is in its universality. Access by everyone regardless of disability is an essential aspect.</p>
             <small>Tim Berners-Lee, W3C Director and inventor of the <cite title="Source Title">World Wide Web</cite></small>
           </blockquote>
+          <!-- <h3>Features</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="list-group">
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Available for all devices</h4>
+                  <p class="list-group-item-text">Wisply was created using the Bootstrap framework. Bootstrap ensures that the website can adapt to the device. Thus, even if you want to access Wisply with your smartphone, all the functionality is still available.</p>
+                </div>
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Configurated to print</h4>
+                  <p class="list-group-item-text">Every page has been optimized to be printed. In order to print, please refer to the browser's functionality.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+          </div> -->
           <article>
             <h2>FAQ</h2>
             <ol>
@@ -65,7 +82,7 @@
             </article>
             <article id="accessibility-answers-2" class="well">
               <h3>Do you provide shortcuts?</h3>
-              Yes, you can use shortcuts. <br />This is a list of useful shortcuts:
+              Yes, we do. <br />This is a list of useful shortcuts:
               <ul>
                 <li> All pages
                   <ul class="light-keys">
@@ -73,7 +90,7 @@
                       <kbd>ALT</kbd> + <kbd>A</kbd> - Wisply goes to accessibility page
                     </li>
                     <li>
-                      <kbd>ALT</kbd> + <kbd>H</kbd> - Wisply goes to home page
+                      <kbd>ALT</kbd> + <kbd>W</kbd> - Wisply goes to home page
                     </li>
                     <li>
                       <kbd>ALT</kbd> + <kbd>C</kbd> - Wisply goes contact page
@@ -87,7 +104,22 @@
                     </li>
                   </ul>
                 </li>
+                <li> Repository page
+                  <ul class="light-keys">
+                    <li>
+                      <kbd>CTRL</kbd> + <kbd>LEFT</kbd> - Wisply gets the previous page
+                    </li>
+                    <li>
+                      <kbd>CTRL</kbd> + <kbd>RIGHT</kbd> - Wisply gets the next page
+                    </li>
+                  </ul>
+                </li>
               </ul>
+              <br />
+              <div class="alert alert-dismissible alert-info">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Protip!</strong> On every page you can find the key shortcuts by pressing <kbd>ALT</kbd> + <kbd>H</kbd> (remember H for Help)
+              </div>
             </article>
           </section>
         </section>

@@ -26,9 +26,10 @@ func buildProcess(ID string, process *action.Process) *Process {
 	remoteServer, _ := remote.New(local)
 
 	harvestProcess := &Process{
-		Process:    process,
-		remote:     remoteServer,
-		repository: local,
+		Process:          process,
+		remote:           remoteServer,
+		repository:       local,
+		notifyController: true,
 	}
 
 	return harvestProcess
@@ -132,18 +133,23 @@ func NewProcess(processID int) *Process {
 }
 
 // GetProcessesByRepository returns the processes of for the repository
-func GetProcessesByRepository(repositoryID int) []*Process {
+// 0 for showing all
+func GetProcessesByRepository(repositoryID, number int) []*Process {
 
 	var (
 		list                                       []*Process
 		processID, harvestID                       int
-		repID                                      string
+		repID, limit                               string
 		formats, collections, records, identifiers int
 	)
 
 	repID = strconv.Itoa(repositoryID)
 
-	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC"
+	if number != 0 {
+		limit = "LIMIT 0, " + strconv.Itoa(number)
+	}
+
+	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC " + limit
 	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {
@@ -179,18 +185,6 @@ func GetProcessToken(ID int, name string) string {
 		fmt.Println(err)
 	}
 	return token
-}
-
-// DeleteProcess deletes a process
-func DeleteProcess(processID int) {
-	sql := "DELETE FROM `process_harvest` WHERE process=?"
-	query, err := database.Connection.Prepare(sql)
-
-	if err != nil {
-		fmt.Println("Error when deleting the harvest process:")
-		fmt.Println(err)
-	}
-	query.Exec(processID)
 }
 
 // RecoverProcess gets the information about the current process and recovers it

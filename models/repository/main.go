@@ -12,6 +12,13 @@ import (
 type Model struct {
 }
 
+// ResetAllRepositories sets the default values for the repositories
+func ResetAllRepositories() {
+	sql := "UPDATE `repository` SET `lastProcess`=0, `status`='unverified'"
+	query, _ := database.Connection.Prepare(sql)
+	query.Exec()
+}
+
 // GetAllInstitutions returns an array of Institution with all institutions
 func (model *Model) GetAllInstitutions() []Institution {
 	var list []Institution

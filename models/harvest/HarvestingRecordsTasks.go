@@ -2,6 +2,7 @@ package harvest
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
@@ -185,5 +186,49 @@ func newInsertRecordsTask(operationHarvest Operationer, repository *repository.R
 		repository:       repository,
 		keysBuffer:       keysBuffer,
 		repositoryBuffer: repositoryBuffer,
+	}
+}
+
+// UpdateNumberOfRecordsTask represents a task that updates the number of records for all the collections
+type UpdateNumberOfRecordsTask struct {
+	Tasker
+	*Task
+	repository       *repository.Repository
+	keysBuffer       *database.SQLBuffer
+	repositoryBuffer *database.SQLBuffer
+}
+
+// Perform gets the number of records for each collection
+func (task *UpdateNumberOfRecordsTask) Perform() error {
+	err := task.update()
+	if err != nil {
+		task.hasProblems(err)
+		return err
+	}
+	task.Finish("The number of records has been updated")
+	return err
+}
+
+func (task *UpdateNumberOfRecordsTask) update() error {
+	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set` WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
+	sql := "UPDATE `repository_collection` SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
+	fmt.Println(sql)
+	_, err := database.Connection.Query(sql)
+	return err
+}
+
+func (task *UpdateNumberOfRecordsTask) hasProblems(err error) {
+	task.ChangeResult("danger")
+	task.Finish(err.Error())
+}
+
+func newUpdateNumberOfRecordsTask(operationHarvest Operationer, repository *repository.Repository) *UpdateNumberOfRecordsTask {
+
+	return &UpdateNumberOfRecordsTask{
+		Task: &Task{
+			operation: operationHarvest,
+			Task:      newTask(operationHarvest.GetOperation(), "Update the number of records"),
+		},
+		repository: repository,
 	}
 }

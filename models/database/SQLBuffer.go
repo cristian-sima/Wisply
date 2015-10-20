@@ -2,41 +2,62 @@ package database
 
 import "errors"
 
-// SQLBuffer is a fater way to insert data into database
+var maxRowsPerExecution = 100
+
+// SQLBuffer is a faster way to insert data into database
 // It keeps a buffer of all the rows and executes the statement only once
+//
+//
+// The Buffer has an internal way to prevent a buffer overflow. If the number of rows stored in the buffer exceeds the maximum number (maxRowsPerExecution), the buffer executes and clears the memory and saves the result (which is an error). In case the error is not nil, it will return it when the Exec is called.
 //
 // Inspired by this post
 // http://stackoverflow.com/questions/21108084/golang-mysql-insert-multiple-data-at-once
 //
 type SQLBuffer struct {
-	memory    []interface{}
-	questions string
-	table     string
-	columns   string
+	memory        []interface{}
+	questions     string
+	table         string
+	columns       string
+	internalError error
+	numberOfRows  int
 }
 
 // AddRow adds a new row to the buffer
 func (buffer *SQLBuffer) AddRow(values ...interface{}) {
 
-	row := ""
+	if buffer.internalError == nil {
 
-	row = "("
+		row := "("
 
-	for range values {
-		row = row + "?,"
+		for range values {
+			row = row + "?,"
+		}
+
+		// delete the last and append ),
+
+		row = row[0:len(row)-1] + "), "
+
+		buffer.questions += row
+		buffer.memory = append(buffer.memory, values...)
+
+		buffer.numberOfRows++
+
+		if buffer.numberOfRows > maxRowsPerExecution {
+			buffer.internalError = buffer.Exec()
+		}
 	}
-	// delete the last ,
-	row = row[0 : len(row)-1]
-
-	row += "), "
-
-	buffer.questions += row
-	buffer.memory = append(buffer.memory, values...)
-
 }
 
 // Exec executes the entire buffer
 func (buffer *SQLBuffer) Exec() error {
+
+	if buffer.internalError != nil {
+		return buffer.internalError
+	}
+
+	if buffer.memory == nil {
+		return nil
+	}
 
 	sqlStr := "INSERT INTO `" + buffer.table + "` (" + buffer.columns + ")" + " VALUES "
 	sqlStr += buffer.questions
@@ -65,6 +86,7 @@ func (buffer *SQLBuffer) Exec() error {
 func (buffer *SQLBuffer) clear() {
 	buffer.memory = nil
 	buffer.questions = ""
+	buffer.numberOfRows = 0
 }
 
 // NewSQLBuffer creates a new buffer

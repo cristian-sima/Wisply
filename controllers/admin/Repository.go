@@ -6,6 +6,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/harvest"
 	repository "github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // RepositoryController manages the operations for repositories (list, delete, add)
@@ -140,6 +141,23 @@ func (controller *RepositoryController) Update() {
 	}
 }
 
+// EmptyRepository deletes all records, formats, collections, emails and information about the repository
+func (controller *RepositoryController) EmptyRepository() {
+	var ID string
+	ID = controller.Ctx.Input.Param(":id")
+	repository, err := repository.NewRepository(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+	} else {
+		processes := harvest.GetProcessesByRepository(repository.ID, 0)
+		for _, process := range processes {
+			process.Delete()
+		}
+		wisply.ClearRepository(repository.ID)
+	}
+	controller.TplNames = "site/admin/repository/blank.tpl"
+}
+
 // Delete deletes the repository specified by parameter id
 func (controller *RepositoryController) Delete() {
 	var ID string
@@ -148,7 +166,7 @@ func (controller *RepositoryController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		processes := harvest.GetProcessesByRepository(repository.ID)
+		processes := harvest.GetProcessesByRepository(repository.ID, 0)
 		for _, process := range processes {
 			process.Delete()
 		}
@@ -185,6 +203,7 @@ func (controller *RepositoryController) ShowRepository() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
+		controller.Data["processes"] = harvest.GetProcessesByRepository(repository.ID, 5)
 		controller.Data["repository"] = repository
 		controller.Data["institution"] = repository.GetInstitution()
 		controller.Data["identification"] = repository.GetIdentification()

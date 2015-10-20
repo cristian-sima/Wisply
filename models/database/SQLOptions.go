@@ -11,6 +11,7 @@ type Temp struct {
 	Offset   string // the actual limit from the client
 	OrderBy  string
 	Limit    int // used to limit the maximum number of resources
+	Where    map[string]string
 }
 
 // SQLOptions represents a valid SQL option object
@@ -24,11 +25,6 @@ func (options *SQLOptions) GetLimit() string {
 		return ""
 	}
 	return "LIMIT " + options.LimitMin + "," + options.Offset
-}
-
-// GetOrder returns the Order By option
-func (options *SQLOptions) GetOrder() string {
-	return options.OrderBy
 }
 
 // NewSQLOptions validates and create a valid SQLOptions object

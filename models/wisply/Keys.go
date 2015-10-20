@@ -1,6 +1,10 @@
 package wisply
 
-import wisplyFormat "github.com/cristian-sima/Wisply/models/wisply/format"
+import (
+	"strings"
+
+	wisplyFormat "github.com/cristian-sima/Wisply/models/wisply/format"
+)
 
 // RecordKeys holds all the keys for the record
 type RecordKeys struct {
@@ -54,6 +58,16 @@ func (keys *RecordKeys) processKeys(name string, values []string) []string {
 func (keys *RecordKeys) ProcessFormats() map[string]int {
 	values := keys.get("format", false)
 	return Compress(wisplyFormat.ConvertFormats(values))
+}
+
+func (keys *RecordKeys) GetURL() string {
+	values := keys.get("relation", false)
+	for _, relation := range values {
+		if strings.HasPrefix(relation, "http") {
+			return relation
+		}
+	}
+	return ""
 }
 
 // Compress compacts and counts the values

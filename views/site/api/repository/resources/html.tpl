@@ -1,21 +1,14 @@
-<div id="repository-top"></div>
-<table class="table">
+<table class="table" id="listOfRecords">
   <tbody>
     {{range $index, $record := .records}}
     <tr>
       <td>
-          {{ if eq ($record.Keys.Get "relation" | len) 1 }}
-            {{range $index, $relation := $record.Keys.Get "relation" }}
-              <a class="showTheater"  href="{{ $relation }}">
-                <h4>
-              {{range $index, $title := $record.Keys.Get "title" }}
-              {{ $title }}
-              {{ end }}
-            </h4>
+          <a class="resource" href="{{ $record.Keys.GetURL }}">
+              <h4>
+            {{range $index, $title := $record.Keys.Get "title" }}
+            {{ $title }}
             {{ end }}
-          {{ else }}
-          Multirelation
-          {{ end }}
+          </h4>
           </a>
         {{range $index, $description := $record.Keys.Get "identifier" }}
         <!-- <span class="label label-info">{{ $description }} </span><br /> -->
@@ -42,9 +35,3 @@
     {{ end }}
   </tbody>
 </table>
-<ul class="pager">
-  <li class="previous" ><a href="#">← Older</a></li>
-  <li class="next"><a href="#">Newer →</a></li>
-</ul>
-
-<div id="repository-bottom"></div>

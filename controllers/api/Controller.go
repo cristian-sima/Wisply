@@ -4,7 +4,11 @@ import (
 	"github.com/cristian-sima/Wisply/controllers/general"
 )
 
-// Controller
+var messages = map[string]string{
+	"tableNotAllowed": "Wisply does not know this table :(",
+}
+
+// Controller represents the basic API controller
 type Controller struct {
 	general.WisplyController
 }

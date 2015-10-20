@@ -8,7 +8,9 @@ import (
 	"github.com/cristian-sima/Wisply/models/api"
 )
 
-var validNumberOfHours = 3600 * 24
+const (
+	validNumberOfHours = 3600 * 24
+)
 
 // Table holds all the methods for downloading the Wisply tables
 type Table struct {
@@ -25,32 +27,22 @@ func (controller *Table) ShowList() {
 	controller.IndicateLastModification(1445250987)
 }
 
-// DownloadTable starts the process of downloading the table
-func (controller *Table) setHeadersDownload(filename string) {
-	controller.Ctx.Output.Header("Content-Description", "File Transfer")
-	controller.Ctx.Output.Header("Content-Type", "application/octet-stream")
-	controller.Ctx.Output.Header("Content-Disposition", "attachment; filename="+filename)
-	controller.Ctx.Output.Header("Content-Transfer-Encoding", "binary")
-	controller.Ctx.Output.Header("Expires", "0")
-	controller.Ctx.Output.Header("Cache-Control", "must-revalidate")
-	controller.Ctx.Output.Header("Pragma", "public")
-}
-
 // GenerateTable generates the table if there is no table or it is too old
 func (controller *Table) GenerateTable() {
-
+	// The "format" variable may be received in future like a parameter (in case there is a need to add a new format version)
+	// In this case, there is no need to modify other code from here
 	format := "csv"
-
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	fullPath := "cache/api/tables/"
-	file, err := controller.getTable(fullPath + "/" + filename)
+	pathToFolder := "cache/api/tables/"
+	fullPath := pathToFolder + "/" + filename
+	file, err := controller.getTable(fullPath)
 	if err != nil {
 		api.GenerateTableFile(tableName, format)
 	} else {
-		if controller.checkFileIsStillValid(fullPath + "/" + filename) {
+		if controller.checkFileIsStillValid(fullPath) {
 			controller.closeFile(file)
-			controller.deleteFile(fullPath + "/" + filename)
+			controller.deleteFile(fullPath)
 			api.GenerateTableFile(tableName, format)
 		}
 	}
@@ -59,27 +51,42 @@ func (controller *Table) GenerateTable() {
 
 // DownloadTable downloads a table
 func (controller *Table) DownloadTable() {
+	// The "format" variable may be received in future like a parameter (in case there is a need to add a new format version)
+	// In this case, there is no need to modify other code from here
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	fullPath := "cache/api/tables/"
+	folderPath := "cache/api/tables/"
+	fullPath := folderPath + "/" + filename
 	if !api.IsAllowedTable(tableName) {
-		controller.DisplaySimpleError("This table name is restricted.")
+		controller.DisplaySimpleError(messages["tableNotAllowed"])
 	} else {
 		var (
 			file *os.File
 			err  error
 		)
-		file, err = controller.getTable(fullPath + "/" + filename)
+		file, err = controller.getTable(fullPath)
 		if err == nil {
-			info, _ := os.Stat(fullPath + "/" + filename)
-			controller.setHeadersDownload("Table " + tableName + " (" + info.ModTime().String() + ")." + format)
-			controller.readFile(file, fullPath)
+			info, _ := os.Stat(fullPath)
+			timeCreated := info.ModTime().String()
+			tableFilename := "Wisply table [" + tableName + "] from [" + timeCreated + "]." + format
+			controller.setHeadersDownload(tableFilename)
+			controller.readFile(file, folderPath)
 			controller.closeFile(file)
 		} else {
 			controller.ShowBlankPage()
 		}
 	}
+}
+
+func (controller *Table) setHeadersDownload(filename string) {
+	controller.Ctx.Output.Header("Content-Description", "File Transfer")
+	controller.Ctx.Output.Header("Content-Type", "application/octet-stream")
+	controller.Ctx.Output.Header("Content-Disposition", "attachment; filename="+filename)
+	controller.Ctx.Output.Header("Content-Transfer-Encoding", "binary")
+	controller.Ctx.Output.Header("Expires", "0")
+	controller.Ctx.Output.Header("Cache-Control", "must-revalidate")
+	controller.Ctx.Output.Header("Pragma", "public")
 }
 
 func (controller *Table) checkFileIsStillValid(path string) bool {
@@ -101,7 +108,7 @@ func (controller *Table) getTable(path string) (*os.File, error) {
 
 func (controller *Table) deleteFile(path string) {
 	if err := os.Remove(path); err != nil {
-		panic("Closing error: " + err.Error())
+		panic("Removing error: " + err.Error())
 	}
 }
 
@@ -111,6 +118,7 @@ func (controller *Table) closeFile(file *os.File) {
 	}
 }
 
+// readFile reads and outputs the content to the client
 func (controller *Table) readFile(file *os.File, fullPath string) {
 	// make a buffer to keep chunks that are read
 	buffer := make([]byte, 1024)

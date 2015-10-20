@@ -1,65 +1,8 @@
 package api
 
-import (
-	"fmt"
-	"strings"
-
-	"github.com/cristian-sima/Wisply/models/database"
-)
+import "github.com/cristian-sima/Wisply/models/database"
 
 var sensitiveTableList = []string{"account", "account_token", "api_table_settings"}
-
-// GenerateTableFile creates the sql table
-func GenerateTableFile(tableName, format string) {
-	switch format {
-	case "csv":
-		generateCSVFile(tableName)
-		break
-	}
-}
-
-func generateCSVFile(tableName string) {
-	columns := ""
-
-	sqlCol := `SELECT  GROUP_CONCAT(COLUMN_NAME SEPARATOR ',')
-	FROM INFORMATION_SCHEMA.COLUMNS
-	WHERE TABLE_SCHEMA='wisply' AND TABLE_NAME='` + tableName + `'`
-	rows, err := database.Connection.Prepare(sqlCol)
-	rows.QueryRow().Scan(&columns)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	elements := strings.Split(columns, ",")
-	stringColumns := ""
-
-	for _, element := range elements {
-		stringColumns += `"` + element + `",`
-	}
-	stringColumns = stringColumns[:len(stringColumns)-1]
-
-	sql := `SELECT ` + stringColumns + `
-	UNION ALL
-	SELECT ` + columns + `
-	FROM ` + tableName + `
-	INTO OUTFILE 'W:/go-workspace/src/github.com/cristian-sima/Wisply/cache/api/tables/` + tableName + `.csv'
-	FIELDS TERMINATED BY ','
-	ENCLOSED BY '"'
-	LINES TERMINATED BY '\n';`
-
-	query, err1 := database.Connection.Prepare(sql)
-	if err1 != nil {
-		fmt.Println("Error sql")
-		panic(err1)
-	}
-
-	_, err2 := query.Exec()
-	if err2 != nil {
-		fmt.Println("Error sql")
-		panic(err2)
-	}
-}
 
 // GetAllWisplyTables returns the list of all the tables which MAY BE downloaded
 func GetAllWisplyTables() []string {

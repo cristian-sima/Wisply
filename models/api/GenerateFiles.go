@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -41,8 +42,12 @@ func (file *file) getFullPath() string {
 		return wisplyPath
 	}
 	pathToFolder := pathOfAPITables
-	rawPath := getWisplyPath() + pathToFolder + file.name + "." + file.format
+	rawPath := getWisplyPath() + pathToFolder + file.getFileName()
 	return strings.Replace(rawPath, "\\", "/", -1)
+}
+
+func (file *file) getFileName() string {
+	return file.name + "." + file.format
 }
 
 func createFile(tableName, format string) *file {
@@ -50,4 +55,23 @@ func createFile(tableName, format string) *file {
 		name:   tableName,
 		format: format,
 	}
+}
+
+func copyFile(dst, src string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	_, err = io.Copy(out, in)
+	cerr := out.Close()
+	if err != nil {
+		return err
+	}
+	return cerr
 }

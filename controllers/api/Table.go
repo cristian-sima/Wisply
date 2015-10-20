@@ -8,7 +8,7 @@ import (
 	"github.com/cristian-sima/Wisply/models/api"
 )
 
-var validNumberOfHours = 5
+var validNumberOfHours = 3600 * 24
 
 // Table holds all the methods for downloading the Wisply tables
 type Table struct {

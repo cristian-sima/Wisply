@@ -28,7 +28,7 @@ func (file *csvFile) generate() {
 		// but it allows it to write to tmp
 		// so we create a file there and copy it to the good location
 		file.execute(tempPath)
-		copyFile(tempPath, fullPath)
+		copyFile(fullPath, tempPath)
 	}
 }
 

@@ -27,7 +27,8 @@ func (file *csvFile) generate() {
 		// unix does not allow mysql to write everywhere
 		// but it allows it to write to tmp
 		// so we create a file there and copy it to the good location
-		file.execute(file.getFileName())
+		deleteFile(tempPath)
+		file.execute(tempPath)
 		copyFile(fullPath, tempPath)
 	}
 }

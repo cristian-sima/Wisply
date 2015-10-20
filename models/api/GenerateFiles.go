@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -74,4 +75,10 @@ func copyFile(dst, src string) error {
 		return err
 	}
 	return cerr
+}
+
+func deleteFile(path string) {
+	if err := os.Remove(path); err != nil {
+		fmt.Println("No file there")
+	}
 }

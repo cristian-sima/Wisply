@@ -1,4 +1,4 @@
-/* global $, bootbox, base64_decode */
+/* global $, bootbox, base64_decode, searchModule */
 /**
  * It contains a reference to the Wisply.App object
  * @global
@@ -294,6 +294,8 @@ var Wisply = function() {
 		 * @access public
 		 */
 		this.shortcutManager = new ShortcutManager();
+		this.isSmallSearchDisplayed = false;
+		this.search = new searchModule.Field('.wisply-search-field');
 	};
 	App.prototype =
 		/**
@@ -304,8 +306,35 @@ var Wisply = function() {
 			 * It initiates the shorcuts' manager
 			 */
 			init: function() {
+				var instance = this;
+				function initSearch() {
+						function showSmallSearch(element) {
+							var smallSearch = $("#search-small-input"),
+							button = $(element);
+							$("#full-logo").hide();
+							$("#search-small").show();
+							button.html("<span class='glyphicon glyphicon-remove'></span>");
+							smallSearch.focus();
+						}
+						function hideSmallSearch(element) {
+							var smallSearch = $("#search-small-input"),
+							button = $(element);
+							$("#search-small").hide();
+							$("#full-logo").show();
+							button.html("<span class='glyphicon glyphicon-search'></span>");
+						}
+						$("#show-small-search-button").click(function() {
+							if(!instance.isSmallSearchDisplayed) {
+								showSmallSearch(this);
+							} else {
+								hideSmallSearch(this);
+							}
+								instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
+						});
+				}
 				this.shortcutManager.init();
 				this.solveHashProblem();
+				initSearch();
 			},
 			/**
 			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content

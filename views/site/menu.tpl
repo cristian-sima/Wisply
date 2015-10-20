@@ -2,7 +2,7 @@
 <div class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
-      <a href="/"  class="navbar-brand">
+      <a href="/" class="navbar-brand" id="full-logo">
         <img id="logo" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
       </a>
       {{ if .isAdminPage }}
@@ -15,22 +15,36 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+      <button class="navbar-toggle" type="button" id="show-small-search-button">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+      <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
+        <div class="form-group visible-xs" style="width:100%;" >
+            <input type="text" style="width:100%;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+        </div>
+    </form>
     </div>
     <nav class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
+        <li class="hidden-sm">
           <a href="/about" id="themes">About</a>
         </li>
         <li>
           <a href="/webscience">Web science</a>
         </li>
-        <li>
+        <li class="hidden-sm">
           <a href="/institutions">Institutions</a>
         </li>
+        <li class="dropdown visible-sm" >
+           <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+           <ul class="dropdown-menu">
+            <li class="divider"></li>
+            <li><a href="/about" id="themes">About</a></li>
+            <li><a href="/institutions">Institutions</a></li>
+           </ul>
+       </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" id="menu-top-left">
-        <li>
-        </li>
         {{ if .accountDisconnected }}
           <li>
             <a href="/auth/login">Login</a>
@@ -45,22 +59,20 @@
         </li>
         {{ if .currentAccount.IsAdministrator }}
         <li>
-          <a href="/admin">Admin</a>
+          <a href="/admin"><span class="glyphicon glyphicon-cog"></span></a>
         </li>
         {{ end }}
         <li>
-          <a id="menu-logout-button" href="#">Logout</a>
+          <a id="menu-logout-button" href="#" title="Logout"><span class="glyphicon glyphicon-log-in"></span></a>
         </li>
         {{ end }}
       </ul>
+      <form class="navbar-form navbar-left hidden-xs" role="search">
+        <div class="form-group">
+            <input type="text" class="wisply-search-field form-control" placeholder="Search">
+        </div>
+    </form>
     </nav>
   </div>
 </div>
-<!--
-  <form class="navbar-form navbar-left" role="search">
-  <div class="form-group">
-  <input type="text" class="form-control" placeholder="Search">
-</div>
-</form>
--->
 {{ end }}

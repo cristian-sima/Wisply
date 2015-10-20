@@ -10,6 +10,10 @@
 <script src="/static/3rd_party/others/js/jquery.cookie.js"></script>
 <script src="/static/3rd_party/others/js/jquery.hotkeys.js"></script>
 
+<script src="/static/3rd_party/others/js/typeahead.bundle.js"></script>
+
+<script src="/static/js/wisply/search.js"></script>
+
 <script src="/static/js/wisply/wisply.js"></script>
 
 {{ if .accountConnected }}

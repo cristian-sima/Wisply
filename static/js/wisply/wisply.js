@@ -295,7 +295,6 @@ var Wisply = function() {
 		 */
 		this.shortcutManager = new ShortcutManager();
 		this.isSmallSearchDisplayed = false;
-		this.search = new searchModule.Field('.wisply-search-field');
 	};
 	App.prototype =
 		/**
@@ -335,6 +334,7 @@ var Wisply = function() {
 				this.shortcutManager.init();
 				this.solveHashProblem();
 				initSearch();
+				this.search = new searchModule.Field('.wisply-search-field');
 			},
 			/**
 			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content

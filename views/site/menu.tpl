@@ -20,9 +20,9 @@
       </button>
       <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
-            <input type="text" style="width:100%;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+          <input type="text" style="width:100%;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
         </div>
-    </form>
+      </form>
     </div>
     <nav class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
@@ -36,22 +36,22 @@
           <a href="/institutions">Institutions</a>
         </li>
         <li class="dropdown visible-sm" >
-           <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-           <ul class="dropdown-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+          <ul class="dropdown-menu">
             <li class="divider"></li>
             <li><a href="/about" id="themes">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
-           </ul>
-       </li>
+          </ul>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right" id="menu-top-left">
         {{ if .accountDisconnected }}
-          <li>
-            <a href="/auth/login">Login</a>
-          </li>
-          <li>
-            <a href="/auth/register">Register</a>
-          </li>
+        <li>
+          <a href="/auth/login">Login</a>
+        </li>
+        <li>
+          <a href="/auth/register">Register</a>
+        </li>
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted">
@@ -67,11 +67,11 @@
         </li>
         {{ end }}
       </ul>
-      <form class="navbar-form navbar-left hidden-xs" role="search">
+      <form class="navbar-form navbar-right hidden-xs" role="search">
         <div class="form-group">
-            <input type="text" class="wisply-search-field form-control" placeholder="Search">
+          <input type="text" class="wisply-search-field form-control" placeholder="Search">
         </div>
-    </form>
+      </form>
     </nav>
   </div>
 </div>

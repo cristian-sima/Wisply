@@ -7,9 +7,9 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	admin "github.com/cristian-sima/Wisply/controllers/admin"
+	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/controllers/api"
-	public "github.com/cristian-sima/Wisply/controllers/public"
+	"github.com/cristian-sima/Wisply/controllers/public"
 )
 
 func init() {
@@ -202,14 +202,23 @@ func init() {
 			adminAPINS,
 		)
 
-		// api
-		// ----------------------------- Repository ----------------------------------
+	// api
+	// ----------------------------- Repository ----------------------------------
 
 	apiRepositoryNS := beego.NSNamespace("/repository",
 		beego.NSNamespace("/resources/:id",
 			beego.NSNamespace("/get",
 				beego.NSRouter("/:min/:number", &api.Repository{}, "GET:GetResources"),
 			),
+		),
+	)
+
+	// api
+	// ----------------------------- Search ----------------------------------
+
+	apiSearchNS := beego.NSNamespace("/search",
+		beego.NSNamespace("/anything/:text",
+			beego.NSRouter("", &api.Search{}, "*:SearchAnything"),
 		),
 	)
 
@@ -225,6 +234,7 @@ func init() {
 				beego.NSRouter("download/:name", &api.Table{}, "*:DownloadTable"),
 			),
 			apiRepositoryNS,
+			apiSearchNS,
 		)
 
 	// -------------------------------- REGISTER -----------------------------

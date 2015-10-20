@@ -27,7 +27,7 @@ func (file *csvFile) generate() {
 		// unix does not allow mysql to write everywhere
 		// but it allows it to write to tmp
 		// so we create a file there and copy it to the good location
-		file.execute(tempPath)
+		file.execute(file.getFileName())
 		copyFile(fullPath, tempPath)
 	}
 }
@@ -44,11 +44,13 @@ func (file *csvFile) execute(path string) error {
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {
 		fmt.Println("Error 1 generating the file from SQL: ")
+		fmt.Println(err1)
 		return err1
 	}
 	_, err2 := query.Exec()
 	if err2 != nil {
 		fmt.Println("Error 2 generating the file from SQL: ")
+		fmt.Println(err2)
 		return err2
 	}
 	return nil

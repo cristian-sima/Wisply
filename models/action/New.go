@@ -63,7 +63,6 @@ func NewOperation(ID int) *Operation {
 			},
 		},
 	}
-
 	return operation
 }
 
@@ -106,7 +105,6 @@ func NewTask(ID int) *Task {
 			},
 		},
 	}
-
 	return task
 }
 
@@ -136,10 +134,8 @@ func NewProcess(ID int) *Process {
 
 	if err1 != nil || err2 != nil {
 		fmt.Println("It has been an error 2 when trying to get the info about the process: ")
-		fmt.Println(opeID)
-		fmt.Println(ID)
-		fmt.Println(err1)
-		fmt.Println(err2)
+		fmt.Println("Err1: " + err1.Error())
+		fmt.Println("Err2: " + err2.Error())
 	}
 
 	process := &Process{
@@ -157,6 +153,5 @@ func NewProcess(ID int) *Process {
 			},
 		},
 	}
-
 	return process
 }

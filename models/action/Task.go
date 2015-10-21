@@ -31,14 +31,16 @@ func (task *Task) CustomFinish(result, explication string) {
 }
 
 func (task *Task) updateInDatabase() {
-	stmt, err := database.Connection.Prepare("UPDATE `task` SET end=?, content=?, result=?, is_running=?, explication=? WHERE id=?")
+	setClause := "SET end=?, content=?, result=?, is_running=?, explication=?"
+	sql := "UPDATE `task` " + setClause + " WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Error 1 when updating the task: ")
+		fmt.Println("Error #1 when updating the task: ")
 		fmt.Println(err)
 	}
 	_, err = stmt.Exec(task.End, task.Content, task.result, strconv.FormatBool(task.IsRunning), task.Explication, strconv.Itoa(task.ID))
 	if err != nil {
-		fmt.Println("Error 2 when updating the task: ")
+		fmt.Println("Error #2 when updating the task: ")
 		fmt.Println(err)
 	}
 }

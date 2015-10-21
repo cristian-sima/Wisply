@@ -32,7 +32,9 @@ func CreateProcess(content string) *Process {
 	query.Exec(process.Content, process.Start, strconv.FormatBool(process.IsRunning))
 
 	// find its ID
-	sql = "SELECT `id` FROM `process` WHERE content=? AND start=? AND is_running=? ORDER BY id DESC LIMIT 0,1"
+	whereClause := "WHERE content=? AND start=? AND is_running=?"
+	orderByClause := "ORDER BY id DESC"
+	sql = "SELECT `id` FROM `process` " + whereClause + " " + orderByClause + " LIMIT 0,1"
 	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(process.Content, process.Start, strconv.FormatBool(process.IsRunning)).Scan(&process.ID)
 
@@ -40,7 +42,6 @@ func CreateProcess(content string) *Process {
 		fmt.Println("Error when selecting the ID of process:")
 		fmt.Println(err)
 	}
-
 	return process
 }
 

@@ -8,7 +8,8 @@ import (
 )
 
 // Operation coordonates a number of many tasks.
-// An example of operation may be inserting records into database. It coordonates the task which creates the buffer and the one which inserts the file.
+// An example of operation may be inserting records into database.
+// It coordonates the task which creates the buffer and the one which inserts the file.
 // It is coordonated by a process
 type Operation struct {
 	*Action
@@ -44,14 +45,16 @@ func (operation *Operation) GetTaskConduit() chan Messager {
 }
 
 func (operation *Operation) updateInDatabase() {
-	stmt, err := database.Connection.Prepare("UPDATE `operation` SET end=?, content=?, is_running=?, result=? WHERE id=?")
+	setClause := "SET end=?, content=?, is_running=?, result=?"
+	sql := "UPDATE `operation` " + setClause + " WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Error 1 when updating the operation: ")
+		fmt.Println("Error #1 when updating the operation: ")
 		fmt.Println(err)
 	}
 	_, err = stmt.Exec(operation.End, operation.Content, strconv.FormatBool(operation.IsRunning), operation.result, strconv.Itoa(operation.ID))
 	if err != nil {
-		fmt.Println("Error 2 when updating the operation: ")
+		fmt.Println("Error #2 when updating the operation: ")
 		fmt.Println(err)
 	}
 }
@@ -67,19 +70,19 @@ func (operation *Operation) CreateTask(content string) *Task {
 	sql := "INSERT INTO `task` " + columns + " VALUES " + values
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Error 1 when creating the task:")
+		fmt.Println("Error #1 when creating the task:")
 		fmt.Println(err)
 	}
 
 	_, err = query.Exec(operation.Process.ID, task.Start, operation.ID, task.GetResult(), task.Content)
 	if err != nil {
-		fmt.Println("Error 2 when creating the task:")
+		fmt.Println("Error #2 when creating the task:")
 		fmt.Println(err)
 	}
 
 	// find its id
-
-	sql = "SELECT `id` FROM `task` WHERE start=? AND operation=? AND result=? AND is_running=? AND content=?"
+	whereClause := "start=? AND operation=? AND result=? AND is_running=? AND content=?"
+	sql = "SELECT `id` FROM `task` WHERE " + whereClause
 	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(task.Start, task.Operation.ID, task.result, strconv.FormatBool(task.IsRunning), task.Content).Scan(&task.ID)
 
@@ -98,11 +101,11 @@ func (operation *Operation) GetTasks() []*Task {
 	fieldList := "task.id, task.content, task.start, task.end, task.is_running, task.result, task.explication"
 
 	// the query
-	sql := "SELECT " + fieldList + " FROM `task` AS task WHERE operation=? ORDER BY task.id DESC"
+	sql := "SELECT " + fieldList + " FROM `task` WHERE operation=? ORDER BY task.id DESC"
 
 	rows, err := database.Connection.Query(sql, operation.Action.ID)
 	if err != nil {
-		fmt.Println("Problem when getting all the tasks of the operation: ")
+		fmt.Println("Problem when getting all the tasks of the operation (Error #5): ")
 		fmt.Println(err)
 	}
 

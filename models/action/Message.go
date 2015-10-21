@@ -22,7 +22,8 @@ type Messager interface {
 	GetValue() interface{}
 }
 
-// OperationMessager ... defines the methods which must be implemented by a message sent from operation to process
+// OperationMessager ... defines the methods which must be implemented by
+// a message sent from operation to process
 type OperationMessager interface {
 	Messager
 	GetOperation() *Operation
@@ -39,7 +40,8 @@ func (message *OperationMessage) GetOperation() *Operation {
 	return message.Operation
 }
 
-// ProcessMessager ... defines the methods which must be implemented by a message sent from process to controller
+// ProcessMessager ... defines the methods which must be implemented by
+// a message sent from process to controller
 type ProcessMessager interface {
 	Messager
 	GetProcess() Processer

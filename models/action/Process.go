@@ -7,7 +7,9 @@ import (
 	database "github.com/cristian-sima/Wisply/models/database"
 )
 
-// Process is a top level action which coordonates many operations and communicates with the controller
+// Process is a top level action which coordonates many operations
+// A process communicates with the controller
+// The controller manages the process
 type Process struct {
 	*Action
 	isSuspended      bool
@@ -35,9 +37,11 @@ func (process *Process) GetOperationConduit() chan OperationMessager {
 }
 
 func (process *Process) updateInDatabase() {
-	stmt, err := database.Connection.Prepare("UPDATE `process` SET is_suspended=?, end=?, is_running=?, current_operation=?, result=? WHERE id=?")
+	setClause := "SET is_suspended=?, end=?, is_running=?, current_operation=?, result=?"
+	sql := "UPDATE `process` " + setClause + " WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Error 1 when finishing the process: ")
+		fmt.Println("Error #1 when finishing the process: ")
 		fmt.Println(err)
 	}
 	if process.ID == 0 {
@@ -47,7 +51,7 @@ func (process *Process) updateInDatabase() {
 	}
 
 	if err != nil {
-		fmt.Println("Error 2 when finishing the process: ")
+		fmt.Println("Error #2 when finishing the process: ")
 		fmt.Println(err)
 	}
 }
@@ -97,22 +101,22 @@ func (process *Process) CreateOperation(content string) *Operation {
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
-		fmt.Println("Error when creating the operation:")
+		fmt.Println("Error #3 when creating the operation:")
 		fmt.Println(err)
 	}
 
 	query.Exec(operation.Start, process.ID, operation.Content)
 
 	// find its ID
-	sql = "SELECT `id` FROM `operation` WHERE start=? AND process=? AND is_running=?"
+	whereClause := "WHERE start=? AND process=? AND is_running=?"
+	sql = "SELECT `id` FROM `operation` " + whereClause
 	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(operation.Start, operation.Process.ID, strconv.FormatBool(operation.IsRunning)).Scan(&operation.ID)
 
 	if err != nil {
-		fmt.Println("Error when selecting the operation id:")
+		fmt.Println("Error #4 when selecting the operation id:")
 		fmt.Println(err)
 	}
-
 	return operation
 }
 
@@ -127,7 +131,7 @@ func (process *Process) GetOperations() []*Operation {
 
 	rows, err := database.Connection.Query(sql, process.Action.ID)
 	if err != nil {
-		fmt.Println("Problem when getting all the operations of the process: ")
+		fmt.Println("Problem #7 when getting all the operations of the process: ")
 		fmt.Println(err)
 	}
 
@@ -170,26 +174,22 @@ func (process *Process) GetOperations() []*Operation {
 
 // DeleteLog the entire log
 func DeleteLog() {
-
 	sql := "DELETE FROM `process`"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Delete 1 error for process:")
+		fmt.Println("Delete #1 error for log:")
 		fmt.Println(err)
 	}
 	query.Exec()
-
 }
 
 // Delete deletes the process along with the tasks and operations
 func (process *Process) Delete() {
-
 	sql := "DELETE FROM `process` WHERE id=?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Delete 1 error for process:")
+		fmt.Println("Delete #1 error for process:")
 		fmt.Println(err)
 	}
 	query.Exec(process.Action.ID)
-
 }

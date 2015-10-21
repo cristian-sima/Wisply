@@ -6,7 +6,6 @@ import (
 )
 
 const (
-	// DateFormat is the format for the dates
 	DateFormat = time.Stamp
 )
 
@@ -17,7 +16,8 @@ type Actioner interface {
 	updateInDatabase()
 }
 
-// Action is the most basic type. It has a starting and ending timestamps and a content
+// Action is the most basic type.
+// It has a starting and ending timestamps and a content
 type Action struct {
 	Actioner
 	ID        int
@@ -41,17 +41,16 @@ func (action *Action) GetEndDate() string {
 	return action.getDate(action.End)
 }
 
-// GetDuration returns the duration between the start and end or some dots if it did not finished
+// GetDuration returns the duration between the start and end
+// It returns "..." if it is not finished
 func (action *Action) GetDuration() string {
 	var duration string
 	if action.IsRunning || action.End == 0 {
 		return "..."
 	}
 	duration = action.getDuration(action.Start, action.End)
-
 	// make it nice
 	duration = action.getNiceDuration(duration)
-
 	return duration
 }
 
@@ -69,11 +68,9 @@ func (action *Action) getDuration(start, end int64) string {
 }
 
 func (action *Action) getNiceDuration(duration string) string {
-
 	duration = strings.Replace(duration, "h", "h, ", -1)
 	duration = strings.Replace(duration, "m", " min, ", -1)
 	duration = strings.Replace(duration, "s", " sec", -1)
-
 	return duration
 }
 

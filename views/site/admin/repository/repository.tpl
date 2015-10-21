@@ -11,7 +11,7 @@
           <div class="row">
             <div class="col-md-12">
               <span class="h4">{{ .repository.Name }}</span>
-              <span class="repository-status" data-toggle="tooltip" data-placement="right" title="See progress" >{{ .repository.Status }}</span>
+              <span class="repository-status" data-toggle="tooltip" data-placement="right" title="See progress" >{{ .repository.Status }}</span> <a href="#" class="showStatusMore" ><span class="glyphicon glyphicon-info-sign" ></span></a>
               <br />
             </div>
           </div>

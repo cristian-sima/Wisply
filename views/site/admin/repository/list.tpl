@@ -30,7 +30,7 @@
           <thead>
             <tr>
               <th>Name</th>
-              <th>Current status</th>
+              <th>Status <a href="#" class="showStatusMore" ><span class="glyphicon glyphicon-info-sign" ></span></a></th>
               <th>Progress</th>
               <th>Base URL</th>
               <th>Institution</th>

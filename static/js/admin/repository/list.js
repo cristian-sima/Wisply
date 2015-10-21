@@ -50,6 +50,14 @@ var Repositories = function () {
     activateListeners: function () {
       $(".deleteRepositoryButton").click(confirmDelete);
       $(".emptyRepositoryButton").click(confirmEmpty);
+      $(".showStatusMore").click(function(event){
+        event.preventDefault();
+        wisply.message.dialog({
+          onEscape: true,
+          title: "Repository Status",
+          message: '<div style="background:white"><blockquote>The status defines the state of the repository<br />The following diagram explains how the status changes <br /></blockquote><img class="img-responsive" src="/static/img/admin/repository/status.png"  /></div>',
+        });
+      });
       GUI.activateActionListeners();
     },
     /**

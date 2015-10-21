@@ -9,7 +9,8 @@ const (
 	// ReadWaitPeriod Time allowed to read the next message from the client.
 	ReadWaitPeriod = 6000 * time.Second
 
-	// PingInterval end pings to client with this period. Must be less than readWait.
+	// PingInterval end pings to client with this period.
+	// Must be less than readWait.
 	PingInterval = (ReadWaitPeriod * 9) / 10
 
 	// MaxMessageSize sets the maximum message size allowed from client.

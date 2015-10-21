@@ -1,3 +1,4 @@
+// Package format contains the Wisply Formats
 package format
 
 // MIME holds the translation of MIME types to a Wisply ones

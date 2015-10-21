@@ -8,12 +8,12 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// InstitutionSearch represents a search object for the institutions
+// InstitutionSearch searches for institutions
 type InstitutionSearch struct {
 	*search
 }
 
-// Perform gets institutions
+// Perform gets the results
 func (search *InstitutionSearch) Perform() Result {
 	searchQuery := Result{
 		Results: []ResultItem{},
@@ -31,6 +31,7 @@ func (search *InstitutionSearch) Perform() Result {
 	return searchQuery
 }
 
+// gets the institutions
 func (search *InstitutionSearch) getFromDB() []repository.Institution {
 	var list []repository.Institution
 	fieldsList := "`id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID`"

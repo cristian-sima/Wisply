@@ -8,7 +8,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Hub represents the object which managers the message. It sends messages to the connections and it notifies the controller if there are new messages
+// Hub represents the object which managers the message.
+// It sends messages to the connections and it notifies the controller
+// if there are new messages
 type Hub struct {
 	// Registered connections.
 	connections map[*Connection]bool
@@ -51,7 +53,6 @@ func (hub *Hub) SendMessage(message *Message, connection *Connection) {
 
 // SendGroupMessage sends a message to a GROUP of connections
 func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
-	// hub.log("I broadcast to a GROUP of " + strconv.Itoa(len(group)) + " connections, this message: ")
 	for _, connection := range group {
 		hub.sendWebsocket(message, connection)
 	}
@@ -59,7 +60,6 @@ func (hub *Hub) SendGroupMessage(message *Message, group []*Connection) {
 
 // BroadcastMessage sends a message to ALL the connection from the hub
 func (hub *Hub) BroadcastMessage(message *Message) {
-	// 	hub.log("I broadcast to ALL " + strconv.Itoa(len(hub.connections)) + " connections, this message: ")
 	if hub.broadcast != nil {
 		hub.broadcast <- message
 	}
@@ -98,12 +98,12 @@ func (hub *Hub) sendWebsocket(message *Message, connection *Connection) {
 
 	ws, err := json.Marshal(&message)
 	if err != nil {
-		hub.log("I got an error when I tried to compress the websocket message into json at sendWebsocket[ at line 94]. Here is the error:")
+		message := "I got an error when I tried to compress the websocket message into json:"
+		hub.log(message)
 		fmt.Println(err)
 	}
 	select {
 	case connection.send <- ws:
-		//	hub.log("Websocket sent")
 	default:
 		fmt.Println("a ajuns aici")
 		close(connection.send)

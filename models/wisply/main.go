@@ -1,3 +1,5 @@
+// Package wisply represents a Wisply repository
+// It contains the metadata from the remote repository and the processed data
 package wisply
 
 import (
@@ -16,8 +18,8 @@ func GetCollections(repositoryID int) []*Collection {
 		list []*Collection
 		name string
 	)
-
-	sql := "SELECT `id`, `spec`, `name`, `description`, `numberOfRecords` FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
+	fieldSet := "`id`, `spec`, `name`, `description`, `numberOfRecords`"
+	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
 	rows, _ := database.Connection.Query(sql, repositoryID)
 	for rows.Next() {
 		collection := &Collection{
@@ -36,10 +38,6 @@ func GetCollections(repositoryID int) []*Collection {
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	start := time.Now()
 	var list []*Record
-
-	// select from identifier
-	// left join identifier_set ON identifier
-	//
 
 	var (
 		rows *sql.Rows
@@ -66,7 +64,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	}
 
 	if err != nil {
-		fmt.Println("error with the records sql")
+		fmt.Println("Error #1 with Wisply repository records")
 		fmt.Println(err)
 	}
 
@@ -116,7 +114,8 @@ func ClearRepository(repositoryID int) {
 }
 
 func updateRepository(repositoryID int) {
-	sql := "UPDATE `repository` SET `lastProcess`=0, `status`='unverified' WHERE `id`=?"
+	setClause := "SET `lastProcess`=0, `status`='unverified'"
+	sql := "UPDATE `repository` " + setClause + " WHERE `id`=?"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec(repositoryID)
 }
@@ -125,6 +124,7 @@ func deleteResources(repositoryID int) {
 	sql := "DELETE FROM `repository_resource` WHERE `repository` = ?"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec(repositoryID)
+
 	sql = "DELETE FROM `resource_key` WHERE `repository` = ?"
 	query, _ = database.Connection.Prepare(sql)
 	query.Exec(repositoryID)
@@ -164,6 +164,7 @@ func deleteIdentifiers(repositoryID int) {
 	sql := "DELETE FROM `identifier` WHERE `repository` = ?"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec(repositoryID)
+
 	sql = "DELETE FROM `identifier_set` WHERE `repository` = ?"
 	query, _ = database.Connection.Prepare(sql)
 	query.Exec(repositoryID)

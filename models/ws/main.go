@@ -1,3 +1,4 @@
+// Package websockets encapsulates the functionality for the Websockets connecton
 package websockets
 
 // CreateHub creates a new Hub

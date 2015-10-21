@@ -312,23 +312,14 @@ var Wisply = function() {
 							button = $(element);
 							$("#full-logo").hide();
 							$("#search-small").show();
-							button.html("<span class='glyphicon glyphicon-remove'></span>");
+							button.html("");
 							smallSearch.focus();
-						}
-						function hideSmallSearch(element) {
-							var smallSearch = $("#search-small-input"),
-							button = $(element);
-							$("#search-small").hide();
-							$("#full-logo").show();
-							button.html("<span class='glyphicon glyphicon-search'></span>");
 						}
 						$("#show-small-search-button").click(function() {
 							if(!instance.isSmallSearchDisplayed) {
 								showSmallSearch(this);
-							} else {
-								hideSmallSearch(this);
 							}
-								instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
+							instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
 						});
 				}
 				this.shortcutManager.init();

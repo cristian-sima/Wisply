@@ -18,6 +18,8 @@ var SearchModule = function() {
 		}
 		return new Handlebars.SafeString(theString);
 	});
+	// Maximum allowed characters for description
+	var maxAllowedCharForDesc = 70;
 	/**
 	 * Does nothing
 	 * @memberof Field
@@ -37,7 +39,7 @@ var SearchModule = function() {
 		this.object = $(selector).typeahead({
 			hint: true,
 			highlight: false,
-			minLength: 2,
+			minLength: 1,
 		}, {
 			name: 'states',
 			source: searchAnything,
@@ -50,25 +52,24 @@ var SearchModule = function() {
         ].join('\n'),
 				empty: [
         '<div class="empty-message">',
-          '<span class="glyphicon glyphicon-inbox"></span> It seems there is nothing like that',
+          '<span class="glyphicon glyphicon-inbox"></span> No results',
         '</div>'
       ].join('\n'),
 				header: [
-				"<h4 class='search-header league-name'>",
+				'<div class="search-header">',
+  			"<span class='h6' class='league-name'>",
 				"Institutions",
-				"</h4>",
-				"<hr />",
+				"</span></div>",
 			].join("\n"),
 				suggestion: Handlebars.compile([
-				"<div>",
-				"<strong>{{Title}}</strong>",
-					"<div class='row'>",
-						"<div class='col-lg-2 col-md-2 col-sm-2'>",
-						"<img class='search-logo' src='{{Icon}}' />",
-						"</div>",
-						"<div class='col-lg-10 col-md-10 col-sm-10 text-muted smaller'>{{ cutString Description 150 }}</div>",
+					"<div style='width:100%'><div class='row'>",
+					"<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>",
+					"<img class='search-logo' src='{{Icon}}' />",
 					"</div>",
-				"</div>",
+					"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
+					"<span class='search-title'>{{Title}}</span><br />",
+					"<span class='text-muted search-description'>{{ cutString Description " + maxAllowedCharForDesc + " }}</span></div>",
+				"</div></div>",
 			].join("\n")),
 			}
 		});
@@ -76,6 +77,23 @@ var SearchModule = function() {
     /* jshint unused:false */
 		this.object.bind('typeahead:select', function(event, suggestion) {
 			window.location = suggestion.URL;
+		});
+		this.object.bind("typeahead:active", function(){
+				var defaultSearchWidth = 400,
+					width = parseInt($(window).width(), 10),
+					searchWidth = defaultSearchWidth;
+				if(width < searchWidth) {
+					searchWidth = width *9.95/10;
+				}
+				$(".tt-menu").css({"width": searchWidth - 30,});
+		});
+		this.object.bind("typeahead:idle", function() {
+				var smallSearch = $("#search-small-input"),
+				button = $("#show-small-search-button");
+				$("#search-small").hide();
+				$("#full-logo").show();
+				button.html("<span class='glyphicon glyphicon-search'></span>");
+				wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
 		});
 	};
 	Field.prototype =

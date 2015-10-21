@@ -20,25 +20,28 @@
       </button>
       <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
-          <input type="text" style="width:100%;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+          <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
         </div>
       </form>
     </div>
     <nav class="navbar-collapse collapse" id="navbar-main">
-      <ul class="nav navbar-nav">
-        <li class="hidden-sm">
+      <ul class="nav navbar-nav hidden-sm">
+        <li class="">
           <a href="/about" id="themes">About</a>
         </li>
-        <li>
+        <li class="hidden-sm">
           <a href="/webscience">Web science</a>
         </li>
         <li class="hidden-sm">
           <a href="/institutions">Institutions</a>
         </li>
-        <li class="dropdown visible-sm" >
+      </ul>
+      <ul class="nav navbar-nav visible-sm">
+        <li class="dropdown" >
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="divider"></li>
+            <li><a href="/webscience">Web science</a></li>
             <li><a href="/about" id="themes">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
           </ul>
@@ -69,7 +72,7 @@
       </ul>
       <form class="navbar-form navbar-right hidden-xs" role="search">
         <div class="form-group">
-          <input type="text" class="wisply-search-field form-control" placeholder="Search">
+          <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
         </div>
       </form>
     </nav>

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"strings"
 
 	"github.com/cristian-sima/Wisply/models/database"
@@ -41,21 +40,10 @@ func (controller *Repository) GetResources() {
 			controller.Abort("databaseError")
 		} else {
 			records := wisply.GetRecords(repo.ID, options)
-
 			switch strings.TrimSpace(controller.GetString("format")) {
 			case "html":
 				controller.Data["records"] = records
 				controller.TplNames = "site/api/repository/resources/html.tpl"
-				break
-			case "json":
-
-				jsonRecords, _ := json.Marshal(struct {
-					Records []*wisply.Record `json:"Records"`
-				}{
-					Records: records,
-				})
-				controller.Data["jsonRecords"] = jsonRecords
-				controller.TplNames = "site/api/repository/resources/json.tpl"
 				break
 			default:
 				controller.TplNames = "site/api/problem.tpl"

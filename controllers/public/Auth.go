@@ -24,7 +24,8 @@ func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {
 		controller.Redirect("/", 302)
 	} else {
-		controller.Data["sendMe"] = strings.TrimSpace(controller.GetString("sendMe"))
+		rawSendMe := controller.GetString("sendMe")
+		controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
 		controller.SetCustomTitle("Login to Wisply")
 		controller.showForm("login")
 	}
@@ -36,7 +37,8 @@ func (controller *AuthController) ShowRegisterForm() {
 	controller.showForm("register")
 }
 
-// showForm shows a form indicated by the parameter name. It can be "login" or "register"
+// showForm shows a form indicated by the parameter name.
+// It can be "login" or "register"
 func (controller *AuthController) showForm(name string) {
 	controller.GenerateXSRF()
 	controller.TplNames = "site/public/auth/" + name + ".tpl"
@@ -45,7 +47,8 @@ func (controller *AuthController) showForm(name string) {
 
 // CreateNewAccount checks if the password and the confirmation are the same
 // If so it sends the details of the user to processRegisterRequest
-// The parameters should be: register-name, register-password, register-email and register-password-confirm
+// The parameters should be: register-name, register-password,
+// register-email and register-password-confirm
 func (controller *AuthController) CreateNewAccount() {
 
 	confirmPassowrd := strings.TrimSpace(controller.GetString("register-password-confirm"))
@@ -70,7 +73,9 @@ func (controller *AuthController) processRegisterRequest(userDetails map[string]
 	if err != nil {
 		controller.DisplayError(problem)
 	} else {
-		controller.DisplaySuccessMessage("Your account is ready!", "/auth/login/")
+		message := "Your account is ready!"
+		goTo := "/auth/login/"
+		controller.DisplaySuccessMessage(message, goTo)
 	}
 
 }
@@ -118,7 +123,8 @@ func (controller *AuthController) rememberConnection(account *auth.Account) {
 	controller.Ctx.SetCookie(cookieName, cookie.GetValue(), cookie.Duration, cookie.Path)
 }
 
-// safeRedilectAccount gets the safe address to redirect the account and redirects
+// safeRedilectAccount gets the safe address where to redirects the account
+// It redirects the account
 func (controller *AuthController) safeRedilectAccount(sendMe string) {
 	var safeAddress string
 	safeAddress = controller.getSafeURL(sendMe)

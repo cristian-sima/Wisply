@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	validNumberOfHours = 3600 * 24
+	numberOfValidHoursForFile = 3600 * 24
 )
 
 // Table holds all the methods for downloading the Wisply tables
@@ -29,7 +29,8 @@ func (controller *Table) ShowList() {
 
 // GenerateTable generates the table if there is no table or it is too old
 func (controller *Table) GenerateTable() {
-	// The "format" variable may be received in future like a parameter (in case there is a need to add a new format version)
+	// The "format" variable may be received in future like a parameter
+	// (in case there is a need to add a new format version)
 	// In this case, there is no need to modify other code from here
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
@@ -51,7 +52,8 @@ func (controller *Table) GenerateTable() {
 
 // DownloadTable downloads a table
 func (controller *Table) DownloadTable() {
-	// The "format" variable may be received in future like a parameter (in case there is a need to add a new format version)
+	// The "format" variable may be received in future like a parameter
+	// (in case there is a need to add a new format version)
 	// In this case, there is no need to modify other code from here
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
@@ -69,10 +71,13 @@ func (controller *Table) DownloadTable() {
 		if err == nil {
 			info, _ := os.Stat(fullPath)
 			timeCreated := info.ModTime().String()
-			tableFilename := "Wisply table [" + tableName + "] from [" + timeCreated + "]." + format
+			name := "Wisply table [" + tableName + "] from [" + timeCreated + "]"
+			tableFilename := name + "." + format
+
 			controller.setHeadersDownload(tableFilename)
 			controller.readFile(file, folderPath)
 			controller.closeFile(file)
+
 		} else {
 			controller.ShowBlankPage()
 		}
@@ -82,17 +87,20 @@ func (controller *Table) DownloadTable() {
 func (controller *Table) setHeadersDownload(filename string) {
 	controller.Ctx.Output.Header("Content-Description", "File Transfer")
 	controller.Ctx.Output.Header("Content-Type", "application/octet-stream")
-	controller.Ctx.Output.Header("Content-Disposition", "attachment; filename="+filename)
+	disposition := "attachment; filename=" + filename
+	controller.Ctx.Output.Header("Content-Disposition", disposition)
 	controller.Ctx.Output.Header("Content-Transfer-Encoding", "binary")
 	controller.Ctx.Output.Header("Expires", "0")
 	controller.Ctx.Output.Header("Cache-Control", "must-revalidate")
 	controller.Ctx.Output.Header("Pragma", "public")
 }
 
+// a cache file is valid for a certain number of hours
+// the number is specified at the top of this file
 func (controller *Table) checkFileIsStillValid(path string) bool {
 	info, _ := os.Stat(path)
 	duration := time.Since(info.ModTime()).Seconds()
-	if int(duration) >= validNumberOfHours {
+	if int(duration) >= numberOfValidHoursForFile {
 		return true
 	}
 	return false
@@ -108,13 +116,13 @@ func (controller *Table) getTable(path string) (*os.File, error) {
 
 func (controller *Table) deleteFile(path string) {
 	if err := os.Remove(path); err != nil {
-		panic("Removing error: " + err.Error())
+		panic("Error occured while removing the file: " + err.Error())
 	}
 }
 
 func (controller *Table) closeFile(file *os.File) {
 	if err := file.Close(); err != nil {
-		panic("Closing error: " + err.Error())
+		panic("Error occured while closing the file: " + err.Error())
 	}
 }
 

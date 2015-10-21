@@ -2,7 +2,8 @@ package public
 
 import repository "github.com/cristian-sima/Wisply/models/repository"
 
-// InstitutionController managers the operations for displaying the institutions for public
+// InstitutionController managers the operations for displaying the institutions
+// It displays the pages which are accessed by the public (no connection)
 type InstitutionController struct {
 	Controller
 	model repository.Model

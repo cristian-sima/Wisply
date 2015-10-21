@@ -55,8 +55,8 @@ func (controller *StaticController) ShowHelp() {
 func (controller *StaticController) ShowPrivacyPolicy() {
 	pageName := "privacy"
 	controller.showStaticPage(pageName)
-
 	controller.SetCustomTitle("Wisply Privacy Policy")
+	// Please use http://www.timestampgenerator.com/
 	controller.IndicateLastModification(1442660323)
 }
 
@@ -64,8 +64,8 @@ func (controller *StaticController) ShowPrivacyPolicy() {
 func (controller *StaticController) ShowTerms() {
 	pageName := "terms-and-conditions"
 	controller.showStaticPage(pageName)
-
 	controller.SetCustomTitle("Wisply Terms and Conditions")
+	// Please use http://www.timestampgenerator.com/
 	controller.IndicateLastModification(1442661323)
 }
 
@@ -73,8 +73,8 @@ func (controller *StaticController) ShowTerms() {
 func (controller *StaticController) ShowCookiesPolicy() {
 	pageName := "cookies"
 	controller.showStaticPage(pageName)
-
 	controller.SetCustomTitle("Wisply Cookies Policy")
+	// Please use http://www.timestampgenerator.com/
 	controller.IndicateLastModification(1442660323)
 }
 
@@ -83,7 +83,7 @@ func (controller *StaticController) showStaticPage(pageName string) {
 	controller.TplNames = "site/public/static/" + pageName + ".tpl"
 }
 
-// ShowSample shows the sample page. This contains visual elements.
+// ShowSample shows the sample page. This page contains visual elements.
 // It is used by developers
 func (controller *StaticController) ShowSample() {
 	controller.TplNames = "site/public/static/sample.tpl"

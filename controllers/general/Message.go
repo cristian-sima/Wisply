@@ -5,7 +5,7 @@ import (
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
 )
 
-// MessageController encapsulates the operations for showing error and success messages
+// MessageController encapsulates the operations for showing messages
 type MessageController struct {
 	beego.Controller
 }
@@ -18,7 +18,8 @@ func (controller *MessageController) DisplaySimpleError(msg string) {
 	controller.DisplayError(err)
 }
 
-// DisplayError shows a complex error message (ussually after the validation of fields)
+// DisplayError shows a complex error message
+// (ussually after the validation of fields)
 func (controller *MessageController) DisplayError(err adapter.WisplyError) {
 	content := err.GetMessage()
 	if len(err.Data) != 0 {
@@ -28,7 +29,8 @@ func (controller *MessageController) DisplayError(err adapter.WisplyError) {
 	controller.displayMessage("error", content)
 }
 
-// DisplaySuccessMessage displays a success message and provides a link to go back
+// DisplaySuccessMessage displays a success message
+// It provides a link to go back
 func (controller *MessageController) DisplaySuccessMessage(content string, backLink string) {
 	controller.Data["backLink"] = backLink
 	controller.displayMessage("success", content)
@@ -38,6 +40,7 @@ func (controller *MessageController) DisplaySuccessMessage(content string, backL
 func (controller *MessageController) displayMessage(typeOfMessage string, content string) {
 	controller.Data["messageContent"] = content
 	controller.Data["displayMessage"] = true
-	controller.TplNames = "site/general/message/" + typeOfMessage + ".tpl"
+	filename := "site/general/message/" + typeOfMessage
+	controller.TplNames = filename + ".tpl"
 	controller.Layout = "site/message-layout.tpl"
 }

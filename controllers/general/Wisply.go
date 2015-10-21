@@ -85,7 +85,8 @@ func (controller *WisplyController) IndicateLastModification(timestamp int64) {
 	controller.Data["lastModification"] = formatedString
 }
 
-// SetCustomTitle sets a custom title for the page. In case the function is not called, it sets the title "Wisply"
+// SetCustomTitle sets a custom title for the page.
+// If the function is not called, it sets the title "Wisply"
 func (controller *WisplyController) SetCustomTitle(title string) {
 	controller.Data["customTitle"] = title
 }
@@ -95,9 +96,3 @@ func (controller *WisplyController) ShowBlankPage() {
 	controller.Layout = "site/blank-layout.tpl"
 	controller.TplNames = "site/blank.tpl"
 }
-
-//
-// // Finish closes the connection to database
-// func (controller *WisplyController) Finish() {
-// 	database.Connection.Close()
-// }

@@ -15,5 +15,5 @@
 		{{end}}
 	</div>
 	<div class="text-center" >
-		<a href="#" onclick="window.history.back();" class="btn btn-info">Go back to form</a>
+		<a href="javascript:history.go(-1)" class="btn btn-info">Go back to form</a>
 	</div>

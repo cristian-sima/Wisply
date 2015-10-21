@@ -58,7 +58,7 @@
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted">
-          <a>Hi, <b>{{ .currentAccount.Name }}</b></a>
+          <a><b>{{ .currentAccount.Name }}</b> <span class="text-success"><span class="glyphicon glyphicon-user"></span></span></a>
         </li>
         {{ if .currentAccount.IsAdministrator }}
         <li>

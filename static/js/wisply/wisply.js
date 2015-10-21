@@ -80,14 +80,22 @@ var Wisply = function() {
 			description: "Load the contact page",
 		}, {
 			"type": "keyup",
-			"key": "Alt+h",
+			"key": "Alt+k",
 			"callback": function() {
 				var description = wisply.shortcutManager.getDescription();
 				wisply.message.show("Key shortcuts available on this page", description);
 				wisply.activateTooltip();
 			},
 			description: "Show the list of key shortcuts",
-		}];
+		}, {
+			"type": "keyup",
+			"key": "Alt+z",
+			"callback": function(event) {
+				event.preventDefault();
+				wisply.search.object.focus();
+			},
+			description: "Activates the searching",
+		},];
 	}
 	ShortcutManager.prototype =
 		/**

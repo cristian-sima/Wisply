@@ -95,6 +95,9 @@
                     <li>
                       <kbd>ALT</kbd> + <kbd>C</kbd> - Wisply goes contact page
                     </li>
+                    <li>
+                      <kbd>ALT</kbd> + <kbd>Z</kbd> - Activates the main search
+                    </li>
                   </ul>
                 </li>
                 <li> When you are connected
@@ -104,21 +107,13 @@
                     </li>
                   </ul>
                 </li>
-                <li> Repository page
-                  <ul class="light-keys">
-                    <li>
-                      <kbd>CTRL</kbd> + <kbd>LEFT</kbd> - Wisply gets the previous page
-                    </li>
-                    <li>
-                      <kbd>CTRL</kbd> + <kbd>RIGHT</kbd> - Wisply gets the next page
-                    </li>
-                  </ul>
-                </li>
               </ul>
+              <br />
+              Each page may contain more key shortcuts.
               <br />
               <div class="alert alert-dismissible alert-info">
                 <button type="button" class="close" data-dismiss="alert">×</button>
-                <strong>Protip!</strong> On every page you can find the key shortcuts by pressing <kbd>ALT</kbd> + <kbd>H</kbd> (remember H for Help)
+                <strong>Protip!</strong> On every page you can find the key shortcuts by pressing <kbd>ALT</kbd> + <kbd>K</kbd> (remember <strong>k</strong> from <strong>k</strong>eys)
               </div>
             </article>
           </section>

@@ -19,7 +19,7 @@ var SearchModule = function() {
 		return new Handlebars.SafeString(theString);
 	});
 	// Maximum allowed characters for description
-	var maxAllowedCharForDesc = 70;
+	var maxAllowedCharForDesc = 90;
 	/**
 	 * Does nothing
 	 * @memberof Field
@@ -40,6 +40,38 @@ var SearchModule = function() {
 			hint: true,
 			highlight: false,
 			minLength: 1,
+		}, {
+			name: 'states',
+			source: searchAnything,
+			display: 'Title',
+			templates: {
+				pending: [
+          "<div class='text-center empty-message' >",
+          wisply.getLoadingImage("small"),
+          "<br /></div>"
+        ].join('\n'),
+				empty: [
+        '<div class="empty-message">',
+          '<span class="glyphicon glyphicon-inbox"></span> No results',
+        '</div>'
+      ].join('\n'),
+				header: [
+				'<div class="search-header">',
+  			"<span class='h6' class='league-name'>",
+				"Institutions",
+				"</span></div>",
+			].join("\n"),
+				suggestion: Handlebars.compile([
+					"<div style='width:100%'><div class='row'>",
+					"<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2'>",
+					"<img class='search-logo' src='{{Icon}}' />",
+					"</div>",
+					"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
+					"<span class='search-title'>{{Title}}</span><br />",
+					"<span class='text-muted search-description'>{{ cutString Description " + maxAllowedCharForDesc + " }}</span></div>",
+				"</div></div>",
+			].join("\n")),
+			}
 		}, {
 			name: 'states',
 			source: searchAnything,

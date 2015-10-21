@@ -88,8 +88,7 @@ var Connection = function () {
       * The callback called when the user has been logged out
       */
       successCallback = function () {
-        wisply.message.showSuccess("You have been disconnected! Refreshing page...");
-        wisply.reloadPage(2000);
+        wisply.reloadPage();
       };
 
       /**

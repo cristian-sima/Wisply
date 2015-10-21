@@ -58,15 +58,22 @@
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted">
-          <a><b>{{ .currentAccount.Name }}</b> <span class="text-success"><span class="glyphicon glyphicon-user"></span></span></a>
+          <a>
+            <b>{{ .currentAccount.Name }}</b>
+            <span class="text-success"><span class="glyphicon glyphicon-user"></span></span>
+          </a>
         </li>
         {{ if .currentAccount.IsAdministrator }}
         <li>
-          <a href="/admin"><span class="glyphicon glyphicon-cog"></span></a>
+          <a href="/admin" data-toggle='tooltip' data-placement='bottom' title='' data-original-title='Admin'>
+            <span class="glyphicon glyphicon-cog"></span>
+          </a>
         </li>
         {{ end }}
         <li>
-          <a id="menu-logout-button" href="#" title="Logout"><span class="glyphicon glyphicon-log-in"></span></a>
+          <a id="menu-logout-button" href="#" data-toggle='tooltip' data-placement='bottom' title='' data-original-title='Logout' title="Logout">
+            <span class="glyphicon glyphicon-log-in"></span>
+          </a>
         </li>
         {{ end }}
       </ul>

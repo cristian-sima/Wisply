@@ -326,6 +326,7 @@ var Wisply = function() {
 				this.solveHashProblem();
 				initSearch();
 				this.search = new searchModule.Field('.wisply-search-field');
+				this.activateTooltip();
 			},
 			/**
 			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content

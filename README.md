@@ -172,14 +172,14 @@ JavaScript has a lot of documentation. The documentation passes the guidelines o
 
 #### Automate Functional Tests
 
-Wisply has a number of automate Functional tests. In order to run these you need to follow the next steps
+Wisply has a number of automate functional tests. In order to run these you need to follow the next steps:
 
-1. Install Node.JS
+1. Install [Node.JS](https://nodejs.org/en/)
 2. Navigate to `tests/acceptance/node`
 3. Install [Jasmine](http://jasmine.github.io/)
-* Note: You need to install this into `/tests/acceptance/node/`
+ **Note**: You need to install this into `/tests/acceptance/node/`
 4. Install [webdriver](http://webdriver.io/guide/getstarted/install.html/)
-* Note: You need to install this into /tests/acceptance/node/
+ **Note**: You need to install this into /tests/acceptance/node/
 5. Install [selenium server](https://github.com/vvo/selenium-standalone)
 6. Type `java -jar /your/download/directory/selenium-server-standalone-2.42.2.jar` in order to start the server
 7. Run tests by typing `wdio wdio.conf.js`

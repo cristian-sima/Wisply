@@ -30,7 +30,8 @@ func (task *InsertFormatsTask) Insert(formats []wisply.Formater) error {
 		return err
 	}
 	number := strconv.Itoa(len(formats))
-	task.Finish(number + " formats inserted")
+	message := number + " formats inserted"
+	task.Finish(message)
 	return nil
 }
 
@@ -44,7 +45,9 @@ func (task *InsertFormatsTask) clearTable() error {
 	sql := "DELETE from `repository_format` WHERE repository=?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		return errors.New("Error while trying to clear the `repository_format` table: <br />" + err.Error())
+		errorMessage := "<br />" + err.Error()
+		message := "Error while trying to clear the `repository_format` table:" + errorMessage
+		return errors.New(message)
 	}
 	query.Exec(strconv.Itoa(ID))
 	return nil
@@ -59,7 +62,9 @@ func (task *InsertFormatsTask) insertData(formats []wisply.Formater) error {
 }
 
 func newInsertFormatsTask(operationHarvest Operationer, repository *repository.Repository) *InsertFormatsTask {
-	formatsBuffer := database.NewSQLBuffer("repository_format", "`repository`, `md_schema`, `namespace`, `prefix`")
+	tableName := "repository_format"
+	columns := "`repository`, `md_schema`, `namespace`, `prefix`"
+	formatsBuffer := database.NewSQLBuffer(tableName, columns)
 	return &InsertFormatsTask{
 		Task: &Task{
 			operation: operationHarvest,

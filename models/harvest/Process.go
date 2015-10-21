@@ -195,12 +195,6 @@ func (process *Process) processFails() {
 	process.Suspend()
 }
 
-//
-// // Suspend stops the process and waits for user
-// func (process *Process) Suspend() {
-// 	process.Process.Suspend()
-// }
-
 // GetRepository returns the wisply repository
 func (process *Process) GetRepository() *repository.Repository {
 	return process.repository
@@ -213,7 +207,8 @@ func (process *Process) GetRemoteServer() remote.RepositoryInterface {
 
 // ForceFinish changes the status of repository to ok
 func (process *Process) ForceFinish() {
-	stmt, err := database.Connection.Prepare("UPDATE `repository` SET `status` = 'ok' WHERE id=?")
+	sql := "UPDATE `repository` SET `status` = 'ok' WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -252,9 +247,11 @@ func (process *Process) updateIdentifiers(number int) error {
 }
 
 func (process *Process) updateStatistics(name string, number int) error {
-	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?")
+	sql := "UPDATE `process_harvest` SET `" + name + "`=`" + name + "` + ? WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
-		fmt.Println("Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": ")
+		message := "Error when updating the number of " + name + " to " + strconv.Itoa(number) + ": "
+		fmt.Println(message)
 		fmt.Println(err)
 		return err
 	}
@@ -283,7 +280,8 @@ func (process *Process) broadcastStatistics(name string, newValue int) {
 // GetStatistics returns the number of formats, collections, records, identifiers
 func (process *Process) GetStatistics() (int, int, int, int) {
 	var formats, collections, records, identifiers int
-	sql := "SELECT `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE id=? LIMIT 0,1"
+	fieldList := "`formats`, `collections`, `records`, `identifiers`"
+	sql := "SELECT " + fieldList + " FROM `process_harvest` WHERE id=? LIMIT 0,1"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
@@ -311,7 +309,8 @@ func (process *Process) GetToken(name string) string {
 
 // SaveToken saves the token for a particular name
 func (process *Process) SaveToken(name string, token string) {
-	stmt, err := database.Connection.Prepare("UPDATE `process_harvest` SET `token_" + name + "`=? WHERE id=?")
+	sql := "UPDATE `process_harvest` SET `token_" + name + "`=? WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
 		fmt.Println("Error 1 when updating the token for " + name + " inside harvesting process: ")
 		fmt.Println(err)
@@ -326,9 +325,7 @@ func (process *Process) SaveToken(name string, token string) {
 func (process *Process) tellController(simple *Message) {
 
 	if process.notifyController && process.controller != nil && process.controller.GetConduit() != nil {
-
 		channel := process.controller.GetConduit()
-
 		msg := &ProcessMessage{
 			Repository: process.GetRepository().ID,
 			ProcessMessage: action.ProcessMessage{

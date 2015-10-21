@@ -1,10 +1,11 @@
-// Package repository manages the repositories
+// Package repository contains the objects for encapsulating the information
+// about the remote repositories and institutions
 package repository
 
 import (
 	"errors"
 
-	adapter "github.com/cristian-sima/Wisply/models/adapter"
+	"github.com/cristian-sima/Wisply/models/adapter"
 	"github.com/cristian-sima/Wisply/models/database"
 )
 

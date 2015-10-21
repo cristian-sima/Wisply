@@ -2,12 +2,14 @@ package harvest
 
 import "github.com/cristian-sima/Wisply/models/wisply"
 
-// IdentificationOperation encapsulates the methods for requesting information from the repository
+// IdentificationOperation encapsulates the methods for requesting information
+// from the repository
 type IdentificationOperation struct {
 	*HarvestingOperation
 }
 
-// Start starts the action. Gets the page, get the content, clean database and store it
+// Start starts the action. Gets the page, get the content, clean database
+// and store it
 func (operation *IdentificationOperation) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("initializing")

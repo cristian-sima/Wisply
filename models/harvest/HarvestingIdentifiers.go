@@ -6,7 +6,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// HarvestingIdentifiers is the operation which collects the identifiers from a remote repository
+// HarvestingIdentifiers is the operation which collects the identifiers from
+// a remote repository
 type HarvestingIdentifiers struct {
 	*HarvestingOperation
 }

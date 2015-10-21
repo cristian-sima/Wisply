@@ -64,7 +64,8 @@ func insertHarvestProcess(process *Process) int {
 	query.Exec(process.ID, process.GetRepository().ID, formats, collections, records, identifiers)
 
 	// find its ID
-	sql = "SELECT `id` FROM `process_harvest` WHERE process=? AND repository=? ORDER by id LIMIT 0,1"
+	whereClause := "WHERE process=? AND repository=?"
+	sql = "SELECT `id` FROM `process_harvest` " + whereClause + " ORDER by id LIMIT 0,1"
 	query, err = database.Connection.Prepare(sql)
 	query.QueryRow(process.ID, process.GetRepository().ID).Scan(&harvestID)
 
@@ -105,8 +106,8 @@ func NewProcess(processID int) *Process {
 		local                                      *repository.Repository
 		formats, collections, records, identifiers int
 	)
-
-	sql := "SELECT `id`, `repository`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE process=?"
+	fieldList := "`id`, `repository`, `formats`, `collections`, `records`, `identifiers`"
+	sql := "SELECT " + fieldList + " FROM `process_harvest` WHERE process=?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
@@ -151,8 +152,9 @@ func GetProcessesByRepository(repositoryID, number int) []*Process {
 	if number != 0 {
 		limit = "LIMIT 0, " + strconv.Itoa(number)
 	}
-
-	sql := "SELECT `id`, `process`, `formats`, `collections`, `records`, `identifiers` FROM `process_harvest` WHERE `repository` = ? ORDER BY process DESC " + limit
+	fieldList := "`id`, `process`, `formats`, `collections`, `records`, `identifiers`"
+	orderByClause := "ORDER BY process DESC " + limit
+	sql := "SELECT " + fieldList + " FROM `process_harvest` WHERE `repository` = ? " + orderByClause
 	rows, err := database.Connection.Query(sql, repositoryID)
 
 	if err != nil {
@@ -184,7 +186,8 @@ func GetProcessToken(ID int, name string) string {
 	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(ID).Scan(&token)
 	if err != nil {
-		fmt.Println("Error when selecting the token for " + name + " inside the harvesting process:")
+		message := "Error when selecting the token for " + name + " inside the harvesting process:"
+		fmt.Println(message)
 		fmt.Println(err)
 	}
 	return token

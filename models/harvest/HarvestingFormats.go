@@ -7,7 +7,8 @@ type HarvestingFormats struct {
 	*HarvestingOperation
 }
 
-// Start marks the local repository status of the local repository as updating and gets the formats
+// Start marks the local repository status of the local repository as
+// updating and gets the formats
 func (operation *HarvestingFormats) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("updating")

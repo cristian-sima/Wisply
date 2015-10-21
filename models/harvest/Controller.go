@@ -24,7 +24,8 @@ func (message *ProcessMessage) GetRepository() int {
 	return message.Repository
 }
 
-// Message can be passed into createProcessMessage in order to create a complex message from process to controller
+// Message can be passed into createProcessMessage in order to create a complex
+// message from process to controller
 type Message struct {
 	Name  string
 	Value interface{}

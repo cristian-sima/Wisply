@@ -9,7 +9,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// InsertIdentificationTask represents a task that inserts the identification into database
+// InsertIdentificationTask represents a task that inserts the identification
+// into database
 type InsertIdentificationTask struct {
 	Tasker
 	*Task
@@ -33,13 +34,15 @@ func (task *InsertIdentificationTask) clearTables() error {
 	sql := "DELETE from `repository_identification` WHERE repository=?"
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {
-		return errors.New("Error while trying to clear the repository_identification table: <br />" + err1.Error())
+		message := "Error while trying to clear the repository_identification table: <br />" + err1.Error()
+		return errors.New(message)
 	}
 	query.Exec(strconv.Itoa(ID))
 	sql2 := "DELETE from `repository_email` WHERE repository=?"
 	query2, err2 := database.Connection.Prepare(sql2)
 	if err2 != nil {
-		return errors.New("Error while trying to clear the repository_email table: <br />" + err2.Error())
+		message := "Error while trying to clear the repository_email table: <br />" + err2.Error()
+		return errors.New(message)
 	}
 	query2.Exec(strconv.Itoa(ID))
 	return nil
@@ -70,7 +73,8 @@ func (task *InsertIdentificationTask) insertEmails(emails []string) error {
 		sql := "INSERT INTO `repository_email` " + sqlColumns + " VALUES " + sqlValues
 		query, err := database.Connection.Prepare(sql)
 		if err != nil {
-			return errors.New("There was problem while trying to insert the email addresses: " + err.Error())
+			message := "There was problem while trying to insert the email addresses: " + err.Error()
+			return errors.New(message)
 		}
 		query.Exec(ID, email)
 	}
@@ -82,7 +86,8 @@ func (task *InsertIdentificationTask) insertDetails(identification *wisply.Ident
 	modifyName := "UPDATE `repository` SET `name`=? WHERE `id` = ?"
 	query1, err1 := database.Connection.Prepare(modifyName)
 	if err1 != nil {
-		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err1.Error())
+		message := "Eror while trying to insert into `repository_identification`: <br />" + err1.Error()
+		return errors.New(message)
 	}
 	query1.Exec((*identification).GetName(), task.repository.ID)
 
@@ -93,7 +98,8 @@ func (task *InsertIdentificationTask) insertDetails(identification *wisply.Ident
 	query2, err2 := database.Connection.Prepare(idenSQL)
 
 	if err2 != nil {
-		return errors.New("Eror while trying to insert into `repository_identification`: <br />" + err2.Error())
+		message := "Eror while trying to insert into `repository_identification`: <br />" + err2.Error()
+		return errors.New(message)
 	}
 	query2.Exec(task.repository.ID, (*identification).GetProtocol(), (*identification).GetEarliestDatestamp(), (*identification).GetDeletedRecord(), (*identification).GetGranularity())
 

@@ -7,7 +7,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// ParseTask represents a task for parsing the content of a request from a remote repository
+// ParseTask represents a task for parsing the content of a request from a
+// remote repository
 // It is a decorator pattern
 type ParseTask struct {
 	*remoteTask
@@ -23,7 +24,8 @@ func (task *ParseTask) Verify(content []byte) error {
 	return err
 }
 
-// GetIdentification tells the remote server to parse the content and to return the identification
+// GetIdentification tells the remote server to parse the content and to
+// return the identification
 func (task *ParseTask) GetIdentification(content []byte) (*wisply.Identificationer, error) {
 
 	task.addContent("identification")
@@ -44,7 +46,8 @@ func (task *ParseTask) GetFormats(content []byte) ([]wisply.Formater, error) {
 	return formats, err
 }
 
-// GetCollections tells the remote server to parse the content and to return the `collections`
+// GetCollections tells the remote server to parse the content and to return
+// the `collections`
 func (task *ParseTask) GetCollections(content []byte) ([]wisply.Collectioner, error) {
 	task.addContent("collections")
 	collections, err := task.remote.GetCollections(content)

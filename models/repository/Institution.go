@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strconv"
 
-	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/adapter"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Institution represents a institution for reinstitutions
@@ -65,7 +65,8 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 // GetRepositories returns the list of repositories
 func (institution *Institution) GetRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM repository WHERE institution = ?"
+	fieldList := "`id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess`"
+	sql := "SELECT " + fieldList + " FROM repository WHERE institution = ?"
 	rows, _ := database.Connection.Query(sql, institution.ID)
 	for rows.Next() {
 		repository := Repository{}
@@ -83,7 +84,8 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	wikiURL := institutionDetails["wikiURL"].(string)
 	wikiID := institutionDetails["wikiID"].(string)
 
-	sql := "UPDATE `institution` SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=? WHERE id=?"
+	setClause := "SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=?"
+	sql := "UPDATE `institution` " + setClause + " WHERE id=?"
 	institution.Name = name
 	institution.Description = description
 	query, _ := database.Connection.Prepare(sql)

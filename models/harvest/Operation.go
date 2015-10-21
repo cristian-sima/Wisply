@@ -6,7 +6,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// Operationer ... defines the set of methods which should be implemented by the harvest operations
+// Operationer ... defines the set of methods which should be implemented by
+// the harvest operations
 type Operationer interface {
 	Start()
 	GetOperation() *action.Operation
@@ -41,7 +42,8 @@ func (operation *Operation) succedded() {
 	operation.TellProcess(msg)
 }
 
-// ChangeRepositoryStatus tells the controller to change the status of the local repository
+// ChangeRepositoryStatus tells the controller to change the status of
+// the local repository
 func (operation *Operation) ChangeRepositoryStatus(status string) {
 	operation.process.ChangeRepositoryStatus(status)
 }
@@ -96,10 +98,11 @@ func (operation *HarvestingOperation) succeeded() {
 
 // constructor
 func newHarvestingOperation(harvestProcess *Process, name string) *HarvestingOperation {
+	operationName := "Harvest " + name
 	return &HarvestingOperation{
 		Operation: &Operation{
 			process:   harvestProcess,
-			Operation: newOperation(harvestProcess.Process, "Harvest "+name),
+			Operation: newOperation(harvestProcess.Process, operationName),
 		},
 	}
 }

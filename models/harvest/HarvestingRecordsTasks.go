@@ -2,7 +2,6 @@ package harvest
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
@@ -42,17 +41,20 @@ func (task *InsertRecordsTask) Clear() error {
 	sql := "DELETE from `repository_resource` WHERE repository=?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		return errors.New("Error while trying to clear the `repository_resource` table: <br />" + err.Error())
+		message := "Error while trying to clear the `repository_resource` table: <br />" + err.Error()
+		return errors.New(message)
 	}
 	query.Exec(ID)
 	// clear keys
 	sql = "DELETE from `resource_key` WHERE repository=?"
 	query, err = database.Connection.Prepare(sql)
 	if err != nil {
-		return errors.New("Error while trying to clear the `resource_key` table: <br />" + err.Error())
+		message := "Error while trying to clear the `resource_key` table: <br />" + err.Error()
+		return errors.New(message)
 	}
 	query.Exec(ID)
-	task.Finish("All the previous records and keys have been deleted")
+	finishMessage := "All the previous records and keys have been deleted"
+	task.Finish(finishMessage)
 	return nil
 }
 
@@ -175,8 +177,18 @@ func (task *InsertRecordsTask) insertKeys(record *wisply.Recorder, keys []string
 }
 
 func newInsertRecordsTask(operationHarvest Operationer, repository *repository.Repository) *InsertRecordsTask {
-	keysBuffer := database.NewSQLBuffer("resource_key", "`resource_key`, `repository`, `value`, `resource`")
-	repositoryBuffer := database.NewSQLBuffer("repository_resource", "`repository`, `identifier`, `datestamp`")
+	var createKeysBuffer = func() *database.SQLBuffer {
+		columns := "`resource_key`, `repository`, `value`, `resource`"
+		tableName := "resource_key"
+		return database.NewSQLBuffer(tableName, columns)
+	}
+	var createRepositoryBuffer = func() *database.SQLBuffer {
+		columns := "`repository`, `identifier`, `datestamp`"
+		tableName := "repository_resource"
+		return database.NewSQLBuffer(tableName, columns)
+	}
+	keysBuffer := createKeysBuffer()
+	repositoryBuffer := createRepositoryBuffer()
 
 	return &InsertRecordsTask{
 		Task: &Task{
@@ -189,7 +201,8 @@ func newInsertRecordsTask(operationHarvest Operationer, repository *repository.R
 	}
 }
 
-// UpdateNumberOfRecordsTask represents a task that updates the number of records for all the collections
+// UpdateNumberOfRecordsTask represents a task that updates the number of
+// records for all the collections
 type UpdateNumberOfRecordsTask struct {
 	Tasker
 	*Task
@@ -210,9 +223,10 @@ func (task *UpdateNumberOfRecordsTask) Perform() error {
 }
 
 func (task *UpdateNumberOfRecordsTask) update() error {
-	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set` WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
-	sql := "UPDATE `repository_collection` SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
-	fmt.Println(sql)
+	whereClause := "WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
+	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set` " + whereClause
+	setClause := "SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
+	sql := "UPDATE `repository_collection` " + setClause
 	_, err := database.Connection.Query(sql)
 	return err
 }

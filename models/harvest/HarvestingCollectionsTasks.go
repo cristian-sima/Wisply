@@ -19,11 +19,6 @@ type InsertCollectionsTask struct {
 
 // Insert clears the table and then inserts them
 func (task *InsertCollectionsTask) Insert(collections []wisply.Collectioner) error {
-	// err := task.clearTable()
-	// if err != nil {
-	// 	task.hasProblems(err)
-	// 	return err
-	// }
 	err := task.insertData(collections)
 	if err != nil {
 		task.hasProblems(err)
@@ -45,11 +40,11 @@ func (task *InsertCollectionsTask) clearTable() error {
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
-		return errors.New("Error while trying to clear the `repository_collection` table: <br />" + err.Error())
+		errorMessage := "<br />" + err.Error()
+		message := "Error while trying to clear the `repository_collection` table:" + errorMessage
+		return errors.New(message)
 	}
-
 	query.Exec(strconv.Itoa(repositoryID))
-
 	return nil
 }
 
@@ -62,7 +57,9 @@ func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner)
 }
 
 func newInsertCollectionsTask(operationHarvest Operationer, repository *repository.Repository) *InsertCollectionsTask {
-	collectionsBuffer := database.NewSQLBuffer("repository_collection", "`repository`, `name`, `spec`")
+	tableName := "repository_collection"
+	columns := "`repository`, `name`, `spec`"
+	collectionsBuffer := database.NewSQLBuffer(tableName, columns)
 	return &InsertCollectionsTask{
 		Task: &Task{
 			operation: operationHarvest,

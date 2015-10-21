@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strconv"
 
-	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/adapter"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Repository represents a repository for rerepositorys
@@ -87,8 +87,8 @@ func (repository *Repository) updateDatabase(repositoryDetails map[string]interf
 	description := repositoryDetails["description"].(string)
 	url := repositoryDetails["url"].(string)
 	id := strconv.Itoa(repository.ID)
-
-	sql := "UPDATE `repository` SET name=?, description=?, url=? WHERE id=?"
+	setClause := "SET name=?, description=?, url=?"
+	sql := "UPDATE `repository` " + setClause + " WHERE id=?"
 	repository.Name = name
 	repository.Description = description
 	query, _ := database.Connection.Prepare(sql)
@@ -135,8 +135,8 @@ func (repository *Repository) ModifyStatus(newStatus string) error {
 func (repository *Repository) GetIdentification() *Identification {
 
 	identification := &Identification{}
-
-	sql := "SELECT id, repository, protocol_version, earliest_datestamp, delete_policy, granularity FROM repository_identification WHERE repository = ?"
+	fieldList := "id, repository, protocol_version, earliest_datestamp, delete_policy, granularity"
+	sql := "SELECT " + fieldList + " FROM repository_identification WHERE repository = ?"
 	query, _ := database.Connection.Prepare(sql)
 	query.QueryRow(repository.ID).Scan(&identification.ID, &identification.Repository, &identification.Protocol, &identification.EarliestDatestamp, &identification.RecordPolicy, &identification.Granularity)
 

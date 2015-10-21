@@ -6,7 +6,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// HarvestingCollections is the operation which collects the collections from a remote repository
+// HarvestingCollections is the operation which collects the collections from
+// a remote repository
 type HarvestingCollections struct {
 	*HarvestingOperation
 }

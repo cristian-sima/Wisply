@@ -52,16 +52,19 @@ func (task *InsertIdentifiersTask) Clear() error {
 	sql := "DELETE from `identifier` WHERE repository=?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
-		return errors.New("Error while trying to clear the `identifier` table: <br />" + err.Error())
+		message := "Error while trying to clear the `identifier` table: <br />" + err.Error()
+		return errors.New(message)
 	}
 	query.Exec(ID)
 	// clear sets
 	sql = "DELETE from `identifier_set` WHERE repository=?"
 	query, err = database.Connection.Prepare(sql)
 	if err != nil {
-		return errors.New("Error while trying to clear the `identifier_set` table: <br />" + err.Error())
+		message := "Error while trying to clear the `identifier_set` table: <br />" + err.Error()
+		return errors.New(message)
 	}
-	task.Finish("All the previous identifiers and sets have been deleted")
+	finishMessage := "All the previous identifiers and sets have been deleted"
+	task.Finish(finishMessage)
 	_, err = query.Exec(ID)
 	return err
 }
@@ -102,8 +105,18 @@ func (task *InsertIdentifiersTask) insertSets(identifier string, sets []string) 
 }
 
 func newInsertIdentifiersTask(operationHarvest Operationer, repository *repository.Repository) *InsertIdentifiersTask {
-	identifiersBuffer := database.NewSQLBuffer("identifier", "`identifier`, `value`, `repository`")
-	setsBuffer := database.NewSQLBuffer("identifier_set", "`identifier`, `setSpec`, `repository`")
+	var createIdentifiersBuffer = func() *database.SQLBuffer {
+		columns := "`identifier`, `value`, `repository`"
+		tableName := "identifier"
+		return database.NewSQLBuffer(tableName, columns)
+	}
+	var createSetsBuffer = func() *database.SQLBuffer {
+		columns := "`identifier`, `setSpec`, `repository`"
+		tableName := "identifier_set"
+		return database.NewSQLBuffer(tableName, columns)
+	}
+	identifiersBuffer := createIdentifiersBuffer()
+	setsBuffer := createSetsBuffer()
 
 	return &InsertIdentifiersTask{
 		Task: &Task{

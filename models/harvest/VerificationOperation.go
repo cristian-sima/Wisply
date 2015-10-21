@@ -7,7 +7,8 @@ type VerificationOperation struct {
 	*HarvestingOperation
 }
 
-// Start starts the action.Operation, change the status of repository to verifying and gets the page
+// Start starts the action.Operation, change the status of repository to
+// verifying and gets the page
 func (operation *VerificationOperation) Start() {
 	operation.Operation.Start()
 	operation.ChangeRepositoryStatus("verifying")

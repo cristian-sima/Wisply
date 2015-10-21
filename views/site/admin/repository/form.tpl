@@ -3,9 +3,13 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
+      {{ if eq .action "Modify" }}
       <li><a href="/admin/repositories/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
       <li><a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a></li>
-      <li class="active">Modify</li>
+      {{ else }}
+      <li><a href="/admin/repositories/add?institution={{.selectedInstitution}}">Choose Type</a></li>
+      {{ end }}
+      <li class="active">{{ .action }}</li>
     </ul>
   </div>
   <div class="panel-body">
@@ -69,7 +73,11 @@
       </div>
       <div class="form-group">
         <div class="col-lg-10 col-lg-offset-2">
+          {{ if eq .action "Add"}}
+          <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories" class="btn btn-default">Back to list</a>
+          {{ else }}
           <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
+          {{ end }}
         </div>
       </div>
     </fieldset>

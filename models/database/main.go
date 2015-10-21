@@ -1,4 +1,5 @@
 // Package database contains the functions to connect to database
+// Also, it provides some useful objects such as SQLBuffer or SQLOptions
 package database
 
 import (
@@ -12,7 +13,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Connection It represents the connection to the database
+// Connection represents the object which holds the connection to the database
 var (
 	Connection *sql.DB
 )

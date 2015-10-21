@@ -74,7 +74,8 @@ func (repository *Repository) GetIdentification(content []byte) (*wisply.Identif
 
 	// check a field which must be
 	if remoteIdentity.RepositoryName == "" {
-		return &idenfitication, errors.New("There was a problem getting the fields")
+		message := "There was a problem getting the fields"
+		return &idenfitication, errors.New(message)
 	}
 
 	idenfitication = &Identification{

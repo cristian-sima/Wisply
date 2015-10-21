@@ -1,3 +1,5 @@
+// Package repository contains the basic remote repository.
+// It must be inherited by the other remote repositories
 package repository
 
 import "github.com/cristian-sima/Wisply/models/repository"

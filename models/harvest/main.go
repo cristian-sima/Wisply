@@ -1,3 +1,6 @@
+// Package harvest manages the process of harvesting metadata from remote
+// repositories.
+// Also, it inserts this data and logs the events
 package harvest
 
 import (

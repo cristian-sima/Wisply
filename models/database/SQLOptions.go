@@ -43,12 +43,9 @@ func isValidOption(options Temp) bool {
 
 func validateLimit(options Temp) bool {
 	isValid := areValidLimits(options.LimitMin, options.Offset)
-
 	if !isValid {
 		return false
 	}
-
 	number, _ := strconv.Atoi(options.Offset)
-
 	return (number <= options.Limit)
 }

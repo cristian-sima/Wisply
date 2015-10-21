@@ -164,5 +164,4 @@ func TestParse(t *testing.T) {
 		_, err := request.Parse(goodFormat)
 		So(err, ShouldBeNil)
 	})
-
 }

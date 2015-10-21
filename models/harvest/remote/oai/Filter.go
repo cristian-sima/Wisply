@@ -31,7 +31,8 @@ func (filter *filter) isRecordAllowed(record Record) bool {
 		regex := filter.data.Harvest.Records.Reject.Identifier + "(?s)"
 		matched, _ := regexp.MatchString(regex, value)
 		if matched {
-			filter.rejectedRecordsIdentifier = append(filter.rejectedRecordsIdentifier, record.Identifier)
+			newList := append(filter.rejectedRecordsIdentifier, record.Identifier)
+			filter.rejectedRecordsIdentifier = newList
 			return false
 		}
 	}

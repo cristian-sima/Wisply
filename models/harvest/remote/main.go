@@ -1,3 +1,6 @@
+// Package remote encapsulates the functionality for a remote repository
+// A remote repository is a web server which delivers metadata.
+// Wispy collects the metadata which is afterwards processed
 package remote
 
 import (
@@ -23,7 +26,8 @@ func New(localRepository *repository.Repository) (RepositoryInterface, error) {
 			rem = oai.NewEPrints(basic)
 		}
 	default:
-		return rem, errors.New("There is no such server like " + localRepository.Category)
+		message := "There is no such server like " + localRepository.Category
+		return rem, errors.New(message)
 	}
 	return rem, nil
 }

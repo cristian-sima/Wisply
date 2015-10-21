@@ -46,13 +46,15 @@ func (request *Request) GetSets() ([]byte, error) {
 	return request.getVerb("ListSets")
 }
 
-// GetRecords returns the content of the request to get all the records for a particular metadata format
+// GetRecords returns the content of the request to get all
+// the records for a particular metadata format
 func (request *Request) GetRecords(prefix string) ([]byte, error) {
 	request.MetadataPrefix = prefix
 	return request.getVerb("ListRecords")
 }
 
-// GetIdentifiers returns the content of the request to get all the identifiers for a particular metadata format
+// GetIdentifiers returns the content of the request to get all
+// the identifiers for a particular metadata format
 func (request *Request) GetIdentifiers(prefix string) ([]byte, error) {
 	request.MetadataPrefix = prefix
 	return request.getVerb("ListIdentifiers")
@@ -90,14 +92,18 @@ func (request *Request) get() ([]byte, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return content, errors.New("There was a problem while trying to connect to that address: <br />" + err.Error())
+		errorMsg := "<br />" + err.Error()
+		message := "There was a problem while trying to connect to that address: " + errorMsg
+		return content, errors.New(message)
 	}
 	defer resp.Body.Close()
 
 	// Read all the data
 	content, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return content, errors.New("There was a problem while trying to read the content of the page: <br />" + err.Error())
+		errorMsg := "<br />" + err.Error()
+		message := "There was a problem while trying to read the content of the page: " + errorMsg
+		return content, errors.New(message)
 	}
 	return content, nil
 }
@@ -132,7 +138,9 @@ func (request *Request) getResponse(body []byte) (*Response, error) {
 	response := &Response{}
 	err := xml.Unmarshal(body, &response)
 	if err != nil {
-		return response, errors.New("There was a problem while trying parsing the XML:<br /> " + err.Error())
+		errorMsg := "<br />" + err.Error()
+		message := "There was a problem while trying parsing the XML:" + errorMsg
+		return response, errors.New(message)
 	}
 	return response, nil
 }

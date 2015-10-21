@@ -48,8 +48,28 @@ var Repositories = function () {
     * @fires RepositoriesManager#confirmDelete
     */
     activateListeners: function () {
-      $(".deleteRepositoryButton").click(confirmDelete);
-      $(".emptyRepositoryButton").click(confirmEmpty);
+      var instance = this;
+      $(".deleteRepositoryButton").click(function(event) {
+        event.preventDefault();
+        var object,repository;
+        object = $(this);
+        repository = new Repository({
+          id: object.data("id"),
+          name: object.data("name"),
+        });
+        instance.confirmDelete(repository);
+      });
+      $(".emptyRepositoryButton").click(function(event){
+        event.preventDefault();
+        var object,
+        repository;
+        object = $(this);
+        repository = new Repository({
+          id: object.data("id"),
+          name: object.data("name"),
+        });
+        instance.confirmEmpty(repository);
+      });
       $(".showStatusMore").click(function(event){
         event.preventDefault();
         wisply.message.dialog({
@@ -218,61 +238,6 @@ var Repositories = function () {
   };
 
   /**
-  * It is called when the user clicks the delete button. It creates the repository button and asks for confirmation
-  * @fires RepositoriesManager#confirmDelete()
-  * @param  {event} e The event generated
-  */
-  function confirmDelete(e) {
-    e.preventDefault();
-    var instance,
-    name,
-    id,
-    repository;
-    instance = $(this);
-    id = instance.data("id");
-    name = instance.data("name");
-    repository = new Repository({
-      id: id,
-      name: name
-    });
-    wisply.repositoriesManager.confirmDelete(repository);
-  }
-
-  function initRepository(e) {
-      e.preventDefault();
-      var instance,
-      id,
-      xsrf;
-      instance = $(this);
-      id = instance.data("id");
-      xsrf = wisply.getXSRF();
-      $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
-          '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
-          '</form>').submit();
-  }
-
-  /**
-  * It is called when the user clicks the empty button. It creates the repository button and asks for confirmation
-  * @fires RepositoriesManager#confirmDelete()
-  * @param  {event} e The event generated
-  */
-  function confirmEmpty(e) {
-    e.preventDefault();
-    var instance,
-    name,
-    id,
-    repository;
-    instance = $(this);
-    id = instance.data("id");
-    name = instance.data("name");
-    repository = new Repository({
-      id: id,
-      name: name
-    });
-    wisply.repositoriesManager.confirmEmpty(repository);
-  }
-
-  /**
   * The constructor activates the listeners
   * @memberof Repositories
   * @class GUI
@@ -316,7 +281,18 @@ var Repositories = function () {
    * It activates all the listeners for the actions
    */
   GUI.activateActionListeners = function() {
-    $(".repositories-init-harvest").click(initRepository);
+    $(".repositories-init-harvest").click(function(event){
+      event.preventDefault();
+      var object,
+      id,
+      xsrf;
+      object = $(this);
+      id = object.data("id");
+      xsrf = wisply.getXSRF();
+      $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
+          '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
+          '</form>').submit();
+    });
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });

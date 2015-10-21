@@ -30,7 +30,6 @@ var Websockets = function () {
               i.onOpen();
             };
         })();
-
         var error = (function () {
           var conn = instance,
             i = copyInfo;
@@ -39,13 +38,9 @@ var Websockets = function () {
               i.onError();
             };
         })();
-
-
         var message = (function () {
           var i = copyInfo;
             return function (evt) {
-              console.log("ws received:")
-              console.log(evt.data)
               i.onMessage(evt);
             };
         })();

@@ -26,21 +26,16 @@ var Operations = function() {
 			 * It activates the listener for all delete buttons
 			 */
 			init: function() {
-				$(".see-full-explication").click(showExplication);
+				$(".see-full-explication").click(function(event){
+					event.preventDefault();
+					var object,
+						explication;
+					object = $(this);
+					explication = object.data("explication");
+					wisply.message.show("Task Explication", explication);
+				});
 			}
 		};
-	/**
-	 * It opens a bootstrap dialog and shows the explication
-	 * @param [event] event The event which is generated
-	 */
-	function showExplication(event) {
-		event.preventDefault();
-		var instance,
-			explication;
-		instance = $(this);
-		explication = instance.data("explication");
-		wisply.message.show("Task Explication", explication);
-	}
 	return {
 		Manager: Manager,
 	};

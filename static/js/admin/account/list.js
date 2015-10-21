@@ -38,7 +38,19 @@ var Accounts = function() {
 			 * @fires AccountsManager#confirmDelete
 			 */
 			init: function() {
-				$(".deleteAccountButton").click(confirmDelete);
+				var instance = this;
+				$(".deleteAccountButton").click(function(event){
+					event.preventDefault();
+					var object,
+						name,
+						id,
+						account;
+					object = $(this);
+					id = object.data("id");
+					name = object.data("name");
+					account = new Account(id, name);
+					instance.confirmDelete(account);
+				});
 			},
 			/**
 			 * It requests the user to confirm
@@ -115,23 +127,6 @@ var Accounts = function() {
 				wisply.executePostAjax(request);
 			}
 		};
-	/**
-	 * It is called when the user clicks the delete button. It requests the user to confirm
-	 * @param [event] event The event which is generated
-	 * @event AccountsManager#confirmDelete
-	 */
-	function confirmDelete(event) {
-		event.preventDefault();
-		var instance,
-			name,
-			id,
-			account;
-		instance = $(this);
-		id = instance.data("id");
-		name = instance.data("name");
-		account = new Account(id, name);
-		wisply.accountsManager.confirmDelete(account);
-	}
 	return {
 		Manager: Manager,
 		Account: Account

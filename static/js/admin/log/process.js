@@ -26,7 +26,15 @@ var Processes = function() {
 			 * It activates the listener for all delete buttons
 			 */
 			init: function() {
-				$(".deleteProcessButton").click(confirmDelete);
+				var instance = this;
+				$(".deleteProcessButton").click(function(event){
+					event.preventDefault();
+					var object,
+						id;
+					object = $(this);
+					id = object.data("id");
+					instance.confirmDelete(id);
+				});
 			},
 			/**
 			 * It requests the user to confirm
@@ -86,7 +94,7 @@ var Processes = function() {
 				 */
 				successCallback = function() {
 					wisply.message.showSuccess("The process has been removed! Refreshing page...");
-					window.location="/admin/log"
+					window.location="/admin/log";
 				};
 				/**
 				 * It is called when there has been problems
@@ -103,18 +111,6 @@ var Processes = function() {
 				wisply.executePostAjax(request);
 			}
 		};
-	/**
-	 * It is called when the user clicks the delete button. It requests the user to confirm
-	 * @param [event] event The event which is generated
-	 */
-	function confirmDelete(event) {
-		event.preventDefault();
-		var instance,
-			id;
-		instance = $(this);
-		id = instance.data("id");
-		wisply.processManager.confirmDelete(id);
-	}
 	return {
 		Manager: Manager,
 	};

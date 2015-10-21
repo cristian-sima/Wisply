@@ -46,7 +46,20 @@ var Institutions = function () {
     * @fires InstitutionsManager#confirmDelete
     */
     activateListeners: function () {
-      $(".deleteInstitutionButton").click(confirmDelete);
+      var instance = this;
+      $(".deleteInstitutionButton").click(function(event){
+        event.preventDefault();
+        var object,
+        name,
+        id,
+        institution;
+        object = $(this);
+        institution = new Institution({
+          id: object.data("id"),
+          name: object.data("name"),
+        });
+        instance.confirmDelete(institution);
+      });
       GUI.activateActionListeners();
     },
     /**
@@ -129,42 +142,6 @@ var Institutions = function () {
   };
 
   /**
-  * It is called when the user clicks the delete button. It creates the institution button and asks for confirmation
-  * @fires InstitutionsManager#confirmDelete()
-  * @param  {event} e The event generated
-  */
-  function confirmDelete(e) {
-    e.preventDefault();
-    var instance,
-    name,
-    id,
-    institution;
-    instance = $(this);
-    id = instance.data("id");
-    name = instance.data("name");
-    institution = new Institution({
-      id: id,
-      name: name
-    });
-    wisply.institutionsManager.confirmDelete(institution);
-  }
-
-  function initInstitution(e) {
-    e.preventDefault();
-    var instance,
-    id,
-    xsrf;
-    instance = $(this);
-    id = instance.data("id");
-    xsrf = wisply.getXSRF();
-
-    $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
-    '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
-    '</form>').submit();
-
-  }
-
-  /**
   * The constructor activates the listeners
   * @memberof Institutions
   * @class GUI
@@ -176,7 +153,20 @@ var Institutions = function () {
   * It activates all the listeners for the actions
   */
   GUI.activateActionListeners = function() {
-    $(".institutions-init-harvest").click(initInstitution);
+    $(".institutions-init-harvest").click(function(event){
+      event.preventDefault();
+      var object,
+      id,
+      form,
+      xsrf;
+      object = $(this);
+      id = object.data("id");
+      xsrf = wisply.getXSRF();
+      form = '<form action="/admin/harvest/init/' + id + '" method="POST">' +
+      '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
+      '</form>';
+      $(form).submit();
+    });
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });

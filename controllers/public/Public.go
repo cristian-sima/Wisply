@@ -1,3 +1,4 @@
+// Package public manages all the public pages that do not require a connection
 package public
 
 import (

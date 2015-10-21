@@ -9,7 +9,8 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// RepositoryController manages the operations for repositories (list, delete, add)
+// RepositoryController manages the operations for repositories
+// For example: (list, delete, add)
 type RepositoryController struct {
 	Controller
 	model repository.Model
@@ -56,19 +57,16 @@ func (controller *RepositoryController) Insert() {
 	if err != nil {
 		controller.DisplayError(problems)
 	} else {
-		controller.DisplaySuccessMessage("The repository has been added!", "/admin/repositories/")
+		message := "The repository has been added!"
+		goTo := "/admin/repositories/"
+		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
 
 // Modify shows the form to modify a repository's details
 func (controller *RepositoryController) Modify() {
-
-	var ID string
-
-	ID = controller.Ctx.Input.Param(":id")
-
+	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
-
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
@@ -79,13 +77,8 @@ func (controller *RepositoryController) Modify() {
 
 // ShowFilter shows the page for modifying the filter
 func (controller *RepositoryController) ShowFilter() {
-
-	var ID string
-
-	ID = controller.Ctx.Input.Param(":id")
-
+	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
-
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
@@ -97,11 +90,8 @@ func (controller *RepositoryController) ShowFilter() {
 
 // ChangeFilter changes the filter
 func (controller *RepositoryController) ChangeFilter() {
-
 	ID := controller.Ctx.Input.Param(":id")
-
 	filter := strings.TrimSpace(controller.GetString("repository-filter"))
-
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
 		controller.Abort("databaseError")
@@ -110,7 +100,9 @@ func (controller *RepositoryController) ChangeFilter() {
 		if err != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The filter has been modified!", "/admin/repositories/repository/"+strconv.Itoa(repository.ID))
+			message := "The filter has been modified!"
+			goTo := "/admin/repositories/repository/" + strconv.Itoa(repository.ID)
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }
@@ -136,12 +128,15 @@ func (controller *RepositoryController) Update() {
 		if err != nil {
 			controller.DisplayError(problems)
 		} else {
-			controller.DisplaySuccessMessage("The account has been modified!", "/admin/repositories/repository/"+strconv.Itoa(repository.ID))
+			message := "The account has been modified!"
+			goTo := "/admin/repositories/repository/" + strconv.Itoa(repository.ID)
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }
 
-// EmptyRepository deletes all records, formats, collections, emails and information about the repository
+// EmptyRepository deletes all records, formats, collections,
+// emails and information about the repository
 func (controller *RepositoryController) EmptyRepository() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
@@ -174,7 +169,9 @@ func (controller *RepositoryController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The repository ["+repository.Name+"] has been deleted. Well done!", "/admin/repositories/")
+			message := "The repository [" + repository.Name + "] has been deleted!"
+			goTo := "/admin/repositories/"
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }

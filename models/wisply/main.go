@@ -54,11 +54,10 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows, err = database.Connection.Query(sql, repositoryID)
 	} else {
 
+		// this takes too long
 		//sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()
 
 		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
-
-		// sql := "SELECT DISTINCT `identifier_set`.`identifier`, `repository_resource`.`id`, `repository_resource`.`datestamp` FROM `identifier_set` INNER JOIN `repository_resource` ON `repository_resource`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
 
 		rows, err = database.Connection.Query(sql, options.Where["collection"])
 

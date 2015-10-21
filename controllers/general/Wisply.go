@@ -1,3 +1,5 @@
+// Package general is not used on any page, but it is inherited by the other controllers
+// Contains basic functions such as generating XSRF token or connecting the account
 package general
 
 import (

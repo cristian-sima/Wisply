@@ -21,9 +21,10 @@ func (search *InstitutionSearch) Perform() Result {
 	institutions := search.getFromDB()
 	for _, institution := range institutions {
 		result := ResultItem{
-			Title: institution.Name,
-			URL:   search.getURL(institution.ID),
-			Data:  institution,
+			Title:       institution.Name,
+			URL:         search.getURL(institution.ID),
+			Description: institution.Description,
+			Icon:        institution.LogoURL,
 		}
 		searchQuery.Results = append(searchQuery.Results, result)
 	}

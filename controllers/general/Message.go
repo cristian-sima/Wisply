@@ -5,7 +5,7 @@ import (
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
 )
 
-// MessageController encapsulates the operations for showing messages
+// MessageController encapsulates the operations for showing error and success messages
 type MessageController struct {
 	beego.Controller
 }

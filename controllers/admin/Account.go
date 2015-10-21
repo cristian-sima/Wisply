@@ -7,7 +7,8 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// AccountController manages the operations with the accounts (such as delete, modify type, list all)
+// AccountController manages the operations with the accounts
+// For instance (delete, modify type, list all)
 // It inherits the AdminController, thus an administrator account is required
 type AccountController struct {
 	Controller
@@ -47,7 +48,9 @@ func (controller *AccountController) Update() {
 		if err != nil {
 			controller.DisplaySimpleError("There was a problem...")
 		} else {
-			controller.DisplaySuccessMessage("The account has been modified!", "/admin/accounts/")
+			successMessage := "The account has been modified!"
+			goTo := "/admin/accounts/"
+			controller.DisplaySuccessMessage(successMessage, goTo)
 		}
 	}
 }
@@ -64,7 +67,9 @@ func (controller *AccountController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The account ["+account.Email+"] has been deleted. Well done!", "/admin/accounts/")
+			successMessage := "The account [" + account.Email + "] has been deleted. Well done!"
+			goTo := "/admin/accounts/"
+			controller.DisplaySuccessMessage(successMessage, goTo)
 		}
 	}
 }

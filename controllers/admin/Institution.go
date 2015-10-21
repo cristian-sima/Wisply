@@ -50,24 +50,21 @@ func (controller *InstitutionController) Insert() {
 	if err != nil {
 		controller.DisplayError(problems)
 	} else {
-		controller.DisplaySuccessMessage("The institution has been added!", "/admin/institutions/")
+		message := "The institution has been added!"
+		goTo := "/admin/institutions/"
+		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
 
 // Modify shows the form to modify a institution's details
 func (controller *InstitutionController) Modify() {
-
 	var ID string
-
 	ID = controller.Ctx.Input.Param(":id")
-
 	institution, err := repository.NewInstitution(ID)
-
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
 		controller.Data["institution"] = institution
-
 		wikiReceive := false
 		if institution.WikiID == "" {
 			institution.WikiID = "NULL"
@@ -77,7 +74,6 @@ func (controller *InstitutionController) Modify() {
 		} else {
 			wikiReceive = true
 		}
-
 		controller.Data["wikiID"] = institution.WikiID
 		controller.Data["wikiReceive"] = wikiReceive
 		controller.showModifyForm()
@@ -86,12 +82,9 @@ func (controller *InstitutionController) Modify() {
 
 // Update updates an institution in the database
 func (controller *InstitutionController) Update() {
-
-	var ID string
 	institutionDetails := make(map[string]interface{})
 
-	ID = controller.Ctx.Input.Param(":id")
-
+	ID := controller.Ctx.Input.Param(":id")
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
 	description := controller.GetString("institution-description")
 
@@ -110,7 +103,9 @@ func (controller *InstitutionController) Update() {
 		if err != nil {
 			controller.DisplayError(problems)
 		} else {
-			controller.DisplaySuccessMessage("The account has been modified!", "/admin/institutions/")
+			message := "The account has been modified!"
+			goTo := "/admin/institutions/"
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }
@@ -137,7 +132,9 @@ func (controller *InstitutionController) Delete() {
 		if databaseError != nil {
 			controller.Abort("databaseError")
 		} else {
-			controller.DisplaySuccessMessage("The institution ["+institution.Name+"] has been deleted. Well done!", "/admin/institutions/")
+			message := "The institution [" + institution.Name + "] has been deleted. Well done!"
+			goTo := "/admin/institutions/"
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }
@@ -155,7 +152,8 @@ func (controller *RepositoryController) ShowInstitution() {
 	}
 }
 
-// ShowAdvanceInstitutionOptions displays the page with further options such as modify or delete
+// ShowAdvanceInstitutionOptions displays the page with further options
+// For instance, further options may be modify or delete
 func (controller *RepositoryController) ShowAdvanceInstitutionOptions() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)

@@ -20,7 +20,9 @@ func (controller *APIController) RemoveAllowedTable() {
 	if err != nil {
 		controller.DisplaySimpleError(err.Error())
 	} else {
-		controller.DisplaySuccessMessage("The table has been removed from the list!", "/admin/api")
+		message := "The table has been removed from the list!"
+		goTo := "/admin/api"
+		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
 
@@ -39,7 +41,9 @@ func (controller *APIController) InsertNewTable() {
 		if err != nil {
 			controller.DisplaySimpleError(err.Error())
 		} else {
-			controller.DisplaySuccessMessage("The table is now available to be downloaded!", "/admin/api")
+			message := "The table is now available to be downloaded!"
+			goTo := "/admin/api"
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }
@@ -73,7 +77,9 @@ func (controller *APIController) ModifyTable() {
 		if err != nil {
 			controller.DisplaySimpleError(err.Error())
 		} else {
-			controller.DisplaySuccessMessage("The table is now available to be downloaded!", "/admin/api")
+			message := "The table is now available to be downloaded!"
+			goTo := "/admin/api"
+			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
 }

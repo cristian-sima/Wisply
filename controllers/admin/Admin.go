@@ -1,3 +1,5 @@
+// Package admin contains the controllers used on administration pages
+// The administration page is a restricted area and an account needs special priviledges
 package admin
 
 import (
@@ -20,7 +22,8 @@ func (controller *Controller) DisplayDashboard() {
 	controller.SetCustomTitle("Admin - Dashboard")
 }
 
-// Prepare redirects to a login page in case the account is not connected, else it loads the page
+// Prepare redirects to a login page in case the account is not connected,
+// else it loads the page
 func (controller *Controller) Prepare() {
 	controller.WisplyController.Prepare()
 	if !controller.AccountConnected || !controller.Account.IsAdministrator {

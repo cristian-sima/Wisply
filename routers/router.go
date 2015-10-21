@@ -1,8 +1,4 @@
 // Package routers contains all the addresses of the application
-// @APIVersion 1.0.0
-// @Title mobile API
-// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
-// @Contact cs25g13@soton.ac.uk
 package routers
 
 import (

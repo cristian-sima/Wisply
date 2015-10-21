@@ -3,8 +3,8 @@ package auth
 import (
 	"errors"
 
-	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/adapter"
+	"github.com/cristian-sima/Wisply/models/database"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -44,7 +44,9 @@ func (register *Register) createNewAccount(details map[string]interface{}) error
 	email = details["email"].(string)
 	hashedPassword = register.getHashedPassword(unsafePassword)
 
-	sql := "INSERT INTO `account` (`name`, `password`, `email`, `administrator`) VALUES (?, ?, ?, ?)"
+	fieldList := "`name`, `password`, `email`, `administrator`"
+	questionList := "?, ?, ?, ?"
+	sql := "INSERT INTO `account` (" + fieldList + ") VALUES (" + questionList + ")"
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(name, hashedPassword, email, isAdministrator)
 	return err
@@ -69,6 +71,5 @@ func (register *Register) checkEmailExists(email string) bool {
 	if id != 0 {
 		exists = true
 	}
-
 	return exists
 }

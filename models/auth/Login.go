@@ -16,7 +16,8 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 
 	deleteOldTokens()
 
-	genericMessage := "There was a problem while login. We think the email or the password were not valid."
+	thinkMessage := "We think the email or the password were not valid."
+	genericMessage := "There was a problem while login. " + thinkMessage
 
 	problem := adapter.WisplyError{}
 
@@ -34,7 +35,8 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 		return problem, errors.New(genericMessage)
 	}
 
-	validPassword := login.checkPasswordIsCorrect(account.Password, loginDetails["password"].(string))
+	passwordString := loginDetails["password"].(string)
+	validPassword := login.checkPasswordIsCorrect(account.Password, passwordString)
 
 	if !validPassword {
 		problem.Message = genericMessage

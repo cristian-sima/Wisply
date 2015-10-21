@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	config "github.com/cristian-sima/Wisply/models/config"
+	"github.com/cristian-sima/Wisply/models/config"
 
 	// the driver
 	_ "github.com/go-sql-driver/mysql"
@@ -47,7 +47,8 @@ func (database *Db) connect() {
 			fmt.Println("")
 			connected = true
 		} else {
-			fmt.Println("[ERROR]: Problem trying to connect to database. Wisply tries again in 3 seconds...")
+			tryAgain := "Wisply tries again in 3 seconds..."
+			fmt.Println("[ERROR]: Problem trying to connect to database." + tryAgain)
 			fmt.Println()
 			time.Sleep(delayMiliseconds * time.Millisecond)
 		}
@@ -61,6 +62,11 @@ func (database *Db) getString() string {
 	)
 	configuration := config.GetDatabase()
 	mysqlAddress = configuration.Host + ":" + configuration.Port
-	databaseString = configuration.Username + ":" + configuration.Password + "@" + "(" + mysqlAddress + ")/" + configuration.Database + "?charset=utf8"
+
+	firstPart := configuration.Username + ":" + configuration.Password + "@"
+	secondPart := "(" + mysqlAddress + ")/" + configuration.Database
+
+	databaseString = firstPart + secondPart + "?charset=utf8"
+
 	return databaseString
 }

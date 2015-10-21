@@ -9,6 +9,8 @@ type Table struct {
 	Description string
 }
 
+// GetDescription returns the description of the table as HTML code
+// rather than a safe string
 func (table *Table) GetDescription() template.HTML {
 	return template.HTML([]byte(table.Description))
 }

@@ -14,7 +14,8 @@ func Validate(rawData map[string]interface{}, rules validity.ValidationRules) *v
 }
 
 // WisplyError represents the error message which is delivered by a model to a constructor
-// It can contain a simple message in the Message field or it can encapsulets an entire validation result
+// It can contain a simple message in the Message field
+// or it can encapsulets an entire validation result
 type WisplyError struct {
 	Data    map[string][]string
 	Message string

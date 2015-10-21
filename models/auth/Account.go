@@ -1,11 +1,12 @@
-// Package auth contains all the functions for creating, login and logout an account
+// Package auth contains all the functions for creating,
+// login and logout an account
 package auth
 
 import (
 	"errors"
 	"strconv"
 
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Account represents an account
@@ -31,8 +32,8 @@ func (account *Account) ChangeType(isAdministrator string) error {
 
 // It modifies the status of the user
 func (account *Account) modifyStatus(isAdministrator string) error {
-
-	stmt, err := database.Connection.Prepare("UPDATE `account` SET administrator=? WHERE id=?")
+	sql := "UPDATE `account` SET administrator=? WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return err
 	}

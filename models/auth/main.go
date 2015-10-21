@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"time"
 
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
-// Settings The authentication's settings
+// Settings is the object which holds the authentication's settings
 var Settings = map[string]interface{}{
 	"duration":        (60 * 60 * 24 * 7 * 4), // one month
 	"path":            "/",
@@ -23,24 +23,21 @@ var Settings = map[string]interface{}{
 type Model struct {
 }
 
-// ReconnectUsingCookie It tries to reconnect the user using the value from the connection cookiePath
+// ReconnectUsingCookie It tries to reconnect the user using the value
+// from the connection cookiePath
 // The value is splited in 2 values: ID and hashedToken
 // Then the values are verified in the database
 // Finally, it is checked if the token is still valid
 func ReconnectUsingCookie(plainCookie string) (string, error) {
-
 	cookie, err := newLoginCookie(plainCookie)
 	if err != nil {
 		return "", errors.New("The cookie has an invalid format")
 	}
-
 	validToken := cookie.IsGood()
 	if !validToken {
 		return "", errors.New("The token is not valid")
 	}
-
 	deleteOldTokens()
-
 	return cookie.AccountID, nil
 }
 
@@ -48,8 +45,8 @@ func deleteOldTokens() {
 	now, _ := strconv.Atoi(getCurrentTimestamp())
 	duration := Settings["duration"].(int)
 	diff := now - duration
-
-	query, _ := database.Connection.Prepare("DELETE from account_token WHERE timestamp < ?")
+	sql := "DELETE from account_token WHERE timestamp < ?"
+	query, _ := database.Connection.Prepare(sql)
 	query.Exec(strconv.Itoa(diff))
 }
 
@@ -69,7 +66,8 @@ func (model *Model) GetAllAccounts() []Account {
 // CountAccounts It returns the number of accounts
 func CountAccounts() int {
 	number := 0
-	query, _ := database.Connection.Prepare("SELECT count(*) FROM account")
+	sql := "SELECT count(*) FROM account"
+	query, _ := database.Connection.Prepare(sql)
 	query.QueryRow().Scan(&number)
 	return number
 }
@@ -88,8 +86,8 @@ func GetAccountByEmail(email string) (*Account, error) {
 	if !id.IsValid {
 		return &account, errors.New("The id is not valid")
 	}
-
-	sql := "SELECT id, name, password, email, administrator FROM account WHERE email = ? "
+	fieldList := "id, name, password, email, administrator"
+	sql := "SELECT " + fieldList + " FROM account WHERE email = ? "
 	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(email).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 
@@ -107,9 +105,9 @@ func NewAccount(ID string) (*Account, error) {
 	if !result.IsValid {
 		return nil, errors.New("The id is not valid")
 	}
-	account := new(Account)
-
-	sql := "SELECT id, name, password, email, administrator FROM account WHERE id= ?"
+	account := &Account{}
+	fieldList := "id, name, password, email, administrator"
+	sql := "SELECT " + fieldList + " FROM account WHERE id= ?"
 	query, err := database.Connection.Prepare(sql)
 	query.QueryRow(ID).Scan(&account.ID, &account.Name, &account.Password, &account.Email, &account.IsAdministrator)
 

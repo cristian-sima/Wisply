@@ -34,6 +34,8 @@ type file struct {
 	format string
 }
 
+// an example of a fullpath is
+// W:\go-workspace\src\github.com\cristian-sima\Wisply\cache\tables\account.csv
 func (file *file) getFullPath() string {
 	var getWisplyPath = func() string {
 		wisplyPath, err := filepath.Abs(filepath.Dir(os.Args[0]))

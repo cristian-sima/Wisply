@@ -8,7 +8,11 @@ var maxRowsPerExecution = 100
 // It keeps a buffer of all the rows and executes the statement only once
 //
 //
-// The Buffer has an internal way to prevent a buffer overflow. If the number of rows stored in the buffer exceeds the maximum number (maxRowsPerExecution), the buffer executes and clears the memory and saves the result (which is an error). In case the error is not nil, it will return it when the Exec is called.
+// The Buffer has an internal way to prevent a buffer overflow.
+// If the number of rows stored in the buffer exceeds the maximum number
+// (maxRowsPerExecution), the buffer executes and clears the memory and saves the result
+//  (which is an error). In case the error is not nil,
+//  it will return it when the Exec is called.
 //
 // Inspired by this post
 // http://stackoverflow.com/questions/21108084/golang-mysql-insert-multiple-data-at-once
@@ -34,7 +38,6 @@ func (buffer *SQLBuffer) AddRow(values ...interface{}) {
 		}
 
 		// delete the last and append ),
-
 		row = row[0:len(row)-1] + "), "
 
 		buffer.questions += row
@@ -78,9 +81,18 @@ func (buffer *SQLBuffer) Exec() error {
 	buffer.clear()
 
 	if err != nil {
-		return errors.New("Problem executing the buffer for table: `" + buffer.table + "`:" + err.Error() + "<br /><br />The query was: <br /><br />" + sqlStr)
+		errMessage := buffer.getErrorMessage(err, sqlStr)
+		return errors.New(errMessage)
 	}
 	return nil
+}
+
+func (buffer *SQLBuffer) getErrorMessage(err error, sqlStr string) string {
+	message := ""
+	description := "Problem executing the buffer for table"
+	message += description + ": `" + buffer.table + "`:" + err.Error()
+	message += "<br /><br />The query was: <br /><br />" + sqlStr
+	return message
 }
 
 func (buffer *SQLBuffer) clear() {

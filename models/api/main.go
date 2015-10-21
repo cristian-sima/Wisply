@@ -1,3 +1,5 @@
+// Package api contains the methods to export data as API requests or
+// by downloading entire tables
 package api
 
 import "github.com/cristian-sima/Wisply/models/database"
@@ -19,12 +21,14 @@ func GetAllWisplyTables() []string {
 	return list
 }
 
-// AreValidDetails checks if the table is allowed and the description is valid
+// AreValidDetails checks if the table is allowed and
+// the description is valid
 func AreValidDetails(table Table) bool {
 	return !IsAllowedTable(table.Name) && isValidDescription(table.Description)
 }
 
-// InsertNewTable adds the table name on the list of the tables which can be downloaded
+// InsertNewTable adds the table name on the list of the tables
+// which can be downloaded
 func InsertNewTable(table Table) error {
 	sql := "INSERT INTO `api_table_settings` (`name`, `description`) VALUES (?, ?)"
 	query, err := database.Connection.Prepare(sql)
@@ -56,7 +60,8 @@ func GetAllowedTables() []Table {
 // NewTable creates a new table by ID
 func NewTable(ID string) (*Table, error) {
 	table := &Table{}
-	sql := "SELECT `id`, `name`, `description` FROM `api_table_settings` WHERE id=? "
+	fieldList := "`id`, `name`, `description`"
+	sql := "SELECT " + fieldList + " FROM `api_table_settings` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return table, err
@@ -76,7 +81,8 @@ func ModifyDetails(table *Table, newDescription string) error {
 	return err2
 }
 
-// GetWisplyTablesNamesNotAllowed returns the list of wisply tables which can be downloaded, but are not yet on the list
+// GetWisplyTablesNamesNotAllowed returns the list of wisply tables which
+// can be downloaded, but are not yet on the list
 func GetWisplyTablesNamesNotAllowed() []string {
 	var (
 		list          []string

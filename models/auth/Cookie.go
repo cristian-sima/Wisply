@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Cookie It represents a connection cookie
@@ -32,13 +32,10 @@ type LoginCookie struct {
 
 // IsGood creates a Token from the id and hashed token and calls its IsValid method
 func (cookie *LoginCookie) IsGood() bool {
-
 	if database.Connection == nil {
 		return false
 	}
-
 	token, err := newTokenFromCookie(cookie)
-
 	if err != nil {
 		return false
 	}
@@ -50,7 +47,8 @@ func newLoginCookie(plainCookie string) (*LoginCookie, error) {
 	var cookie *LoginCookie
 
 	if !hasGoodFormat(plainCookie) {
-		return cookie, errors.New("The cookie does not have a valid format")
+		message := "The cookie does not have a valid format"
+		return cookie, errors.New(message)
 	}
 	elements := getCookieElements(plainCookie)
 

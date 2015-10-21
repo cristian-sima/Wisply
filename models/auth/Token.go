@@ -3,7 +3,7 @@ package auth
 import (
 	"strconv"
 
-	database "github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/nu7hatch/gouuid"
 )
 
@@ -23,7 +23,9 @@ func (token *Token) Encrypt() string {
 
 // Insert inserts the token in the database
 func (token *Token) Insert() {
-	sql := "INSERT INTO `account_token` (`id`, `account`, `value`, `timestamp`) VALUES (?, ?, ?, ?)"
+	fieldList := "`id`, `account`, `value`, `timestamp`"
+	questionList := "?, ?, ?, ?"
+	sql := "INSERT INTO `account_token` (" + fieldList + ") VALUES (" + questionList + ")"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec("NULL", strconv.Itoa(token.Account.ID), token.Encrypt(), token.Timestamp)
 }

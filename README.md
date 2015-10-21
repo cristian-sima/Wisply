@@ -170,6 +170,19 @@ JavaScript has a lot of documentation. The documentation passes the guidelines o
 **Note!**
 * Due to security reasons, the JavaScript documentation *can't* be accessed using the Wisply server (for instance http://wisply.me/doc/js). You can access it by using the absolute path in your browser (C:\path\util\doc\js\index.html for Windows)
 
+#### Automate Functional Tests
+
+Wisply has a number of automate Functional tests. In order to run these you need to follow the next steps
+
+1. Install Node.JS
+2. Navigate to `tests/acceptance/node`
+3. Install [Jasmine](http://jasmine.github.io/)
+* Note: You need to install this into `/tests/acceptance/node/`
+4. Install [webdriver](http://webdriver.io/guide/getstarted/install.html/)
+* Note: You need to install this into /tests/acceptance/node/
+5. Install [selenium server](https://github.com/vvo/selenium-standalone)
+6. Type `java -jar /your/download/directory/selenium-server-standalone-2.42.2.jar` in order to start the server
+7. Run tests by typing `wdio wdio.conf.js`
 
 ### Utilities
 The Shell code is documentated according to the guidelines presented by [Inquisitor](http://www.inquisitor.ru/doc/shelldoc.html). Also, the utilities for Windows have comments in order to adapt them to your system

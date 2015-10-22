@@ -36,25 +36,28 @@ var SearchModule = function() {
 			},
 			limit: 10,
 			remote: {
-        cacheKey: 'Title',
+        cacheKey: 'ID',
 				url: '/api/search/anything/%QUERY',
 				wildcard: '%QUERY',
+				transform: function(o) {
+					console.log(o)
+					return o;
+				},
 			}
 		});
 
 		function getTemplate() {
-			function getSuggestion() {
-				return [
-			"<div style='width:100%'><div class='row'>",
-			"<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
-			"<div style='width:40px' class='text-center'><img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' /></div>",
-			"</div>",
-			"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
-			"<span class='search-title'>{{ cutString Title 40 }}</span><br />",
-			"<span class='text-muted bold'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 110 }}</span></div>",
-		"</div></div>",
-	].join("\n");
-			}
+			var suggestion = [
+					"<div style='width:100%'><div class='row'>",
+					"<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
+					"<div style='width:40px' class='text-center'><img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' /></div>",
+					"</div>",
+					"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
+					"<span class='search-title'>{{ cutString Title 40 }}</span><br />",
+					"<span class='text-muted bold'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 110 }}</span></div>",
+				"</div></div>",
+			].join("\n");
+
 			var footer = [
 					"<div class='row'><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
 					'<div class="search-footer">',
@@ -62,6 +65,7 @@ var SearchModule = function() {
 					"</strong></div>",
 					"</div></div>"
 				].join("\n");
+
 			return {
 				name: 'Title',
 				display: "Title",
@@ -74,7 +78,7 @@ var SearchModule = function() {
 					          '<span class="glyphicon glyphicon-inbox"></span> No results available.',
 					        '</div>'
 					      ].join('\n'),
-					suggestion: Handlebars.compile(getSuggestion()),
+					suggestion: Handlebars.compile(suggestion),
 				}
 			};
 		}

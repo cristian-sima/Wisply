@@ -11,7 +11,7 @@
 <script src="/static/3rd_party/others/js/jquery.hotkeys.js"></script>
 
 <script src="/static/3rd_party/others/js/handlebars-v4.0.2.js"></script>
-<script src="/static/3rd_party/others/js/typeahead.bundle.js"></script>
+<script src="/static/3rd_party/others/js/jquery.autocomplete.js"></script>
 
 <script src="/static/js/wisply/search.js"></script>
 

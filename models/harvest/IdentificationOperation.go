@@ -1,6 +1,6 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/wisply"
+import wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 
 // IdentificationOperation encapsulates the methods for requesting information
 // from the repository

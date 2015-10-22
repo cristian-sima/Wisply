@@ -1,4 +1,4 @@
-package wisply
+package data
 
 // Identifier ... must be implemented by a identifier
 type Identifier interface {

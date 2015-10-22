@@ -1,4 +1,4 @@
-package wisply
+package data
 
 // Identificationer ... defines the methods of a identification object
 type Identificationer interface {

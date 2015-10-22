@@ -3,7 +3,7 @@ package harvest
 import (
 	"fmt"
 
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // HarvestingCollections is the operation which collects the collections from

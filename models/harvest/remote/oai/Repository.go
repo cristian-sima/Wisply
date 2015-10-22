@@ -8,7 +8,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/harvest/remote/oai/protocol"
 	"github.com/cristian-sima/Wisply/models/harvest/remote/repository"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // Repository holds a local reposiory, the request and response and a filter

@@ -6,33 +6,10 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/cristian-sima/Wisply/models/database"
 )
-
-// GetCollections returns the collections
-func GetCollections(repositoryID int) []*Collection {
-	var (
-		list []*Collection
-		name string
-	)
-	fieldSet := "`id`, `spec`, `name`, `description`, `numberOfRecords`"
-	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
-	rows, _ := database.Connection.Query(sql, repositoryID)
-	for rows.Next() {
-		collection := &Collection{
-			Repository: repositoryID,
-		}
-		rows.Scan(&collection.ID, &collection.Spec, &name, &collection.Description, &collection.NumberOfResources)
-		elements := strings.Split(name, ":")
-		collection.Name = elements[len(elements)-1]
-		collection.Name = strings.Replace(collection.Name, "=", "-", -1)
-		list = append(list, collection)
-	}
-	return list
-}
 
 // GetRecords returns all the records
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {

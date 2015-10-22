@@ -6,7 +6,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // InsertIdentificationTask represents a task that inserts the identification

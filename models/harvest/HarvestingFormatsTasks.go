@@ -6,7 +6,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // InsertFormatsTask represents a task that inserts the formats into database

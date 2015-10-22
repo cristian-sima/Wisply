@@ -1,7 +1,7 @@
 package oai
 
 import (
-	wisply "github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // Identification represents the identification for a repository

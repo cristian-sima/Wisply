@@ -25,6 +25,7 @@ func (search *RepositoriesSearch) Perform() Result {
 			URL:         search.getURL(repositoryObject.ID),
 			Description: repositoryObject.Description,
 			Icon:        "/static/img/public/repository/repository.png",
+			Category:    "Repository",
 		}
 		searchQuery.Results = append(searchQuery.Results, result)
 	}
@@ -62,7 +63,7 @@ func NewRepositoriesSearch(text string) RepositoriesSearch {
 	return RepositoriesSearch{
 		search: &search{
 			text:     text,
-			category: "repositoryObjects",
+			category: "Repository",
 		},
 	}
 }

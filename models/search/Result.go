@@ -7,6 +7,7 @@ type ResultItem struct {
 	URL         string
 	Description string
 	Icon        string
+	Category    string
 }
 
 // Result encapsulates a list of results for a category

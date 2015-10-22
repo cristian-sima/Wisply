@@ -103,11 +103,17 @@ h6 {
 /* scaffolding */
 /* ----------- */
 
+.search-footer,
 .search-header {
   background-color: #f5f5f5;
   color:#bbbbbb;
   margin: none;
   padding-left: 20px;
+}
+.search-footer {
+  padding-top: 4px;
+  height: 30px;
+  margin-top:5px;
 }
 
 .typeahead,
@@ -115,7 +121,7 @@ h6 {
 .tt-hint {
   width:350px;
   height: 50px;
-  padding: 8px 12px;
+  padding: 8px 2px;
   padding-top: 0px;
   line-height: 30px;
   -webkit-border-radius: 8px;
@@ -128,11 +134,12 @@ h6 {
 
 .search-result {
   line-height: 12px;
+  margin-left: 5px;
 }
 
 .search-title {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 12px;
 }
 
@@ -176,10 +183,11 @@ h6 {
 }
 
 .tt-suggestion {
-  padding: 3px 20px;
+  padding: 3px 5px;
   line-height: 24px;
 }
 
+.search-footer:hover,
 .tt-suggestion:hover {
   cursor: pointer;
   color: #fff;
@@ -205,6 +213,8 @@ h6 {
 }
 
 .search-logo {
-    max-width: 40px;
-    max-height: 40px;
+      display: inline;
+    max-width: 35px;
+    max-height: 35px;
+    margin-bottom: 23px;
 }

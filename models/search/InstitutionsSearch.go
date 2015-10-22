@@ -25,6 +25,7 @@ func (search *InstitutionSearch) Perform() Result {
 			URL:         search.getURL(institution.ID),
 			Description: institution.Description,
 			Icon:        institution.LogoURL,
+			Category:    "Institution",
 		}
 		searchQuery.Results = append(searchQuery.Results, result)
 	}

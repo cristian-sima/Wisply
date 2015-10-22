@@ -53,7 +53,7 @@ var SearchModule = function() {
 			"</div>",
 			"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
 			"<span class='search-title'>{{ cutString Title " + maxAllowedCharForDesc + " }}</span><br />",
-			"<span class='text-muted search-description'>{{ Category }}</span></div>",
+			"<span class='text-muted bold'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description " + maxAllowedCharForDesc + " }}</span></div>",
 		"</div></div>",
 	].join("\n");
 			}

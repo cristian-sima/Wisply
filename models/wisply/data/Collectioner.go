@@ -4,4 +4,5 @@ package data
 type Collectioner interface {
 	GetName() string
 	GetSpec() string
+	GetPath() string
 }

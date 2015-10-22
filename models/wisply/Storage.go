@@ -1,8 +1,6 @@
 package wisply
 
 import (
-	"strings"
-
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
@@ -16,21 +14,17 @@ type Storage struct {
 // GetCollections returns a list of the collections
 func (storage *Storage) GetCollections() []*Collection {
 
-	var (
-		list []*Collection
-		name string
-	)
-	fieldSet := "`id`, `spec`, `name`, `description`, `numberOfRecords`"
+	var list []*Collection
+
+	fieldSet := "`id`, `spec`, `name`, `path`, `description`, `numberOfRecords`"
 	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
 	rows, _ := database.Connection.Query(sql, storage.Remote.ID)
 	for rows.Next() {
 		collection := &Collection{
 			Repository: storage.Remote.ID,
 		}
-		rows.Scan(&collection.ID, &collection.Spec, &name, &collection.Description, &collection.NumberOfResources)
-		elements := strings.Split(name, ":")
-		collection.Name = elements[len(elements)-1]
-		collection.Name = strings.Replace(collection.Name, "=", "-", -1)
+		rows.Scan(&collection.ID, &collection.Spec, &collection.Name, &collection.Path, &collection.Description, &collection.NumberOfResources)
+
 		list = append(list, collection)
 	}
 	return list

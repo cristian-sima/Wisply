@@ -80,6 +80,7 @@ func (repository *Format) GetNamespace() string {
 type Collection struct {
 	Name string
 	Spec string
+	Path string
 }
 
 // GetName returns the name of the collection
@@ -87,8 +88,13 @@ func (repository *Collection) GetName() string {
 	return repository.Name
 }
 
-// GetSpec returns the id of the collection
+// GetSpec returns the path of sets (the set of collection)
 func (repository *Collection) GetSpec() string {
+	return repository.Spec
+}
+
+// GetPath returns the path to the collection
+func (repository *Collection) GetPath() string {
 	return repository.Spec
 }
 

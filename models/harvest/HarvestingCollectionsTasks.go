@@ -51,14 +51,14 @@ func (task *InsertCollectionsTask) clearTable() error {
 func (task *InsertCollectionsTask) insertData(collections []wisply.Collectioner) error {
 	repositoryID := task.repository.ID
 	for _, collection := range collections {
-		task.collectionsBuffer.AddRow(repositoryID, collection.GetName(), collection.GetSpec())
+		task.collectionsBuffer.AddRow(repositoryID, collection.GetPath(), collection.GetSpec(), collection.GetName())
 	}
 	return task.collectionsBuffer.Exec()
 }
 
 func newInsertCollectionsTask(operationHarvest Operationer, repository *repository.Repository) *InsertCollectionsTask {
 	tableName := "repository_collection"
-	columns := "`repository`, `name`, `spec`"
+	columns := "`repository`, `path`, `spec`, `name`"
 	collectionsBuffer := database.NewSQLBuffer(tableName, columns)
 	return &InsertCollectionsTask{
 		Task: &Task{

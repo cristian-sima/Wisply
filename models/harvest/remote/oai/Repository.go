@@ -124,15 +124,27 @@ func (repository *Repository) GetCollections(content []byte) ([]wisply.Collectio
 		return collections, err
 	}
 
+	var getNameFromPath = func(path string) string {
+		name := ""
+		elements := strings.Split(path, ":")
+		name = elements[len(elements)-1]
+		name = strings.Replace(name, "=", "-", -1)
+		return name
+	}
+
 	// cache the last response
 	repository.lastResponse = response
 
 	remoteCollections := response.ListSets.Set
 
 	for _, collection := range remoteCollections {
+
+		collectionName := getNameFromPath(collection.SetName)
+
 		collection := &Collection{
-			Name: collection.SetName,
+			Path: collection.SetName,
 			Spec: collection.SetSpec,
+			Name: collectionName,
 		}
 		collections = append(collections, collection)
 	}

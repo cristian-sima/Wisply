@@ -128,7 +128,7 @@ func (repository *Repository) GetCollections(content []byte) ([]wisply.Collectio
 		name := ""
 		elements := strings.Split(path, ":")
 		name = elements[len(elements)-1]
-		name = strings.Replace(name, "=", "-", -1)
+		name = strings.TrimSpace(strings.Replace(name, "=", "-", -1))
 		return name
 	}
 

@@ -18,14 +18,6 @@ var SearchModule = function() {
 		}
 		return new Handlebars.SafeString(theString);
 	});
-	// Array Remove - By John Resig (MIT Licensed)
-	Array.prototype.remove = function(from, to) {
-	  var rest = this.slice((to || from) + 1 || this.length);
-	  this.length = from < 0 ? this.length + from : from;
-	  return this.push.apply(this, rest);
-	};
-	// Maximum allowed characters for description
-	var maxAllowedCharForDesc = 90;
 	/**
 	 * Does nothing
 	 * @memberof Field
@@ -35,16 +27,22 @@ var SearchModule = function() {
 	 */
 	var Field = function Field(selector) {
 		var engine = new Bloodhound({
-			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('ID'),
+			datumTokenizer: function(d) {
+		     return Bloodhound.tokenizers.whitespace(d.Title);
+		 },
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			identify: function(o) {
+				return o.ID;
+			},
+			limit: 10,
 			remote: {
+        cacheKey: 'Title',
 				url: '/api/search/anything/%QUERY',
-				wildcard: '%QUERY'
+				wildcard: '%QUERY',
 			}
 		});
 
-
-		function getTemplate(type) {
+		function getTemplate() {
 			function getSuggestion() {
 				return [
 			"<div style='width:100%'><div class='row'>",
@@ -52,38 +50,39 @@ var SearchModule = function() {
 			"<div style='width:40px' class='text-center'><img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' /></div>",
 			"</div>",
 			"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
-			"<span class='search-title'>{{ cutString Title " + maxAllowedCharForDesc + " }}</span><br />",
-			"<span class='text-muted bold'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description " + maxAllowedCharForDesc + " }}</span></div>",
+			"<span class='search-title'>{{ cutString Title 40 }}</span><br />",
+			"<span class='text-muted bold'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 110 }}</span></div>",
 		"</div></div>",
 	].join("\n");
 			}
-			var searchMoreOption = [
-			"<div class='row'><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
-			'<div class="search-footer">',
-			"<span class='h6'><span class='text-primary'><span class='glyphicon glyphicon-search'></span></span> &nbsp;&nbsp;Find more about<strong> {{query}}",
-			"</strong></div>",
-			"</div></div>"
-		].join("\n");
+			var footer = [
+					"<div class='row'><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
+					'<div class="search-footer">',
+					"<span><span class='text-primary'><span class='glyphicon glyphicon-search'></span></span> &nbsp;&nbsp;Find more about<strong> {{cutString query 30 }}",
+					"</strong></div>",
+					"</div></div>"
+				].join("\n");
 			return {
 				name: 'Title',
-				source: engine,
 				display: "Title",
+				valueKey: "Title",
+				source: engine,
 				templates: {
-				footer: Handlebars.compile(searchMoreOption),
-				empty: [
-        '<div class="empty-message">',
-          '<span class="glyphicon glyphicon-inbox"></span> No results available.',
-        '</div>'
-      ].join('\n'),
-				suggestion: Handlebars.compile(getSuggestion(type)),
-			}
+					footer: Handlebars.compile(footer),
+					empty: [
+					        '<div class="empty-message">',
+					          '<span class="glyphicon glyphicon-inbox"></span> No results available.',
+					        '</div>'
+					      ].join('\n'),
+					suggestion: Handlebars.compile(getSuggestion()),
+				}
 			};
 		}
 		this.object = $(selector).typeahead({
 			hint: true,
 			highlight: false,
 			minLength: 1,
-		}, getTemplate("Institution"));
+		}, getTemplate());
 		// keep the code cosistent even if we do not use the event
 		/* jshint unused:false */
 		this.object.bind('typeahead:select', function(event, suggestion) {

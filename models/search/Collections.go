@@ -22,7 +22,7 @@ func (search CollectionsSearch) Perform() {
 		result := &Result{
 			Title:       collection.Name,
 			URL:         search.getURL(collection),
-			Description: collection.Description + "<br /> " + strconv.Itoa(collection.NumberOfResources) + " resources",
+			Description: collection.Description + " -  " + strconv.Itoa(collection.NumberOfResources) + " resources",
 			Icon:        "/static/img/public/repository/repository.png",
 			Category:    "Collection",
 		}
@@ -35,8 +35,10 @@ func (search CollectionsSearch) getNonEmptyFromDB() []wisply.Collection {
 	var list []wisply.Collection
 	fieldsList := "`id`, `name`, `description`, `spec`, `path`, `numberOfRecords`, `repository`"
 	limitClause := search.options.GetLimit()
-	whereClause := "WHERE `name` LIKE ? OR `description` LIKE ?"
-	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository_collection` " + whereClause + space + limitClause
+	whereClause := "WHERE (`name` LIKE ? OR `description` LIKE ?) AND (`numberOfRecords` != 0) "
+	orderByClause := "ORDER BY `numberOfRecords` DESC"
+	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository_collection` " + whereClause + space + orderByClause + space + limitClause
+	fmt.Println(sql)
 	rows, err := database.Connection.Query(sql, search.likeQuery(), search.likeQuery())
 	if err != nil {
 		fmt.Println(sql)
@@ -45,9 +47,7 @@ func (search CollectionsSearch) getNonEmptyFromDB() []wisply.Collection {
 	for rows.Next() {
 		collection := wisply.Collection{}
 		rows.Scan(&collection.ID, &collection.Name, &collection.Description, &collection.Spec, &collection.Path, &collection.NumberOfResources, &collection.Repository)
-		if collection.NumberOfResources != 0 {
-			list = append(list, collection)
-		}
+		list = append(list, collection)
 	}
 	return list
 }

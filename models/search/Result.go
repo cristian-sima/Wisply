@@ -1,16 +1,12 @@
 package search
 
-// ResultItem is one result from a search
-// It has a url to go to
-type ResultItem struct {
+// Result represents an item that makes the query
+type Result struct {
+	ID          int
 	Title       string
 	URL         string
 	Description string
 	Icon        string
 	Category    string
-}
-
-// Result encapsulates a list of results for a category
-type Result struct {
-	Results []ResultItem `json:"results"`
+	Data        interface{}
 }

@@ -14,37 +14,36 @@ type RepositoriesSearch struct {
 }
 
 // Perform gets the results
-func (search *RepositoriesSearch) Perform() Result {
-	searchQuery := Result{
-		Results: []ResultItem{},
-	}
+func (search RepositoriesSearch) Perform() {
+
 	repositoryObjects := search.getFromDB()
 	for _, repositoryObject := range repositoryObjects {
-		result := ResultItem{
+		result := &Result{
 			Title:       repositoryObject.Name,
 			URL:         search.getURL(repositoryObject.ID),
 			Description: repositoryObject.Description,
 			Icon:        "/static/img/public/repository/repository.png",
 			Category:    "Repository",
 		}
-		searchQuery.Results = append(searchQuery.Results, result)
+		search.response.AppendItem(result)
 	}
-	return searchQuery
 }
 
 // gets the repositoryObjects
-func (search *RepositoriesSearch) getFromDB() []repository.Repository {
+func (search RepositoriesSearch) getFromDB() []repository.Repository {
 	var list []repository.Repository
+
 	fieldsList := "`id`, `name`, `description`"
+	limitClause := search.options.GetLimit()
 	whereClause := "WHERE `name` LIKE ? OR `description` LIKE ?"
-	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository` " + whereClause
-	rows, err := database.Connection.Query(sql, search.likeText(), search.likeText())
-	fmt.Println(sql)
+	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository` " + whereClause + space + limitClause
+	rows, err := database.Connection.Query(sql, search.likeQuery(), search.likeQuery())
+
 	if err != nil {
+		fmt.Println("Erorr search repositories: ")
 		fmt.Println(err)
 	}
 	for rows.Next() {
-		fmt.Println("rep")
 		repositoryObject := repository.Repository{}
 		rows.Scan(&repositoryObject.ID, &repositoryObject.Name, &repositoryObject.Description)
 		list = append(list, repositoryObject)
@@ -52,18 +51,15 @@ func (search *RepositoriesSearch) getFromDB() []repository.Repository {
 	return list
 }
 
-func (search *RepositoriesSearch) getURL(repositoryObjectID int) string {
+func (search RepositoriesSearch) getURL(repositoryObjectID int) string {
 	path := "/repository/"
 	action := path + strconv.Itoa(repositoryObjectID)
 	return action
 }
 
 // NewRepositoriesSearch creates a new search object for finding repositoryObjects
-func NewRepositoriesSearch(text string) RepositoriesSearch {
+func NewRepositoriesSearch(search *search) RepositoriesSearch {
 	return RepositoriesSearch{
-		search: &search{
-			text:     text,
-			category: "Repository",
-		},
+		search: search,
 	}
 }

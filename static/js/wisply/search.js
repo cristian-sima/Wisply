@@ -35,7 +35,7 @@ var SearchModule = function() {
 	 */
 	var Field = function Field(selector) {
 		var engine = new Bloodhound({
-			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Title'),
+			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('ID'),
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
 			remote: {
 				url: '/api/search/anything/%QUERY',
@@ -65,14 +65,14 @@ var SearchModule = function() {
 			"</div></div>"
 		].join("\n");
 			return {
-				name: 'categories',
+				name: 'Title',
 				source: engine,
-				display: type,
+				display: "Title",
 				templates: {
 				footer: Handlebars.compile(searchMoreOption),
 				empty: [
         '<div class="empty-message">',
-          '<span class="glyphicon glyphicon-inbox"></span> No results',
+          '<span class="glyphicon glyphicon-inbox"></span> No results available.',
         '</div>'
       ].join('\n'),
 				suggestion: Handlebars.compile(getSuggestion(type)),

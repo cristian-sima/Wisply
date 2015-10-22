@@ -1,26 +1,24 @@
 package search
 
-// Searcher defines a search
+import "github.com/cristian-sima/Wisply/models/database"
+
+// Searcher defines the sets of methods which must be implemented by a search
 type Searcher interface {
 	Perform()
 }
 
 // Search
 type search struct {
-	text     string
-	channel  chan string
-	category string
+	query    string
+	response *Response
+	request  *Request
+	options  database.SQLOptions
 }
 
-func (search *search) likeText() string {
-	return "%" + search.text + "%"
+func (search *search) changeOptions(options database.SQLOptions) {
+	search.options = options
 }
 
-// constructor
-// newSearch creates a new search
-func newSearch(text string, channel chan string) *search {
-	return &search{
-		text:    text,
-		channel: channel,
-	}
+func (search *search) likeQuery() string {
+	return "%" + search.query + "%"
 }

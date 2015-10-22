@@ -95,7 +95,7 @@ func (repository *Collection) GetSpec() string {
 
 // GetPath returns the path to the collection
 func (repository *Collection) GetPath() string {
-	return repository.Spec
+	return repository.Path
 }
 
 // RESOURCES

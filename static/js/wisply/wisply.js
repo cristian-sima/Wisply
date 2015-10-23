@@ -8,7 +8,8 @@ var wisply;
 /**
  * @file Encapsulates the functionality for all pages.
  * @author Cristian Sima
- */
+ */ 
+ $.cookie.json = true;
 /**
  * Encapsulates the functionality for all pages.
  * @namespace Wisply
@@ -89,7 +90,7 @@ var Wisply = function() {
 			description: "Show the list of key shortcuts",
 		}, {
 			"type": "keyup",
-			"key": "Alt+z",
+			"key": "Ctrl+space",
 			"callback": function(event) {
 				event.preventDefault();
 				wisply.search.object.focus();

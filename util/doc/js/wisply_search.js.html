@@ -42,7 +42,7 @@ var SearchModule = function() {
 	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
 		if (theString.length > numberOfAllowedCharacters) {
 			var shortString = theString.substr(0, numberOfAllowedCharacters);
-		 	theString = shortString + "...";
+			theString = shortString + "...";
 		}
 		return new Handlebars.SafeString(theString);
 	});
@@ -54,61 +54,166 @@ var SearchModule = function() {
 	 * @classdesc It gets the elements
 	 */
 	var Field = function Field(selector) {
-		var searchAnything = new Bloodhound({
-			datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Title'),
+		var instance = this,
+			engine = new Bloodhound({
+			datumTokenizer: function(d) {
+		     return Bloodhound.tokenizers.whitespace(d.Title);
+		 },
 			queryTokenizer: Bloodhound.tokenizers.whitespace,
+			identify: function(o) {
+				return o.ID;
+			},
 			remote: {
+        cacheKey: 'ID',
 				url: '/api/search/anything/%QUERY',
-				wildcard: '%QUERY'
+				wildcard: '%QUERY',
+				rateLimitWait: 600,
 			}
 		});
+
+		$(selector).val(this.getLastSearchValue());
+
+			var suggestion = [
+					"&lt;div style='width:100%'>&lt;div class='row'>",
+					"&lt;div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
+					"&lt;div style='width:40px' class='text-center'>&lt;img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' />&lt;/div>",
+					"&lt;/div>",
+					"&lt;div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
+					"&lt;span class='search-title'>{{ cutString Title 40 }}&lt;/span>&lt;br />",
+					"&lt;span class='text-muted bold search-category'>&lt;small>{{ Category }}&lt;/small>&lt;/span>&lt;br />&lt;span class='text-muted search-description'>{{ cutString Description 110 }}&lt;/span>&lt;/div>",
+				"&lt;/div>&lt;/div>",
+			].join("\n");
+
+			var footer = [
+					"&lt;div class='row'>&lt;div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
+					'&lt;div class="search-footer">',
+					"&lt;span>&lt;span class='text-primary'>&lt;span class='glyphicon glyphicon-search'>&lt;/span>&lt;/span> &amp;nbsp;&amp;nbsp;Find more about&lt;strong> {{cutString query 30 }}",
+					"&lt;/strong>&lt;/div>",
+					"&lt;/div>&lt;/div>"
+				].join("\n");
+
+
+			var resultEngine = {
+					name: 'Title',
+					display: "Title",
+					valueKey: "Title",
+					source: function(q, sync, async) {
+							if(q !== "") {
+							engine.search(q, sync, async);
+						}
+					},
+					limit: 7,
+					templates: {
+						footer: Handlebars.compile(footer),
+						empty: [
+						        '&lt;div class="search-no-results">',
+						          '&lt;span class="glyphicon glyphicon-inbox">&lt;/span> No results available.',
+						        '&lt;/div>'
+						      ].join('\n'),
+						suggestion: Handlebars.compile(suggestion),
+					}
+			};
+
+			var cookieEngine = {
+				templates: {
+					header: "&lt;div class='search-header'>Last searches&lt;/div>",
+				},
+				source : function() {
+					var instanceCopy = instance;
+					return (function cookieEngine(q, sync, async) {
+						if (q === '') {
+							var searches = instanceCopy.getLastSearchQueries();
+							sync(instanceCopy.getLastSearchQueries());
+						}
+					});
+				}(),
+			};
+
 		this.object = $(selector).typeahead({
 			hint: true,
 			highlight: false,
-			minLength: 2,
-		}, {
-			name: 'states',
-			source: searchAnything,
-			display: 'Title',
-			templates: {
-				pending: [
-          "&lt;div class='text-center empty-message' >",
-          wisply.getLoadingImage("small"),
-          "&lt;br />&lt;/div>"
-        ].join('\n'),
-				empty: [
-        '&lt;div class="empty-message">',
-          '&lt;span class="glyphicon glyphicon-inbox">&lt;/span> It seems there is nothing like that',
-        '&lt;/div>'
-      ].join('\n'),
-				header: [
-				"&lt;h4 class='search-header league-name'>",
-				"Institutions",
-				"&lt;/h4>",
-				"&lt;hr />",
-			].join("\n"),
-				suggestion: Handlebars.compile([
-				"&lt;div>",
-				"&lt;strong>{{Title}}&lt;/strong>",
-					"&lt;div class='row'>",
-						"&lt;div class='col-lg-2 col-md-2 col-sm-2'>",
-						"&lt;img class='search-logo' src='{{Icon}}' />",
-						"&lt;/div>",
-						"&lt;div class='col-lg-10 col-md-10 col-sm-10 text-muted smaller'>{{ cutString Description 150 }}&lt;/div>",
-					"&lt;/div>",
-				"&lt;/div>",
-			].join("\n")),
+			minLength: 0,
+		}, resultEngine, cookieEngine);
+
+		// keep the code cosistent even if we do not use the event
+		/* jshint unused:false */
+		this.object.bind('typeahead:select', function(event, suggestion) {
+			if(suggestion.Category) {
+				instance.saveSearchQuery(suggestion.Title);
+				window.location = suggestion.URL;
+			} else {
+				var t = this,
+					suggestionCopy = suggestion;
+				$(this).typeahead('close');
+				setTimeout(function() {
+					$(t).typeahead("val", "");
+					$(t).typeahead("val", suggestionCopy);
+					$(t).typeahead('open');
+				}, 100);
 			}
 		});
-    // keep the code cosistent even if we do not use the event
-    /* jshint unused:false */
-		this.object.bind('typeahead:select', function(event, suggestion) {
-			window.location = suggestion.URL;
+		this.object.bind("typeahead:active", function() {
+			var defaultSearchWidth = 400,
+				width = parseInt($(window).width(), 10),
+				searchWidth = defaultSearchWidth;
+			if (width &lt; searchWidth) {
+				searchWidth = width * 9.95 / 10;
+			}
+			$(".tt-menu").css({
+				"width": searchWidth - 30,
+			});
 		});
+		this.object.bind("typeahead:idle", function() {
+			var smallSearch = $("#search-small-input"),
+				button = $("#show-small-search-button");
+			$("#search-small").hide();
+			$("#full-logo").show();
+			button.html("&lt;span class='glyphicon glyphicon-search'>&lt;/span>");
+			wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
+		});
+		this.cookieName = 'last-searches';
 	};
 	Field.prototype =
 		/** @lends SearchModule.Field */
-		{};
+		{
+			saveSearchQuery: function(newValue) {
+				var oldList,
+				allowedSearches = 5,
+				newList;
+				oldList = this.getLastSearchQueries();
+
+				if(!oldList) {
+					newList = [];
+				} else {
+					newList = oldList;
+					if(newValue &amp;&amp; newValue !== "") {
+						// if the same as last one
+						if(newValue !== oldList[0]) {
+							newList.unshift(newValue);
+						}
+					}
+					if (newList.length > allowedSearches) {
+						newList.pop();
+					}
+				}
+				$.cookie(this.cookieName, newList, { path: '/' });
+			},
+			getLastSearchValue: function() {
+				var listOfSearches = this.getLastSearchQueries()["last-searches"],
+					last;
+				if(!listOfSearches) {
+					return "";
+				}
+				last = listOfSearches[0];
+				if(!last) {
+					return "";
+				}
+				return last;
+			},
+			getLastSearchQueries: function () {
+				return $.cookie(this.cookieName);
+			}
+		};
 	return {
 		Field: Field,
 	};
@@ -133,7 +238,7 @@ $(document).ready(function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Oct 21 2015 17:59:38 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Fri Oct 23 2015 12:53:05 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

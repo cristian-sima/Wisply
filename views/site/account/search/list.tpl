@@ -28,9 +28,9 @@
             <td>{{ $query }}</td>
             <td>
               {{ if $search.Accessed }}
-              Yes
+              <span class="label label-success">Yes</span>
               {{ else }}
-              No
+              <span class="label label-default">No</span>
               {{ end }}
             </td>
           </tr>

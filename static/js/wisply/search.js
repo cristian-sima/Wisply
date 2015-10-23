@@ -46,6 +46,7 @@ var SearchModule = function() {
 					cacheKey: 'ID',
 					url: instance.URL + '%QUERY',
 					wildcard: '%QUERY',
+					rateLimitWait: 1000,
 				}
 			});
 

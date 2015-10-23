@@ -55,7 +55,8 @@ func (list List) GetAll() []Search {
 	}
 	fieldList := "`id`, `query`, `timestamp`, `accessed`"
 	whereClause := "WHERE `account` = ?"
-	sql := "SELECT " + fieldList + "FROM `account_searches` " + whereClause
+	orderClause := "ORDER BY `timestamp` DESC "
+	sql := "SELECT " + fieldList + "FROM `account_searches` " + whereClause + " " + orderClause
 	rows, _ := database.Connection.Query(sql, list.accountID)
 	for rows.Next() {
 		accessedString := ""

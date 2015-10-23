@@ -58,7 +58,7 @@
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted">
-          <a>
+          <a href="/account" data-toggle='tooltip' data-placement='bottom' title='' data-original-title='Dashboard'>
             <b>{{ .currentAccount.Name }}</b>
             <span class="text-success"><span class="glyphicon glyphicon-user"></span></span>
           </a>

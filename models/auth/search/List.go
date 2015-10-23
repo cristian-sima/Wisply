@@ -1,6 +1,10 @@
 package searches
 
-import "github.com/cristian-sima/Wisply/models/database"
+import (
+	"time"
+
+	"github.com/cristian-sima/Wisply/models/database"
+)
 
 // List encapsulates all the searches made by an account
 type List struct {
@@ -60,7 +64,7 @@ func (list List) GetAll() []Search {
 	for rows.Next() {
 		accessedString := ""
 		item := Search{}
-		rows.Scan(&item.Query, &item.Timestamp, accessedString)
+		rows.Scan(&item.ID, &item.Query, &item.Timestamp, &accessedString)
 		item.Accessed = getBoolFromString(accessedString)
 		allList = append(allList, item)
 	}
@@ -69,10 +73,15 @@ func (list List) GetAll() []Search {
 
 // Search is a typical search performed by a user
 type Search struct {
-	ID        string
+	ID        int
 	Accessed  bool
 	Query     string
 	Timestamp int64
+}
+
+// GetDate transforms the timestamp into a date
+func (search Search) GetDate() string {
+	return time.Unix(search.Timestamp, 0).Format(dateFormat)
 }
 
 // NewList loads a searches object for an account

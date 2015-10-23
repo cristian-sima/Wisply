@@ -3,6 +3,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/cristian-sima/Wisply/controllers/account"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/controllers/api"
 	"github.com/cristian-sima/Wisply/controllers/public"
@@ -236,6 +237,17 @@ func init() {
 			apiSearchNS,
 		)
 
+	// api
+	// ----------------------------- ACCOUNT -------------------------------
+
+	accountNS :=
+		beego.NewNamespace("/account",
+			beego.NSRouter("", &account.Home{}, "GET:Show"),
+			beego.NSNamespace("/search/",
+				beego.NSRouter("", &account.Search{}, "GET:DisplayList"),
+			),
+		)
+
 	// -------------------------------- REGISTER -----------------------------
 
 	// public
@@ -243,8 +255,9 @@ func init() {
 	beego.AddNamespace(publicInstitutionsNS)
 	beego.AddNamespace(publicRepositoryNS)
 
-	// admin
+	// other NS
 	beego.AddNamespace(adminNS)
 	beego.AddNamespace(apiNS)
+	beego.AddNamespace(accountNS)
 
 }

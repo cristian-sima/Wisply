@@ -18,8 +18,9 @@ func (controller *Controller) Prepare() {
 	if !controller.AccountConnected || !controller.Account.IsAdministrator {
 		controller.WisplyController.RedirectToLoginPage()
 	}
+	controller.loadLayout()
 }
 
 func (controller *Controller) loadLayout() {
-	controller.Layout = "site/admin-layout.tpl"
+	controller.Layout = "site/account-layout.tpl"
 }

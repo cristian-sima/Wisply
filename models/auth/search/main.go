@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+const (
+	dateFormat = time.Stamp
+)
+
 func getCurrentTimestamp() string {
 	var timestamp string
 	unixTime := time.Now().Unix()

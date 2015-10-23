@@ -7,5 +7,5 @@ type Home struct {
 
 // Show displays the dashboard of an account
 func (controller *Home) Show() {
-	controller.TplNames = "site/blank.tpl"
+	controller.TplNames = "site/account/dashboard.tpl"
 }

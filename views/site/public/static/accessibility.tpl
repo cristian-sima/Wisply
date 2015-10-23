@@ -16,23 +16,6 @@
             <p>The power of the Web is in its universality. Access by everyone regardless of disability is an essential aspect.</p>
             <small>Tim Berners-Lee, W3C Director and inventor of the <cite title="Source Title">World Wide Web</cite></small>
           </blockquote>
-          <!-- <h3>Features</h3>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="list-group">
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Available for all devices</h4>
-                  <p class="list-group-item-text">Wisply was created using the Bootstrap framework. Bootstrap ensures that the website can adapt to the device. Thus, even if you want to access Wisply with your smartphone, all the functionality is still available.</p>
-                </div>
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Configurated to print</h4>
-                  <p class="list-group-item-text">Every page has been optimized to be printed. In order to print, please refer to the browser's functionality.</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-            </div>
-          </div> -->
           <article>
             <h2>FAQ</h2>
             <ol>
@@ -96,7 +79,7 @@
                       <kbd>ALT</kbd> + <kbd>C</kbd> - Wisply goes contact page
                     </li>
                     <li>
-                      <kbd>ALT</kbd> + <kbd>Z</kbd> - Activates the main search
+                      <kbd>CTRL</kbd> + <kbd>SPACE</kbd> - Activates the main search
                     </li>
                   </ul>
                 </li>

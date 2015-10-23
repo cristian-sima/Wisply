@@ -8,7 +8,7 @@ var wisply;
 /**
  * @file Encapsulates the functionality for all pages.
  * @author Cristian Sima
- */ 
+ */
  $.cookie.json = true;
 /**
  * Encapsulates the functionality for all pages.
@@ -334,7 +334,11 @@ var Wisply = function() {
 				this.shortcutManager.init();
 				this.solveHashProblem();
 				initSearch();
-				this.search = new searchModule.Field('.wisply-search-field');
+				this.search = new searchModule.Field({
+					selector: '.wisply-search-field',
+					URL: "/api/search/anything/",
+					saveSearches: true,
+				});
 				this.activateTooltip();
 			},
 			/**

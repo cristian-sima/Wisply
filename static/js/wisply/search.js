@@ -25,24 +25,31 @@ var SearchModule = function() {
 	 * @param [string] select The selector for the search
 	 * @classdesc It gets the elements
 	 */
-	var Field = function Field(selector) {
-		var instance = this,
-			engine = new Bloodhound({
-			datumTokenizer: function(d) {
-		     return Bloodhound.tokenizers.whitespace(d.Title);
-		 },
-			queryTokenizer: Bloodhound.tokenizers.whitespace,
-			identify: function(o) {
-				return o.ID;
-			},
-			remote: {
-        cacheKey: 'ID',
-				url: '/api/search/anything/%QUERY',
-				wildcard: '%QUERY',
-			}
-		});
+	var Field = function Field(o) {
 
-			var suggestion = [
+		this.selector = o.selector;
+		this.URL = o.URL;
+		this.saveSearches = o.saveSearches;
+
+		var instance = this,
+			engine;
+
+		engine = new Bloodhound({
+				datumTokenizer: function(d) {
+					return Bloodhound.tokenizers.whitespace(d.Title);
+				},
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				identify: function(o) {
+					return o.ID;
+				},
+				remote: {
+					cacheKey: 'ID',
+					url: instance.URL + '%QUERY',
+					wildcard: '%QUERY',
+				}
+			});
+
+		var suggestion = [
 					"<div style='width:100%'><div class='row'>",
 					"<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
 					"<div style='width:40px' class='text-center'><img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' /></div>",
@@ -52,66 +59,62 @@ var SearchModule = function() {
 					"<span class='text-muted bold search-category'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 110 }}</span></div>",
 				"</div></div>",
 			].join("\n");
-
-			var footer = [
+		var footer = [
 					"<div class='row'><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
 					'<div class="search-footer">',
 					"<span><span class='text-primary'><span class='glyphicon glyphicon-search'></span></span> &nbsp;&nbsp;Find more about<strong> {{cutString query 30 }}",
 					"</strong></div>",
 					"</div></div>"
 				].join("\n");
-
-
-			var resultEngine = {
-					name: 'Title',
-					display: "Title",
-					valueKey: "Title",
-					source: function(q, sync, async) {
-							if(q !== "") {
-							engine.search(q, sync, async);
-						}
-					},
-					limit: 7,
-					templates: {
-						footer: Handlebars.compile(footer),
-						empty: [
-						        '<div class="search-no-results">',
-						          '<span class="glyphicon glyphicon-inbox"></span> No results available.',
-						        '</div>'
-						      ].join('\n'),
-						suggestion: Handlebars.compile(suggestion),
+		var emptyTemplate = [
+					'<div class="search-no-results">',
+						'<span class="glyphicon glyphicon-inbox"></span> No results available.',
+					'</div>'
+				].join('\n');
+		var resultEngine = {
+			name: 'Title',
+			display: "Title",
+			valueKey: "Title",
+			source: function(q, sync, async) {
+				if (q !== "") {
+					engine.search(q, sync, async);
+				}
+			},
+			limit: 7,
+			templates: {
+				footer: Handlebars.compile(footer),
+				empty: emptyTemplate,
+				suggestion: Handlebars.compile(suggestion),
+			}
+		};
+		var cookieEngine = {
+			templates: {
+				header: "<div class='search-header'>Last searches</div>",
+			},
+			source: function() {
+				var instanceCopy = instance;
+				return (function cookieEngine(q, sync, async) {
+					if (q === '') {
+						var searches = instanceCopy.getLastSearchQueries(),
+							a = instanceCopy.getLastSearchQueries();
+						sync(a);
 					}
-			};
-
-			var cookieEngine = {
-				templates: {
-					header: "<div class='search-header'>Last searches</div>",
-				},
-				source : function() {
-					var instanceCopy = instance;
-					return (function cookieEngine(q, sync, async) {
-						if (q === '') {
-							var searches = instanceCopy.getLastSearchQueries(),
-								a = instanceCopy.getLastSearchQueries();
-								console.log(a)
-							sync(a);
-						}
-					});
-				}(),
-			};
-
-		this.object = $(selector).typeahead({
+				});
+			}(),
+		};
+		this.object = $(instance.selector).typeahead({
 			hint: true,
 			highlight: false,
 			minLength: 0,
 		}, resultEngine, cookieEngine);
-
 		// keep the code cosistent even if we do not use the event
 		/* jshint unused:false */
 		this.object.bind('typeahead:select', function(event, suggestion) {
-			if(suggestion.Category) {
-				instance.saveSearchQuery(suggestion.Title);
+			if (suggestion.Category) {
 				window.location = suggestion.URL;
+				if(instance.saveSearches) {
+					instance.saveSearchQuery(suggestion.Title);
+				}
 			} else {
 				var t = this,
 					suggestionCopy = suggestion;
@@ -149,17 +152,16 @@ var SearchModule = function() {
 		{
 			saveSearchQuery: function(newValue) {
 				var oldList,
-				allowedSearches = 5,
-				newList;
+					allowedSearches = 5,
+					newList;
 				oldList = this.getLastSearchQueries();
-
-				if(!oldList) {
+				if (!oldList) {
 					newList = [];
 				} else {
 					newList = oldList;
-					if(newValue && newValue !== "") {
+					if (newValue && newValue !== "") {
 						// if the same as last one
-						if(newValue !== oldList[0]) {
+						if (newValue !== oldList[0]) {
 							newList.unshift(newValue);
 						}
 					}
@@ -167,21 +169,23 @@ var SearchModule = function() {
 						newList.pop();
 					}
 				}
-				$.cookie(this.cookieName, newList, { path: '/' });
+				$.cookie(this.cookieName, newList, {
+					path: '/'
+				});
 			},
 			getLastSearchValue: function() {
 				var listOfSearches = this.getLastSearchQueries(),
 					last;
-				if(!listOfSearches) {
+				if (!listOfSearches) {
 					return "";
 				}
 				last = listOfSearches[0];
-				if(!last) {
+				if (!last) {
 					return "";
 				}
 				return last;
 			},
-			getLastSearchQueries: function () {
+			getLastSearchQueries: function() {
 				return $.cookie(this.cookieName);
 			}
 		};

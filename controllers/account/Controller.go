@@ -15,7 +15,7 @@ type Controller struct {
 // else it loads the page
 func (controller *Controller) Prepare() {
 	controller.WisplyController.Prepare()
-	if !controller.AccountConnected || !controller.Account.IsAdministrator {
+	if !controller.AccountConnected {
 		controller.WisplyController.RedirectToLoginPage()
 	}
 	controller.loadLayout()

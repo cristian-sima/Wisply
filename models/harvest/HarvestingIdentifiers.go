@@ -1,7 +1,6 @@
 package harvest
 
 import (
-	"fmt"
 	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
@@ -47,7 +46,6 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 			operation.process.SaveToken("identifiers", token)
 		} else if operation.process.Identifiers != initNumberOfIdentifiers {
 			lastToken := operation.GetRemote().GetFinishToken()
-			fmt.Println("finishing token identifiers: " + lastToken)
 			operation.process.SaveToken("identifiers", lastToken)
 		}
 		time.Sleep(delayBetweenMultiRequests)

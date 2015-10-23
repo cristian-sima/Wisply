@@ -104,12 +104,9 @@ var SearchModule = function() {
 						});
 						instance.object.bind('typeahead:asyncrequest', function() {
 							 $(instance.selector + '-spinner').show();
-							 console.log("show");
 						 });
 						 instance.object.bind('typeahead:autocompleted :asynccancel typeahead:asyncreceive', function() {
 							 $(instance.selector + '-spinner').hide();
-							 console.log("hide");
-
 						 });
 						instance.object.bind("typeahead:active", function() {
 							var defaultSearchWidth = 400,
@@ -126,7 +123,6 @@ var SearchModule = function() {
 							});
 							setTimeout(function() {
 								$(instance.selector + '-spinner').hide();
- 							 console.log("hide");
 							}, 100);
 						});
 						instance.object.bind("typeahead:idle", function() {
@@ -137,7 +133,6 @@ var SearchModule = function() {
 							button.html("<span class='glyphicon glyphicon-search'></span>");
 							wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
 							$(instance.selector + '-spinner').hide();
-							console.log("hide");
 						});
 					}
 					/**

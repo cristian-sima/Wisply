@@ -9,6 +9,7 @@ type Search struct {
 func (controller *Search) DisplayHistory() {
 	list := controller.Account.GetSearches().GetAll()
 	controller.Data["searches"] = list
+	controller.SetCustomTitle("Account - Activity")
 	controller.TplNames = "site/account/search/list.tpl"
 }
 

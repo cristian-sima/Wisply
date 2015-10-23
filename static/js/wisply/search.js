@@ -111,9 +111,19 @@ var SearchModule = function() {
 		/* jshint unused:false */
 		this.object.bind('typeahead:select', function(event, suggestion) {
 			if (suggestion.Category) {
-				window.location = suggestion.URL;
 				if(instance.saveSearches) {
 					instance.saveSearchQuery(suggestion.Title);
+				}
+				if(wisply.connection) {
+					var	requestObject = {
+							url: "/api/search/save/" + suggestion.Title,
+							success: function() {
+								window.location = suggestion.URL;
+							},
+						};
+					wisply.executePostAjax(requestObject);
+				} else {
+						window.location = suggestion.URL;
 				}
 			} else {
 				var t = this,
@@ -156,20 +166,17 @@ var SearchModule = function() {
 					newList;
 				oldList = this.getLastSearchQueries();
 				newList = oldList;
-				console.log("old list");
-				console.log(oldList);
 				if (!oldList) {
 					newList = [];
 				}
 				if (newValue && newValue !== "") {
 					// if the same as last one
 					if (!oldList || (oldList && newValue !== oldList[0])) {
-						console.log("pune" + newValue);
 						newList.unshift(newValue);
 						if (newList.length > allowedSearches) {
 							newList.pop();
 						}
-						$.cookie(this.cookieName, newList, {
+						$.cookie(this.cookieName, JSON.stringify(newList), {
 							path: '/'
 						});
 					}
@@ -188,7 +195,11 @@ var SearchModule = function() {
 				return last;
 			},
 			getLastSearchQueries: function() {
-				return $.cookie(this.cookieName);
+				var string =  $.cookie(this.cookieName);
+				if(string === "" || !string) {
+					return [];
+				}
+				return JSON.parse(string);
 			}
 		};
 	return {

@@ -77,6 +77,11 @@ func (controller *WisplyController) initConnectedState(id string) {
 	controller.Data["currentAccount"] = controller.Account
 }
 
+// IsAccountConnected checks if there is any account connected
+func (controller *WisplyController) IsAccountConnected() bool {
+	return controller.AccountConnected
+}
+
 // IndicateLastModification shows in the footer the data when the page has been last modified
 // Please use http://www.timestampgenerator.com/
 func (controller *WisplyController) IndicateLastModification(timestamp int64) {
@@ -95,4 +100,14 @@ func (controller *WisplyController) SetCustomTitle(title string) {
 func (controller *WisplyController) ShowBlankPage() {
 	controller.Layout = "site/blank-layout.tpl"
 	controller.TplNames = "site/blank.tpl"
+}
+
+// RedirectToLoginPage redirects the account to the login page
+func (controller *WisplyController) RedirectToLoginPage() {
+
+	loginPath := "/auth/login"
+	addressParameter := "sendMe"
+
+	currentPage := controller.Ctx.Request.URL.Path
+	controller.Redirect(loginPath+"?"+addressParameter+"="+currentPage, 302)
 }

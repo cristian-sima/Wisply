@@ -9,7 +9,6 @@ var wisply;
  * @file Encapsulates the functionality for all pages.
  * @author Cristian Sima
  */
- $.cookie.json = true;
 /**
  * Encapsulates the functionality for all pages.
  * @namespace Wisply

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/cristian-sima/Wisply/models/auth/search"
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
@@ -16,6 +17,11 @@ type Account struct {
 	Password        string
 	Email           string
 	IsAdministrator bool
+}
+
+// GetSearches returns the list of searches made by the account
+func (account *Account) GetSearches() searches.List {
+	return searches.NewList(account.ID)
 }
 
 // ChangeType changes the type of the account

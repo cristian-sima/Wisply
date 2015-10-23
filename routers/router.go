@@ -213,8 +213,11 @@ func init() {
 	// ----------------------------- Search ----------------------------------
 
 	apiSearchNS := beego.NSNamespace("/search",
-		beego.NSNamespace("/anything/:text",
+		beego.NSNamespace("/anything/:query",
 			beego.NSRouter("", &api.Search{}, "*:SearchAnything"),
+		),
+		beego.NSNamespace("/save/:query",
+			beego.NSRouter("", &api.Search{}, "POST:JustSaveAccountQuery"),
 		),
 	)
 

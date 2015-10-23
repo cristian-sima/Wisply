@@ -18,11 +18,22 @@ func (search CollectionsSearch) Perform() {
 
 	collections := search.getNonEmptyFromDB()
 
+	var getCollectionDescription = func(number int) string {
+		text := ""
+		if number == 1 {
+			text = "One resource"
+		} else {
+			text = strconv.Itoa(number) + " resources"
+		}
+		return text
+	}
+
 	for _, collection := range collections {
+		description := collection.Description + "  " + getCollectionDescription(collection.NumberOfResources)
 		result := &Result{
 			Title:       collection.Name,
 			URL:         search.getURL(collection),
-			Description: collection.Description + " -  " + strconv.Itoa(collection.NumberOfResources) + " resources",
+			Description: description,
 			Icon:        "/static/img/public/repository/collection.png",
 			Category:    "Collection",
 		}

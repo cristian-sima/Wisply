@@ -34,19 +34,14 @@ var SearchModule = function() {
 			identify: function(o) {
 				return o.ID;
 			},
-			limit: 10,
 			remote: {
         cacheKey: 'ID',
 				url: '/api/search/anything/%QUERY',
 				wildcard: '%QUERY',
-				transform: function(o) {
-					console.log(o)
-					return o;
-				},
 			}
 		});
 
-		function getTemplate() {
+
 			var suggestion = [
 					"<div style='width:100%'><div class='row'>",
 					"<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
@@ -66,11 +61,13 @@ var SearchModule = function() {
 					"</div></div>"
 				].join("\n");
 
-			return {
+
+		var suggestions = {
 				name: 'Title',
 				display: "Title",
 				valueKey: "Title",
 				source: engine,
+				limit: 7,
 				templates: {
 					footer: Handlebars.compile(footer),
 					empty: [
@@ -81,12 +78,12 @@ var SearchModule = function() {
 					suggestion: Handlebars.compile(suggestion),
 				}
 			};
-		}
+
 		this.object = $(selector).typeahead({
 			hint: true,
 			highlight: false,
 			minLength: 1,
-		}, getTemplate());
+		}, suggestions);
 		// keep the code cosistent even if we do not use the event
 		/* jshint unused:false */
 		this.object.bind('typeahead:select', function(event, suggestion) {

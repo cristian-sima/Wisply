@@ -155,23 +155,25 @@ var SearchModule = function() {
 					allowedSearches = 5,
 					newList;
 				oldList = this.getLastSearchQueries();
+				newList = oldList;
+				console.log("old list");
+				console.log(oldList);
 				if (!oldList) {
 					newList = [];
-				} else {
-					newList = oldList;
-					if (newValue && newValue !== "") {
-						// if the same as last one
-						if (newValue !== oldList[0]) {
-							newList.unshift(newValue);
+				}
+				if (newValue && newValue !== "") {
+					// if the same as last one
+					if (!oldList || (oldList && newValue !== oldList[0])) {
+						console.log("pune" + newValue);
+						newList.unshift(newValue);
+						if (newList.length > allowedSearches) {
+							newList.pop();
 						}
-					}
-					if (newList.length > allowedSearches) {
-						newList.pop();
+						$.cookie(this.cookieName, newList, {
+							path: '/'
+						});
 					}
 				}
-				$.cookie(this.cookieName, newList, {
-					path: '/'
-				});
 			},
 			getLastSearchValue: function() {
 				var listOfSearches = this.getLastSearchQueries(),

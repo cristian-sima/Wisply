@@ -2,6 +2,7 @@ package harvest
 
 import (
 	"fmt"
+	"time"
 
 	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
@@ -49,6 +50,7 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 			fmt.Println("finishing token identifiers: " + lastToken)
 			operation.process.SaveToken("identifiers", lastToken)
 		}
+		time.Sleep(delayBetweenMultiRequests)
 	}
 	if err != nil {
 		operation.failed()

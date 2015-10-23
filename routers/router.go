@@ -247,6 +247,10 @@ func init() {
 				beego.NSRouter("", &account.Search{}, "GET:DisplayHistory"),
 				beego.NSRouter("clear", &account.Search{}, "POST:ClearHistory"),
 			),
+			beego.NSNamespace("/settings",
+				beego.NSRouter("", &account.Settings{}, "GET:DisplayPage"),
+				beego.NSRouter("/delete", &account.Settings{}, "POST:DeleteAccount"),
+			),
 		)
 
 	// -------------------------------- REGISTER -----------------------------

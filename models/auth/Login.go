@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // Login It manages the login operations
@@ -36,7 +35,7 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 	}
 
 	passwordString := loginDetails["password"].(string)
-	validPassword := login.checkPasswordIsCorrect(account.Password, passwordString)
+	validPassword := checkPasswordIsCorrect(account.Password, passwordString)
 
 	if !validPassword {
 		problem.Message = genericMessage
@@ -44,12 +43,4 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 	}
 
 	return problem, nil
-}
-
-func (login *Login) checkPasswordIsCorrect(hashedPassword, plainPassword string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
-	if err == nil {
-		return true
-	}
-	return false
 }

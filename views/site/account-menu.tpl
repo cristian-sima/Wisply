@@ -10,6 +10,7 @@
             <li><a href="/account/search">Searches</a></li>
           </ul>
         </li>
+        <li><a href="/account/settings">Settings</li>
       </ul>
     </div>
   </div>

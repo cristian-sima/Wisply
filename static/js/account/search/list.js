@@ -52,7 +52,7 @@ var Search = function() {
 					mainButton,
           instance = this;
 				cancelButton = {
-					label: "No, Thanks",
+					label: "Cancel",
 					className: "btn-primary",
 					callback: function() {
 						this.modal('hide');
@@ -71,7 +71,7 @@ var Search = function() {
 				};
 				msg = {
 					title: "We need your confirmation",
-					message: "Wisply uses your search history in order to deliver better suggestions and results. You may opt to clear your history, but Wisply will not longer know what is the best for you. Once it is deleted you can <strong>not</strong> recover the history <br /><br /> Are you sure?",
+					message: "Wisply uses your search history in order to deliver better suggestions and results. You may choose to clear your history, but Wisply will not longer know what is best for you. Once it is deleted you <strong>cannot</strong> recover the history. <br /><br /> Are you sure?",
 					onEscape: true,
 					buttons: buttons
 				};

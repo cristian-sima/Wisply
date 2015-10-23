@@ -102,16 +102,32 @@ var SearchModule = function() {
 								}, 100);
 							}
 						});
+						instance.object.bind('typeahead:asyncrequest', function() {
+							 $(instance.selector + '-spinner').show();
+							 console.log("show");
+						 });
+						 instance.object.bind('typeahead:autocompleted :asynccancel typeahead:asyncreceive', function() {
+							 $(instance.selector + '-spinner').hide();
+							 console.log("hide");
+
+						 });
 						instance.object.bind("typeahead:active", function() {
 							var defaultSearchWidth = 400,
 								width = parseInt($(window).width(), 10),
 								searchWidth = defaultSearchWidth;
 							if (width < searchWidth) {
 								searchWidth = width * 9.95 / 10;
+								$(instance.selector + '-spinner').css({
+									"right": "-110px",
+								});
 							}
 							$(".tt-menu").css({
 								"width": searchWidth - 30,
 							});
+							setTimeout(function() {
+								$(instance.selector + '-spinner').hide();
+ 							 console.log("hide");
+							}, 100);
 						});
 						instance.object.bind("typeahead:idle", function() {
 							var smallSearch = $("#search-small-input"),
@@ -120,6 +136,8 @@ var SearchModule = function() {
 							$("#full-logo").show();
 							button.html("<span class='glyphicon glyphicon-search'></span>");
 							wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
+							$(instance.selector + '-spinner').hide();
+							console.log("hide");
 						});
 					}
 					/**
@@ -203,16 +221,17 @@ var SearchModule = function() {
 							var instanceCopy = instance;
 							// keep the code cosistent even if we do not use the event
 							/* jshint unused:false */
-							return (function cookieEngine(q, sync, async) {
+							return (function cookieEngine(q, sync) {
 								if (q === '') {
 									var searches = instanceCopy.cookies.getLastSearchQueries();
 									sync(searches);
+									$(instance.selector + '-spinner').hide();
 								}
 							});
 						}();
 						engine = {
 							templates: {
-								header: "<div class='search-header'>Last searches</div>",
+								header: "<div class='search-header'>Previous queries</div>",
 							},
 							source: source,
 						};

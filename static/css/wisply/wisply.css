@@ -103,6 +103,15 @@ h6 {
 /* scaffolding */
 /* ----------- */
 
+.search-spinner {
+  display:none;
+  position: absolute;
+  top: 7px;
+  right: -20px;
+  height: 20px;
+   width: 20px;
+}
+
 .search-footer,
 .search-header {
   background-color: #f5f5f5;

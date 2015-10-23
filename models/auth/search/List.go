@@ -1,10 +1,6 @@
 package searches
 
-import (
-	"time"
-
-	"github.com/cristian-sima/Wisply/models/database"
-)
+import "github.com/cristian-sima/Wisply/models/database"
 
 // List encapsulates all the searches made by an account
 type List struct {
@@ -41,8 +37,8 @@ func (list List) insertQuery(query string, accessedBool bool) {
 	stmt.Exec(query, timestamp, list.accountID, accessedString)
 }
 
-// Empty clears the history of a user
-func (list List) Empty(query string, accessedBool bool) {
+// Clear clears the history of a user
+func (list List) Clear() {
 	sql := "DELETE FROM `account_searches` WHERE account = ? "
 	stmt, _ := database.Connection.Prepare(sql)
 	stmt.Exec(list.accountID)
@@ -69,19 +65,6 @@ func (list List) GetAll() []Search {
 		allList = append(allList, item)
 	}
 	return allList
-}
-
-// Search is a typical search performed by a user
-type Search struct {
-	ID        int
-	Accessed  bool
-	Query     string
-	Timestamp int64
-}
-
-// GetDate transforms the timestamp into a date
-func (search Search) GetDate() string {
-	return time.Unix(search.Timestamp, 0).Format(dateFormat)
 }
 
 // NewList loads a searches object for an account

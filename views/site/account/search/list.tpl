@@ -1,11 +1,14 @@
 <div class="panel panel-default">
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
-      <li><a href="/admin">Account</a></li>
-      <li class="active">Searchees</li>
+      <li><a href="/account">Account</a></li>
+      <li class="active">Search History</li>
     </ul>
   </div>
   <div class="panel-body">
+  {{ if eq (.searches | len ) 0 }}
+  There is no search available
+  {{ else }}
     <div class="table-responsive">
       <table id="list-accounts" class="table table-striped table-hover ">
         <thead>
@@ -35,5 +38,8 @@
         </tbody>
       </table>
     </div>
+    <a class="btn btn-danger" id="clearSearchHistory">Clear my search history</a>
+    {{ end }}
   </div>
 </div>
+<script src="/static/js/account/search/list.js"></script>

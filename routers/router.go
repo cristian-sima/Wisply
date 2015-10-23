@@ -244,7 +244,8 @@ func init() {
 		beego.NewNamespace("/account",
 			beego.NSRouter("", &account.Home{}, "GET:Show"),
 			beego.NSNamespace("/search/",
-				beego.NSRouter("", &account.Search{}, "GET:DisplayList"),
+				beego.NSRouter("", &account.Search{}, "GET:DisplayHistory"),
+				beego.NSRouter("clear", &account.Search{}, "POST:ClearHistory"),
 			),
 		)
 

@@ -35,6 +35,25 @@ CREATE TABLE `account` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `account_searches`
+--
+
+DROP TABLE IF EXISTS `account_searches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `account_searches` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` int(11) DEFAULT NULL,
+  `query` varchar(200) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `accessed` tinyint(1) NOT NULL COMMENT '0 if the search has not been accessed or 1 if the account accessed the search',
+  PRIMARY KEY (`id`),
+  KEY `account` (`account`),
+  CONSTRAINT `account_searches_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `account_token`
 --
 
@@ -50,7 +69,7 @@ CREATE TABLE `account_token` (
   UNIQUE KEY `id` (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_token_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -374,4 +393,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-23 12:52:51
+-- Dump completed on 2015-10-23 17:03:00

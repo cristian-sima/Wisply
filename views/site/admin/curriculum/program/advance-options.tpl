@@ -20,11 +20,11 @@
             <h2>Delete</h2>
             <div class="well">
               <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that all the data related to <strong>{{ .program.GetName }}</strong> will be remvoed and it can not be recovered.</span></h5><br />
-              <a data-id="{{ .program.GetID }}" data-name="" href="#" class="btn btn-danger deleteProgramButton">Delete program and entire data related to it from Wisply</a>
+              <a data-id="{{ .program.GetID }}" data-name="{{ .program.GetName }}" href="#" class="btn btn-danger deleteProgramButton">Delete program and entire data related to it from Wisply</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <script src="/static/js/admin/repository/list.js"></script>
+  <script src="/static/js/admin/curriculum/program/advance-options.js"></script>

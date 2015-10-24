@@ -218,7 +218,9 @@ var Wisply = function() {
 	 * @memberof Wisply
 	 * @classdesc It uses manages the operating regarding JavaScript messages
 	 */
-	function Message() {}
+	function Message() {
+		this.currentMessage = undefined;
+	}
 	/**
 	 * @memberof Message
 	 */
@@ -259,7 +261,7 @@ var Wisply = function() {
 			 * @see {@link http://bootboxjs.com/|Bootbox official website}
 			 */
 			alert: function(args) {
-				bootbox.dialog(args);
+				this.dialog(args);
 			},
 			/**
 			 * It represents an adapter for the bootbox alert function. It shows a dialog message
@@ -268,6 +270,7 @@ var Wisply = function() {
 			 * @see {@link http://bootboxjs.com/|Bootbox official website}
 			 */
 			dialog: function(args) {
+				this._clear();
 				return bootbox.dialog(args);
 			},
 			/**
@@ -279,11 +282,21 @@ var Wisply = function() {
 			tellToWait: function(title) {
 				var msg;
 				msg = "<div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of sugar) :) <br />" + wisply.getLoadingImage("big") + "</div>";
-				return this.dialog({
+				this.currentMessage = this.dialog({
 					title: title,
 					message: msg,
 				});
+				return this.currentMessage;
 			},
+			/**
+			 * In case there is any window open, it hides it.
+			 * It is a private method
+			 */
+			_clear: function() {
+				if(this.currentMessage) {
+					this.currentMessage.modal('hide');
+				}
+			}
 		};
 	/**
 	 * The constructor creates a message and a shortcut objects

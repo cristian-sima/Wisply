@@ -17,7 +17,7 @@
         <div class="form-group">
           <label for="repository-name" class="col-lg-2 control-label">Name</label>
           <div class="col-lg-10">
-            <input type="text" value="{{ .program.GetName }}" class="form-control" name="program-name" id="program-name" placeholder="The name of the program of study" required pattern=".{3,255}" title="The name has 3 up to 300 characters!">
+            <input type="text" value="{{ .program.GetName }}" class="form-control" name="program-name" id="program-name" placeholder="The name of the program" required pattern=".{3,255}" title="The name has 3 up to 300 characters!">
           </div>
         </div>
         <div class="form-group">

@@ -61,6 +61,7 @@ var Settings = function() {
 					options = {
 						title: "Type your password",
 						buttons: buttons,
+						onEscape: true,
 						message: '<input class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="password" id="promt-password" />',
 					};
 					bootbox.dialog(options);
@@ -90,9 +91,9 @@ var Settings = function() {
 					wisply.message.showError("There was a problem with your request");
 				};
 				request = {
-					"url": '/account/settings/delete',
-					"success": successCallback,
-					"error": errorCallback,
+					url: '/account/settings/delete',
+					success: successCallback,
+					error: errorCallback,
 					data: {
 						password: password,
 					},

@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cristian-sima/Wisply/models/auth"
 	"github.com/cristian-sima/Wisply/models/curriculum"
 )
 
@@ -23,6 +24,7 @@ func (controller *Curriculum) ShowHomePage() {
 // ShowProgramAdvanceOptions shows the panel with the advance options for the
 // program
 func (controller *Curriculum) ShowProgramAdvanceOptions() {
+	controller.GenerateXSRF()
 	controller.loadProgramToTemplate()
 	controller.TplNames = "site/admin/curriculum/program/advance-options.tpl"
 }
@@ -69,6 +71,26 @@ func (controller *Curriculum) CreateProgram() {
 		message := "The program has been created!"
 		goTo := "/admin/curriculum/"
 		controller.DisplaySuccessMessage(message, goTo)
+	}
+}
+
+// DeleteProgram deletes the entire program and data related to it
+// It requires the admin password
+func (controller *Curriculum) DeleteProgram() {
+	password := strings.TrimSpace(controller.GetString("password"))
+	isPasswordValid := auth.VerifyAccount(controller.Account, password)
+	if isPasswordValid {
+		program := controller.loadProgramToTemplate()
+		err := program.Delete()
+		if err != nil {
+			controller.DisplaySimpleError(err.Error())
+		} else {
+			message := "Wisply deleted all the information related to [" + program.GetName() + "] !"
+			goTo := "/admin/curriculum/"
+			controller.DisplaySuccessMessage(message, goTo)
+		}
+	} else {
+		controller.Redirect("/admin/curriculum", 404)
 	}
 }
 

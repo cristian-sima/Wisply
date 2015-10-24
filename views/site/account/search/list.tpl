@@ -10,6 +10,8 @@
   There is no search available
   {{ else }}
     <div class="table-responsive">
+      This is a list of the words(or queries) which you have searched for. <br />
+      This list is only visible to you and Wisply <br />
       <table id="list-accounts" class="table table-striped table-hover ">
         <thead>
           <tr>

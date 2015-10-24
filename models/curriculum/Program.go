@@ -22,6 +22,14 @@ func (program Program) GetName() string {
 	return program.name
 }
 
+// Delete removes the program of study and any information about it
+func (program Program) Delete() error {
+	sql := "DELETE FROM `program_of_study` WHERE id = ? "
+	stmt, err := database.Connection.Prepare(sql)
+	stmt.Exec(program.id)
+	return err
+}
+
 // Modify changes the details of the program
 func (program Program) Modify(details map[string]interface{}) error {
 	result := areValidProgramDetails(details)

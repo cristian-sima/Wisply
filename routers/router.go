@@ -167,6 +167,21 @@ func init() {
 		),
 	)
 
+
+	// admin
+	// ----------------------------- Curriculum ----------------------------------
+
+	adminCurriculumNS := beego.NSNamespace("/curriculum",
+		beego.NSRouter("", &admin.Curriculum{}, "*:ShowHomePage"),
+		// beego.NSNamespace("/modify",
+		// 	beego.NSRouter(":id", &admin.AccountController{}, "GET:Modify"),
+		// 	beego.NSRouter(":id", &admin.AccountController{}, "POST:Update"),
+		// ),
+		// beego.NSNamespace("/delete",
+		// 	beego.NSRouter(":id", &admin.AccountController{}, "POST:Delete"),
+		// ),
+	)
+
 	// admin
 	// ----------------------------- Admin API ----------------------------------
 
@@ -197,6 +212,7 @@ func init() {
 			adminHarvestNS,
 			adminLogNS,
 			adminAPINS,
+			adminCurriculumNS,
 		)
 
 	// api

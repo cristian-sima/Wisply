@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
-      <li class="active">Add repository</li>
+      <li class="active"><span class="glyphicon glyphicon-plus"></span> Add repository</li>
     </ul>
   </div>
   <div class="panel-body">

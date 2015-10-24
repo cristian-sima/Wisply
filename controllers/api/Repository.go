@@ -45,6 +45,9 @@ func (controller *Repository) GetResources() {
 				controller.Data["records"] = records
 				controller.TplNames = "site/api/repository/resources/html.tpl"
 				break
+			case "json":
+				controller.Ctx.Output.Json(records, false, false)
+				break
 			default:
 				controller.TplNames = "site/api/problem.tpl"
 				break

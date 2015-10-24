@@ -13,7 +13,7 @@
       <br />
   </div>
   <div class="btn-group">
-    <a href="/admin/api/add" class="btn btn-primary">Add table</a>
+    <a href="/admin/api/add" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add table</a>
   </div>
   <br />
   <br />

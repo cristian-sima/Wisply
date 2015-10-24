@@ -49,7 +49,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	for rows.Next() {
 		counter++
 		record := &Record{}
-		rows.Scan(&record.identifier, &record.ID, &record.timestamp)
+		rows.Scan(&record.Identifier, &record.ID, &record.Timestamp)
 
 		if record.ID == 0 {
 
@@ -60,10 +60,10 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 				fmt.Println(err)
 			}
 
-			query.QueryRow(record.identifier).Scan(&record.ID, &record.timestamp)
+			query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp)
 		}
 		sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
-		rows2, _ := database.Connection.Query(sql2, record.identifier)
+		rows2, _ := database.Connection.Query(sql2, record.Identifier)
 
 		keys := &RecordKeys{}
 		for rows2.Next() {
@@ -83,7 +83,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 func GetRecordByIdentifier(identifier string) Record {
 	record := Record{}
 
-	record.identifier = identifier
+	record.Identifier = identifier
 
 	sql := "SELECT `id`, `datestamp` FROM `repository_resource` WHERE identifier = ?"
 	query, err := database.Connection.Prepare(sql)
@@ -92,10 +92,10 @@ func GetRecordByIdentifier(identifier string) Record {
 		fmt.Println(err)
 	}
 
-	query.QueryRow(record.identifier).Scan(&record.ID, &record.timestamp)
+	query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp)
 
 	sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
-	rows2, _ := database.Connection.Query(sql2, record.identifier)
+	rows2, _ := database.Connection.Query(sql2, record.Identifier)
 
 	keys := &RecordKeys{}
 	for rows2.Next() {

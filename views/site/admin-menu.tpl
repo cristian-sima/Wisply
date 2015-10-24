@@ -23,5 +23,8 @@
   <li>
     <a href="/admin/log" > Log </a>
   </li>
+  <li>
+    <a href="/admin/curriculum" >Curriculum</a>
+  </li>
 </ul>
 {{ end }}

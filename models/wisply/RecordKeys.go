@@ -8,19 +8,19 @@ import (
 
 // RecordKeys holds all the keys for the record
 type RecordKeys struct {
-	data map[string][]string
+	Data map[string][]string
 }
 
 // Add inserts a new value for a name
 func (keys *RecordKeys) Add(name, value string) {
-	if keys.data == nil {
-		keys.data = make(map[string][]string)
+	if keys.Data == nil {
+		keys.Data = make(map[string][]string)
 	}
-	_, exists := keys.data[name]
+	_, exists := keys.Data[name]
 	if !exists {
-		keys.data[name] = []string{value}
+		keys.Data[name] = []string{value}
 	} else {
-		keys.data[name] = append(keys.data[name], value)
+		keys.Data[name] = append(keys.Data[name], value)
 	}
 }
 
@@ -37,9 +37,9 @@ func (keys *RecordKeys) Nice(name string) []string {
 // Get returns all the keys for a name
 func (keys *RecordKeys) get(name string, processThem bool) []string {
 	var ret []string
-	_, exists := keys.data[name]
+	_, exists := keys.Data[name]
 	if exists {
-		ret = keys.data[name]
+		ret = keys.Data[name]
 	}
 	if processThem {
 		return keys.processKeys(name, ret)

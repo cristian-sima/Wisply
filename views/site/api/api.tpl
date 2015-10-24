@@ -40,6 +40,36 @@
               </div>
             </div>
           </section>
+          <section>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">API requests</h3>
+              </div>
+              <div class="panel-body">
+                <br />
+                You may use data from Wisply in your application. Wisply makes available a public API <br />
+
+                <ul>
+                  <li><div>
+                    <h5>List repository resources</h5>
+                    Type <span class="label label-primary">GET</span>
+                    <br />
+                    How to use it <br />
+                    <pre>api/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&format={<strong>format</strong>}</pre>
+                    Where: <br />
+                    <ul>
+                        <li><strong>repositoryID</strong> is the ID of the repository</li>
+                        <li><strong>startResource</strong> is the wisply ID of the first resource</li>
+                        <li><strong>resourceNumber</strong> the number of resources. Please note  that Wisply limits the number to 100. For more, please download the table</li>
+                        <li><strong>collectionId</strong> is the id of the collection within the repository</li>
+                        <li><strong>format</strong> may be html or json</li>
+                    </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </div>

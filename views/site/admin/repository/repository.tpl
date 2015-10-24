@@ -19,7 +19,7 @@
           {{ if eq (.processes | len) 0 }}
           <span class="text-muted">No process for this repository</span>
           {{ else }}
-          <h3>Last 5 processes:</h3>
+          <h3>Last 5 harvesting processes:</h3>
           <div class="row text-center">
                 <div class="table-responsive col-md-12">
                   <table id="list-processes" class="table table-bordered table-condensed">

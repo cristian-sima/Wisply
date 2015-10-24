@@ -5,6 +5,7 @@ describe('Shortcut Keys', function() {
 
   it('types ALT + A - Load accessibility bar', function(done) {
     browser
+      .pause(1000)
       .url("/")
       .pause(1000)
       .click("#wisply-body")

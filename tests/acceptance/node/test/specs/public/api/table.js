@@ -12,18 +12,16 @@ var  user = {
 
 // creates an ccount
 describe('API - Tables', function() {
-
       it('go to api page', function(done){
         browser.
-            url('/api')
-            .pause(1000)
-            .getTitle(function(err, title) {
-                expect(err).toBe(undefined);
-                expect(title).toBe("API & Developers");
-            })
-            .call(done);
+          url('/api')
+          .pause(1000)
+          .getTitle(function(err, title) {
+              expect(err).toBe(undefined);
+              expect(title).toBe("API & Developers");
+          })
+          .call(done);
       });
-
       it('go to tables tapage', function(done){
         browser.
             url('/api/table/list')
@@ -34,9 +32,6 @@ describe('API - Tables', function() {
             })
             .call(done);
       });
-
-
-
       var i, tableName,
         downloadTable = function(tableName) {
           it('download the table ' + tableName, function(done){
@@ -48,6 +43,8 @@ describe('API - Tables', function() {
                   expect(err).toBe(undefined);
                   expect(title).toBe("API & Developers");
               })
+              .keys("U+E00C")
+              .pause(1000)
               .call(done);
         });
       };

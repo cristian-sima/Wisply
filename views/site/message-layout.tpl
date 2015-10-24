@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-{{ template "header" }}
+{{ template "header" . }}
 <body id="wisply-body">
   {{ template "javascript" }}
-  {{ template "menu" }}
+  {{ template "menu" . }}
   <div class="container" >
     <div class="page-header" id="banner">
       <div class="row" >
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    {{ template "footer"}}
+    {{ template "footer" . }}
   </div>
 </body>
 </html>

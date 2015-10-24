@@ -50,10 +50,4 @@ describe('Account', function() {
             .call(done);
       });
 
-      it('click the clear button', function(done){
-        browser.
-            click("#clearSearchHistory")
-            .pause(3000)
-            .call(done);
-      });
     });

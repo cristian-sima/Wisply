@@ -1,4 +1,4 @@
-package wisply
+package data
 
 // Recorder ... must be implemented by a repository
 type Recorder interface {

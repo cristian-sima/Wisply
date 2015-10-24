@@ -1,9 +1,9 @@
 package harvest
 
 import (
-	"fmt"
+	"time"
 
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // HarvestingIdentifiers is the operation which collects the identifiers from
@@ -46,9 +46,9 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 			operation.process.SaveToken("identifiers", token)
 		} else if operation.process.Identifiers != initNumberOfIdentifiers {
 			lastToken := operation.GetRemote().GetFinishToken()
-			fmt.Println("finishing token identifiers: " + lastToken)
 			operation.process.SaveToken("identifiers", lastToken)
 		}
+		time.Sleep(delayBetweenMultiRequests)
 	}
 	if err != nil {
 		operation.failed()

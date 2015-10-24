@@ -27,7 +27,7 @@ func (controller *Controller) DisplayDashboard() {
 func (controller *Controller) Prepare() {
 	controller.WisplyController.Prepare()
 	if !controller.AccountConnected || !controller.Account.IsAdministrator {
-		controller.redirectAccount()
+		controller.WisplyController.RedirectToLoginPage()
 	} else {
 		controller.initPage()
 	}
@@ -41,14 +41,4 @@ func (controller *Controller) loadLayout() {
 // initPage is called when an administrator is connected
 func (controller *Controller) initPage() {
 	controller.Data["isAdminPage"] = true
-}
-
-// redirectAccount redirects the account to the login page
-func (controller *Controller) redirectAccount() {
-
-	loginPath := "/auth/login"
-	addressParameter := "sendMe"
-
-	currentPage := controller.Ctx.Request.URL.Path
-	controller.Redirect(loginPath+"?"+addressParameter+"="+currentPage, 302)
 }

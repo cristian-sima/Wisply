@@ -1,6 +1,6 @@
 package harvest
 
-import "github.com/cristian-sima/Wisply/models/wisply"
+import wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 
 // HarvestingFormats is the operation which collects the formats from a remote repository
 type HarvestingFormats struct {

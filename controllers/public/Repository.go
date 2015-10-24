@@ -41,10 +41,16 @@ func (controller *RepositoryController) ShowRepository() {
 
 		if repo.HasBeenProcessed() {
 			process := harvest.NewProcess(repo.LastProcess)
-			collections := wisply.GetCollections(repo.ID)
+
+			storage := wisply.NewStorage(repo)
+
+			collections := storage.GetCollections()
+
 			controller.Data["collections"] = collections
+
 			collectionsJSON, _ := json.Marshal(collections)
 			controller.Data["collectionsJSON"] = string(collectionsJSON)
+
 			controller.Data["process"] = process
 			controller.IndicateLastModification(process.Process.End)
 		}

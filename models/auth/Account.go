@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/cristian-sima/Wisply/models/auth/search"
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
@@ -16,6 +17,11 @@ type Account struct {
 	Password        string
 	Email           string
 	IsAdministrator bool
+}
+
+// GetSearches returns the list of searches made by the account
+func (account *Account) GetSearches() searches.List {
+	return searches.NewList(account.ID)
 }
 
 // ChangeType changes the type of the account
@@ -64,13 +70,8 @@ func (account *Account) createNewToken() *Token {
 }
 
 // Delete removes the account from the database
-func (account *Account) Delete() error {
+func (account *Account) Delete() {
 	sql := "DELETE from `account` WHERE id=?"
 	query, _ := database.Connection.Prepare(sql)
-	_, err := query.Exec(strconv.Itoa(account.ID))
-
-	if err != nil {
-		panic(err)
-	}
-	return err
+	query.Exec(strconv.Itoa(account.ID))
 }

@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
@@ -125,4 +127,18 @@ func getSHA1Digest(plainToken string) string {
 	hasher.Write(array)
 	token := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 	return token
+}
+
+// VerifyAccount checks if the password for an account is good or not
+func VerifyAccount(account *Account, plainPassword string) bool {
+	result := checkPasswordIsCorrect(account.Password, plainPassword)
+	return result
+}
+
+func checkPasswordIsCorrect(hashedPassword, plainPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
+	if err == nil {
+		return true
+	}
+	return false
 }

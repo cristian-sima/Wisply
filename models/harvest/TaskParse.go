@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/harvest/remote"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // ParseTask represents a task for parsing the content of a request from a

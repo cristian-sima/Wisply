@@ -55,11 +55,26 @@ func (keys *RecordKeys) processKeys(name string, values []string) []string {
 	return values
 }
 
+// ProcessFormats returns the formats in a wisply form
 func (keys *RecordKeys) ProcessFormats() map[string]int {
 	values := keys.get("format", false)
 	return Compress(wisplyFormat.ConvertFormats(values))
 }
 
+// GetTitle returns all the title of the string as a string
+func (keys *RecordKeys) GetTitle() string {
+	values := keys.get("title", false)
+	title := ""
+	for _, currentTitle := range values {
+		if len(title) != 0 {
+			title += ". "
+		}
+		title += currentTitle
+	}
+	return title
+}
+
+// GetURL returns the first relation which starts with http
 func (keys *RecordKeys) GetURL() string {
 	values := keys.get("relation", false)
 	for _, relation := range values {

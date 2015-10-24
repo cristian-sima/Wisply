@@ -20,7 +20,10 @@
       </button>
       <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
-          <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+          <div style="position:relative">
+            <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+          </div>
         </div>
       </form>
     </div>
@@ -58,7 +61,7 @@
         {{ end }}
         {{ if .accountConnected }}
         <li  class="text-muted">
-          <a>
+          <a href="/account" data-toggle='tooltip' data-placement='bottom' title='' data-original-title='Dashboard'>
             <b>{{ .currentAccount.Name }}</b>
             <span class="text-success"><span class="glyphicon glyphicon-user"></span></span>
           </a>
@@ -79,7 +82,10 @@
       </ul>
       <form class="navbar-form navbar-right hidden-xs" role="search">
         <div class="form-group">
-          <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
+          <div style="position:relative">
+            <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
+            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+          </div>
         </div>
       </form>
     </nav>

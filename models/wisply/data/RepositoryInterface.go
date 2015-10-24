@@ -1,4 +1,4 @@
-package wisply
+package data
 
 // RepositoryInterface ... defines the method to be implemented by a remote repository
 type RepositoryInterface interface {

@@ -1,49 +1,41 @@
 package api
 
-import (
-	"fmt"
-
-	"github.com/cristian-sima/Wisply/models/search"
-)
+import "github.com/cristian-sima/Wisply/models/search"
 
 // Search is the controller which manages the "search" operations
 type Search struct {
 	Controller
-	results []search.ResultItem
-}
-
-// Prepare allocates memory for result array
-func (controller *Search) Prepare() {
-	controller.results = make([]search.ResultItem, 0)
-	//controller.Prepare()
 }
 
 // SearchAnything searches for all
 func (controller *Search) SearchAnything() {
-	text := controller.Ctx.Input.Param(":text")
-	controller.getInstitutions(text)
-	controller.getRepositories(text)
-	controller.deliverResults()
+	query := controller.Ctx.Input.Param(":query")
+	if controller.IsAccountConnected() {
+		controller.saveNotAccessedSearch(query)
+	}
+	request := search.NewRequest(query)
+	request.SearchAnything()
+	controller.deliverResults(request.Response)
 }
 
-func (controller *Search) getInstitutions(text string) {
-	institutionsSearch := search.NewInstitutionsSearch(text)
-	query := institutionsSearch.Perform()
-	controller.add(query.Results)
+// JustSaveAccountQuery saves the token
+func (controller *Search) JustSaveAccountQuery() {
+	query := controller.Ctx.Input.Param(":query")
+	controller.saveAcessedSearch(query)
+	controller.Ctx.Output.Json(true, false, false)
 }
 
-func (controller *Search) getRepositories(text string) {
-	repositoriesSearch := search.NewRepositoriesSearch(text)
-	query := repositoriesSearch.Perform()
-	controller.add(query.Results)
+// SaveAccountQuery saves a search query that was accessed
+func (controller *Search) saveAcessedSearch(query string) {
+	controller.Account.GetSearches().InsertAccessed(query)
 }
 
-func (controller *Search) add(newResults []search.ResultItem) {
-	controller.results = append(controller.results, newResults...)
+// SaveAccountQuery saves a search query that was not accessed
+func (controller *Search) saveNotAccessedSearch(query string) {
+	controller.Account.GetSearches().InsertNotAccessed(query)
 }
 
-func (controller *Search) deliverResults() {
-	results := controller.results
-	fmt.Println(results)
+func (controller *Search) deliverResults(response *search.Response) {
+	results := response.Results
 	controller.Ctx.Output.Json(results, false, false)
 }

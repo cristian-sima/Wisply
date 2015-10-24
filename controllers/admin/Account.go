@@ -63,14 +63,10 @@ func (controller *AccountController) Delete() {
 	if err != nil {
 		controller.Abort("databaseError")
 	} else {
-		databaseError := account.Delete()
-		if databaseError != nil {
-			controller.Abort("databaseError")
-		} else {
-			successMessage := "The account [" + account.Email + "] has been deleted. Well done!"
-			goTo := "/admin/accounts/"
-			controller.DisplaySuccessMessage(successMessage, goTo)
-		}
+		account.Delete()
+		successMessage := "The account [" + account.Email + "] has been deleted. Well done!"
+		goTo := "/admin/accounts/"
+		controller.DisplaySuccessMessage(successMessage, goTo)
 	}
 }
 

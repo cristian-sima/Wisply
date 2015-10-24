@@ -6,11 +6,16 @@ package harvest
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/cristian-sima/Wisply/models/action"
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/harvest/remote"
 	"github.com/cristian-sima/Wisply/models/repository"
+)
+
+const (
+	delayBetweenMultiRequests = 1 * time.Second
 )
 
 // CreateProcess creates a new harvest process

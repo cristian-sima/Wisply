@@ -89,7 +89,7 @@ var Wisply = function() {
 			description: "Show the list of key shortcuts",
 		}, {
 			"type": "keyup",
-			"key": "Alt+z",
+			"key": "Ctrl+space",
 			"callback": function(event) {
 				event.preventDefault();
 				wisply.search.object.focus();
@@ -333,7 +333,11 @@ var Wisply = function() {
 				this.shortcutManager.init();
 				this.solveHashProblem();
 				initSearch();
-				this.search = new searchModule.Field('.wisply-search-field');
+				this.search = new searchModule.Field({
+					selector: '.wisply-search-field',
+					URL: "/api/search/anything/",
+					saveSearches: true,
+				});
 				this.activateTooltip();
 			},
 			/**

@@ -1,4 +1,4 @@
-package wisply
+package data
 
 // Formater ... defines the methods of the formats the repository
 type Formater interface {

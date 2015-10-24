@@ -3,6 +3,7 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/cristian-sima/Wisply/controllers/account"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/controllers/api"
 	"github.com/cristian-sima/Wisply/controllers/public"
@@ -213,8 +214,11 @@ func init() {
 	// ----------------------------- Search ----------------------------------
 
 	apiSearchNS := beego.NSNamespace("/search",
-		beego.NSNamespace("/anything/:text",
+		beego.NSNamespace("/anything/:query",
 			beego.NSRouter("", &api.Search{}, "*:SearchAnything"),
+		),
+		beego.NSNamespace("/save/:query",
+			beego.NSRouter("", &api.Search{}, "POST:JustSaveAccountQuery"),
 		),
 	)
 
@@ -233,6 +237,22 @@ func init() {
 			apiSearchNS,
 		)
 
+	// api
+	// ----------------------------- ACCOUNT -------------------------------
+
+	accountNS :=
+		beego.NewNamespace("/account",
+			beego.NSRouter("", &account.Home{}, "GET:Show"),
+			beego.NSNamespace("/search/",
+				beego.NSRouter("", &account.Search{}, "GET:DisplayHistory"),
+				beego.NSRouter("clear", &account.Search{}, "POST:ClearHistory"),
+			),
+			beego.NSNamespace("/settings",
+				beego.NSRouter("", &account.Settings{}, "GET:DisplayPage"),
+				beego.NSRouter("/delete", &account.Settings{}, "POST:DeleteAccount"),
+			),
+		)
+
 	// -------------------------------- REGISTER -----------------------------
 
 	// public
@@ -240,8 +260,9 @@ func init() {
 	beego.AddNamespace(publicInstitutionsNS)
 	beego.AddNamespace(publicRepositoryNS)
 
-	// admin
+	// other NS
 	beego.AddNamespace(adminNS)
 	beego.AddNamespace(apiNS)
+	beego.AddNamespace(accountNS)
 
 }

@@ -1,9 +1,9 @@
 package harvest
 
 import (
-	"fmt"
+	"time"
 
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // HarvestingCollections is the operation which collects the collections from
@@ -36,9 +36,9 @@ func (operation *HarvestingCollections) multiRequest() {
 			operation.process.SaveToken("collections", token)
 		} else if operation.process.Collections != initNumberOfCollections {
 			lastToken := operation.GetRemote().GetFinishToken()
-			fmt.Println("finishing token: " + lastToken)
 			operation.process.SaveToken("collections", lastToken)
 		}
+		time.Sleep(delayBetweenMultiRequests)
 	}
 	if err != nil {
 		operation.failed()

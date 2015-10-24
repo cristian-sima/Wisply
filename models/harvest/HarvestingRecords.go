@@ -1,9 +1,9 @@
 package harvest
 
 import (
-	"fmt"
+	"time"
 
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // HarvestingRecords is the operation which collects the records from a remote repository
@@ -36,9 +36,9 @@ func (operation *HarvestingRecords) multiRequest() {
 			operation.process.SaveToken("records", token)
 		} else if operation.process.Records != initNumberOfRecords {
 			lastToken := operation.GetRemote().GetFinishToken()
-			fmt.Println("finishing token: " + lastToken)
 			operation.process.SaveToken("records", lastToken)
 		}
+		time.Sleep(delayBetweenMultiRequests)
 	}
 	if err != nil {
 		operation.failed()

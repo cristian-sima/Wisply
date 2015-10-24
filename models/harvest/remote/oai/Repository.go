@@ -8,7 +8,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/harvest/remote/oai/protocol"
 	"github.com/cristian-sima/Wisply/models/harvest/remote/repository"
-	"github.com/cristian-sima/Wisply/models/wisply"
+	wisply "github.com/cristian-sima/Wisply/models/wisply/data"
 )
 
 // Repository holds a local reposiory, the request and response and a filter
@@ -124,15 +124,27 @@ func (repository *Repository) GetCollections(content []byte) ([]wisply.Collectio
 		return collections, err
 	}
 
+	var getNameFromPath = func(path string) string {
+		name := ""
+		elements := strings.Split(path, ":")
+		name = elements[len(elements)-1]
+		name = strings.TrimSpace(strings.Replace(name, "=", "-", -1))
+		return name
+	}
+
 	// cache the last response
 	repository.lastResponse = response
 
 	remoteCollections := response.ListSets.Set
 
 	for _, collection := range remoteCollections {
+
+		collectionName := getNameFromPath(collection.SetName)
+
 		collection := &Collection{
-			Name: collection.SetName,
+			Path: collection.SetName,
 			Spec: collection.SetSpec,
+			Name: collectionName,
 		}
 		collections = append(collections, collection)
 	}

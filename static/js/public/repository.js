@@ -592,12 +592,12 @@ var PublicRepository = function() {
 							function getLabel(collection) {
 								var text = "",
 									tooltip = "",
-									name = collection.Name,
+									name = collection.Path,
 									maxCharacters = 20;
 								if (elements.length != 1) {
 									if (name.length > maxCharacters) {
 										name = name.substring(0, maxCharacters) + "...";
-										tooltip = 'data-toggle="tooltip" data-original-title="' + collection.Name + '"';
+										tooltip = 'data-toggle="tooltip" data-original-title="' + collection.Path + '"';
 									}
 								}
 								text = '<span ' + tooltip + ' data-id="' + collection.ID + '" class="hover label label-info set-collection">' + name + '</span> ';
@@ -819,7 +819,7 @@ var PublicRepository = function() {
 							 * @return {string} The HTML code for the DIV which holds the name of collection
 							 */
 							function getLeftDiv(collection) {
-								return '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"><span class="h6">' + collection.Name + '</span></div>';
+								return '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9"><span class="h6">' + collection.Path + '</span></div>';
 							}
 							collectionHTML += '<a data-id="' + collection.ID + '" class="hover list-group-item set-collection">';
 							collectionHTML += '<div class="row list-group-item-heading">';

@@ -19,3 +19,10 @@ func isValidName(name string) *validity.ValidationResults {
 	}
 	return wisply.Validate(rawData, rules)
 }
+
+func areValidProgramDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"name": rules["name"],
+	}
+	return wisply.Validate(details, rules)
+}

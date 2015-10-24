@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/cristian-sima/Wisply/models/curriculum"
@@ -22,35 +23,40 @@ func (controller *Curriculum) ShowHomePage() {
 // ShowProgramAdvanceOptions shows the panel with the advance options for the
 // program
 func (controller *Curriculum) ShowProgramAdvanceOptions() {
-	ID := controller.Ctx.Input.Param(":id")
-	controller.loadProgramToTemplate(ID)
+	controller.loadProgramToTemplate()
 	controller.TplNames = "site/admin/curriculum/program/advance-options.tpl"
 }
 
 // ShowProgram shows the dashboard for a program
 func (controller *Curriculum) ShowProgram() {
-	ID := controller.Ctx.Input.Param(":id")
-	controller.loadProgramToTemplate(ID)
+	controller.loadProgramToTemplate()
 	controller.TplNames = "site/admin/curriculum/program/home.tpl"
-}
-
-// ShowProgram shows the dashboard for a program
-func (controller *Curriculum) loadProgramToTemplate(ID string) *curriculum.Program {
-	program, err := curriculum.NewProgram(ID)
-	if err != nil {
-		controller.Abort("databaseError")
-		return program
-	} else {
-		controller.Data["program"] = program
-		// controller.Data["definitions"] = program.GetDefinitions()
-		controller.SetCustomTitle("Admin - " + program.GetName())
-		return program
-	}
 }
 
 // ShowAddProgramForm shows the page with the form to add a program
 func (controller *Curriculum) ShowAddProgramForm() {
 	controller.showForm("Add")
+}
+
+// ShowModifyProgramForm shows the page with the form modify the program
+func (controller *Curriculum) ShowModifyProgramForm() {
+	controller.loadProgramToTemplate()
+	controller.showForm("Modify")
+}
+
+// UpdateProgram updates the details of the program
+func (controller *Curriculum) UpdateProgram() {
+	program := controller.loadProgramToTemplate()
+	details := make(map[string]interface{})
+	details["name"] = strings.TrimSpace(controller.GetString("program-name"))
+	err := program.Modify(details)
+	if err != nil {
+		controller.DisplaySimpleError(err.Error())
+	} else {
+		message := "The program has been updated!"
+		goTo := "/admin/curriculum/programs/" + strconv.Itoa(program.GetID()) + "/advance-options"
+		controller.DisplaySuccessMessage(message, goTo)
+	}
 }
 
 // CreateProgram creates a new program
@@ -64,6 +70,18 @@ func (controller *Curriculum) CreateProgram() {
 		goTo := "/admin/curriculum/"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
+}
+
+func (controller *Curriculum) loadProgramToTemplate() *curriculum.Program {
+	ID := controller.Ctx.Input.Param(":id")
+	program, err := curriculum.NewProgram(ID)
+	if err != nil {
+		controller.Abort("databaseError")
+		return program
+	}
+	controller.Data["program"] = program
+	controller.SetCustomTitle("Admin - " + program.GetName())
+	return program
 }
 
 func (controller *Curriculum) showForm(action string) {

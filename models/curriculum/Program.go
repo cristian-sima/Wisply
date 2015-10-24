@@ -22,6 +22,20 @@ func (program Program) GetName() string {
 	return program.name
 }
 
+// Modify changes the details of the program
+func (program Program) Modify(details map[string]interface{}) error {
+	result := areValidProgramDetails(details)
+	if !result.IsValid {
+		return errors.New("Problem with the details")
+	}
+	setClause := "SET `name`=?"
+	whereClause := "WHERE `id`= ?"
+	sql := "UPDATE `program_of_study` " + setClause + " " + whereClause
+	query, err := database.Connection.Prepare(sql)
+	query.Exec(details["name"].(string), program.id)
+	return err
+}
+
 // NewProgram creates a new program by ID
 func NewProgram(ID string) (*Program, error) {
 	program := &Program{}

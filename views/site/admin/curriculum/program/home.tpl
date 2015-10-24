@@ -11,7 +11,7 @@
 
     <hr />
     <div>
-      <a href="/admin/curriculum/programs/{{ .repository.ID }}/advance-options">Advance options</a>
+      <a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options">Advance options</a>
     </div>
   </div>
 </div>

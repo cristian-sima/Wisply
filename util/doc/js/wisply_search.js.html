@@ -38,13 +38,25 @@ var searchModule = {};
  */
 var SearchModule = function() {
 	'use strict';
-	// register a new function for the JavaScript template library
-	// it is used to cut a string which is too long
-	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
+
+	/**
+	 * In case the length of the string is greater than the numberOfAllowedCharacters
+	 * it cuts the string and appends "..."
+	 * @param  {string} theString                 The string to be modified
+	 * @param  {number} numberOfAllowedCharacters The number of characters to display
+	 * @return {string} The modified string
+	 */
+	function cutString(theString, numberOfAllowedCharacters) {
 		if (theString.length > numberOfAllowedCharacters) {
 			var shortString = theString.substr(0, numberOfAllowedCharacters);
 			theString = shortString + "...";
 		}
+		return theString;
+	}
+	// register a new function for the JavaScript template library
+	// it is used to cut a string which is too long
+	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
+		theString = cutString(theString, numberOfAllowedCharacters);
 		return new Handlebars.SafeString(theString);
 	});
 	/**
@@ -125,19 +137,16 @@ var SearchModule = function() {
 								$(this).typeahead('close');
 								setTimeout(function() {
 									$(that).typeahead("val", "");
-									$(that).typeahead("val", suggestionCopy);
+									$(that).typeahead("val", suggestionCopy.textValue);
 									$(that).typeahead('open');
 								}, 100);
 							}
 						});
 						instance.object.bind('typeahead:asyncrequest', function() {
 							 $(instance.selector + '-spinner').show();
-							 console.log("show");
 						 });
 						 instance.object.bind('typeahead:autocompleted :asynccancel typeahead:asyncreceive', function() {
 							 $(instance.selector + '-spinner').hide();
-							 console.log("hide");
-
 						 });
 						instance.object.bind("typeahead:active", function() {
 							var defaultSearchWidth = 400,
@@ -154,7 +163,6 @@ var SearchModule = function() {
 							});
 							setTimeout(function() {
 								$(instance.selector + '-spinner').hide();
- 							 console.log("hide");
 							}, 100);
 						});
 						instance.object.bind("typeahead:idle", function() {
@@ -165,7 +173,6 @@ var SearchModule = function() {
 							button.html("&lt;span class='glyphicon glyphicon-search'>&lt;/span>");
 							wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
 							$(instance.selector + '-spinner').hide();
-							console.log("hide");
 						});
 					}
 					/**
@@ -192,19 +199,18 @@ var SearchModule = function() {
 									cacheKey: 'ID',
 									url: instance.URL + '%QUERY',
 									wildcard: '%QUERY',
-									rateLimitWait: 1000,
 								}
 							});
 							return object;
 						}
 						suggestion = [
-							"&lt;div style='width:100%'>&lt;div class='row'>",
+							"&lt;div title='{{ Title }}' style='width:100%'>&lt;div class='row'>",
 							"&lt;div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
 							"&lt;div style='width:40px' class='text-center'>&lt;img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' />&lt;/div>",
 							"&lt;/div>",
 							"&lt;div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
 							"&lt;span class='search-title'>{{ cutString Title 40 }}&lt;/span>&lt;br />",
-							"&lt;span class='text-muted bold search-category'>&lt;small>{{ Category }}&lt;/small>&lt;/span>&lt;br />&lt;span class='text-muted search-description'>{{ cutString Description 110 }}&lt;/span>&lt;/div>",
+							"&lt;span class='text-muted bold search-category'>&lt;small>{{ Category }}&lt;/small>&lt;/span>&lt;br />&lt;span class='text-muted search-description'>{{ cutString Description 90 }}&lt;/span>&lt;/div>",
 						"&lt;/div>&lt;/div>",
 					].join("\n");
 						footer = [
@@ -258,8 +264,12 @@ var SearchModule = function() {
 							});
 						}();
 						engine = {
+							name: 'textValue',
+							display: "textValue",
+							valueKey: "textValue",
 							templates: {
 								header: "&lt;div class='search-header'>Previous queries&lt;/div>",
+								suggestion: Handlebars.compile("&lt;div>{{cutString textValue 50}}&lt;/div>"),
 							},
 							source: source,
 						};
@@ -323,11 +333,13 @@ var SearchModule = function() {
 				 * @return {Boolean} True if it is valid, false otherwise
 				 */
 				function isGoodValue(value, list) {
-					return value &amp;&amp; value !== "" &amp;&amp; value !== list[0];
+					return (value &amp;&amp; value !== "") &amp;&amp; ((!list[0]) || (list[0] &amp;&amp; value !== list[0].textValue));
 				}
 				list = this.getLastSearchQueries();
 				if (isGoodValue(newValue, list)) {
-					list.unshift(newValue);
+					list.unshift({
+						textValue: newValue,
+					});
 					if (list.length > this.maxNumberOfQueries) {
 						list.pop();
 					}
@@ -371,7 +383,7 @@ $(document).ready(function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Fri Oct 23 2015 23:09:44 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Sat Oct 24 2015 11:15:44 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

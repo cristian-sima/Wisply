@@ -24,7 +24,7 @@ describe('Static pages', function() {
 
   it('loads the webscience page', function(done) {
       browser
-          .url('/webscience')
+          .url('/curriculum/webscience')
           .getTitle(function(err, title) {
               expect(err).toBe(undefined);
               expect(title).toBe('Webscience');

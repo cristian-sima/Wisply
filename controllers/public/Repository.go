@@ -23,7 +23,6 @@ func (controller *RepositoryController) List() {
 	controller.Data["institutions"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.TplNames = "site/public/institution/list.tpl"
-	controller.Layout = "site/public-layout.tpl"
 }
 
 // ShowRepository shows the details regarding a repository
@@ -55,7 +54,6 @@ func (controller *RepositoryController) ShowRepository() {
 			controller.IndicateLastModification(process.Process.End)
 		}
 
-		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/repository/repository.tpl"
 	}
 }

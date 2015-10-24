@@ -19,7 +19,6 @@ func (controller *InstitutionController) List() {
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.SetCustomTitle("Institutions")
 	controller.TplNames = "site/public/institution/list.tpl"
-	controller.Layout = "site/public-layout.tpl"
 }
 
 // ShowInstitution shows the details regarding an institution
@@ -32,7 +31,6 @@ func (controller *InstitutionController) ShowInstitution() {
 		controller.SetCustomTitle(institution.Name)
 		controller.Data["institution"] = institution
 		controller.Data["repositories"] = institution.GetRepositories()
-		controller.Layout = "site/public-layout.tpl"
 		controller.TplNames = "site/public/institution/institution.tpl"
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cristian-sima/Wisply/models/auth"
+	"github.com/cristian-sima/Wisply/models/curriculum"
 )
 
 // WisplyController inherits the MessageController
@@ -36,6 +37,11 @@ func (controller *WisplyController) initState() {
 	} else {
 		controller.checkConnectionCookie()
 	}
+	controller.loadPrograms()
+}
+
+func (controller *WisplyController) loadPrograms() {
+	controller.Data["programs"] = curriculum.GetAllPrograms()
 }
 
 func (controller *WisplyController) checkConnectionCookie() {

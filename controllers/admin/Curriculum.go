@@ -15,8 +15,6 @@ type Curriculum struct {
 
 // ShowHomePage shows all the repositories
 func (controller *Curriculum) ShowHomePage() {
-	list := curriculum.GetAllPrograms()
-	controller.Data["programs"] = list
 	controller.SetCustomTitle("Admin - Curriculum")
 	controller.TplNames = "site/admin/curriculum/list.tpl"
 }

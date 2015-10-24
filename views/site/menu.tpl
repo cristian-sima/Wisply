@@ -32,8 +32,15 @@
         <li class="">
           <a href="/about" id="themes">About</a>
         </li>
-        <li class="hidden-sm">
-          <a href="/webscience">Web science</a>
+        <li class="hidden-sm dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              Curriculum <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              {{range $index, $program := .programs}}
+              <li><a href="/curriculum/{{$program.GetID}}">{{ $program.GetName }}</a></li>
+              {{ end }}
+            </ul>
         </li>
         <li class="hidden-sm">
           <a href="/institutions">Institutions</a>
@@ -44,7 +51,16 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="divider"></li>
-            <li><a href="/webscience">Web science</a></li>
+            <li class="dropdown">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Curriculum <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                {{range $index, $program := .programs}}
+                <li><a href="/curriculum/{{$program.GetID }}">{{ $program.GetName }}</a></li>
+                {{ end }}
+              </ul>
+            </li>
             <li><a href="/about" id="themes">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
           </ul>

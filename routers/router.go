@@ -19,7 +19,6 @@ func init() {
 	beego.Router("/", &public.StaticController{}, "*:ShowIndex")
 	beego.Router("/about", &public.StaticController{}, "*:ShowAbout")
 	beego.Router("/contact", &public.StaticController{}, "*:ShowContact")
-	beego.Router("/webscience", &public.StaticController{}, "*:ShowWebscience")
 	beego.Router("/sample", &public.StaticController{}, "*:ShowSample")
 	beego.Router("/accessibility", &public.StaticController{}, "*:ShowAccessibility")
 	beego.Router("/help", &public.StaticController{}, "*:ShowHelp")
@@ -41,6 +40,15 @@ func init() {
 		),
 		beego.NSNamespace("/logout",
 			beego.NSRouter("", &public.AuthController{}, "POST:Logout"),
+		),
+	)
+
+	// public
+	// ----------------------------- Curriculum --------------------------------------
+
+	publicCurriculumNS := beego.NewNamespace("curriculum/",
+		beego.NSNamespace(":id",
+			beego.NSRouter("", &public.Curriculum{}, "GET:ShowProgram"),
 		),
 	)
 
@@ -287,6 +295,7 @@ func init() {
 	beego.AddNamespace(publicAuthNS)
 	beego.AddNamespace(publicInstitutionsNS)
 	beego.AddNamespace(publicRepositoryNS)
+	beego.AddNamespace(publicCurriculumNS)
 
 	// other NS
 	beego.AddNamespace(adminNS)

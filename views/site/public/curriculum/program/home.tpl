@@ -9,8 +9,9 @@
         </ul>
       </div>
       <div class="panel-body">
-        <span class="h4">{{ .program.GetName }}</span>
-
+        <h1>{{ .program.GetName }}</h1>
+        <br />
+        {{ .program.GetHTMLDescription }}
 
       </div>
     </div>

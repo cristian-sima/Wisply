@@ -27,6 +27,28 @@ func (controller *Curriculum) ShowProgramAdvanceOptions() {
 	controller.TplNames = "site/admin/curriculum/program/advance-options.tpl"
 }
 
+// ShowModifyDescriptionForm displays the form to modify the static description
+func (controller *Curriculum) ShowModifyDescriptionForm() {
+	controller.GenerateXSRF()
+	program := controller.loadProgramToTemplate()
+	controller.Data["description"] = program.GetDescription()
+	controller.TplNames = "site/admin/curriculum/program/form-description.tpl"
+}
+
+// UpdateProgramDescription changes the static description of the program
+func (controller *Curriculum) UpdateProgramDescription() {
+	program := controller.loadProgramToTemplate()
+	description := strings.TrimSpace(controller.GetString("program-description"))
+	err := program.SetDescription(description)
+	if err != nil {
+		controller.DisplaySimpleError(err.Error())
+	} else {
+		message := "The description has been changed!"
+		goTo := "/admin/curriculum/programs/" + strconv.Itoa(program.GetID()) + "/advance-options"
+		controller.DisplaySuccessMessage(message, goTo)
+	}
+}
+
 // ShowProgram shows the dashboard for a program
 func (controller *Curriculum) ShowProgram() {
 	controller.loadProgramToTemplate()

@@ -10,7 +10,14 @@
       <div class="row" >
         <div class="col-md-12">
           <div>
-            <h2>Modify</h2>
+            <h2>Static description</h2>
+            <div class="well">
+              The static description appears on the public page. <br/>
+              <a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options/modify-static-description" class="btn btn-primary">Modify static description</a>
+            </div>
+          </div>
+          <div>
+            <h2>Details</h2>
             <div class="well">
               You can use this option to modify the program. <br/>
               <a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options/modify" class="btn btn-primary">Modify program</a>

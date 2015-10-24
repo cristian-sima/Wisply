@@ -2,14 +2,17 @@ package curriculum
 
 import (
 	"errors"
+	"html/template"
+	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
 // Program of study contains multiple Modules
 type Program struct {
-	id   int
-	name string
+	id          int
+	name        string
+	description string
 }
 
 // GetID returns the ID of the program
@@ -28,6 +31,39 @@ func (program Program) Delete() error {
 	stmt, err := database.Connection.Prepare(sql)
 	stmt.Exec(program.id)
 	return err
+}
+
+// GetHTMLDescription returns the description as HTML code
+func (program Program) GetHTMLDescription() template.HTML {
+	description := program.GetDescription()
+	return template.HTML([]byte(description))
+}
+
+// SetDescription sets the static description
+func (program Program) SetDescription(description string) error {
+	sql := "UPDATE `program_of_study` SET description=? WHERE id=?"
+	stmt, err := database.Connection.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(description, strconv.Itoa(program.id))
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+// GetDescription returns the static description from database
+func (program Program) GetDescription() string {
+	if program.description != "" {
+		return program.description
+	}
+	fieldSet := "`description`"
+	sql := "SELECT " + fieldSet + " FROM `program_of_study` WHERE id = ? LIMIT 0,1"
+	query, _ := database.Connection.Prepare(sql)
+	query.QueryRow(program.id).Scan(&program.description)
+
+	return program.description
 }
 
 // Modify changes the details of the program

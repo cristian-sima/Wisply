@@ -14,11 +14,6 @@ type AuthController struct {
 	Model auth.Model
 }
 
-// Prepare calls the WisplyController Prepare method
-func (controller *AuthController) Prepare() {
-	controller.WisplyController.Prepare()
-}
-
 // ShowLoginForm shows the login form
 func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {

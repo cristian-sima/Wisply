@@ -24,7 +24,7 @@ var Wisply = function() {
 	function ShortcutManager() {
 		this.memory = [];
 		this.defaultShortcuts = [{
-			"type": "keyup",
+			"type": "keydown",
 			"key": "Alt+a",
 			"callback": function() {
 				/**
@@ -65,21 +65,21 @@ var Wisply = function() {
 			},
 			description: "Show the accessibility bar",
 		}, {
-			"type": "keyup",
+			"type": "keydown",
 			"key": "Alt+w",
 			"callback": function() {
 				wisply.goTo("/");
 			},
 			description: "Load the home page",
 		}, {
-			"type": "keyup",
+			"type": "keydown",
 			"key": "Alt+c",
 			"callback": function() {
 				wisply.goTo("/contact");
 			},
 			description: "Load the contact page",
 		}, {
-			"type": "keyup",
+			"type": "keydown",
 			"key": "Alt+k",
 			"callback": function() {
 				var description = wisply.shortcutManager.getDescription();
@@ -88,7 +88,7 @@ var Wisply = function() {
 			},
 			description: "Show the list of key shortcuts",
 		}, {
-			"type": "keyup",
+			"type": "keydown",
 			"key": "Ctrl+space",
 			"callback": function(event) {
 				event.preventDefault();

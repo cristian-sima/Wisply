@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" hola_ext_inject="disabled">
+<html lang="en">
 {{ template "header" . }}
-<body>
+<body id="wisply-body">
   {{ template "javascript" . }}
   {{ template "menu" . }}
   <div class="container" >

@@ -18,11 +18,11 @@
       <button class="navbar-toggle" type="button" id="show-small-search-button">
         <span class="glyphicon glyphicon-search"></span>
       </button>
-      <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
+      <form class="navbar-brand navbar-right hideMe " id="search-small" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
           <div style="position:relative">
             <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
-            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>
@@ -30,7 +30,7 @@
     <nav class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav hidden-sm">
         <li class="">
-          <a href="/about" id="themes">About</a>
+          <a href="/about">About</a>
         </li>
         <li class="hidden-sm dropdown">
             <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -61,7 +61,7 @@
                 {{ end }}
               </ul>
             </li>
-            <li><a href="/about" id="themes">About</a></li>
+            <li><a href="/about">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
           </ul>
         </li>
@@ -96,11 +96,11 @@
         </li>
         {{ end }}
       </ul>
-      <form class="navbar-form navbar-right hidden-xs" role="search">
+      <form class="navbar-form navbar-right hidden-xs">
         <div class="form-group">
           <div style="position:relative">
             <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
-            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>

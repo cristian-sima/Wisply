@@ -12,11 +12,13 @@ type Program struct {
 	name string
 }
 
-func (program Program) getID() int {
+// GetID returns the ID of the program
+func (program Program) GetID() int {
 	return program.id
 }
 
-func (program Program) getName() string {
+// GetName returns the name of the program
+func (program Program) GetName() string {
 	return program.name
 }
 

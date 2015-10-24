@@ -28,7 +28,7 @@
           <tbody>
             {{range $index, $program := .programs}}
             <tr>
-              <td><a href="/admin/curriculum/programs/{{ $program.GetID }}">{{ $program.GetName | html }}</a></td>
+              <td><a href="/admin/curriculum/programs/{{ $program.GetID }}">{{ ($program.GetName) | html }}</a></td>
             </tr>
             {{end }}
           </tbody>

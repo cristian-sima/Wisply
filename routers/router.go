@@ -167,16 +167,17 @@ func init() {
 		),
 	)
 
-
 	// admin
 	// ----------------------------- Curriculum ----------------------------------
 
 	adminCurriculumNS := beego.NSNamespace("/curriculum",
 		beego.NSRouter("", &admin.Curriculum{}, "*:ShowHomePage"),
-		// beego.NSNamespace("/modify",
-		// 	beego.NSRouter(":id", &admin.AccountController{}, "GET:Modify"),
-		// 	beego.NSRouter(":id", &admin.AccountController{}, "POST:Update"),
-		// ),
+		beego.NSNamespace("/programs",
+			beego.NSNamespace("/add",
+				beego.NSRouter("", &admin.Curriculum{}, "GET:ShowAddProgramForm"),
+				beego.NSRouter("", &admin.Curriculum{}, "POST:CreateProgram"),
+			),
+		),
 		// beego.NSNamespace("/delete",
 		// 	beego.NSRouter(":id", &admin.AccountController{}, "POST:Delete"),
 		// ),

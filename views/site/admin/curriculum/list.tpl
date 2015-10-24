@@ -8,7 +8,7 @@
   <div class="panel-body">
     <section>
       <div class="btn-group-sm">
-        <a href="/admin/curriculum/programs/add" class="btn btn-primary">
+        <a href="/admin/curriculum/add" class="btn btn-primary">
           <span class="glyphicon glyphicon-plus"></span> Add program of study</a>
       </div>
     </section>

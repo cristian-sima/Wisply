@@ -53,7 +53,7 @@
                     <h2 class="table-name" >{{ $table.Name }}</h2>
                     <h5 class="text-muted">{{ $table.Name }}</h5>
                     <br />
-                    <button data-name="{{ $table.Name }}" data-id="{{ $table.ID }}" type="button" class="btn btn-primary download-table" aria-label="Left Align">
+                    <button id="download-{{$table.Name}}-table" data-name="{{ $table.Name }}" data-id="{{ $table.ID }}" type="button" class="btn btn-primary download-table" aria-label="Left Align">
                       <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download
                     </button>
                     <br />

@@ -32,14 +32,14 @@ func (list List) insertQuery(query string, accessedBool bool) {
 	fieldList := "`query`, `timestamp`, `account`, `accessed`"
 	questionList := "?, ?, ?, ?"
 	accessedString := getAccessedString(accessedBool)
-	sql := "INSERT INTO `account_searches` (" + fieldList + ") VALUES (" + questionList + ")"
+	sql := "INSERT INTO `account_search` (" + fieldList + ") VALUES (" + questionList + ")"
 	stmt, _ := database.Connection.Prepare(sql)
 	stmt.Exec(query, timestamp, list.accountID, accessedString)
 }
 
 // Clear clears the history of a user
 func (list List) Clear() {
-	sql := "DELETE FROM `account_searches` WHERE account = ? "
+	sql := "DELETE FROM `account_search` WHERE account = ? "
 	stmt, _ := database.Connection.Prepare(sql)
 	stmt.Exec(list.accountID)
 }
@@ -56,7 +56,7 @@ func (list List) GetAll() []Search {
 	fieldList := "`id`, `query`, `timestamp`, `accessed`"
 	whereClause := "WHERE `account` = ?"
 	orderClause := "ORDER BY `timestamp` DESC "
-	sql := "SELECT " + fieldList + "FROM `account_searches` " + whereClause + " " + orderClause
+	sql := "SELECT " + fieldList + "FROM `account_search` " + whereClause + " " + orderClause
 	rows, _ := database.Connection.Query(sql, list.accountID)
 	for rows.Next() {
 		accessedString := ""

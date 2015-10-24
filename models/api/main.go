@@ -4,7 +4,7 @@ package api
 
 import "github.com/cristian-sima/Wisply/models/database"
 
-var sensitiveTableList = []string{"account", "account_token", "api_table_settings"}
+var sensitiveTableList = []string{"account", "account_token", "account_search", "api_table_setting"}
 
 // GetAllWisplyTables returns the list of all the tables which MAY BE downloaded
 func GetAllWisplyTables() []string {
@@ -30,7 +30,7 @@ func AreValidDetails(table Table) bool {
 // InsertNewTable adds the table name on the list of the tables
 // which can be downloaded
 func InsertNewTable(table Table) error {
-	sql := "INSERT INTO `api_table_settings` (`name`, `description`) VALUES (?, ?)"
+	sql := "INSERT INTO `api_table_setting` (`name`, `description`) VALUES (?, ?)"
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(table.Name, table.Description)
 	return err
@@ -38,7 +38,7 @@ func InsertNewTable(table Table) error {
 
 // RemoveAllowedTable removes the table from the list of allowed tables
 func RemoveAllowedTable(ID int) error {
-	sql := "DELETE FROM `api_table_settings` WHERE `id`=? "
+	sql := "DELETE FROM `api_table_setting` WHERE `id`=? "
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(ID)
 	return err
@@ -47,7 +47,7 @@ func RemoveAllowedTable(ID int) error {
 // GetAllowedTables returns the list of allowed tables
 func GetAllowedTables() []Table {
 	var list []Table
-	sql := "SELECT `id`, `name`, `description` FROM `api_table_settings`"
+	sql := "SELECT `id`, `name`, `description` FROM `api_table_setting`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		table := Table{}
@@ -61,7 +61,7 @@ func GetAllowedTables() []Table {
 func NewTable(ID string) (*Table, error) {
 	table := &Table{}
 	fieldList := "`id`, `name`, `description`"
-	sql := "SELECT " + fieldList + " FROM `api_table_settings` WHERE id=? "
+	sql := "SELECT " + fieldList + " FROM `api_table_setting` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return table, err
@@ -72,7 +72,7 @@ func NewTable(ID string) (*Table, error) {
 
 // ModifyDetails changes the details of the table
 func ModifyDetails(table *Table, newDescription string) error {
-	sql := "UPDATE `api_table_settings` SET `description`=? WHERE `id`=? "
+	sql := "UPDATE `api_table_setting` SET `description`=? WHERE `id`=? "
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {
 		return err1

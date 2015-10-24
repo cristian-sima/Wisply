@@ -10,13 +10,25 @@ var searchModule = {};
  */
 var SearchModule = function() {
 	'use strict';
-	// register a new function for the JavaScript template library
-	// it is used to cut a string which is too long
-	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
+
+	/**
+	 * In case the length of the string is greater than the numberOfAllowedCharacters
+	 * it cuts the string and appends "..."
+	 * @param  {string} theString                 The string to be modified
+	 * @param  {number} numberOfAllowedCharacters The number of characters to display
+	 * @return {string} The modified string
+	 */
+	function cutString(theString, numberOfAllowedCharacters) {
 		if (theString.length > numberOfAllowedCharacters) {
 			var shortString = theString.substr(0, numberOfAllowedCharacters);
 			theString = shortString + "...";
 		}
+		return theString;
+	}
+	// register a new function for the JavaScript template library
+	// it is used to cut a string which is too long
+	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
+		theString = cutString(theString, numberOfAllowedCharacters);
 		return new Handlebars.SafeString(theString);
 	});
 	/**
@@ -97,7 +109,7 @@ var SearchModule = function() {
 								$(this).typeahead('close');
 								setTimeout(function() {
 									$(that).typeahead("val", "");
-									$(that).typeahead("val", suggestionCopy);
+									$(that).typeahead("val", suggestionCopy.textValue);
 									$(that).typeahead('open');
 								}, 100);
 							}
@@ -159,19 +171,18 @@ var SearchModule = function() {
 									cacheKey: 'ID',
 									url: instance.URL + '%QUERY',
 									wildcard: '%QUERY',
-									rateLimitWait: 700,
 								}
 							});
 							return object;
 						}
 						suggestion = [
-							"<div style='width:100%'><div class='row'>",
+							"<div title='{{ Title }}' style='width:100%'><div class='row'>",
 							"<div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
 							"<div style='width:40px' class='text-center'><img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' /></div>",
 							"</div>",
 							"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
 							"<span class='search-title'>{{ cutString Title 40 }}</span><br />",
-							"<span class='text-muted bold search-category'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 110 }}</span></div>",
+							"<span class='text-muted bold search-category'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 90 }}</span></div>",
 						"</div></div>",
 					].join("\n");
 						footer = [
@@ -225,8 +236,12 @@ var SearchModule = function() {
 							});
 						}();
 						engine = {
+							name: 'textValue',
+							display: "textValue",
+							valueKey: "textValue",
 							templates: {
 								header: "<div class='search-header'>Previous queries</div>",
+								suggestion: Handlebars.compile("<div>{{cutString textValue 50}}</div>"),
 							},
 							source: source,
 						};
@@ -290,11 +305,13 @@ var SearchModule = function() {
 				 * @return {Boolean} True if it is valid, false otherwise
 				 */
 				function isGoodValue(value, list) {
-					return value && value !== "" && value !== list[0];
+					return (value && value !== "") && ((!list[0]) || (list[0] && value !== list[0].textValue));
 				}
 				list = this.getLastSearchQueries();
 				if (isGoodValue(newValue, list)) {
-					list.unshift(newValue);
+					list.unshift({
+						textValue: newValue,
+					});
 					if (list.length > this.maxNumberOfQueries) {
 						list.pop();
 					}

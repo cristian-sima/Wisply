@@ -1,6 +1,11 @@
 package search
 
-import "github.com/cristian-sima/Wisply/models/database"
+import (
+	"log"
+	"time"
+
+	"github.com/cristian-sima/Wisply/models/database"
+)
 
 // Request describes the operation which can be called to search something
 type Request struct {
@@ -29,6 +34,8 @@ func (request *Request) SearchAnything() {
 	request.addEnquire(NewRepositoriesSearch(search))
 	request.addEnquire(NewCollectionsSearch(search))
 
+	request.addEnquire(NewResourcesSearch(search))
+
 	request.enquireData()
 }
 
@@ -39,7 +46,12 @@ func (request *Request) addEnquire(enquire Searcher) {
 func (request *Request) enquireData() {
 	// TODO go channel
 	for _, enquire := range request.enquiries {
+		start := time.Now()
+
 		enquire.Perform()
+
+		elapsed := time.Since(start)
+		log.Printf("Search has taken %s", elapsed)
 	}
 }
 

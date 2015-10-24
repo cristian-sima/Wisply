@@ -79,6 +79,34 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	return list
 }
 
+// GetRecordByIdentifier finds the record in the database by identifier
+func GetRecordByIdentifier(identifier string) Record {
+	record := Record{}
+
+	record.identifier = identifier
+
+	sql := "SELECT `id`, `datestamp` FROM `repository_resource` WHERE identifier = ?"
+	query, err := database.Connection.Prepare(sql)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	query.QueryRow(record.identifier).Scan(&record.ID, &record.timestamp)
+
+	sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
+	rows2, _ := database.Connection.Query(sql2, record.identifier)
+
+	keys := &RecordKeys{}
+	for rows2.Next() {
+		var name, value string
+		rows2.Scan(&name, &value)
+		keys.Add(name, value)
+	}
+	record.Keys = keys
+	return record
+}
+
 // ClearRepository deletes all the resources, formats, collections, identifiers, emails and the identificaiton details
 func ClearRepository(repositoryID int) {
 	deleteResources(repositoryID)

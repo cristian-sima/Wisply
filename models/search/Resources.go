@@ -2,7 +2,6 @@ package search
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/wisply"
@@ -16,44 +15,52 @@ type ResourcesSearch struct {
 // Perform gets the results
 func (search ResourcesSearch) Perform() {
 
-	collections := search.getNonEmptyFromDB()
+	resources := search.getNonEmptyFromDB()
 
-	for _, collection := range collections {
+	for _, resource := range resources {
 		result := &Result{
-			Title:       collection.Name,
-			URL:         search.getURL(collection),
-			Description: collection.Description + " -  " + strconv.Itoa(collection.NumberOfResources) + " resources",
+			Title:       resource.Keys.GetTitle(),
+			URL:         resource.Keys.GetURL(),
+			Description: search.getDescription(resource),
 			Icon:        "/static/img/public/repository/resource.png",
-			Category:    "Collection",
+			Category:    "Resource",
 		}
 		search.response.AppendItem(result)
 	}
 }
 
 // gets the repositoryObjects
-func (search ResourcesSearch) getNonEmptyFromDB() []wisply.Collection {
-	var list []wisply.Collection
+func (search ResourcesSearch) getNonEmptyFromDB() []wisply.Record {
+	var list []wisply.Record
+
 	fieldsList := "`resource`"
 	limitClause := search.options.GetLimit()
 	whereClause := "WHERE `value` LIKE ? "
 	sql := "SELECT DISTINCT " + fieldsList + " FROM `resource_key` " + whereClause + space + limitClause
 	fmt.Println(sql)
-	rows, err := database.Connection.Query(sql, search.likeQuery(), search.likeQuery())
+
+	rows, err := database.Connection.Query(sql, search.likeQuery())
 	if err != nil {
 		fmt.Println(sql)
 		fmt.Println(err)
 	}
+
 	for rows.Next() {
-		collection := wisply.Collection{}
-		rows.Scan(&collection.ID, &collection.Name, &collection.Description, &collection.Spec, &collection.Path, &collection.NumberOfResources, &collection.Repository)
-		list = append(list, collection)
+		var identifier string
+		rows.Scan(&identifier)
+		record := wisply.GetRecordByIdentifier(identifier)
+		list = append(list, record)
 	}
+
 	return list
 }
 
-func (search ResourcesSearch) getURL(collection wisply.Collection) string {
-	path := "/repository/" + strconv.Itoa(collection.Repository) + "#list|0-15*collection|" + strconv.Itoa(collection.ID)
-	return path
+func (search ResourcesSearch) getName(resource wisply.Record) string {
+	return "Name"
+}
+
+func (search ResourcesSearch) getDescription(resource wisply.Record) string {
+	return ""
 }
 
 // NewResourcesSearch creates a new search object for finding repositoryObjects

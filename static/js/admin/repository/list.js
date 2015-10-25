@@ -158,7 +158,7 @@ var Repositories = function () {
         className: "btn-danger",
         callback: function () {
           wisply.repositoriesManager.empty(repository);
-          wisply.message.tellToWait("Clearing repository...");
+          wisply.message.tellToWait("Removing metadata...");
         }
       };
       buttons = {

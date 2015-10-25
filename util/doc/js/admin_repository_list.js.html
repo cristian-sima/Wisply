@@ -19,11 +19,11 @@
 
     <h1 class="page-title">Source: admin/repository/list.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global $, wisply */
@@ -186,7 +186,7 @@ var Repositories = function () {
         className: "btn-danger",
         callback: function () {
           wisply.repositoriesManager.empty(repository);
-          wisply.message.tellToWait("Clearing repository...");
+          wisply.message.tellToWait("Removing metadata...");
         }
       };
       buttons = {

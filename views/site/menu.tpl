@@ -5,11 +5,6 @@
       <a href="/" class="navbar-brand" id="full-logo">
         <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
       </a>
-      {{ if .isAdminPage }}
-      <button type="button" class="navbar-toggle btn-lg" data-toggle="offcanvas" data-target=".sidebar-nav">
-        <span class="glyphicon glyphicon-cog"></span>
-      </button>
-      {{ end }}
       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>

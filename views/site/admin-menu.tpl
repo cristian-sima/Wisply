@@ -50,7 +50,7 @@
     <a href="/admin/curriculum" >
       <span class="glyphicon glyphicon-tasks"></span>
       <span class="hidden-sm hidden-xs">
-        Curriculum
+        Curricula
       </span>
     </a>
   </li>

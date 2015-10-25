@@ -2,7 +2,7 @@
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
-      <li class="active">Curriculum panel</li>
+      <li class="active">Curricula panel</li>
     </ul>
   </div>
   <div class="panel-body">
@@ -13,26 +13,28 @@
         </div>
       </section>
       <br />
-      <h4>Programs of study</h4>
       <section>
         {{ if eq (len .programs) 0 }}
         There is no program of study.
         {{ else }}
-        <div class="table-responsive">
-          <table class="table table-striped table-hover " id="repositories-list">
-            <thead>
-              <tr>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{range $index, $program := .programs}}
-              <tr>
-                <td><a class="btn btn-default" href="/admin/curriculum/programs/{{ $program.GetID }}">{{ ($program.GetName) | html }}</a></td>
-              </tr>
-              {{end }}
-            </tbody>
-          </table>
+        <div>
+          <div class="row text-center">
+            {{range $index, $program := .programs}}
+            <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
+              <a href="/admin/curriculum/programs/{{ $program.GetID }}">
+                <div style="height:100px;" class="thumbnail">
+                  <div class="caption">
+                    <h3>
+                      {{ ($program.GetName) | html }}
+                    </h3>
+                  </div>
+                </div>
+              </a>
+              </div>
+            {{end }}
+            </div>
+          </div>
+
           <div id="harvest-history-container" class="modal fade">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -48,7 +50,6 @@
               </div>
             </div>
           </div>
+          {{ end }}
         </div>
-        {{ end }}
       </div>
-    </div>

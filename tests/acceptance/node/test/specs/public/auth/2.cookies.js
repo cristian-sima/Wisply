@@ -1,14 +1,10 @@
-
-var  user = {
-      name: "Jameson Henry",
-      email: "henry@oxford.ac.uk",
-      password: "my-strong-password"
-    },
-    settings = {
-      separator: "::"
-    },
-     connectionCookie = {},
-   hackedCookie = "";
+var userModule = require("../../general/user.js"),
+  user = userModule.user,
+  settings = {
+    separator: "::"
+  },
+  connectionCookie = {},
+  hackedCookie = "";
 
 /**
  * It splits a connection cookie and returns the id and the token
@@ -66,7 +62,7 @@ browser.addCommand("isLongConnection", function() {
 // creates an ccount
 describe('Cookies', function() {
 
-      it('connects and disconnects', function(done) {
+      it('connects and disconnects the user account', function(done) {
         browser
         .url("/auth/login")
         .deleteCookie("session")
@@ -83,7 +79,7 @@ describe('Cookies', function() {
         .pause(3000)
         .call(done);
       });
-      it('rejects the modification of session cookie in order to connect', function(done) {
+      it('rejects the modification of session cookie in order to connect the user', function(done) {
         browser
         .url("/auth/login")
         .deleteCookie("session")
@@ -116,7 +112,7 @@ describe('Cookies', function() {
         })
         .call(done);
       });
-      it('disconnects the account if there is no session cookie', function(done) {
+      it('disconnects the account if there are no session cookies', function(done) {
         browser
         .url("/auth/login")
         .setValue('#login-email', user.email)

@@ -63,7 +63,7 @@
         </div>
         <hr />
         <div>
-          <a href="/admin/institutions/institution/{{ .institution.ID }}/advance-options">Advance options</a>
+          <a class="btn btn-primary" href="/admin/institutions/institution/{{ .institution.ID }}/advance-options">Advance options</a>
         </div>
       </div>
     </div>

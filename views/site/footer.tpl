@@ -21,7 +21,7 @@
         <li>
           <div class="dropup">
             <span role="button" class="hover link dropdown-toggle" id="moreOptionsFooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <a id="moreButton">More<span class="caret"></span></a>
+              <a class="hover">More<span class="caret"></span></a>
             </span>
             <ul class="dropdown-menu" aria-labelledby="moreOptionsFooter">
               <li><a href="/accessibility">Accessibility</a></li>

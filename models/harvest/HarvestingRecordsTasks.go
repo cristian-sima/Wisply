@@ -223,11 +223,18 @@ func (task *UpdateNumberOfRecordsTask) Perform() error {
 }
 
 func (task *UpdateNumberOfRecordsTask) update() error {
-	whereClause := "WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
-	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set` " + whereClause
+
+	space := " "
+
+	selectWhereClause := "WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
+	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set`" + space + selectWhereClause
 	setClause := "SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
-	sql := "UPDATE `repository_collection` " + setClause
-	_, err := database.Connection.Query(sql)
+
+	whereClause := "WHERE `repository_collection`.`repository` = ?"
+	sql := "UPDATE `repository_collection` " + setClause + space + whereClause
+
+	repositoryID := task.repository.ID
+	_, err := database.Connection.Query(sql, repositoryID)
 	return err
 }
 

@@ -19,17 +19,12 @@
 
 {{ if .accountConnected }}
 <script src="/static/js/wisply/connection.js"></script>
-
-{{ if .currentAccount.IsAdministrator }}
-<script src="/static/js/admin/admin.js"></script>
 {{end}}
-{{ else }}
+
 <script>
     window.cookieconsent_options = {"message":"Wisply uses cookies to ensure you get the best experience","dismiss":"Got it!","learnMore":"More info","link":"/cookies","theme":"light-bottom"};
 </script>
 <script src="/static/3rd_party/others/js/cookieconsent.latest.min.js"></script>
-
-{{ end }}
 
 <!-- Google Analytics-->
 <script>

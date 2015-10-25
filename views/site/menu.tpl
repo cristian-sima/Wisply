@@ -3,13 +3,8 @@
   <div class="container">
     <div class="navbar-header">
       <a href="/" class="navbar-brand" id="full-logo">
-        <img id="logo" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
+        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
       </a>
-      {{ if .isAdminPage }}
-      <button type="button" class="navbar-toggle btn-lg" data-toggle="offcanvas" data-target=".sidebar-nav">
-        <span class="glyphicon glyphicon-cog"></span>
-      </button>
-      {{ end }}
       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -18,11 +13,11 @@
       <button class="navbar-toggle" type="button" id="show-small-search-button">
         <span class="glyphicon glyphicon-search"></span>
       </button>
-      <form class="navbar-brand navbar-right hideMe " id="search-small" role="search" style="width:50%;"  >
+      <form class="navbar-brand navbar-right hideMe " id="search-small" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
           <div style="position:relative">
             <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
-            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>
@@ -30,22 +25,51 @@
     <nav class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav hidden-sm">
         <li class="">
-          <a href="/about" id="themes">About</a>
+          <a href="/about">About</a>
+        </li>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Curricula <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {{range $index, $program := .programs}}
+            <li>
+              <a href="/curriculum/{{$program.GetID}}">
+                {{ $program.GetName }}
+              </a>
+            </li>
+            {{ end }}
+          </ul>
         </li>
         <li class="hidden-sm">
-          <a href="/webscience">Web science</a>
-        </li>
-        <li class="hidden-sm">
-          <a href="/institutions">Institutions</a>
+          <a href="/institutions">
+            Institutions
+          </a>
         </li>
       </ul>
       <ul class="nav navbar-nav visible-sm">
         <li class="dropdown" >
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-          <ul class="dropdown-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            More
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu multi-level">
+            <li class="dropdown-submenu">
+              <a href="" class="dropdown-toggle" data-toggle="curriculum" role="button" aria-expanded="false">
+                Curricula
+              </a>
+              <ul class="dropdown-menu" role="curriculum">
+                {{range $index, $program := .programs}}
+                <li>
+                  <a href="/curriculum/{{$program.GetID }}">
+                    {{ $program.GetName }}
+                  </a>
+                </li>
+                {{ end }}
+              </ul>
+            </li>
             <li class="divider"></li>
-            <li><a href="/webscience">Web science</a></li>
-            <li><a href="/about" id="themes">About</a></li>
+            <li><a href="/about">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
           </ul>
         </li>
@@ -80,11 +104,11 @@
         </li>
         {{ end }}
       </ul>
-      <form class="navbar-form navbar-right hidden-xs" role="search">
+      <form class="navbar-form navbar-right hidden-xs">
         <div class="form-group">
           <div style="position:relative">
             <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
-            <img class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>

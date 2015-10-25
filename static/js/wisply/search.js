@@ -130,7 +130,7 @@ var SearchModule = function() {
 									"right": "-110px",
 								});
 							}
-							$(".tt-menu").css({
+							$(".tt-dataset").css({
 								"width": searchWidth - 30,
 							});
 							setTimeout(function() {
@@ -188,8 +188,8 @@ var SearchModule = function() {
 						footer = [
 							"<div class='row'><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
 							'<div class="search-footer">',
-							"<span><span class='text-primary'><span class='glyphicon glyphicon-search'></span></span> &nbsp;&nbsp;Find more about<strong> {{cutString query 30 }}",
-							"</strong></div>",
+							"<div><span class='text-primary'><span class='glyphicon glyphicon-search'></span></span> &nbsp;&nbsp;Find more about<strong> {{cutString query 30 }}",
+							"</strong></div></div>",
 							"</div></div>"
 						].join("\n");
 						emptyTemplate = [

@@ -30,6 +30,7 @@ func (request *Request) SearchAnything() {
 	}
 	search.changeOptions(options)
 
+	request.addEnquire(NewCurriculaSearch(search))
 	request.addEnquire(NewInstitutionsSearch(search))
 	request.addEnquire(NewRepositoriesSearch(search))
 	request.addEnquire(NewCollectionsSearch(search))

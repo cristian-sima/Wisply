@@ -1,30 +1,16 @@
 
-var  user = {
-      name: "Jameson Henry",
-      email: "henry@oxford.ac.uk",
-      password: "my-strong-password"
-    },
-    settings = {
-      separator: "::"
-    },
-     connectionCookie = {},
-   hackedCookie = "";
-
-// creates an ccount
-describe('API - Tables', function() {
-
-      it('go to api page', function(done){
+describe('API & Developers', function() {
+      it('goes to API & Developers page', function(done){
         browser.
-            url('/api')
-            .pause(1000)
-            .getTitle(function(err, title) {
-                expect(err).toBe(undefined);
-                expect(title).toBe("API & Developers");
-            })
-            .call(done);
+          url('/api')
+          .pause(1000)
+          .getTitle(function(err, title) {
+              expect(err).toBe(undefined);
+              expect(title).toBe("API & Developers");
+          })
+          .call(done);
       });
-
-      it('go to tables tapage', function(done){
+      it('goes to API page for tables', function(done){
         browser.
             url('/api/table/list')
             .pause(1000)
@@ -34,12 +20,10 @@ describe('API - Tables', function() {
             })
             .call(done);
       });
-
-
-
       var i, tableName,
         downloadTable = function(tableName) {
-          it('download the table ' + tableName, function(done){
+          var old, newPage;
+          it('downloads the table ' + tableName, function(done){
           browser.
               pause(1000)
               .click("#" + tableName)
@@ -48,6 +32,7 @@ describe('API - Tables', function() {
                   expect(err).toBe(undefined);
                   expect(title).toBe("API & Developers");
               })
+              .pause(1500)
               .call(done);
         });
       };

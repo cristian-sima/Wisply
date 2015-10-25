@@ -27,7 +27,7 @@ exports.init = function (browser) {
         })
         .call(done);
   });
-  it('connects as Administrator', function (done) {
+  it('connects as the Administrator account', function (done) {
     browser
         .pause(1000)
         .url("/auth/login?sendMe=/admin")

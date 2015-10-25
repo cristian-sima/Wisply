@@ -7,13 +7,17 @@
   </div>
   <div class="panel-body">
     <div>
-      This panel can be used to allow or reject tables from being downloaded by the public. <Br />
+      This panel can be used to allow or reject tables from being downloaded by the public. The public list is available <a target="_blank" href="http://localhost:8081/api/table/list">here</a>.
+      <br />
       The tables which are not listed here are by default <strong>rejected</strong>.
       <br />
       <br />
   </div>
   <div class="btn-group">
-    <a href="/admin/api/add" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add table</a>
+    <a href="/admin/api/add" class="btn btn-primary">
+      <span class="glyphicon glyphicon-plus"></span>
+      Add table on API public download list
+    </a>
   </div>
   <br />
   <br />
@@ -26,8 +30,8 @@
           <tr>
             <th class="hidden-xs">#</th>
             <th>Table</th>
-            <th>Delete</th>
             <th>Modify</th>
+            <th>Private</th>
           </tr>
         </thead>
         <tbody>
@@ -36,14 +40,10 @@
           <tr>
             <td>{{ $table.ID }}</td>
             <td>{{ $table.Name }}</td>
-            <td>
-              <form action="/admin/api/delete" method="POST">
-          			{{ $xsrf_input }}
-                <input type="hidden" name="table-id" value="{{ $table.ID }}"/>
-                <input type="submit" class="btn btn-primary" value="Remove" />
-              </form>
-            </td>
             <td><a href="/admin/api/modify/{{ $table.ID }}">Modify</a></td>
+            <td>
+              <a href="#" class="makeTablePrivate" data-id="{{ $table.ID }}" data-name="{{ $table.Name }}">Make private</a>
+            </td>
           </tr>
           {{end }}
         </tbody>
@@ -52,4 +52,4 @@
     </div>
   </div>
 </div>
-<script src="/static/js/admin/account/list.js"></script>
+<script src="/static/js/admin/api/list.js"></script>

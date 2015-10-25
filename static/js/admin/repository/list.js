@@ -127,7 +127,7 @@ var Repositories = function () {
         "main": mainButton
       };
       msg = {
-        title: "Please confirm!",
+        title: "We need your confirmation",
         message: "The repository <b>" + repository.name + "</b> will be permanently removed. Are you sure?",
         onEscape: true,
         buttons: buttons
@@ -154,11 +154,11 @@ var Repositories = function () {
         }
       };
       mainButton = {
-        label: "Clear",
+        label: "Clear metadata",
         className: "btn-danger",
         callback: function () {
           wisply.repositoriesManager.empty(repository);
-          wisply.message.tellToWait("Clearing repository...");
+          wisply.message.tellToWait("Removing metadata...");
         }
       };
       buttons = {
@@ -166,8 +166,8 @@ var Repositories = function () {
         "main": mainButton
       };
       msg = {
-        title: "Please confirm!",
-        message: "The repository <b>" + repository.name + "</b> will be permanently cleared. Are you sure?",
+        title: "We need your confirmation",
+        message: "The metadata from this repository, stored on Wisply will be deleted. Also, Wisply will delete any data related to this (logs, data). <br /><br />Are you sure?",
         onEscape: true,
         buttons: buttons
       };

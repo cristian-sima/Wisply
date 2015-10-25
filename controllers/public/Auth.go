@@ -14,11 +14,6 @@ type AuthController struct {
 	Model auth.Model
 }
 
-// Prepare calls the WisplyController Prepare method
-func (controller *AuthController) Prepare() {
-	controller.WisplyController.Prepare()
-}
-
 // ShowLoginForm shows the login form
 func (controller *AuthController) ShowLoginForm() {
 	if controller.AccountConnected {
@@ -42,7 +37,6 @@ func (controller *AuthController) ShowRegisterForm() {
 func (controller *AuthController) showForm(name string) {
 	controller.GenerateXSRF()
 	controller.TplNames = "site/public/auth/" + name + ".tpl"
-	controller.Layout = "site/public-layout.tpl"
 }
 
 // CreateNewAccount checks if the password and the confirmation are the same

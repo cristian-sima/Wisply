@@ -26,13 +26,6 @@ func (controller *StaticController) ShowIndex() {
 	controller.showStaticPage(pageName)
 }
 
-// ShowWebscience shows the webscience page
-func (controller *StaticController) ShowWebscience() {
-	pageName := "webscience"
-	controller.SetCustomTitle("Webscience")
-	controller.showStaticPage(pageName)
-}
-
 // ShowAccessibility shows the accessibility page
 func (controller *StaticController) ShowAccessibility() {
 	pageName := "accessibility"
@@ -79,7 +72,6 @@ func (controller *StaticController) ShowCookiesPolicy() {
 }
 
 func (controller *StaticController) showStaticPage(pageName string) {
-	controller.Layout = "site/public-layout.tpl"
 	controller.TplNames = "site/public/static/" + pageName + ".tpl"
 }
 

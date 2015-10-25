@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- saved from url=(0028)http://bootswatch.com/paper/ -->
-<html lang="en" hola_ext_inject="disabled"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Sample</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

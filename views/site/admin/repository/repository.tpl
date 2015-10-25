@@ -36,7 +36,7 @@
                     <tbody>
                       {{range $index, $element := .processes}}
                       <tr class="{{ $element.GetResult }}">
-                        <td class="col-md-1"><a href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
+                        <td class="col-md-1"><a title="See process" href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
                         <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
                         <!-- start state -->
                         <td class="col-md-1">
@@ -144,7 +144,7 @@
       {{ end }}
       <hr />
       <div>
-        <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
+        <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
       </div>
     </div>
   </div>

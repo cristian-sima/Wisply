@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" hola_ext_inject="disabled">
+<html lang="en">
 {{ template "header" . }}
 <body>
   {{ template "javascript" . }}

@@ -1,28 +1,37 @@
-.navbar .navbar-default .navbar-fixed-top, #sidebar, .warning-notice, .breadcrumb, footer {
-  display:none;
+/* CSSTidy 1.3: Sun, 25 Oct 2015 08:11:04 -0700 */
+table
+{
+  page-break-inside:auto;
 }
 
-table {
-  page-break-inside:auto !important;
-}
-tr    {
-  page-break-inside:avoid !important;
-  page-break-after:auto !important;
-}
-thead {
-  display:table-header-group !important;
-}
-tfoot {
-  display:table-footer-group !important;
-}
-a[href]:after {
-  content: none
-}
-.print-div {
-   page-break-after: always;
-   page-break-inside: avoid;
+tr
+{
+  page-break-inside:avoid;
+  page-break-after:auto;
 }
 
-.no-print {
+thead
+{
+  display:table-header-group;
+}
+
+tfoot
+{
+  display:table-footer-group;
+}
+
+a[href]:after
+{
+  content:none;
+}
+
+.print-div
+{
+  page-break-after:always;
+  page-break-inside:avoid;
+}
+
+.navbar .navbar-default .navbar-fixed-top,.admin-sidebar,.warning-notice,.breadcrumb,footer,.no-print
+{
   display:none;
 }

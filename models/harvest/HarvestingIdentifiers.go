@@ -53,7 +53,11 @@ func (operation *HarvestingIdentifiers) multiRequest() {
 	if err != nil {
 		operation.failed()
 	} else {
-		operation.updateCollections()
+		if operation.process.Identifiers != initNumberOfIdentifiers {
+			operation.updateCollections()
+		} else {
+			operation.succedded()
+		}
 	}
 }
 

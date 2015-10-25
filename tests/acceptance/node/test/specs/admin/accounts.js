@@ -9,7 +9,6 @@ describe('Admin - Accounts', function() {
   admin.init(browser);
   it('navigate to page', function(done) {
       browser
-      .element("#sidebar")
       .click("a=Accounts")
       .getTitle(function(err, title) {
           expect(err).toBe(undefined);
@@ -17,14 +16,14 @@ describe('Admin - Accounts', function() {
       })
       .call(done);
   });
-  it('goes to modify user type', function(done){
+  it('goes to the page which modifies the account type', function(done){
       browser.
       element('#list-accounts tbody tr:nth-Child(3) td:nth-Child(5)').
       click('a=Modify')
       .pause(1000)
       .call(done);
   });
-  it('modifies the type of user to administrator', function(done){
+  it('modifies the type of the account from user to administrator', function(done){
       browser
       .selectByValue('#modify-administrator', 'true')
       .submitForm("#modify")
@@ -35,7 +34,7 @@ describe('Admin - Accounts', function() {
       .click("a=Go back")
       .call(done);
   });
-  it('delete an account', function(done){
+  it('deletes an account', function(done){
       browser
       .url("/admin")
       .url("/admin/accounts")
@@ -46,14 +45,4 @@ describe('Admin - Accounts', function() {
       .keys("U+E00C")
       .call(done);
   });
-  // it('navigate back to dashboard', function(done) {
-  //     browser
-  //     .element(".breadcrumb")
-  //     .click("a=Admin")
-  //     .getTitle(function(err, title) {
-  //         expect(err).toBe(undefined);
-  //         expect(title).toBe(admin.info.dashboard.title);
-  //     })
-  //     .call(done);
-  //   });
 });

@@ -95,7 +95,6 @@
               Each page may contain more key shortcuts.
               <br />
               <div class="alert alert-dismissible alert-info">
-                <button type="button" class="close" data-dismiss="alert">×</button>
                 <strong>Protip!</strong> On every page you can find the key shortcuts by pressing <kbd>ALT</kbd> + <kbd>K</kbd> (remember <strong>k</strong> from <strong>k</strong>eys)
               </div>
             </article>

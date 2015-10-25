@@ -83,8 +83,9 @@
     </div>
     {{ end }}
     <div class="no-print">
-      <a href="/admin/log/process/{{ .process.Action.ID }}">See overview</a> <br />
-      <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}">See overview</a>
+      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary printPage" ><span class="glyphicon glyphicon-print"></span> Print</a>
     </div>
     <br />
     <hr/>

@@ -1,30 +1,58 @@
 {{ define "admin-menu" }}
-<header class="">
-  <button type="button" class="text-center btn btn-default btn-sm visible-xs" id="close-sidebar-admin">
-    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-  </button>
-</header>
 <ul class="nav">
   <li>
-    <a href="/admin">Dashboard</a>
+    <a href="/admin">
+      <span class="glyphicon glyphicon-th-large"></span>
+      <span class="hidden-sm hidden-xs">Dashboard</span>
+    </a>
   </li>
   <li>
-    <a href="/admin/institutions" >Institutions </a>
+    <a href="/admin/institutions" >
+      <span class="glyphicon glyphicon-education"></span>
+      <span class="hidden-sm hidden-xs">
+        Institutions
+      </span>
+    </a>
   </li>
   <li>
-    <a href="/admin/repositories/">Repositories</a>
+    <a href="/admin/repositories/">
+      <span class="glyphicon glyphicon-equalizer"></span>
+      <span class="hidden-sm hidden-xs">
+        Repositories
+      </span>
+    </a>
   </li>
   <li>
-    <a href="/admin/accounts" > Accounts </a>
+    <a href="/admin/accounts" >
+      <span class="glyphicon glyphicon-user"></span>
+      <span class="hidden-sm hidden-xs">
+        Accounts
+      </span>
+    </a>
   </li>
   <li>
-    <a href="/admin/api" > API Settings</a>
+    <a href="/admin/api" >
+      <span class="glyphicon glyphicon-save"></span>
+      <span class="hidden-sm hidden-xs">
+        API Settings
+      </span>
+    </a>
   </li>
   <li>
-    <a href="/admin/log" > Log </a>
+    <a href="/admin/log" >
+      <span class="glyphicon glyphicon-list-alt"></span>
+      <span class="hidden-sm hidden-xs">
+        Logs
+      </span>
+    </a>
   </li>
   <li>
-    <a href="/admin/curriculum" >Curriculum</a>
+    <a href="/admin/curriculum" >
+      <span class="glyphicon glyphicon-tasks"></span>
+      <span class="hidden-sm hidden-xs">
+        Curricula
+      </span>
+    </a>
   </li>
 </ul>
 {{ end }}

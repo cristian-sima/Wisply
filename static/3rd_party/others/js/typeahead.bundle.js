@@ -1120,7 +1120,7 @@
                 },
                 hint: {
                     position: "absolute",
-                    top: "-5px",
+                    top: "1px",
                     left: "0",
                     borderColor: "transparent",
                     boxShadow: "none",

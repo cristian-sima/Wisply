@@ -8,7 +8,7 @@
   </li>
   <li>
     <a href="/admin/institutions" >
-      <span class="glyphicon glyphicon-bookmark"></span>
+      <span class="glyphicon glyphicon-education"></span>
       <span class="hidden-sm hidden-xs">
         Institutions
       </span>

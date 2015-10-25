@@ -11,8 +11,10 @@
       <div class="panel-body">
         <h1>{{ .program.GetName }}</h1>
         <br />
+        <span class="text-warning glyphicon glyphicon-warning-sign"></span></span> Wisply was not able to generate data about <strong>{{ .program.GetName }}</strong>'s curriculum from the institutions.
+        <br />
+        <br />
         {{ .program.GetHTMLDescription }}
-
       </div>
     </div>
   </div>

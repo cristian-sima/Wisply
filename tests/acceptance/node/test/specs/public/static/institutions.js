@@ -1,5 +1,5 @@
 describe('Institutions', function() {
-  it('goes to the page', function(done) {
+  it('goes to the institutions page', function(done) {
       browser
       .url("/institutions")
       .windowHandleMaximize()
@@ -9,7 +9,7 @@ describe('Institutions', function() {
       })
       .call(done);
     });
-    it("clicks to see an institution", function(done){
+    it("clicks an institution", function(done){
         browser
         .click('a=University of Southampton')
         .getTitle(function(err, title) {

@@ -22,16 +22,6 @@ describe('Static pages', function() {
           .call(done);
   });
 
-  it('loads the webscience page', function(done) {
-      browser
-          .url('/curriculum/webscience')
-          .getTitle(function(err, title) {
-              expect(err).toBe(undefined);
-              expect(title).toBe('Webscience');
-          })
-          .call(done);
-  });
-
   it('loads the contact page', function(done) {
       browser
           .url('/contact')

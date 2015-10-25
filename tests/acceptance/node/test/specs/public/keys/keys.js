@@ -3,25 +3,26 @@ var userModule = require("../../general/user.js"),
 
 describe('Shortcut Keys', function() {
 
-  it('types ALT + A - Load accessibility bar', function(done) {
+  it('types ALT + A - It loads accessibility bar', function(done) {
     browser
-      .pause(1000)
+      .pause(2000)
       .url("/")
       .pause(1000)
       .click("#wisply-body")
-      .keys(['Alt', 'a'])
+      .keys(['Alt', 'a']).keys("NULL")
       .pause(1500)
       .isExisting('#at-collapse').then(function(isExisting){
           expect(isExisting).toBe(true);
       })
       .call(done);
   });
-  it('types ALT + K - Show the key shortcuts', function(done) {
+  it('types ALT + K - It shows the key shortcuts', function(done) {
       browser
+      .pause(1000)
       .url("/")
       .pause(1000)
       .click("#wisply-body")
-      .keys(['Alt', 'k'])
+      .keys(['Alt', 'k']).keys("NULL")
       .pause(1500)
       .isExisting('.modal-title').then(function(isExisting){
           expect(isExisting).toBe(true);
@@ -32,12 +33,12 @@ describe('Shortcut Keys', function() {
       .call(done);
   });
 
-  it('types ALT + K - Go to home page', function(done) {
+  it('types ALT + W - It goes to home page', function(done) {
       browser
       .url("/contact")
       .pause(1000)
       .click("#wisply-body")
-      .keys(['Alt', 'w'])
+      .keys(['Alt', 'w']).keys("NULL")
       .pause(1500)
       .url(function(err, res){
           expect(res.value).toEqual("http://localhost:8081/");
@@ -45,12 +46,12 @@ describe('Shortcut Keys', function() {
       .call(done);
   });
 
-  it('types ALT + K - Go to contact page', function(done) {
+  it('types ALT + C - It goes to contact page', function(done) {
       browser
       .url("/about")
       .pause(1000)
       .click("#wisply-body")
-      .keys(['Alt', 'c'])
+      .keys(['Alt', 'c']).keys("NULL")
       .pause(1500)
       .url(function(err, res){
           expect(res.value).toEqual("http://localhost:8081/contact");
@@ -58,22 +59,7 @@ describe('Shortcut Keys', function() {
       .call(done);
   });
 
-
-  it('types ALT + K - Go to contact page', function(done) {
-      browser
-      .url("/about")
-      .pause(1000)
-      .click("#wisply-body")
-      .keys(['Alt', 'c'])
-      .pause(1500)
-      .url(function(err, res){
-          expect(res.value).toEqual("http://localhost:8081/contact");
-      })
-      .call(done);
-  });
-
-
-  it('connects the account', function(done) {
+  it('connects the user account', function(done) {
     browser
     .pause(1000)
     .url("/auth/login")
@@ -92,12 +78,12 @@ describe('Shortcut Keys', function() {
     .call(done);
   });
 
-  it('types ALT + L - Logs out the current account', function(done) {
+  it('types ALT + L - It logs out the current account', function(done) {
       browser
       .url("/about")
       .pause(1000)
       .click("#wisply-body")
-      .keys(['Alt', 'l'])
+      .keys(['Alt', 'l']).keys("NULL")
       .pause(1500)
       .isExisting('#menu-logout-button').then(function(isExisting){
           expect(isExisting).toBe(false);
@@ -105,7 +91,7 @@ describe('Shortcut Keys', function() {
       .call(done);
   });
 
-  it('types CTRL + Space - Focuses the search field', function(done) {
+  it('types CTRL + Space - It focuses the search field', function(done) {
       browser
       .url("/about")
       .pause(1000)

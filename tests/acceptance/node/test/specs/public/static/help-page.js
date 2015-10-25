@@ -69,7 +69,7 @@ describe('Help functionality', function() {
       })
       .call(done);
   });
-  it("goes to top and goes back to legal", function (done) {
+  it("goes to the top and it goes back to legal", function (done) {
       browser
       .scroll(0, 0)
       .pause(500)

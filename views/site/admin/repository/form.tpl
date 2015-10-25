@@ -76,7 +76,7 @@
           {{ if eq .action "Add"}}
           <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories" class="btn btn-default">Back to list</a>
           {{ else }}
-          <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Submit" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
           {{ end }}
         </div>
       </div>

@@ -85,7 +85,7 @@
     {{ end }}
     <div class="no-print">
       <a href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a> <br />
-      <a href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
     </div>
     <br />
     {{ $len := .operations | len }}

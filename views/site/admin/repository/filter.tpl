@@ -41,7 +41,7 @@
     <fieldset>
       <div class="form-group text-center">
         <div class="col-lg-10 col-lg-offset-2">
-          <input type="submit" class="btn btn-primary" value="Change" /> <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Change" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
         </div>
       </div>
     </fieldset>

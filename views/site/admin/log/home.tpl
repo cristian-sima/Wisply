@@ -78,7 +78,7 @@
     </div>
     {{ end }}
     <div id="other-options">
-      <a href="/admin/log/advance-options">Advance options</a>
+      <a class="btn btn-primary" href="/admin/log/advance-options">Advance options</a>
     </div>
   </div>
 </div>

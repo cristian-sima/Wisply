@@ -144,7 +144,7 @@
       {{ end }}
       <hr />
       <div>
-        <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
+        <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
       </div>
     </div>
   </div>

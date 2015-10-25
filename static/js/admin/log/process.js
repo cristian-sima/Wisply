@@ -35,6 +35,10 @@ var Processes = function() {
 					id = object.data("id");
 					instance.confirmDelete(id);
 				});
+				$(".printPage").click(function(event) {
+					event.preventDefault();
+					window.print();
+				});
 			},
 			/**
 			 * It requests the user to confirm

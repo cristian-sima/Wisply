@@ -84,8 +84,9 @@
     </div>
     {{ end }}
     <div class="no-print">
-      <a href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a> <br />
+      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a>
       <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary printPage" ><span class="glyphicon glyphicon-print"></span> Print</a>
     </div>
     <br />
     {{ $len := .operations | len }}
@@ -111,7 +112,7 @@
             {{ $p := .process}}
             {{range $index, $operation := .operations}}
             <tr class="{{ $operation.GetResult }}">
-              <td class="col-md-1"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.ID }}</a></td>
+              <td class="col-md-1"><a class="btn btn-primary btn-xs" href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">See #{{ $operation.ID }}</a></td>
               <td class="col-md-3">{{ $operation.Action.Content }}</td>
               <!-- start state -->
               <td class="col-md-1">
@@ -167,3 +168,4 @@ $(document).ready(function(){
   });
 });
 </script>
+<script src="/static/js/admin/log/process.js"></script>

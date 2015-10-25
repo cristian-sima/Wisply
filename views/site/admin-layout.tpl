@@ -7,7 +7,7 @@
   <div class="container" >
     <div class="page-header" id="banner">
       <div class="row row-offcanvas row-offcanvas-left">
-        <div class="col-xs-2 col-sm-2 sidebar-offcanvas" class="admin-sidebar" role="navigation">
+        <div class="admin-sidebar col-xs-2 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
           {{ template "admin-menu" }}
         </div>
         <div class="col-xs-12 col-sm-10">

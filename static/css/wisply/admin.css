@@ -1,0 +1,34 @@
+
+@media screen and max-width 767px {
+  .row-offcanvas
+  {
+    position:relative;
+    -webkit-transition:all .25s ease-out;
+    -moz-transition:all .25s ease-out;
+    transition:all .25s ease-out;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas
+  {
+    right:-41.6%;
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas
+  {
+    left:-41.6%;
+  }
+
+  .sidebar-offcanvas
+  {
+    position:absolute;
+    top:0;
+    width:41.6%;
+  }
+
+  .admin-sidebar
+  {
+    padding-top:0;
+  }
+}

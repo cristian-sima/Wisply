@@ -1,5 +1,5 @@
 {{ define "admin-menu" }}
-<div class="text-center">
+<div>
   <ul class="nav">
     <li>
       <a href="/admin">

@@ -27,35 +27,48 @@
         <li class="">
           <a href="/about">About</a>
         </li>
-        <li class="hidden-sm dropdown">
-            <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-              Curriculum <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-              {{range $index, $program := .programs}}
-              <li><a href="/curriculum/{{$program.GetID}}">{{ $program.GetName }}</a></li>
-              {{ end }}
-            </ul>
+        <li class="dropdown">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Curricula <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {{range $index, $program := .programs}}
+            <li>
+              <a href="/curriculum/{{$program.GetID}}">
+                {{ $program.GetName }}
+              </a>
+            </li>
+            {{ end }}
+          </ul>
         </li>
         <li class="hidden-sm">
-          <a href="/institutions">Institutions</a>
+          <a href="/institutions">
+            Institutions
+          </a>
         </li>
       </ul>
       <ul class="nav navbar-nav visible-sm">
         <li class="dropdown" >
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li class="divider"></li>
-            <li class="dropdown">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                Curriculum <span class="caret"></span>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            More
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu multi-level">
+            <li class="dropdown-submenu">
+              <a href="" class="dropdown-toggle" data-toggle="curriculum" role="button" aria-expanded="false">
+                Curricula
               </a>
-              <ul class="dropdown-menu" role="menu">
+              <ul class="dropdown-menu" role="curriculum">
                 {{range $index, $program := .programs}}
-                <li><a href="/curriculum/{{$program.GetID }}">{{ $program.GetName }}</a></li>
+                <li>
+                  <a href="/curriculum/{{$program.GetID }}">
+                    {{ $program.GetName }}
+                  </a>
+                </li>
                 {{ end }}
               </ul>
             </li>
+            <li class="divider"></li>
             <li><a href="/about">About</a></li>
             <li><a href="/institutions">Institutions</a></li>
           </ul>

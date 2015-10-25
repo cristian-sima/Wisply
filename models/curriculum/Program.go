@@ -109,7 +109,8 @@ func CreateProgram(name string) error {
 func GetAllPrograms() []Program {
 	var list []Program
 	fieldList := "`id`, `name`"
-	sql := "SELECT " + fieldList + " FROM `program_of_study` "
+	orderClause := "ORDER BY `name` ASC"
+	sql := "SELECT " + fieldList + " FROM `program_of_study` " + orderClause
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		item := Program{}

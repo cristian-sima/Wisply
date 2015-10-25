@@ -92,7 +92,7 @@ var AdanceOptionsProgram = function () {
 
       cancelButton = {
         label: "Cancel",
-        className: "btn-primary",
+        className: "btn-success",
         callback: function () {
           this.modal('hide');
         }

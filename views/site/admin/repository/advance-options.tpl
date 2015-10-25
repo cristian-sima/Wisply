@@ -25,18 +25,18 @@
             </div>
           </div>
           <div>
-            <h2>Clear repository</h2>
+            <h2>Clear metadata</h2>
             <div class="well">
               This option can be used to clear all the records, collections, formats, identifiers, emails and the identification details.
               <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the items can not be recovered.</span></h5><br />
-              <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger emptyRepositoryButton">Clear the contents of repository</a>
+              <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger emptyRepositoryButton">Clear metadata from {{ .repository.Name }}</a>
             </div>
           </div>
           <div>
             <h2>Delete</h2>
             <div class="well">
               <h5><span class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Please note that the repository can not be recovered.</span></h5><br />
-              <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete repository from Wisply</a>
+              <a data-id="{{ .repository.ID }}" data-name="" href="#" class="btn btn-danger deleteRepositoryButton">Delete {{ .repository.Name }}</a>
             </div>
           </div>
         </div>

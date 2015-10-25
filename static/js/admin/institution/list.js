@@ -90,7 +90,7 @@ var Institutions = function () {
         }
       };
       mainButton = {
-        label: "Yes",
+        label: "Delete",
         className: "btn-danger",
         callback: function () {
           wisply.institutionsManager.delete(institution);

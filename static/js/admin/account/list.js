@@ -72,14 +72,14 @@ var Accounts = function() {
 					mainButton;
 				cancelButton = {
 					label: "Cancel",
-					className: "btn-default",
+					className: "btn-success",
 					callback: function() {
 						this.modal('hide');
 					}
 				};
 				mainButton = {
-					label: "Delete",
-					className: "btn-primary",
+					label: "Delete account",
+					className: "btn-danger",
 					callback: function() {
 						wisply.accountsManager.delete(account);
 					}
@@ -89,8 +89,8 @@ var Accounts = function() {
 					"main": mainButton
 				};
 				msg = {
-					title: "Please confirm!",
-					message: "The account <b>" + account.name + "</b> will be permanently removed. Are you sure?",
+					title: "We need your confirmation",
+					message: "The account <b>" + account.name + "</b> will be permanently removed.<br /><br /> Are you sure?",
 					onEscape: true,
 					buttons: buttons
 				};

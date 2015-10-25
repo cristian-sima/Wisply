@@ -54,19 +54,10 @@
             <b class="caret"></b>
           </a>
           <ul class="dropdown-menu multi-level">
-            <li class="dropdown-submenu">
-              <a href="/curricula" class="dropdown-toggle" data-toggle="curriculum" role="button" aria-expanded="true">
+            <li>
+              <a href="/curricula" >
                 Curricula
               </a>
-              <ul class="dropdown-menu" role="menu">
-                {{range $index, $program := .programs}}
-                <li>
-                  <a href="/curriculum/{{$program.GetID }}">
-                    {{ $program.GetName }}
-                  </a>
-                </li>
-                {{ end }}
-              </ul>
             </li>
             <li class="divider"></li>
             <li><a href="/about">About</a></li>

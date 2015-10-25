@@ -1,58 +1,75 @@
-body {
-    background-color: #EFEFEF;
-    font: 0.9em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+/* CSSTidy 1.3: Sun, 25 Oct 2015 07:58:52 -0700 */
+body
+{
+  background-color:#EFEFEF;
+  font:.9em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
-h1 {
-    margin: 0;
-    padding: 0;
-    color: #FFF;
-    text-align: center;
-    margin-bottom: 20px;
+
+h1
+{
+  color:#FFF;
+  text-align:center;
+  margin:0 0 20px;
+  padding:0;
 }
-div.wrapper {
-    width: 600px;
-    margin: 40px auto 0;
-    text-align: center;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+div.wrapper
+{
+  width:600px;
+  text-align:center;
+  box-shadow:5px 5px 10px rgba(0,0,0,0.3);
+  margin:40px auto 0;
 }
-.wrapper a {
-    display: block;
-    font-size: 0.9em;
-    padding-top: 20px;
-    color: #FFF;
-    text-decoration: none;
-    text-align: center;
+
+.wrapper a
+{
+  display:block;
+  font-size:.9em;
+  padding-top:20px;
+  color:#FFF;
+  text-decoration:none;
+  text-align:center;
 }
-.container {
-    width: 600px;
-    padding-bottom: 15px;
-    background-color: #FFFFFF;
+
+.container
+{
+  width:600px;
+  padding-bottom:15px;
+  background-color:#FFF;
 }
-.navtop {
-    height: 63px;
-    background-color: #24B2EB;
+
+.navtop
+{
+  height:63px;
+  background-color:#24B2EB;
 }
-.navtop .inner-text {
-    padding: 13px;
+
+.navtop .inner-text
+{
+  padding:13px;
 }
-.content {
-    padding: 10px 10px 25px;
-    background: #FFFFFF;
-    color: #333;
+
+.content
+{
+  color:#333;
+  padding:10px 10px 25px;
 }
-a.button {
-    color: white;
-    padding: 15px 20px;
-    text-shadow: 1px 1px 0 #00A5FF;
-    font-weight: bold;
-    text-align: center;
-    border: #24B2EB solid 1px;
-    margin: 0 200px;
-    clear: both;
-    background-color: #24B2EB;
-    border-radius: 100px;
+
+a.button
+{
+  color:#FFF;
+  text-shadow:1px 1px 0 #00A5FF;
+  font-weight:700;
+  text-align:center;
+  clear:both;
+  background-color:#24B2EB;
+  border-radius:100px;
+  margin:0 200px;
+  padding:15px 20px;
 }
-a.button:hover {
-    text-decoration: none;
-    background-color: #24B2EB;
+
+a.button:hover
+{
+  text-decoration:none;
+  background-color:#24B2EB;
 }

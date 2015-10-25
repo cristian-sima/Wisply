@@ -2,31 +2,28 @@
 Author     Cristian Sima
 */
 
-#logo {
-  display: inline;
-}
 
 .hideMe {
     display: none;
 }
 
 .panel-body {
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 .progress {
   height:20px
 }
 
-#sidebar {
+.admin-sidebar {
   height: 100%;
   padding-right: 0;
   padding-top: 20px;
 }
-#sidebar .nav {
+.admin-sidebar .nav {
   width: 95%;
 }
-#sidebar li {
+li.admin-sidebar {
   border:0 #f2f2f2 solid;
   border-bottom-width:1px;
 }
@@ -67,7 +64,7 @@ Author     Cristian Sima
     top: 0;
     width: 41.6%;
   }
-  #sidebar {
+  .admin-sidebar {
     padding-top:0;
   }
 }
@@ -132,7 +129,7 @@ h6 {
   width:350px;
   height: 50px;
   padding: 8px 2px;
-  padding-top: 0px;
+  padding-top: 0;
   line-height: 30px;
   -webkit-border-radius: 8px;
      -moz-border-radius: 8px;

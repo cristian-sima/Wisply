@@ -33,7 +33,7 @@ function suscces(msg) {
 
 client.addCommand("checkPageExists", function(url) {
     return this.url(url).then(function(urlResult) {
-        return this.isExisting("#logo").then(function(isExisting) {
+        return this.isExisting(".wisply-logo").then(function(isExisting) {
             expect(isExisting).toBeFalsy();
         });
     });

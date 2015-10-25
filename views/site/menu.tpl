@@ -3,7 +3,7 @@
   <div class="container">
     <div class="navbar-header">
       <a href="/" class="navbar-brand" id="full-logo">
-        <img id="logo" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
+        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
       </a>
       {{ if .isAdminPage }}
       <button type="button" class="navbar-toggle btn-lg" data-toggle="offcanvas" data-target=".sidebar-nav">

@@ -9,7 +9,6 @@ describe('Admin - Accounts', function() {
   admin.init(browser);
   it('navigate to page', function(done) {
       browser
-      .element("#sidebar")
       .click("a=Accounts")
       .getTitle(function(err, title) {
           expect(err).toBe(undefined);

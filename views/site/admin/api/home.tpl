@@ -7,7 +7,8 @@
   </div>
   <div class="panel-body">
     <div>
-      This panel can be used to allow or reject tables from being downloaded by the public. <Br />
+      This panel can be used to allow or reject tables from being downloaded by the public. The public list is available <a target="_blank" href="http://localhost:8081/api/table/list">here</a>.
+      <br />
       The tables which are not listed here are by default <strong>rejected</strong>.
       <br />
       <br />
@@ -15,7 +16,7 @@
   <div class="btn-group">
     <a href="/admin/api/add" class="btn btn-primary">
       <span class="glyphicon glyphicon-plus"></span>
-      Add table on download list
+      Add table on API public download list
     </a>
   </div>
   <br />

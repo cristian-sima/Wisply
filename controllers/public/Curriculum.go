@@ -7,6 +7,11 @@ type Curriculum struct {
 	Controller
 }
 
+// ShowCurricula shows all the curricula
+func (controller *Curriculum) ShowCurricula() {
+	controller.TplNames = "site/public/curriculum/curricula.tpl"
+}
+
 // ShowProgram shows the dashboard for a program
 func (controller *Curriculum) ShowProgram() {
 	controller.loadProgramToTemplate()

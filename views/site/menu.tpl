@@ -55,10 +55,10 @@
           </a>
           <ul class="dropdown-menu multi-level">
             <li class="dropdown-submenu">
-              <a href="" class="dropdown-toggle" data-toggle="curriculum" role="button" aria-expanded="false">
+              <a href="/curricula" class="dropdown-toggle" data-toggle="curriculum" role="button" aria-expanded="true">
                 Curricula
               </a>
-              <ul class="dropdown-menu" role="curriculum">
+              <ul class="dropdown-menu" role="menu">
                 {{range $index, $program := .programs}}
                 <li>
                   <a href="/curriculum/{{$program.GetID }}">

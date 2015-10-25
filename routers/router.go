@@ -26,6 +26,8 @@ func init() {
 	beego.Router("/cookies", &public.StaticController{}, "*:ShowCookiesPolicy")
 	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTerms")
 
+	beego.Router("/curricula", &public.Curriculum{}, "*:ShowCurricula")
+
 	// public
 	// ----------------------------- Authentification --------------------------------------
 

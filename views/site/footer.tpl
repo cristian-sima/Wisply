@@ -24,9 +24,10 @@
               <a class="hover">More<span class="caret"></span></a>
             </span>
             <ul class="dropdown-menu" aria-labelledby="moreOptionsFooter">
+              <li><a href="/thank-you">Thank you</a></li>
               <li><a href="/accessibility">Accessibility</a></li>
               <li><a href="/privacy">Privacy Policy</a></li>
-                <li><a href="/contact">Contact</a></li>
+              <li><a href="/contact">Contact</a></li>
             </ul>
           </div>
         </li>

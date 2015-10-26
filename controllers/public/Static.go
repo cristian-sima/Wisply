@@ -19,6 +19,13 @@ func (controller *StaticController) ShowContact() {
 	controller.showStaticPage(pageName)
 }
 
+// ShowThankYouPage shows the thank you page
+func (controller *StaticController) ShowThankYouPage() {
+	pageName := "thank-you"
+	controller.SetCustomTitle("Thank you")
+	controller.showStaticPage(pageName)
+}
+
 // ShowIndex shows the index page
 func (controller *StaticController) ShowIndex() {
 	pageName := "index"

@@ -5,7 +5,7 @@
         <aside class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li><a href="/api">API & Developers</a></li>
+            <li><a href="/api">API &amp; Developers</a></li>
           </ul>
         </aside>
         <section class="panel-body">
@@ -90,7 +90,7 @@
                       <br />
                       Where: <br />
                       <ul>
-                        <li><strong>query</strong> is the string which you want to search. It must be less then 50 characters.</li>
+                        <li><strong>query</strong> is the string which you want to search. It must be less then 100 characters.</li>
                       </ul>
                     </div>
                   </li>

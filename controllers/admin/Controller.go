@@ -2,24 +2,12 @@
 // The administration page is a restricted area and an account needs special priviledges
 package admin
 
-import (
-	general "github.com/cristian-sima/Wisply/controllers/general"
-	model "github.com/cristian-sima/Wisply/models/admin"
-)
+import general "github.com/cristian-sima/Wisply/controllers/general"
 
 // Controller must be inherited by all the pages that are for administrators
 // It ensures that an account is connected when accesing the page
 type Controller struct {
 	general.WisplyController
-}
-
-// DisplayDashboard shows the administrator dashboard
-func (controller *Controller) DisplayDashboard() {
-	dashboard := model.NewDashboard()
-	controller.Data["numberOfAccounts"] = dashboard.Accounts
-	controller.Data["numberOfRepositories"] = dashboard.Repositories
-	controller.TplNames = "site/admin/admin/dashboard.tpl"
-	controller.SetCustomTitle("Admin - Dashboard")
 }
 
 // Prepare redirects to a login page in case the account is not connected,

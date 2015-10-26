@@ -25,6 +25,7 @@ func init() {
 	beego.Router("/privacy", &public.StaticController{}, "*:ShowPrivacyPolicy")
 	beego.Router("/cookies", &public.StaticController{}, "*:ShowCookiesPolicy")
 	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTerms")
+	beego.Router("/thank-you", &public.StaticController{}, "*:ShowThankYouPage")
 
 	beego.Router("/curricula", &public.Curriculum{}, "*:ShowCurricula")
 
@@ -231,7 +232,7 @@ func init() {
 
 	adminNS :=
 		beego.NewNamespace("/admin",
-			beego.NSRouter("", &admin.Controller{}, "*:DisplayDashboard"),
+			beego.NSRouter("", &admin.Home{}, "*:DisplayDashboard"),
 			adminAccountsNS,
 			adminRepositoryNS,
 			adminInstitutionsNS,

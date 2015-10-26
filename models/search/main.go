@@ -3,5 +3,5 @@ package search
 
 var (
 	space                     = " "
-	allowedCharactersForQuery = 30
+	allowedCharactersForQuery = 100
 )

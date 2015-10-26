@@ -1,13 +1,10 @@
 package general
 
-import (
-	beego "github.com/astaxie/beego"
-	adapter "github.com/cristian-sima/Wisply/models/adapter"
-)
+import adapter "github.com/cristian-sima/Wisply/models/adapter"
 
 // MessageController encapsulates the operations for showing messages
 type MessageController struct {
-	beego.Controller
+	Controller
 }
 
 // DisplaySimpleError shows an simple error message (string)

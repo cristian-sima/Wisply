@@ -13,20 +13,20 @@
     <br />
     The filter should be in JSON format and it must be like this:<br />
     <ul>
-        <li><strong>Operation</strong> (e.g. harvest)
-          <ul>
-            <li><strong>Item</strong> (e.g. records)
-              <ul>
-                <li>
-                  <strong>Action</strong> (e.g. reject) :  <strong>regex</strong> (e.g "0-9")
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+      <li><strong>Operation</strong> (e.g. harvest)
+        <ul>
+          <li><strong>Item</strong> (e.g. records)
+            <ul>
+              <li>
+                <strong>Action</strong> (e.g. reject) :  <strong>regex</strong> (e.g "0-9")
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
     </ul>
     <div>
-        <span class="text-warning"><span class="glyphicon glyphicon-alert"></span> Notice</span> In case your filter does not follow the format presented above, it will be ignored.
+      <span class="text-warning"><span class="glyphicon glyphicon-alert"></span> Notice</span> In case your filter does not follow the format presented above, it will be ignored.
     </div>
     <br />
     <br />
@@ -41,45 +41,38 @@
     <fieldset>
       <div class="form-group text-center">
         <div class="col-lg-10 col-lg-offset-2">
-          <input type="submit" class="btn btn-primary" value="Change" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Change" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Cancel</a>
         </div>
       </div>
     </fieldset>
   </form>
 </div>
-</div>
 <link href="/static/3rd_party/product/jsoneditor/jsoneditor.min.css" type="text/css" rel="stylesheet" property='stylesheet' />
 <script src="/static/3rd_party/product/jsoneditor/jsoneditor.min.js"></script>
-
 <script>
-
 // Stores the JSON editor
 var editor;
-
 $(document).ready(function() {
   $("#repository-filter").focus();
   $("#filter-form").submit(formSubmited);
   loadEditor();
 });
-
 /**
- * It is called when the form is sent. It takes the value of the filter and sends the form
- * @param  {event} event The event which is geneated
- */
+* It is called when the form is sent. It takes the value of the filter and sends the form
+* @param  {event} event The event which is geneated
+*/
 function formSubmited(event) {
   // get json
   var json = JSON.stringify(editor.get());
   $("#repository-filter").val(json);
 }
-
 /**
- * It loads the filter from database into the editor
- */
+* It loads the filter from database into the editor
+*/
 function loadEditor() {
   var container = document.getElementById('jsoneditor'),
   raw = "{{ .repository.GetFilter }}";
   editor = new JSONEditor(container);
-
   if (raw !== "") {
     var json = JSON.parse(raw);
     editor.set(json);

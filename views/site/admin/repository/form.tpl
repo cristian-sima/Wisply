@@ -39,7 +39,7 @@
       </div>
       {{ if eq .action "Add" }}
       <div class="form-group">
-        <label for="institution-URL" class="col-lg-2 control-label">Institution <a href="/admin/institutions/add" target="_blank"><span data-toggle="tooltip" data-placement="top" title="Create institution" class="glyphicon glyphicon-plus-sign text-success"> </span></a></label>
+        <label for="repository-institution" class="col-lg-2 control-label">Institution <a href="/admin/institutions/add" target="_blank"><span data-toggle="tooltip" data-placement="top" title="Create institution" class="glyphicon glyphicon-plus-sign text-success"> </span></a></label>
         <div class="col-lg-10">
           <select class="form-control" name="repository-institution" id="repository-institution">
             {{ $selected := .selectedInstitution }}
@@ -76,13 +76,12 @@
           {{ if eq .action "Add"}}
           <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories" class="btn btn-default">Back to list</a>
           {{ else }}
-          <input type="submit" class="btn btn-primary" value="Submit" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options" class="btn btn-default">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Submit" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Cancel</a>
           {{ end }}
         </div>
       </div>
     </fieldset>
   </form>
-</div>
 </div>
 <script>
 $(document).ready(function() {

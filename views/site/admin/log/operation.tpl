@@ -33,22 +33,24 @@
       <div class="col-lg-4 col-md-4 col-sm-4">
         <table class="table">
           <tbody>
-            <td>
-              {{ if .operation.Action.IsRunning }}
-              <span class="label label-warning">Working</span>
-              {{ else }}
-              <span class="label label-success">Finished</span>
-              {{ end }}
-            </td>
-            <td>
-              <strong>
+            <tr>
+              <td>
                 {{ if .operation.Action.IsRunning }}
-                <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                <span class="label label-warning">Working</span>
                 {{ else }}
-                <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
+                <span class="label label-success">Finished</span>
                 {{ end }}
-              </strong>
-            </td>
+              </td>
+              <td>
+                <strong>
+                  {{ if .operation.Action.IsRunning }}
+                  <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                  {{ else }}
+                  <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
+                  {{ end }}
+                </strong>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -77,7 +79,7 @@
           <tbody>
             {{range $index, $task := .tasks}}
             <tr class="{{ $task.GetResult }}">
-              <td class="col-md-1">{{ $task.ID }}</a></td>
+              <td class="col-md-1">{{ $task.ID }}</td>
               <td class="col-md-2.5"><small>{{ $task.Action.Content }}</small></td>
               <!-- start state -->
               <td class="col-md-1">

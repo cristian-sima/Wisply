@@ -12,16 +12,16 @@
     <form method="POST" class="form-horizontal">
       {{ .xsrf_input }}
       <div class="form-group">
-        <label for="table-name" class="col-lg-2 control-label"></label>
+        <span class="col-lg-2 control-label"></span>
         <div class="col-lg-10">
-        Program <a target="_blabk" href="/curriculum/{{ .program.GetID }}"><strong>{{ .program.GetName }} </strong></a>
+          Program <a target="_blank" href="/curriculum/{{ .program.GetID }}"><strong>{{ .program.GetName }} </strong></a>
         </div>
       </div>
       <fieldset>
         <div class="form-group">
           <label for="program-description" class="col-lg-2 control-label">Description</label>
           <div class="col-lg-10">
-            <textarea type="text" class="form-control" name="program-description" id="program-description" placeholder="Description" pattern=".{3,1000}" title="The name has 3 up to 1000 characters!">{{ .program.GetDescription }}</textarea>
+            <textarea class="form-control" name="program-description" id="program-description" placeholder="Description" title="The name has 3 up to 1000 characters!">{{ .program.GetDescription }}</textarea>
           </div>
         </div>
         <div class="form-group">
@@ -30,16 +30,16 @@
           </div>
         </fieldset>
       </form>
+    </div>
   </div>
-</div>
-<script src="/static/3rd_party/product/tinymce/js/tinymce/tinymce.min.js"></script>
-<script>
-$(document).ready(function(){
-	tinymce.init({
-		selector: "#program-description",
-		auto_focus: "program-description",
-    height: "300px",
-	});
-  $("#program-description").focus();
-});
-</script>
+  <script src="/static/3rd_party/product/tinymce/js/tinymce/tinymce.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    tinymce.init({
+      selector: "#program-description",
+      auto_focus: "program-description",
+      height: "300px",
+    });
+    $("#program-description").focus();
+  });
+  </script>

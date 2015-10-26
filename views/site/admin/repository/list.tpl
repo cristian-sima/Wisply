@@ -67,42 +67,28 @@
                 {{ else if eq  $element.Status "verification-failed" }}
                 <span class="label label-danger">verification failed</span>
 
-
                 {{ else if eq  $element.Status "problems" }}
                 <span class="label label-danger">problems</span>
-
                 {{ end }}
               </div>
             </td>
             <td id="rep-action-{{ $element.ID }}">
               {{ if eq  $element.Status "unverified" }}
               <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' ></span></a>
-
               {{ else if eq  $element.Status "ok" }}
               <a href=""> <span data-toggle='tooltip' data-ID="{{ $element.ID }}" data-placement='top' title='' data-original-title='Update' class='repositories-init-harvest glyphicon glyphicon-retweet hover' ></span></a>
-
               {{ else if eq  $element.Status "verified" }}
               <span class="text-muted">Working...</span>
-
-
               {{ else if eq  $element.Status "verifying" }}
               <span class="text-muted">Working...</span>
-
-
               {{ else if eq  $element.Status "updating" }}
               <span class="text-muted">Working...</span>
-
               {{ else if eq  $element.Status "initializing" }}
               <span class="text-muted">Working...</span>
-
-
               {{ else if eq  $element.Status "verification-failed" }}
               <a href='/admin/log/'>See log</a>
-
-
               {{ else if eq  $element.Status "problems" }}
               <a href='/admin/log/'>See log</a>
-
               {{ end }}
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
@@ -111,7 +97,6 @@
           {{end }}
         </tbody>
       </table>
-
       <div id="harvest-history-container" class="modal fade">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -127,12 +112,12 @@
           </div>
         </div>
       </div>
-
     </div>
     {{ else }}
     There are no repositories... :(
     {{ end }}
-  </div>
+  </section>
+</div>
 </div>
 <script>
 var server = {};

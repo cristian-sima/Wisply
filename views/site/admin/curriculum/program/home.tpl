@@ -8,7 +8,6 @@
   </div>
   <div class="panel-body">
     <span class="h4">{{ .program.GetName }}</span>
-
     <hr />
     <div>
       <a class="btn btn-primary" href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options">Advance options</a>

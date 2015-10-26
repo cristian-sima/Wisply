@@ -25,7 +25,7 @@
             </tr>
             <tr>
               <td>Repository</td>
-              <td><strong><a href="/admin/repositories/repository/{{ .harvestProcess.GetRepository.ID }}">{{ .harvestProcess.GetRepository.Name }}</strong></a></td>
+              <td><strong><a href="/admin/repositories/repository/{{ .harvestProcess.GetRepository.ID }}">{{ .harvestProcess.GetRepository.Name }}</a></strong></td>
             </tr>
           </tbody>
         </table>
@@ -130,7 +130,7 @@
               <tbody>
                 {{range $index, $task := $tasks}}
                 <tr class="{{ $task.GetResult }}">
-                  <td class="col-md-1">{{ $task.ID }}</a></td>
+                  <td class="col-md-1">{{ $task.ID }}</td>
                   <td class="col-md-2.5"><small>{{ $task.Action.Content }}</small></td>
                   <!-- start state -->
                   <td class="col-md-1">

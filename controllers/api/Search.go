@@ -13,9 +13,18 @@ func (controller *Search) SearchAnything() {
 	if controller.IsAccountConnected() {
 		controller.saveNotAccessedSearch(query)
 	}
-	request := search.NewRequest(query)
-	request.SearchAnything()
-	controller.deliverResults(request.Response)
+	request, err := search.NewRequest(query)
+	if err != nil {
+		controller.sendEmptyArray()
+	} else {
+		request.SearchAnything()
+		controller.deliverResults(request.Response)
+	}
+}
+
+// JustSaveAccountQuery saves the token
+func (controller *Search) sendEmptyArray() {
+	controller.Ctx.Output.Json(make([]int, 0), false, false)
 }
 
 // JustSaveAccountQuery saves the token

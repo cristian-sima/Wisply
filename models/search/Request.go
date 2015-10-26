@@ -1,6 +1,7 @@
 package search
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -56,11 +57,24 @@ func (request *Request) enquireData() {
 	}
 }
 
+func isValidQuery(query string) bool {
+
+	if len(query) <= allowedCharactersForQuery {
+		return true
+	}
+	return false
+}
+
 // NewRequest creates a search request
-func NewRequest(query string) *Request {
+func NewRequest(query string) (*Request, error) {
+	var request Request
+	if !isValidQuery(query) {
+		return &request, errors.New("Invalid query")
+	}
 	response := NewResponse(query)
-	return &Request{
+	request = Request{
 		query:    query,
 		Response: response,
 	}
+	return &request, nil
 }

@@ -1,4 +1,7 @@
 // Package search contains all the objects for searching
 package search
 
-var space = " "
+var (
+	space                     = " "
+	allowedCharactersForQuery = 30
+)

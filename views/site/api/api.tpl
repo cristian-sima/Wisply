@@ -48,15 +48,15 @@
               </div>
               <div class="panel-body">
                 <br />
-                You may use data from Wisply in your application. Wisply makes available a public API <br />
-
-                <ul>
-                  <li>
+                You can integrate data from Wisply with your application. Wisply makes available a public API which you can use.
+                <br />
+                <br />
+                <ul class="list-group">
+                  <li class="list-group-item">
                     <div>
-                      <h5>List repository resources</h5>
-                      Type <span class="label label-primary">GET</span>
+                      <h5>List the resources from a repository</h5>
+                      Type <span class="label label-info">GET</span>
                       <br />
-                      How to use it <br />
                       <pre>api/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&amp;format={<strong>format</strong>}</pre>
                       Where:
                       <br />
@@ -66,6 +66,31 @@
                         <li><strong>resourceNumber</strong> the number of resources. Please note  that Wisply limits the number to 100. For more, please download the table</li>
                         <li><strong>collectionId</strong> is the id of the collection within the repository</li>
                         <li><strong>format</strong> may be html or json</li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div>
+                      <h5>Search for items</h5>
+                      Type <span class="label label-info">GET</span>
+                      <br />
+                      <pre>api/search/anything/{<strong>query</strong>}</pre>
+                      <br />
+                      <blockquote>
+                        This request searches for (in this order): <br />
+                        <ul>
+                          <li>curricula</li>
+                          <li>institutions</li>
+                          <li>repositories</li>
+                          <li>collections</li>
+                          <li>resources (in case the query is at least 5 characters)</li>
+                        </ul>
+                        Wisply returns at most 5 items of each type.
+                      </blockquote>
+                      <br />
+                      Where: <br />
+                      <ul>
+                        <li><strong>query</strong> is the string which you want to search. It must be less then 50 characters.</li>
                       </ul>
                     </div>
                   </li>

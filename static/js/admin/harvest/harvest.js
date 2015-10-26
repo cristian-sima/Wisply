@@ -94,34 +94,53 @@ var Harvest = function() {
 					header = "<thead><tr><th class='text-center'>Number</th><th class='text-center'>Date</th><th class='text-center'>Category</th><th class='text-center'>Content</th></tr></thead>";
 					return header;
 				}
+				/**
+				 * It returns the HTML code for a row which represents an event
+				 * @param  {object} currentEvent The event
+				 * @param  {number} currentIndex The ID of the row
+				 * @return {string} The HTML code for event
+				 */
+				function getHTMLEvent(currentEvent, currentIndex) {
+					/**
+					 * It returns the type of HTML code
+					 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
+					 * @return {string}      The HTML code for the type of the event
+					 */
+					function getLabel(type) {
+						var textClass = "",
+							content = "",
+							typeObject = {
+								"LOG" : {
+									class: "",
+									content:"Event",
+								},
+								"ERROR": {
+									class: "text-danger",
+									content : "Error",
+								},
+								"WARN" : {
+									class : "text-warning",
+									content: "Warning",
+								},
+							},
+							currentType = typeObject[type];
+						textClass = currentType.class;
+						content = currentType.content;
+						return "<span class='" + textClass + "'>" + content + "</span>";
+					}
+					var htmlEvent = "";
+					htmlEvent += "<tr>";
+					htmlEvent += "<td>" + currentIndex + "</td>";
+					htmlEvent += "<td>" + currentEvent.date + "</td>";
+					htmlEvent += "<td>" + getLabel(currentEvent.type) + "</td>";
+					htmlEvent += "<td>" + currentEvent.content + "</td>";
+					htmlEvent += "</tr>";
+					return htmlEvent;
+				}
 				var events = "<tbody>",
 					moreButton = "",
-					index, currentEvent;
-				/**
-				 * It returns the type of HTML code
-				 * @param  {string} type It can be "LOG", "ERROR" or "WARN"
-				 * @return {string}      The HTML code for the type of the event
-				 */
-				function getType(type) {
-					var textClass = "",
-						content = "";
-					switch (type) {
-						case "LOG":
-							textClass = "";
-							content = "Event";
-							break;
-						case "ERROR":
-							textClass = "text-danger";
-							content = "Error";
-							break;
-						case "WARN":
-							textClass = "text-warning";
-							content = "Warning";
-							break;
-					}
-					return "<span class='" + textClass + "'>" + content + "</span>";
-				}
-				var dif = this.data.length - this.see,
+					index, currentEvent,
+					dif = this.data.length - this.see,
 					see = 0;
 				if (dif <= 0) {
 					see = this.data.length - 1;
@@ -130,13 +149,7 @@ var Harvest = function() {
 					moreButton = "You have seen " + this.see + " events. There are " + dif + " events more <br /><div class='text-center'><button id='harvest-history-see-more' class='btn btn-info'>See more</button></div>";
 				}
 				for (index = this.start; index <= see; index++) {
-					currentEvent = this.data[index];
-					events += "<tr>";
-					events += "<td>" + (this.data.length - index) + "</td>";
-					events += "<td>" + currentEvent.date + "</td>";
-					events += "<td>" + getType(currentEvent.type) + "</td>";
-					events += "<td>" + currentEvent.content + "</td>";
-					events += "</tr>";
+						events += getHTMLEvent(this.data[index], (this.data.length - index));
 				}
 				events += "</tbody>";
 				var html = "<table class='table table=condensed table-hover ''>";

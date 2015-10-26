@@ -361,28 +361,38 @@ var HarvestProcess = function() {
 			 * @param  {object} message The message from the server
 			 */
 			decide: function(message) {
+
+				/**
+				 * It is called when the status of the repository has changed
+				 * It decides which operation to call
+				 * @param  {object} decideManager The reference to the decide manager
+				 * @param  {object} message       The reference to the object from the server
+				 */
+				function repositoryStatusChanged(decideManager, message) {
+					decideManager.stage.repository.status = message.Value;
+					decideManager.stage.GUI.updateRepositoryStatus();
+					switch(message.Value) {
+						case "verifying":
+							decideManager.stage.performStage(3);
+						break;
+							case "initializing":
+							decideManager.stage.firedStageFinished();
+							decideManager.stage.firedStageFinished();
+						break;
+						case "verification-failed":
+							decideManager.stage.GUI.showCurrent("The verification failed");
+							decideManager.stage.pause();
+							decideManager.stage.stages[3].enableModifyURL();
+						break;
+						case "verified":
+							decideManager.stage.firedStageFinished();
+						break;
+					}
+				}
 				if (this.isGoogMessage(message)) {
 					switch (message.Name) {
 						case "repository-status-changed":
-							this.stage.repository.status = message.Value;
-							this.stage.GUI.updateRepositoryStatus();
-							switch(message.Value) {
-								case "verifying":
-									this.stage.performStage(3);
-								break;
-									case "initializing":
-									this.stage.firedStageFinished();
-									this.stage.firedStageFinished();
-								break;
-								case "verification-failed":
-									this.stage.GUI.showCurrent("The verification failed");
-									this.stage.pause();
-									this.stage.stages[3].enableModifyURL();
-								break;
-								case "verified":
-									this.stage.firedStageFinished();
-								break;
-							}
+							repositoryStatusChanged(this, message);
 							break;
 						case "harvest-update":
 							this.stage.stages[5].analyse(message.Value);

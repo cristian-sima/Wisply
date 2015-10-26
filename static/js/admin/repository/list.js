@@ -252,27 +252,21 @@ var Repositories = function () {
    */
   GUI.getStatusColor = function (status) {
     var html = "",
-        label = "";
-    switch (status) {
-    case "unverified":
-      label = "info";
-        break;
-    case "problems":
-    case "verification-failed":
-      label = "danger";
-        break;
-    case "updating":
-    case "verifying":
-    case "initializing":
-      label = "warning";
-        break;
-    case "ok":
-    case "verified":
-      label = "success";
-        break;
-    default:
+        label,
+        statusObject = {
+          "unverified" :          "info",
+          "problems":             "danger",
+          "verification-failed":  "danger",
+          "updating":             "warning",
+          "verifying":            "warning",
+          "initializing":         "warning",
+          "ok":                   "success",
+          "verified":             "success",
+        };
+    label = statusObject[status];
+    if(!label){
+      label = "Unknown";
       console.log("The status [" + status + "] is not a valid one");
-      break;
     }
     html += '<span class="label label-' + label + '">' + status + '</span>';
     return html;

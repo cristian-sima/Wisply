@@ -44,7 +44,7 @@
           <section>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">API requests</h3>
+                <h3 id="http" class="panel-title">API requests</h3>
               </div>
               <div class="panel-body">
                 <br />

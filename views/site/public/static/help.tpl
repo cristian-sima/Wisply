@@ -26,11 +26,20 @@
         <section class="panel-body">
           <h1>Help</h1>
           This page contain information which may help you.
-
           <section>
             <h2 id="#FAQ">FAQ</h2>
             <ol>
-              <li><a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?</a>
+              <li>
+                <a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?
+                </a>
+              </li>
+              <li>
+                <a class="scroll" href="#help-answers-2">Can I obtain the data that Wisply is using?
+                </a>
+              </li>
+              <li>
+                <a class="scroll" href="#help-answers-3">How do you get data from institutions?
+                </a>
               </li>
             </ol>
             <section id="help-answers">
@@ -38,6 +47,27 @@
               <article id="help-answers-1" class="well">
                 <h3>I need an email to log in. Why don't you use an username?</h3>
                 We had to decide which method is better. We have chosen the combination of a real name and an email for various reasons. Firstly, the real name idenfity a person in the virtual space better than a combination of letters and digits. A username can be forgetten while an email is frequently used, so it may be more covinient for you to use it.
+              </article>
+              <article id="help-answers-2" class="well">
+                <h3>Can I obtain the data that Wisply is using?</h3>
+                Of course! <br />
+                There are two main ways to get Wisply data <br />
+                <ol>
+                  <li>HTTP requests using our Application Programming Interface (API). The list of requests is on <a href="api#http">API page</a>.</li>
+                  <li>You can download the entire tables which Wisply is using. The list is available <a class="btn btn-xs btn-primary" href="api/table/list">HERE</a></li>
+                </ol>
+              </article>
+              <article id="help-answers-3" class="well">
+                <h3>How do you get data from institutions?</h3>
+                Great question! <br />
+                Wisply has tried to automate the process of collecting and analysing data from different institutions.<br />
+                <br />
+                <br />
+                The following diagram explains how wisply is working:
+                <img src="/static/img/public/about/about.png" class="img-responsive" />
+                <br />
+                <br />
+                For now, Wisply is only able to gather data from <a href="http://www.eprints.org/uk/">EPrints</a> repositories.
               </article>
             </section>
           </section>

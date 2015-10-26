@@ -50,8 +50,6 @@ var Institutions = function () {
       $(".deleteInstitutionButton").click(function(event){
         event.preventDefault();
         var object,
-        name,
-        id,
         institution;
         object = $(this);
         institution = new Institution({

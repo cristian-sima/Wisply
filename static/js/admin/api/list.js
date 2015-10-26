@@ -49,8 +49,6 @@ var AdminAPI = function () {
       $(".makeTablePrivate").click(function(event){
         event.preventDefault();
         var object,
-        name,
-        id,
         table;
         object = $(this);
         table = new Table({

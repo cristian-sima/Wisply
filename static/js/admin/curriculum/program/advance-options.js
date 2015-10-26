@@ -157,70 +157,9 @@ var AdanceOptionsProgram = function () {
     },
   };
 
-  /**
-  * The constructor activates the listeners
-  * @memberof Programs
-  * @class GUI
-  * @classdesc It encapsulets the GUI functionality
-  */
-  var GUI = function GUI() {
-  };
-  /**
-   * It returns the HTML span for a status
-   * @param  {string} status The status of the program
-   * @return {string} The HTML code for the status
-   */
-  GUI.getStatusColor = function (status) {
-    var html = "",
-        label = "";
-    switch (status) {
-    case "unverified":
-      label = "info";
-        break;
-    case "problems":
-    case "verification-failed":
-      label = "danger";
-        break;
-    case "updating":
-    case "verifying":
-    case "initializing":
-      label = "warning";
-        break;
-    case "ok":
-    case "verified":
-      label = "success";
-        break;
-    default:
-      console.log("The status [" + status + "] is not a valid one");
-      break;
-    }
-    html += '<span class="label label-' + label + '">' + status + '</span>';
-    return html;
-  };
-  /**
-   * It activates all the listeners for the actions
-   */
-  GUI.activateActionListeners = function() {
-    $(".programs-init-harvest").click(function(event){
-      event.preventDefault();
-      var object,
-      id,
-      xsrf;
-      object = $(this);
-      id = object.data("id");
-      xsrf = wisply.getXSRF();
-      $('<form action="/admin/harvest/init/' + id + '" method="POST">' +
-          '<input type="hidden" name="_xsrf" value="' + xsrf + '">' +
-          '</form>').submit();
-    });
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-  };
   return {
     Program: Program,
     Manager: Manager,
-    GUI: GUI
   };
 };
 $(document).ready(function() {

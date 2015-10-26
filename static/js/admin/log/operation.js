@@ -1,4 +1,4 @@
-/* global jQuery,$, wisply, bootbox */
+/* global jQuery,$, wisply */
 /**
  * @file Encapsulates the functionality for managing the operations
  * @author Cristian Sima

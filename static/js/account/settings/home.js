@@ -1,4 +1,4 @@
-/* global jQuery,$, wisply */
+/* global jQuery,$, wisply, bootbox */
 /**
  * @file Encapsulates the functionality for managing the Settings
  * @author Cristian Sima

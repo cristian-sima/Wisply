@@ -209,7 +209,7 @@ var SearchModule = function() {
 							},
 							limit: 7,
 							templates: {
-								footer: Handlebars.compile(footer),
+								// footer: Handlebars.compile(footer),
 								empty: emptyTemplate,
 								suggestion: Handlebars.compile(suggestion),
 							}

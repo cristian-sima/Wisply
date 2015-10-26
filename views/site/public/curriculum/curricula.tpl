@@ -9,20 +9,21 @@
           </ul>
         </div>
         <section class="panel-body">
-          <section>
+            <h1>Curricula</h1>
+            <br />
             <div>
               <div class="row text-center">
                 {{range $index, $program := .programs}}
                 <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
                   <a href="/curriculum/{{ $program.GetID }}">
-                    <div style="height:150px;" class="thumbnail">
+                    <article style="height:150px;" class="thumbnail">
                       <span class="glyphicon glyphicon-bookmark big-icon"></span>
                       <div class="caption">
-                        <h3>
+                        <h2>
                           {{ ($program.GetName) | html }}
-                        </h3>
+                        </h2>
                       </div>
-                    </div>
+                    </article>
                   </a>
                 </div>
                 {{end }}
@@ -33,8 +34,10 @@
       </div>
     </div>
   </div>
-  <style>
-  .big-icon {
-    font-size: 56px;
-  }
-  </style>
+  <div>
+    <style scoped>
+    .big-icon {
+      font-size: 56px;
+    }
+    </style>
+  </div>

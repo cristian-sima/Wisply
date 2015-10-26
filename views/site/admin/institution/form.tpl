@@ -47,7 +47,7 @@
 									{{ if eq .institution.LogoURL "" }}
 									<span class="glyphicon glyphicon-education institution-logo-default"></span>
 									{{ else }}
-									<img src="{{ .institution.LogoURL }}" class="inlogo"  />
+									<img alt="{{ .institution.Name }}" src="{{ .institution.LogoURL }}" class="inlogo"  />
 									{{ end }}
 									{{ else }}
 									<span class="glyphicon glyphicon-education institution-logo-default"></span>
@@ -56,7 +56,8 @@
 							</div>
 						</label>
 						<div class="col-lg-10">
-							<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{.institution.Description}}</textarea><span class="help-block">
+							<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{.institution.Description}}</textarea>
+	
 								<span class="description-modified hideMe">
 									<span class="text-warning">
 										<span class="glyphicon glyphicon-warning-sign"></span> Auto receiving from Wikipedia off
@@ -94,32 +95,34 @@
 					</div>
 					<div class="form-group">
 						<div class="col-lg-10 col-lg-offset-2">
-							<input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" /> <a href="/admin/institutions" class="btn btn-default">Cancel</a> </div>
+							<input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" />
+							<a href="/admin/institutions" class="btn btn-default">Cancel</a>
 						</div>
-					</fieldset>
-				</form>
-			</div>
+					</div>
+				</fieldset>
+			</form>
 		</div>
-		<script>
-		var server = {};
+	</div>
+	<script>
+	var server = {};
 
-		server.original = {
-			description : "{{.institution.Description}}",
-			wikiReceive : JSON.parse({{.wikiReceive}}),
-			logoURL: {{ .institution.LogoURL }},
-			{{ if .wikiID }}
-			{{ if eq .wikiID "NULL" }}
-			wikiID: "NULL",
-			{{else }}
-			wikiID: parseInt({{ .wikiID }}, 10),
-			{{ end }}
-			{{ else }}
-			wikiID: undefined,
-			{{ end }}
-		};
-		</script>
-		<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" />
-		<script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
-		<script src="/static/js/wisply/typer.js"></script>
-		<script src="/static/js/wisply/wikier.js"></script>
-		<script src="/static/js/admin/institution/functionality.js"></script>
+	server.original = {
+		description : "{{.institution.Description}}",
+		wikiReceive : JSON.parse({{.wikiReceive}}),
+		logoURL: {{ .institution.LogoURL }},
+		{{ if .wikiID }}
+		{{ if eq .wikiID "NULL" }}
+		wikiID: "NULL",
+		{{else }}
+		wikiID: parseInt({{ .wikiID }}, 10),
+		{{ end }}
+		{{ else }}
+		wikiID: undefined,
+		{{ end }}
+	};
+	</script>
+	<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
+	<script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
+	<script src="/static/js/wisply/typer.js"></script>
+	<script src="/static/js/wisply/wikier.js"></script>
+	<script src="/static/js/admin/institution/functionality.js"></script>

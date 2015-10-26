@@ -45,21 +45,22 @@
     </div>
   </div>
 </div>
-<style>
-#Source-URL {
-  width: 100%;
-  border:none;
-}
-.big-number {
-  font-size: 22px;
-  color:#dfdfdf;
-}
-.counter-name {
-  font-size: 16px;
+<div>
+  <style scoped>
+  #Source-URL {
+    width: 100%;
+    border:none;
+  }
+  .big-number {
+    font-size: 22px;
+    color:#dfdfdf;
+  }
+  .counter-name {
+    font-size: 16px;
 
-}
-</style>
-
+  }
+  </style>
+</div>
 <script>
 var server = {},
 repository;

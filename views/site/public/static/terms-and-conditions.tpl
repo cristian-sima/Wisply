@@ -9,14 +9,14 @@
         <div class="panel-body">
           <ul>
             <li><a class="scroll" href="#terms-and-conditions">Introduction</a></li>
-            <li><a  class="scroll" href="#basic-terms">Basic terms</a></li>
-            <li><a  class="scroll" href="#privacy">Privacy</a></li>
-            <li><a  class="scroll" href="#warranties">Warranties</a></li>
-            <li><a  class="scroll" href="#restricted-access">Restricted access</a></li>
-            <li><a  class="scroll" href="#limitations">Limitations</a></li>
-            <li><a  class="scroll" href="#governing-law">Governing Law</a></li>
-            <li><a  class="scroll" href="#use-licence">Use licence</a></li>
-            <li><a  class="scroll" href="#prohibited-uses">Prohibited uses</a></li>
+            <li><a class="scroll" href="#basic-terms">Basic terms</a></li>
+            <li><a class="scroll" href="#privacy">Privacy</a></li>
+            <li><a class="scroll" href="#warranties">Warranties</a></li>
+            <li><a class="scroll" href="#restricted-access">Restricted access</a></li>
+            <li><a class="scroll" href="#limitations">Limitations</a></li>
+            <li><a class="scroll" href="#governing-law">Governing Law</a></li>
+            <li><a class="scroll" href="#use-licence">Use licence</a></li>
+            <li><a class="scroll" href="#prohibited-uses">Prohibited uses</a></li>
           </ul>
         </div>
       </div>
@@ -115,8 +115,7 @@
                 </ul>
                 <p>
                   We consider you
-                  <storng>
-                    do not</strong>:
+                  <strong>do not</strong>:
                   </p>
                   <ul >
                     <li>use excessive bandwidth</li>

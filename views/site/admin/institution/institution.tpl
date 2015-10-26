@@ -14,7 +14,7 @@
                 {{ if eq .institution.LogoURL "" }}
                 <span class="glyphicon glyphicon-education institution-logo-default"></span>
                 {{ else }}
-                <img src="{{ .institution.LogoURL }}" class="inlogo" />
+                <img alt="{{ .institution.Name }}" src="{{ .institution.LogoURL }}" class="inlogo" />
                 {{ end }}
               </div>
             </div>
@@ -25,7 +25,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6" >
             <div>
-              <h1>{{ .institution.Name }}</h2>
+              <h1>{{ .institution.Name }}</h1>
                 <span class="text-muted">Institution</span>
               </div>
               <div>
@@ -67,11 +67,13 @@
         </div>
       </div>
     </div>
-    <style>
-    .big-number {
-      font-size: 30px;
-    }
-    </style>
+    <div>
+      <style scoped>
+      .big-number {
+        font-size: 30px;
+      }
+      </style>
+    </div>
     <script src="/static/js/admin/institution/list.js"></script>
     <script>
     $(document).ready(function(){

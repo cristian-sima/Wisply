@@ -148,11 +148,13 @@
       </div>
     </div>
   </div>
-  <style>
-  .big-number {
-    font-size: 30px;
-  }
-  </style>
+  <div>
+    <style scoped>
+    .big-number {
+      font-size: 30px;
+    }
+    </style>
+  </div>
   <script src="/static/js/admin/repository/list.js"></script>
   <script>
   $(document).ready(function(){

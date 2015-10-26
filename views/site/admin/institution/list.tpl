@@ -41,19 +41,20 @@
               <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
               <td>
                 {{ if eq $element.WikiID "NULL" }}
-                <span class="label label-danger">Disabled</label>
-                  {{ else }}
-                  <span class="label label-success">Enabled</label>
-                    {{ end }}
-                  </td>
-                </tr>
-                {{end }}
-              </tbody>
-            </table>
-          </div>
-          {{ else }}
-          There are no institution... :(
-          {{ end }}
-        </div>
+                <span class="label label-danger">Disabled</span>
+                {{ else }}
+                <span class="label label-success">Enabled</span>
+                {{ end }}
+              </td>
+            </tr>
+            {{end }}
+          </tbody>
+        </table>
       </div>
-      <script src="/static/js/admin/institution/list.js"></script>
+      {{ else }}
+      There are no institution... :(
+      {{ end }}
+    </section>
+  </div>
+</div>
+<script src="/static/js/admin/institution/list.js"></script>

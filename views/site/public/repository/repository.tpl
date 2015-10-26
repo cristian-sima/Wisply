@@ -56,9 +56,7 @@
             <!-- Resources -->
             <div class="col-lg-6 col-md-6 col-sm-6" >
               <div id="repository-top"></div>
-              <div id="repository-before-resources">
-              </span>
-            </div>
+              <div id="repository-before-resources"></div>
               <div id="repository-resources"></div>
               <ul class="pager">
                 <li class="previous" style="display:none"><a href="#">← Previous</a></li>
@@ -77,7 +75,8 @@
     </div>
   </div>
 </div>
-<style>
+<div>
+<style scoped>
 .text-almost-invisible {
   color:#D8D8D8;
 }
@@ -89,6 +88,7 @@ a.resource:focus{
   outline: 0px auto transparent;
 }
 </style>
+</div>
 <script src="/static/js/admin/repository/list.js"></script>
 <script>
 var server = {};

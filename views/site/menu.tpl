@@ -89,7 +89,7 @@
         </li>
         {{ end }}
         <li>
-          <a id="menu-logout-button" href="#" data-toggle='tooltip' data-placement='bottom' title='' data-original-title='Logout' title="Logout">
+          <a id="menu-logout-button" href="#" data-toggle='tooltip' data-placement='bottom' data-original-title='Logout' title="Logout">
             <span class="glyphicon glyphicon-log-in"></span>
           </a>
         </li>

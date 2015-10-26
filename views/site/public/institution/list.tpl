@@ -27,7 +27,7 @@
                     {{ if eq $institution.LogoURL "" }}
                     <span class="glyphicon glyphicon-education institution-logo-default"></span>
                     {{ else }}
-                    <img src="{{ $institution.LogoURL }}" class="inlogo text-center" />
+                    <img alt="{{ $institution.Name }}" src="{{ $institution.LogoURL }}" class="inlogo text-center" />
                     {{ end }}
                   </div>
                   <div class="caption">
@@ -46,5 +46,5 @@
     </div>
   </div>
 </div>
-<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" />
+<link href="/static/css/public/institution.css" property='stylesheet' type="text/css" rel="stylesheet" />
 <script src="/static/js/admin/institution/list.js"></script>

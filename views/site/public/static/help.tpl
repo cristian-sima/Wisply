@@ -41,6 +41,10 @@
                 <a class="scroll" href="#help-answers-3">How do you get data from institutions?
                 </a>
               </li>
+              <li>
+                <a class="scroll" href="#help-answers-4">How do I integrate my repository with Wisply?
+                </a>
+              </li>
             </ol>
             <section id="help-answers">
               <h2>Answers</h2>
@@ -69,14 +73,19 @@
                 <br />
                 For now, Wisply is only able to gather data from <a href="http://www.eprints.org/uk/">EPrints</a> repositories.
               </article>
+              <article id="help-answers-4" class="well">
+                <h3>How do I integrate my repository with Wisply?</h3>
+                <br />
+                In case you want to integrate your repository with Wisply, you can <a href="/contact">contact us</a>. We will make sure that Wisply will gather metadata data from it.
+              </article>
             </section>
           </section>
           <section>
             <h2 id="legal-aspects">Legal aspects</h2>
             <ol>
-              <li><a href="/privacy">Privacy Policy</a></li>
-              <li><a href="/cookies">Cookies Policy</a></li>
-              <li><a href="/terms-and-conditions">Terms and conditions</a></li>
+              <li><h3 class="h6"><a href="/privacy">Privacy Policy</a></h3></li>
+              <li><h3 class="h6"><a href="/cookies">Cookies Policy</a></h3></li>
+              <li><h3 class="h6"><a href="/terms-and-conditions">Terms and conditions</a></h3></li>
             </ol>
           </section>
         </section>

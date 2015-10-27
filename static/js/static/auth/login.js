@@ -33,11 +33,13 @@ var LoginModule = function () {
       this.focusName();
       wisply.preloadLoadingImage();
       if(info.hasCaptcha) {
-        var module = wisply.getModule("captcha");
+        var module = wisply.getModule("captcha"),
+          name = "login-form-captcha";
         new module.Captcha({
-          element: $("#login-form-captcha"),
+          element: $("#" + name),
           ID: info.ID,
-        });
+          name: name,
+        }).show();
       }
     },
     /**

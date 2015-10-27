@@ -35,14 +35,7 @@
               <div class="col-lg-10">
                 <input type='hidden' value='{{ .captcha.GetID }}' name='login-captcha-id' id="login-captcha-id" />
                 <div id="login-form-captcha">
-                  <div class="well" >
-                    Type the numbers which appear in the next image.
-                    <br />
-                    Can't read it? Try a <a href="#" class="captcha-new-image" data-target="login-form-captcha"> different image</a> or an <a class="listen-capthca">audio captcha</a>.
-                    <br />
-                    <img class='captcha-image thumbnail' src='{{ .captcha.GetImageURL }}' alt='Captcha image' />
-                    <a href="#" class="info-captcha" data-toggle="tooltip" title="This image is intended to distinguish human from machine input. Typically, it is a way of thwarting spam and automated extraction of data from websites." ><span class="glyphicon glyphicon-question-sign"></span> What's this?</a>
-                  </div>
+                    
                 </div>
                 <input type="text" class="form-control" placeholder="Type the numbers" name="login-captcha-value" id="login-captcha-value" required  />
               </div>

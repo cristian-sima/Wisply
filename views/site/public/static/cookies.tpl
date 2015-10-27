@@ -35,7 +35,9 @@
           We use cookies to improve the "Site" performance and to enhance your user experience. This policy explains how we do that.
           <article>
             <h2 id="what-are-cookies">
-              <a href="#what-are-cookies" class="scroll" ><span class="glyphicon glyphicon-info-sign"> </span></a> What are cookies?
+              <a href="#what-are-cookies" class="scroll" ><span class="glyphicon glyphicon-info-sign"> </span>
+                <span class="force-black-color">What are cookies?</span>
+              </a>
             </h2>
             Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.
             <br />
@@ -45,7 +47,10 @@
           </article>
           <article>
             <h2 id="what-cookies-do-we-use">
-              <a class="scroll" href="#what-cookies-do-we-use"><span class="glyphicon glyphicon-th"></span></a> What cookies do we use?
+              <a class="scroll" href="#what-cookies-do-we-use">
+                <span class="glyphicon glyphicon-th"></span>
+                <span class="force-black-color">What cookies do we use?</span>
+              </a>
             </h2>
             In order to deliver its services, Wisply uses these cookies:
             <ol>
@@ -71,7 +76,9 @@
           </article>
           <article>
             <h2 id="does-anyone-else-use-cookies-on-Wisply">
-              <a class="scroll" href="#does-anyone-else-use-cookies-on-Wisply"><span class="glyphicon glyphicon-transfer"></span></a> Does anyone else use cookies on Wisply?
+              <a class="scroll" href="#does-anyone-else-use-cookies-on-Wisply"><span class="glyphicon glyphicon-transfer"></span>
+                <span class="force-black-color">Does anyone else use cookies on Wisply?</span>
+              </a>
             </h2>
             We do use or allow third parties to serve cookies that fall into the two categories above. For example, like many companies, we may place cookies to help us monitor our traffic. We may also use third party cookies to help us with market research, revenue tracking, improving site functionality and monitoring compliance with our terms and conditions and policies.
             <br />
@@ -81,7 +88,9 @@
           </article>
           <article>
             <h2 id="can-I-delete-the-cookies">
-              <a class="scroll" href="#can-I-delete-the-cookies"><span class="glyphicon glyphicon-trash"></span></a> Can I delete the cookies?
+              <a class="scroll" href="#can-I-delete-the-cookies"><span class="glyphicon glyphicon-trash"></span>
+                <span class="force-black-color">Can I delete the cookies?</span>
+              </a>
             </h2>
             As there was mentioned above, cookies help you to get the most out of Wisply website.
             <br />
@@ -92,4 +101,11 @@
       </div>
     </div>
   </div>
+</div>
+<div>
+  <style scoped>
+  .force-black-color {
+    color: #000;
+  }
+  </style>
 </div>

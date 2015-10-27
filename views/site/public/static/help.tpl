@@ -27,7 +27,7 @@
           <h1>Help</h1>
           This page contain information which may help you.
           <section>
-            <h2 id="#FAQ">FAQ</h2>
+            <h2 id="FAQ">FAQ</h2>
             <ol>
               <li>
                 <a class="scroll" href="#help-answers-1">I need an email to log in. Why don't you use an username?

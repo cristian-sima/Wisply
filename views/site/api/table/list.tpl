@@ -11,14 +11,14 @@
         </div>
         <div class="panel-body">
           <h1>Wisply tables</h1>
-          <br />
-          The tables are updated daily.
+          <div class="well well-sm">
+          These tables are updated daily.
           <br />
           Wisply makes the tables available in CSV format.
           <br />
           In case you need them in other format, you may want to use <a href="http://www.convertcsv.com/" target="_blank"> this online tool</a>.
           <br />
-          <br />
+        </div>
           <div>
             <span class="text-warning">
               <span class="glyphicon glyphicon-star"></span>

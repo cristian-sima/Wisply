@@ -13,6 +13,7 @@
           </ul>
         </div>
         <div class="panel-body">
+          <h1>Institutions</h1>
           <blockquote>
             <p>Wisply is proudly collecting data from these prestigious institutions</p>
           </blockquote>

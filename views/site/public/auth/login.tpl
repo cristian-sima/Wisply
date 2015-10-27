@@ -3,7 +3,7 @@
     <div class="col-md-6 col-md-offset-3 col-centered" >
       <div class="panel panel-primary">
         <div class="panel-heading">
-          <h3 class="panel-title">Authentication</h3>
+          <h1 class="panel-title">Authentication page</h1>
         </div>
         <div class="panel-body">
           <div class=" text-center">
@@ -12,7 +12,6 @@
           <form action="/auth/login" method="POST" class="form-horizontal" id="login-form">
             {{ .xsrf_input }}
             <input type="hidden" value="{{.sendMe}}" name="login-send-me" />
-            <fieldset>
               <div class="form-group text-left">
                 <label for="login-email" class="col-lg-2 control-label">E-mail</label>
                 <div class="col-lg-10">
@@ -35,7 +34,6 @@
                   <input type="submit" class="btn btn-primary" id="login-submit-button" value="Login" />
                 </div>
               </div>
-            </fieldset>
           </form>
         </div>
       </div>

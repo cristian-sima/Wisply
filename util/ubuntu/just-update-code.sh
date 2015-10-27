@@ -9,11 +9,13 @@ startScript () {
 
 # It stops wisply, updates from github and starts it
 processScript () {
-  bash util/ubuntu/just-update-code.sh
-  showMessage "Starting Wisply..."
-  bash util/ubuntu/start.sh
-  sleep 5
-  showSuccess "Ready"
+  bash util/ubuntu/stop.sh
+  showMessage "Please wait..."
+  sleep 2
+  showMessage "Updating from GitHub..."
+  go get -u github.com/cristian-sima/Wisply
+  sleep 2
+  showSuccess "Done!"
 }
 
 # It tells the user that the script has been executed and exists the script

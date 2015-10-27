@@ -1,6 +1,7 @@
 package public
 
 import (
+	"net"
 	"strconv"
 	"strings"
 
@@ -32,9 +33,17 @@ func (controller *AuthController) showLoginForm() {
 	controller.SetCustomTitle("Login to Wisply")
 	controller.showForm("login")
 
+	ip, _, _ := net.SplitHostPort(controller.Ctx.Request.RemoteAddr)
+
 	//if controller.IsProductionMode() {
-	controller.Data["captcha"] = captcha.New()
-	controller.Data["showCaptcha"] = true
+
+	page := "login-form"
+	captcha.RegisterAction(page, ip)
+
+	if captcha.RequireCaptcha(page, ip) {
+		controller.Data["captcha"] = captcha.New()
+		controller.Data["showCaptcha"] = true
+	}
 	//}
 }
 

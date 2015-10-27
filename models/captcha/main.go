@@ -3,8 +3,24 @@ package captcha
 import "github.com/dchest/captcha"
 
 const (
-	pathToImage string = "/captcha/"
+	pathToImage          string = "/captcha/"
+	allowedTimeForAction int64  = 60 * 30 // 30 minutes
+
 )
+
+var maxNumberOfTimes = map[string]int{
+	"default": 10,
+}
+
+var currentListOfActions List
+
+func getAllowedNumber(page string) int {
+	number, exists := maxNumberOfTimes[page]
+	if !exists {
+		return maxNumberOfTimes["default"]
+	}
+	return number
+}
 
 // New creates a new capcha and returns the ID
 func New() Captcha {

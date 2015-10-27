@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <h1>API &amp; Developers</h1>
-                <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Logo Wisply Image" />
+                <img class="img-responsive" src="/static/img/api/cloud.png" alt="API &amp; Developers" />
               </div>
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <br />

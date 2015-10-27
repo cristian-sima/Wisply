@@ -10,7 +10,7 @@
           </ul>
         </div>
         <div class="panel-body">
-          <h2>Wisply tables</h2>
+          <h1>Wisply tables</h1>
           <br />
           The tables are updated daily.
           <br />
@@ -53,7 +53,8 @@
                   <td class="col-md-1">{{ $table.ID }} </td>
                   <td class="col-md-4">
                     <h2 class="table-name" >{{ $table.Name }}</h2>
-                    <h5 class="text-muted">{{ $table.Name }}</h5>
+                    <span class="h6 text-muted">{{ $table.Name }}</span>
+                    <br />
                     <br />
                     <button id="download-{{$table.Name}}-table" data-name="{{ $table.Name }}" data-id="{{ $table.ID }}" type="button" class="btn btn-primary download-table" aria-label="Left Align">
                       <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download

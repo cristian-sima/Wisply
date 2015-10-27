@@ -3,7 +3,7 @@
   <div class="container">
     <div class="navbar-header">
       <a href="/" class="navbar-brand" id="full-logo">
-        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
+        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Wisply Logo"/> Wisply
       </a>
       <button class="navbar-toggle" type="button" title="Show Menu" data-toggle="collapse" data-target="#navbar-main">
         <span class="icon-bar"></span>

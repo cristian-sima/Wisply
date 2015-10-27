@@ -32,14 +32,15 @@
           </ul>
         </aside>
         <section class="panel-body">
-          <h1 id="privacy-policy">Terms and conditions</h1>
+          <h1 id="terms-and-conditions">Terms and conditions</h1>
           <p>These terms and conditions govern Wisply website. By visiting this website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you can't use Wisply services.</p>
           <p>
             You are responsible for your use of the Terms, for any Content you post to the Services, and for any consequences thereof.
           </p>
           <article>
             <h2 id="basic-terms">
-              <a class="scroll" href="#basic-terms"><span class="glyphicon glyphicon-list-alt"></span>
+              <a class="scroll" href="#basic-terms">
+                <span class="glyphicon glyphicon-list-alt"></span>
                 <span class="force-black-color">Basic terms</span>
               </a>
             </h2>
@@ -66,7 +67,8 @@
           </article>
           <article>
             <h2 id="privacy">
-              <a class="scroll" href="#privacy"><span class="glyphicon glyphicon-bookmark"></span>
+              <a class="scroll" href="#privacy">
+                <span class="glyphicon glyphicon-bookmark"></span>
                 <span class="force-black-color"> Privacy</span>
               </a>
             </h2>
@@ -74,7 +76,8 @@
           </article>
           <article>
             <h2 id="password">
-              <a class="scroll" href="#password"><span class="glyphicon glyphicon-eye-open"></span>
+              <a class="scroll" href="#password">
+                <span class="glyphicon glyphicon-eye-open"></span>
                 <span class="force-black-color">Passwords</span>
               </a>
             </h2>
@@ -82,7 +85,8 @@
           </article>
           <article>
             <h2 id="warranties">
-              <a class="scroll" href="#warranties"><span class="glyphicon glyphicon-bullhorn"></span>
+              <a class="scroll" href="#warranties">
+                <span class="glyphicon glyphicon-bullhorn"></span>
                 <span class="force-black-color"> Warranties</span>
               </a>
             </h2>
@@ -96,7 +100,8 @@
           </article>
           <article>
             <h2 id="restricted-access">
-              <a class="scroll" href="#restricted-access"><span class="glyphicon glyphicon-cloud"></span>
+              <a class="scroll" href="#restricted-access">
+                <span class="glyphicon glyphicon-cloud"></span>
                 <span class="force-black-color"> Restricted access</span>
               </a>
             </h2>
@@ -106,14 +111,16 @@
           </article>
           <article>
             <h2 id="limitations">
-              <a class="scroll" href="#limitations"><span class="glyphicon glyphicon-star-empty"></span>
+              <a class="scroll" href="#limitations">
+                <span class="glyphicon glyphicon-star-empty"></span>
                 <span class="force-black-color"> Limitations</span>
               </a>
             </h2>
             In no event shall Wisply or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption,) arising out of the use or inability to use the materials on Wisply's Internet site, even if Wisply or a Wisply authorized representative has been notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.
           </article>
           <article>
-            <h2 id="governing-law"><a class="scroll" href="#governing-law"><span class="glyphicon glyphicon-paperclip"></span>
+            <h2 id="governing-law"><a class="scroll" href="#governing-law">
+              <span class="glyphicon glyphicon-paperclip"></span>
               <span class="force-black-color"> Governing Law</span>
             </a>
           </h2>
@@ -122,7 +129,8 @@
         </article>
         <article>
           <h2 id="use-licence">
-            <a class="scroll" href="#use-licence"><span class="glyphicon glyphicon-heart-empty"></span>
+            <a class="scroll" href="#use-licence">
+              <span class="glyphicon glyphicon-heart-empty"></span>
               <span class="force-black-color"> Use Licence</span>
             </a>
           </h2>
@@ -136,7 +144,8 @@
         </article>
         <article>
           <h2 id="prohibited-uses">
-            <a class="scroll" href="#prohibited-uses"><span class="glyphicon glyphicon-fire"></span>
+            <a class="scroll" href="#prohibited-uses">
+              <span class="glyphicon glyphicon-fire"></span>
               <span class="force-black-color">Prohibited uses</span>
             </a>
           </h2>

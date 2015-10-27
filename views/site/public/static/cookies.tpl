@@ -35,7 +35,7 @@
           We use cookies to improve the "Site" performance and to enhance your user experience. This policy explains how we do that.
           <article>
             <h2 id="what-are-cookies">
-              <a href="#what-are-cookies" class="scroll" ><span class="glyphicon glyphicon-info-sign"></span>What are cookies?</a> What are cookies?
+              <a href="#what-are-cookies" class="scroll" ><span class="glyphicon glyphicon-info-sign"> </span></a> What are cookies?
             </h2>
             Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.
             <br />

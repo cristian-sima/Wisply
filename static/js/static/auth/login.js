@@ -1,4 +1,4 @@
-/* global $, wisply, server */
+/* global $, wisply */
 var login;
 
 /**

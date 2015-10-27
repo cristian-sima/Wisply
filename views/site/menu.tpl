@@ -100,7 +100,7 @@
           <div style="position:relative">
             <label for="search-2" style="display:none">Search</label>
             <input aria-label="Search for Desktop" id="search-2" type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
-            <img alt="Please wait" style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Please wait..." style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>

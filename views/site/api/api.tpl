@@ -18,12 +18,12 @@
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <br />
                 <blockquote>
-                  <h3>Open data</h3>
+                  <h2>Open data</h2>
                   Wisply is making available all possible data in <a target="_blank" href="http://theodi.org/">open data</a> format.
                 </blockquote>
                 <br />
                 <blockquote>
-                  <h3>Open source</h3>
+                  <h2>Open source</h2>
                   If you want to understand how Wisply is spinning the wheels, you may want to go to our <a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub page</a>.
                 </blockquote>
               </div>

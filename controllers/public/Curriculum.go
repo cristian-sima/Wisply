@@ -9,6 +9,7 @@ type Curriculum struct {
 
 // ShowCurricula shows all the curricula
 func (controller *Curriculum) ShowCurricula() {
+	controller.SetCustomTitle("Wisply - Curricula")
 	controller.TplNames = "site/public/curriculum/curricula.tpl"
 }
 
@@ -26,6 +27,6 @@ func (controller *Curriculum) loadProgramToTemplate() *curriculum.Program {
 		return program
 	}
 	controller.Data["program"] = program
-	controller.SetCustomTitle("Admin - " + program.GetName())
+	controller.SetCustomTitle(program.GetName() + " Curriculum")
 	return program
 }

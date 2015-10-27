@@ -33,7 +33,7 @@
           </a>
           <ul class="dropdown-menu" role="menu">
             {{range $index, $program := .programs}}
-            <li>
+            <li role="listitem">
               <a href="/curriculum/{{$program.GetID}}">
                 {{ $program.GetName }}
               </a>
@@ -51,7 +51,7 @@
         <li class="dropdown" >
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             More
-            <b class="caret"></b>
+            <span class="caret"></span>
           </a>
           <ul class="dropdown-menu multi-level">
             <li>

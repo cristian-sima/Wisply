@@ -13,7 +13,7 @@ import (
 // WisplyController inherits the MessageController
 // Its role is to maintain the connection of the account
 type WisplyController struct {
-	MessageController
+	Message
 	AccountConnected bool
 	Account          *auth.Account
 }

@@ -3,21 +3,21 @@
   <div class="container">
     <div class="navbar-header">
       <a href="/" class="navbar-brand" id="full-logo">
-        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Logo"/> Wisply
+        <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Wisply Top Logo"/> Wisply
       </a>
       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <button class="navbar-toggle" type="button" id="show-small-search-button">
+      <button class="navbar-toggle" type="button" id="show-small-search-button" title="Show small search button">
         <span class="glyphicon glyphicon-search"></span>
       </button>
       <form class="navbar-brand navbar-right hideMe " id="search-small" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
           <div style="position:relative">
             <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
-            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <img alt="Loading Spinner Mobile" style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>
@@ -98,8 +98,9 @@
       <form class="navbar-form navbar-right hidden-xs">
         <div class="form-group">
           <div style="position:relative">
-            <input type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
-            <img alt="Spinner" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
+            <label for="search-2" style="display:none">Search for desktop</label>
+            <input id="search-2" type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
+            <img alt="Loading Spinner Desktop" style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
       </form>

@@ -17,7 +17,7 @@
           </article>
           <article>
             <h2>What is actually Wisply doing?</h2>
-            <img src="/static/img/public/about/about.png" class="img-responsive" />
+            <img src="/static/img/public/about/about.png" class="img-responsive" alt="Diagram which explains how Wisply works"/>
             <ul>
               <li>
                 Wisply will identify resources from a range of different sources used in the teaching of Web science. It will aggregate and present the resources in a searchable form, mapping them to the Web science curriculum. This collection of aggregated data will be also available for analytical purposes.

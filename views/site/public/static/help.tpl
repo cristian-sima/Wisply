@@ -64,7 +64,7 @@
                 <br />
                 <br />
                 The following diagram explains how wisply is working:
-                <img src="/static/img/public/about/about.png" class="img-responsive" />
+                <img src="/static/img/public/about/about.png" class="img-responsive" alt="Diagram which explains how Wisply works" />
                 <br />
                 <br />
                 For now, Wisply is only able to gather data from <a href="http://www.eprints.org/uk/">EPrints</a> repositories.

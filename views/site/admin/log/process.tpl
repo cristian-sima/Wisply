@@ -112,7 +112,7 @@
             {{ $p := .process}}
             {{range $index, $operation := .operations}}
             <tr class="{{ $operation.GetResult }}">
-              <td class="col-md-1"><a class="btn btn-primary btn-xs" href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">See #{{ $operation.ID }}</a></td>
+              <td class="col-md-1"><a class="btn btn-primary btn-xs" href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}"><span class="no-print">See</span> #{{ $operation.ID }}</a></td>
               <td class="col-md-3">{{ $operation.Action.Content }}</td>
               <!-- start state -->
               <td class="col-md-1">

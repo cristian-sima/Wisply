@@ -16,7 +16,7 @@
       <form class="navbar-brand navbar-right hideMe " id="search-small" style="width:50%;"  >
         <div class="form-group visible-xs" style="width:100%;" >
           <div style="position:relative">
-            <input type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
+            <input aria-label="Search for Mobile" type="text" style="width:276px;"  id="search-small-input" class="wisply-search-field form-control" placeholder="Search">
             <img alt="Loading Spinner Mobile" style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>
@@ -98,7 +98,7 @@
       <form class="navbar-form navbar-right hidden-xs">
         <div class="form-group">
           <div style="position:relative">
-            <input aria-label="Search" id="search-2" type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
+            <input aria-label="Search for Desktop" id="search-2" type="text" style="width: 278px;" class="wisply-search-field form-control" placeholder="Search">
             <img alt="Loading Spinner Desktop" style="display:none" class="wisply-search-field-spinner search-spinner" src='/static/img/wisply/load.gif' />
           </div>
         </div>

@@ -39,7 +39,7 @@
           </p>
           <article>
             <h2 id="basic-terms">
-              <a href="#basic-terms"><span class="glyphicon glyphicon-list-alt"></span></a> Basic terms
+              <a class="scroll" href="#basic-terms"><span class="glyphicon glyphicon-list-alt"></span></a> Basic terms
             </h2>
             <p>These terms and conditions are only applicable for the domain http://wisply.me. Any other software which does not operate on the domain http://wiply.me is excluded from all the legal aspects.</p>
             <p>
@@ -63,11 +63,15 @@
             </ul>
           </article>
           <article>
-            <h2 id="privacy"><a class="scroll" href="#privacy"><span class="glyphicon glyphicon-bookmark"></span></a> Privacy</h2>
+            <h2 id="privacy">
+              <a class="scroll" href="#privacy"><span class="glyphicon glyphicon-bookmark"></span></a> Privacy
+            </h2>
             Any information that you or other users provide to Wisply is subject to our <a href="/privacy">Privacy Policy</a>, which governs our collection and use of your information.
           </article>
           <article>
-            <h2 id="password"><a href="#password"><span class="glyphicon glyphicon-eye-open"></span></a> Passwords</h2>
+            <h2 id="password">
+              <a class="scroll" href="#password"><span class="glyphicon glyphicon-eye-open"></span></a> Passwords
+            </h2>
             It is your responsibility to protect the password that you use to access Wisply. We suggest you use a “strong” password (one which uses a combination of upper and lower case letters, numbers and symbols) with your account. Wisply can not be liable for any loss or damage arising from your failure to comply with the above.
           </article>
           <article>

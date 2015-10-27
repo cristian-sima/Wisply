@@ -316,6 +316,7 @@ var Wisply = function() {
 		 */
 		this.shortcutManager = new ShortcutManager();
 		this.isSmallSearchDisplayed = false;
+		this.modules = {};
 	};
 	App.prototype =
 		/**
@@ -352,6 +353,34 @@ var Wisply = function() {
 					saveSearches: true,
 				});
 				this.activateTooltip();
+			},
+			/**
+			 * It adds a new module to the array of modules. In case the module is
+			 * already loaded, it displays a warning
+			 * @param  {string} name    The name of the module
+			 * @param  {object} content The module object
+			 * @return {object} It returns the reference to the module
+			 */
+			loadModule: function(name, content){
+				if (this.modules[name]) {
+				 	console.warn("The module [" + name + "] has been loaded once");
+				} else {
+					this.modules[name] = content;
+				}
+				return this.modules[name];
+			},
+			/**
+			 * It returns the module specified by name. In case the module does not
+			 * exists, it throws an Exception
+			 * @param  {string} name The name of the module
+			 * @return {object} The module
+			 */
+			getModule: function(name) {
+				var module = this.modules[name];
+				if(!module) {
+					throw("Wisply did not has the module [" + name + "]");
+				}
+				return module;
 			},
 			/**
 			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content

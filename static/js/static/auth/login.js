@@ -1,4 +1,4 @@
-/* global $, wisply */
+/* global $, wisply, server */
 var login;
 
 /**
@@ -7,29 +7,38 @@ var login;
 */
 
 /**
-* @namespace Login
+ * Requires CaptchaModule, ServerModule
+* @namespace LoginModule
 */
-var Login = function () {
+var LoginModule = function () {
   'use strict';
 
   /**
   * Encapsulates the functionality for login
   * @class Form
-  * @memberof Login
+  * @memberof LoginModule
   * @classdesc It represents the login gateway
   */
   var Form = function Form() {
   };
   Form.prototype =
-  /** @lends Login.Form */
+  /** @lends LoginModule.Form */
   {
     /**
     * It loads the listeners and focuses the name
     */
     init : function () {
+      var info = wisply.getModule("server").getData();
       this.loadListeners();
       this.focusName();
       wisply.preloadLoadingImage();
+      if(info.hasCaptcha) {
+        var module = wisply.getModule("captcha");
+        new module.Captcha({
+          element: $("#login-form-captcha"),
+          ID: info.ID,
+        });
+      }
     },
     /**
     * It adds a listener for form submit
@@ -56,7 +65,7 @@ var Login = function () {
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Login();
+  var module = wisply.loadModule("login", new LoginModule());
   login = new module.Form();
   login.init();
 });

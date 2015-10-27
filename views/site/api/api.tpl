@@ -24,7 +24,7 @@
                 <br />
                 <blockquote>
                   <h2>Open data</h2>
-                  Wisply is making available all possible data in <a class="scroll" href="#http">open data</a> format.
+                  Wisply is making available all possible data in <a class="scroll" href="#open-data">open data</a> format.
                 </blockquote>
               </div>
             </div>
@@ -33,7 +33,7 @@
           <br />
         </section>
         <div>
-        <section>
+        <section id="open-data">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">Download data sets and tables</h3>

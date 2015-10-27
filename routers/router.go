@@ -6,6 +6,7 @@ import (
 	"github.com/cristian-sima/Wisply/controllers/account"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/controllers/api"
+	"github.com/cristian-sima/Wisply/controllers/general"
 	"github.com/cristian-sima/Wisply/controllers/public"
 )
 
@@ -30,12 +31,14 @@ func init() {
 
 	beego.Router("/curricula", &public.Curriculum{}, "*:ShowCurricula")
 
+	beego.Router("/captcha/:id\\.:type", &general.Captcha{}, "*:Serve")
+
 	// public
 	// ----------------------------- Authentification --------------------------------------
 
 	publicAuthNS := beego.NewNamespace("auth",
 		beego.NSNamespace("/login",
-			beego.NSRouter("", &public.AuthController{}, "GET:ShowLoginForm"),
+			beego.NSRouter("", &public.AuthController{}, "GET:ShowLoginPage"),
 			beego.NSRouter("", &public.AuthController{}, "POST:LoginAccount"),
 		),
 		beego.NSNamespace("/register",

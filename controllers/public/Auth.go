@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	auth "github.com/cristian-sima/Wisply/models/auth"
+	captcha "github.com/cristian-sima/Wisply/models/captcha"
 )
 
 // AuthController inherits the WisplyController
@@ -14,16 +15,27 @@ type AuthController struct {
 	Model auth.Model
 }
 
-// ShowLoginForm shows the login form
-func (controller *AuthController) ShowLoginForm() {
+// ShowLoginPage shows the login form in case user is not connected or otherwise
+// it redirects to "/"
+func (controller *AuthController) ShowLoginPage() {
 	if controller.AccountConnected {
-		controller.Redirect("/", 302)
+		controller.Redirect("/", 200)
 	} else {
-		rawSendMe := controller.GetString("sendMe")
-		controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
-		controller.SetCustomTitle("Login to Wisply")
-		controller.showForm("login")
+		controller.showLoginForm()
 	}
+}
+
+// ShowLoginForm shows the login form
+func (controller *AuthController) showLoginForm() {
+	rawSendMe := controller.GetString("sendMe")
+	controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
+	controller.SetCustomTitle("Login to Wisply")
+	controller.showForm("login")
+
+	//if controller.IsProductionMode() {
+	controller.Data["captcha"] = captcha.New()
+	controller.Data["showCaptcha"] = true
+	//}
 }
 
 // ShowRegisterForm shows the form to register a new account

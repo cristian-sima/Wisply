@@ -11,7 +11,7 @@
         <section class="panel-body">
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
-              <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Image" />
+              <img class="img-responsive" src="/static/img/api/cloud.png" alt="API Logo Wisply Image" />
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
               <br />
@@ -36,7 +36,7 @@
               </div>
               <div class="panel-body">
                 <br />
-                You can download the entire tables which Wisply is using. The list is available <a href="/api/table/list" class="btn btn-primary btn-xs">here</a>
+                In case you want to use the data, you can download the entire tables which Wisply is using. <a href="/api/table/list" class="btn btn-primary btn-xs">See the list of tables</a>
                 <br />
               </div>
             </div>
@@ -54,7 +54,7 @@
                 <ul class="list-group">
                   <li class="list-group-item">
                     <div>
-                      <h5>List the resources from a repository</h5>
+                      <h4>List the resources from a repository</h4>
                       Type <span class="label label-info">GET</span>
                       <br />
                       <pre>api/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&amp;format={<strong>format</strong>}</pre>
@@ -71,7 +71,7 @@
                   </li>
                   <li class="list-group-item">
                     <div>
-                      <h5>Search for items</h5>
+                      <h4>Search for items</h4>
                       Type <span class="label label-info">GET</span>
                       <br />
                       <pre>api/search/anything/{<strong>query</strong>}</pre>

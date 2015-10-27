@@ -74,9 +74,9 @@
           <section>
             <h2 id="legal-aspects">Legal aspects</h2>
             <ol>
-              <li><h5><a href="/privacy">Privacy Policy</a></h5></li>
-              <li><h5><a href="/cookies">Cookies Policy</a></h5></li>
-              <li><h5><a href="/terms-and-conditions">Terms and conditions</a></h5></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/cookies">Cookies Policy</a></li>
+              <li><a href="/terms-and-conditions">Terms and conditions</a></li>
             </ol>
           </section>
         </section>

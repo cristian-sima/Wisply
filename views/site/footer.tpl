@@ -13,7 +13,7 @@
           <a href="https://twitter.com/wisplyOfficial" target="_blank">Twitter</a>
         </li>
         <li>
-          <a href="/api">API & Developers</a>
+          <a href="/api">API &amp; Developers</a>
         </li>
         <li>
           <a href="/help">Help</a>
@@ -32,7 +32,7 @@
           </div>
         </li>
         <li class="pull-right">
-          <a href="#top">Back to top</a>
+          <a href="javascript:scroll(0,0)">Back to top</a>
         </li>
       </ul>
       {{ if .indicateLastModification }}

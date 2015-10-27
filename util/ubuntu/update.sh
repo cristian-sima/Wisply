@@ -17,7 +17,8 @@ processScript () {
   sleep 2
   showSuccess "Done!"
   showMessage "Starting Wisply..."
-  sleep 3
+  bash ./start.sh
+  sleep 5
   showSuccess "Ready"
 }
 

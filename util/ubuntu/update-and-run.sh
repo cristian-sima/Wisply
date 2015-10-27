@@ -9,7 +9,7 @@ startScript () {
 
 # It stops wisply, updates from github and starts it
 processScript () {
-  bash util/ubuntu/update.sh | showMessage
+  bash util/ubuntu/stop.sh | showMessage
   showMessage "Please wait..."
   sleep 2
   showMessage "Updating from GitHub..."
@@ -17,7 +17,7 @@ processScript () {
   sleep 2
   showSuccess "Done!"
   showMessage "Starting Wisply..."
-  bash util/ubuntu/update.sh | showMessage
+  bash util/ubuntu/start.sh | showMessage
   sleep 5
   showSuccess "Ready"
 }

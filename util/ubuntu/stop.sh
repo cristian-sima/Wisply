@@ -11,6 +11,7 @@ startScript () {
 stopNow () {
   showMessage "Tring to stop Wisply..."
   pkill Wisply
+  pkill bee
   showSuccess "Wisply has been stopped !"
   showMessage "If you want to start it again, type: bash util/ubuntu/start.sh"
 }

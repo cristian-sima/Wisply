@@ -127,7 +127,7 @@
               <td class="col-md-1.5">{{ $operation.GetEndDate }}</td>
               <td class="col-md-3">
                 {{ if eq $operation.GetDuration "..." }}
-                <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                <img src='/static/img/wisply/load/small.gif' alt='...' />
                 {{ else }}
                 {{ $operation.GetDuration }}
                 {{ end }}

@@ -44,7 +44,7 @@
               <td>
                 <strong>
                   {{ if .operation.Action.IsRunning }}
-                  <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                  <img src='/static/img/wisply/load/small.gif' alt='...' />
                   {{ else }}
                   <span class="glyphicon glyphicon-time"></span> {{ .operation.GetDuration }}
                   {{ end }}
@@ -94,7 +94,7 @@
               <td class="col-md-1.5">{{ $task.GetEndDate }}</td>
               <td class="col-md-1.5">
                 {{ if eq $task.GetDuration "..." }}
-                <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                <img src='/static/img/wisply/load/small.gif' alt='...' />
                 {{ else }}
                 {{ $task.GetDuration }}
                 {{ end }}

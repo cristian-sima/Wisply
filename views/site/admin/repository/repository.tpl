@@ -55,7 +55,7 @@
                         <td class="col-md-1.5">{{ $element.GetEndDate }}</td>
                         <td class="col-md-3">
                           {{ if eq $element.GetDuration "..." }}
-                          <img src='/static/img/wisply/load.gif' style='height: 20px; width: 20px' />
+                          <img src='/static/img/wisply/load/small.gif' alt='...' />
                           {{ else }}
                           {{ $element.GetDuration }}
                           {{ end }}

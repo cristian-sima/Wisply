@@ -411,7 +411,7 @@ var Wisply = function() {
 			 */
 			preloadLoadingImage: function() {
 				var img = new Image();
-				img.src = "/static/img/wisply/load.gif";
+				img.src = "/static/img/wisply/load/medium.gif";
 			},
 			/**
 			 * It executes a JQuery post request, adding to it the xsrf token value
@@ -484,18 +484,19 @@ var Wisply = function() {
 				}
 				/**
 				 * It returns the HTML code for the loading element
-				 * @param  {number} dimension The size of the image in px
+				 * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+			 	 * @param  {number} dimension The size of the image in px
 				 * @return {string}           The HTML code for loading element
 				 */
-				function getHTML(dimension) {
-					return "<img src='/static/img/wisply/load.gif' style='height: " + dimension + "px; width: " + dimension + "px' />";
+				function getHTML(size, dimension) {
+					return "<img alt='...' src='/static/img/wisply/load/" + size + ".gif" + "' style='height: " + dimension + "px; width: " + dimension + "px' />";
 				}
 				var dimension;
 				if (typeof size === 'undefined') {
 					size = "small";
 				}
 				dimension = getDimension(size);
-				return getHTML(dimension);
+				return getHTML(size, dimension);
 			},
 			/**
 			 * It redirects the account to a certain page

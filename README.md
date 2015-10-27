@@ -146,11 +146,30 @@ I recommend XAMPP. This software contains the MySQL server and it has a good use
 
 Wisply is evolving. You may want to get the last version on your server, but installing each version is time consuming. Thus, in order to quickly update Wisply, please follow the next steps:
 
-1. Open a terminal window
-2. Type `go get -u github.com/cristian-sima/Wisply`
-3. If there was no message shown, it means the update was successful
-
 The update is not affecting the current configuration (information about database, about server) and does not delete the existing data from database.
+
+### Ubuntu
+
+There are 2 ways to update Wisply:
+
+* Just code changes
+1. Open a terminal window
+2. Type `bash util/ubuntu/update-and-run.sh`
+  This utility stops Wisply, updates it and runs the
+
+* The schema or data of database are changed
+1. Open a terminal window
+2. Type `bash util/ubuntu/update-just-code.sh` and wait. This command stops Wisply and updates the code
+3. Install Wisply as highlighted bellow.
+
+
+### Windows
+
+1. Stop Wisply
+2. Open a terminal window
+3. Type `go get -u github.com/cristian-sima/Wisply`
+4. If there was no message shown, it means the update was successful
+
 
 **Note**: In case the new version has a different SQL schema, there is a need to install the application again (follow the installer steps, highlighted above)
 

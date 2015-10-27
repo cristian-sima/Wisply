@@ -31,9 +31,9 @@
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
             Curricula <span class="caret"></span>
           </a>
-          <ul class="dropdown-menu" role="menu">
+          <ul class="dropdown-menu">
             {{range $index, $program := .programs}}
-            <li role="listitem">
+            <li>
               <a href="/curriculum/{{$program.GetID}}">
                 {{ $program.GetName }}
               </a>

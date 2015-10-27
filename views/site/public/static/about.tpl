@@ -9,15 +9,18 @@
           </ul>
         </div>
         <section class="panel-body">
-          <h1>About</h1>
-          Wisply tries to change the way the Web science resources are mapped.
+          <h1>About Wisply</h1>
+          <blockquote>
+            Wisply tries to change the way the Web science curriculum is generated.
+          </blockquote>
           <article>
-            <h2>Which is the problem?</h2>
+            <h2><span class="text-muted glyphicon glyphicon-question-sign"></span> Problem</h2>
             There are many institutions offering Web science courses in different forms and formats across the world. Initially, it is possible to categorise the nature of these offers, by manually investigating and recording the data. However, this is not a sustainable approach for the long term, because the process is increasingly complex. Not only this method is very costly, but, it is also inefficient, since the Web science is constantly changing. As a result of this, the outcome of the process is outdated compared to what is actually taught. In addition to this problem, there is no software on the market which can provide a map of the Web science in terms of resources and its fields of study.
           </article>
           <article>
-            <h2>What is actually Wisply doing?</h2>
+            <h2><span class="text-muted glyphicon glyphicon glyphicon-tasks"></span> How</h2>
             <img src="/static/img/public/about/about.png" class="img-responsive" alt="Diagram which explains how Wisply works"/>
+            <br />
             <ul>
               <li>
                 Wisply will identify resources from a range of different sources used in the teaching of Web science. It will aggregate and present the resources in a searchable form, mapping them to the Web science curriculum. This collection of aggregated data will be also available for analytical purposes.
@@ -36,7 +39,7 @@
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
       <a class="twitter-timeline" href="https://twitter.com/wisplyOfficial" data-widget-id="644855089694380033">Tweets by @wisplyOfficial</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>
   </div>
 </div>

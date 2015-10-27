@@ -8,7 +8,7 @@
         <h1>Web<small>science</small></h1>
         <p>Understanding world’s largest and most complex engineered environment is a difficult task to achieve. <br />
           Let's simplify it.</p>
-          <p><a class="btn btn-primary btn-lg" href="/about">Learn more</a></p>
+          <p><a class="btn btn-primary btn-lg" href="/about">Learn more about Wisply</a></p>
         </article>
       </div>
     </div>

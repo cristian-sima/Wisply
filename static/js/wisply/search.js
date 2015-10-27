@@ -262,6 +262,7 @@ var SearchModule = function() {
 					activateListeners();
 				}
 				createObject();
+				$(".tt-hint").attr('aria-label', 'Search Hint');
 			}
 		};
 	/**

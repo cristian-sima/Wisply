@@ -30,11 +30,13 @@
           <h1 id="cookie-policy">How do we use cookies?</h1>
           We use cookies to improve the "Site" performance and to enhance your user experience. This policy explains how we do that.
           <article>
-            <h2 id="what-are-cookies">
-              <a class="scroll" href="#what-are-cookies"><span class="glyphicon glyphicon-info-sign"></span></a> What are cookies?
-            </h2>
-            <p>Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.</p>
-            <p>There are many functions cookies serve. For example, they can help us to remember your account and preferences, analyse how well Wisply is performing, or even allow us to recommend resources we believe will be most relevant to you.</p>
+            <p>
+              <h2 id="what-are-cookies">
+                <a class="scroll" href="#what-are-cookies"><span class="glyphicon glyphicon-info-sign"></span></a> What are cookies?
+              </h2>Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.
+            </p>
+            <p>There are many functions cookies serve. For example, they can help us to remember your account and preferences, analyse how well Wisply is performing, or even allow us to recommend resources we believe will be most relevant to you.
+            </p>
             <p>
               Certain cookies contain personal information – for example, if you click to “remember me” when logging in, a cookie will store your username. Most cookies <strong>will not</strong> collect information that identifies you, but will instead collect more general information such as how users arrive at and use Wisply.
             </p>

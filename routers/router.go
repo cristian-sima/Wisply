@@ -18,6 +18,7 @@ func init() {
 
 	beego.Router("/", &public.StaticController{}, "*:ShowIndex")
 	beego.Router("/about", &public.StaticController{}, "*:ShowAbout")
+	beego.Router("/learn-more", &public.StaticController{}, "*:ShowAbout")
 	beego.Router("/contact", &public.StaticController{}, "*:ShowContact")
 	beego.Router("/sample", &public.StaticController{}, "*:ShowSample")
 	beego.Router("/accessibility", &public.StaticController{}, "*:ShowAccessibility")

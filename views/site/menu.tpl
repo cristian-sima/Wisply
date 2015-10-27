@@ -5,7 +5,7 @@
       <a href="/" class="navbar-brand" id="full-logo">
         <img style="display:inline" src="/static/img/wisply/logo/jpg.jpg" alt="Wisply Top Logo"/> Wisply
       </a>
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+      <button class="navbar-toggle" type="button" title="Show Menu" label="Show Menu" data-toggle="collapse" data-target="#navbar-main">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>

@@ -4,10 +4,10 @@
  * @author Cristian Sima
  */
 /**
- * @namespace HarvestList
+ * @namespace HarvestListModule
  * It holds the functionality to see a live list of repositories
  */
-var HarvestList = function() {
+var HarvestListModule = function() {
 	'use strict';
 	var Stages = [{
 		id: 0,
@@ -32,7 +32,7 @@ var HarvestList = function() {
 	}];
 	/**
 	 * Creates a GUI
-	 * @memberof HarvestList
+	 * @memberof HarvestListModule
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
@@ -40,7 +40,7 @@ var HarvestList = function() {
 		this.GUI = new GUI();
 	};
 	DecisionManager.prototype =
-		/** @lends HarvestList.DecisionManager */
+		/** @lends HarvestListModule.DecisionManager */
 		{
 			/**
 			 * It is called when a message has arrived from the server. It decides what to call
@@ -77,7 +77,7 @@ var HarvestList = function() {
 		};
 	/**
 	 * It gets the JQUERY element
-	 * @memberof HarvestList
+	 * @memberof HarvestListModule
 	 * @class GUI
 	 * @classdesc It encapsulates the UX functionality
 	 */
@@ -85,7 +85,7 @@ var HarvestList = function() {
 		this.list = $("#repositories-list");
 	};
 	GUI.prototype =
-		/** @lends HarvestList.GUI */
+		/** @lends HarvestListModule.GUI */
 		{
 			/**
 			 * It changes the status of all the repositories
@@ -195,8 +195,8 @@ $(document).ready(function() {
 		stage,
 		manager,
 		stages;
-	harvest = new Harvest();
-	list = new HarvestList();
+	harvest = wisply.getModule("harvest");
+	list = new HarvestListModule();
 	repository = wisply.repositriesModule;
 	decision = new list.DecisionManager();
 	stages = list.Stages;

@@ -6,13 +6,13 @@
 // It has a history
 var harvestHistory = {};
 /**
- * @namespace Harvest
+ * @namespace HarvestModule
  */
-var Harvest = function() {
+var HarvestModule = function() {
 	'use strict';
 	/**
 	 * Creates an empty history
-	 * @memberof Harvest
+	 * @memberof HarvestModule
 	 * @class History
 	 * @classdesc It holds a history of events
 	 */
@@ -23,11 +23,11 @@ var Harvest = function() {
 		this.see = this.eventsOnPage;
 	};
 	History.prototype =
-		/** @lends Harvest.History */
+		/** @lends HarvestModule.History */
 		{
 			/**
 			 * It logs an event
-			 * @param [Harvest.HistoryGUI] gui The reference to the gui
+			 * @param [HarvestModule.HistoryGUI] gui The reference to the gui
 			 */
 			setGUI: function(id) {
 				this.gui = new HistoryGUI(id, this);
@@ -176,11 +176,11 @@ var Harvest = function() {
 		};
 	/**
 	 * The constructor creates the connection
-	 * @memberof Harvest
+	 * @memberof HarvestModule
 	 * @class HarvestConnection
 	 * @classdesc It is a middleware between the harvest manager and the web sockets connection
 	 * @param [string] id The id of the element where the history will be displayed
-	 * @param [Harvest.History] history The reference to the gui
+	 * @param [HarvestModule.History] history The reference to the gui
 	 */
 	var HistoryGUI = function HistoryGUI(id, history) {
 		this.activ = false;
@@ -188,7 +188,7 @@ var Harvest = function() {
 		this.history = history;
 	};
 	HistoryGUI.prototype =
-		/** @lends Harvest.HistoryGUI */
+		/** @lends HarvestModule.HistoryGUI */
 		{
 			/**
 			 * It updates the gui
@@ -218,7 +218,7 @@ var Harvest = function() {
 		};
 	/**
 	 * The constructor creates the connection
-	 * @memberof Harvest
+	 * @memberof HarvestModule
 	 * @class HarvestConnection
 	 * @classdesc It is a middleware between the harvest manager and the web sockets connection
 	 * @param [Repository] manager A reference to the harvest manager
@@ -246,7 +246,7 @@ var Harvest = function() {
 		this.onError = error;
 	};
 	HarvestConnection.prototype =
-		/** @lends Harvest.HarvestConnection */
+		/** @lends HarvestModule.HarvestConnection */
 		{
 			/**
 			 * It is called when a message arrived from server. It logs in the history and tells the manager
@@ -312,7 +312,7 @@ var Harvest = function() {
 		};
 	/**
 	 * It saves the references
-	 * @memberof Harvest
+	 * @memberof HarvestModule
 	 * @class HarvestConnection
 	 * @classdesc It contains references to the Page object, StageManager and History
 	 * @param [Repository] repository A reference to the repository
@@ -327,7 +327,7 @@ var Harvest = function() {
 		this.decisionManager = decisionManager;
 	};
 	Manager.prototype =
-		/** @lends Harvest.Manager */
+		/** @lends HarvestModule.Manager */
 		{
 			/**
 			 * It creates the web socket connection
@@ -365,7 +365,7 @@ var Harvest = function() {
 		};
 	/**
 	 * Saves the stages
-	 * @memberof Harvest
+	 * @memberof HarvestModule
 	 * @class StageManager
 	 * @classdesc The stage manager encapsulates the functionality for managing the stages of the client
 	 * @param [array] stages An array with the stages
@@ -378,7 +378,7 @@ var Harvest = function() {
 		// stages
 	};
 	StageManager.prototype =
-		/** @lends Harvest.StageManager */
+		/** @lends HarvestModule.StageManager */
 		{
 			/**
 			 * It sets a GUI for the manager. The GUI MUST implement theser methods: update, restart
@@ -530,6 +530,7 @@ var Harvest = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var module = new Harvest();
+	var module = new HarvestModule();
 	harvestHistory = new module.History();
+	wisply.loadModule("harvest", module);
 });

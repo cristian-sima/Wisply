@@ -675,7 +675,7 @@ $(document).ready(function() {
 		stage,
 		manager,
 		stages;
-	harvest = new Harvest();
+	harvest = wisply.getModule("harvest");
 	process = new HarvestProcess();
 	repository = wisply.repositriesModule;
 	decision = new process.DecisionManager();

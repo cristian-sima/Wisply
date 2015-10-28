@@ -77,14 +77,14 @@ var AccountSettingsModule = function() {
 					successCallback,
 					errorCallback;
 				/**
-				 * It is called when request has been performed
+				 * It is called when the account has been deleted. It refreshes the page
 				 * @ignore
 				 */
 				successCallback = function() {
 					wisply.reloadPage();
 				};
 				/**
-				 * It is called when there has been problems
+				 * It is called when the password is not good
 				 * @ignore
 				 */
 				errorCallback = function() {

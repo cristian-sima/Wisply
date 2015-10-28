@@ -1,7 +1,6 @@
 package public
 
 import (
-	"net"
 	"strconv"
 	"strings"
 
@@ -33,18 +32,14 @@ func (controller *AuthController) showLoginForm() {
 	controller.SetCustomTitle("Login to Wisply")
 	controller.showForm("login")
 
-	ip, _, _ := net.SplitHostPort(controller.Ctx.Request.RemoteAddr)
+	page := "login-form-page"
 
-	//if controller.IsProductionMode() {
+	controller.RegisterCaptchaAction(page)
 
-	page := "login-form"
-	captcha.RegisterAction(page, ip)
-
-	if captcha.RequireCaptcha(page, ip) {
+	if controller.IsCaptchaRequired(page) {
 		controller.Data["captcha"] = captcha.New()
 		controller.Data["showCaptcha"] = true
 	}
-	//}
 }
 
 // ShowRegisterForm shows the form to register a new account
@@ -65,6 +60,14 @@ func (controller *AuthController) showForm(name string) {
 // The parameters should be: register-name, register-password,
 // register-email and register-password-confirm
 func (controller *AuthController) CreateNewAccount() {
+	if !controller.IsCaptchaValid("register-form-page") {
+		controller.DisplaySimpleError("Please enter a valid code!")
+	} else {
+		controller.createNewAccount()
+	}
+}
+
+func (controller *AuthController) createNewAccount() {
 
 	confirmPassowrd := strings.TrimSpace(controller.GetString("register-password-confirm"))
 	password := strings.TrimSpace(controller.GetString("register-password"))
@@ -92,11 +95,19 @@ func (controller *AuthController) processRegisterRequest(userDetails map[string]
 		goTo := "/auth/login/"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
-
 }
 
 // LoginAccount checks if the details provided are good and it logins the account
 func (controller *AuthController) LoginAccount() {
+	if !controller.IsCaptchaValid("login-form-page") {
+		controller.DisplaySimpleError("Please enter a valid code!")
+	} else {
+		controller.loginAccount()
+	}
+}
+
+// LoginAccount checks if the details provided are good and it logins the account
+func (controller *AuthController) loginAccount() {
 
 	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
 	rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))

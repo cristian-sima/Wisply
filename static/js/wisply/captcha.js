@@ -31,8 +31,8 @@ var CaptchaModule = function() {
 	 */
 	function Captcha(o) {
 		this.ID = o.ID;
-		this.name = "captcha-" + o.name;
-		this.element = o.element;
+		this.name = o.name + "-captcha";
+		this.element = $("#" + this.name);
 		this.reloadParameter = "";
 	}
 	Captcha.prototype =
@@ -102,7 +102,7 @@ var CaptchaModule = function() {
 				 * @return {string} The string for the DIV
 				 */
 				function getContent(image) {
-					var html = "<input type='hidden' value='{{ id }}' name='{{ name }}' />" + "Type the numbers which appear in the next image. <br />" + "Can't read it? Try a <a href='#' id='{{ name }}-reload' data-target='login-form-captcha'> different image</a> or an <a href='#' id='{{ name }}-audio'>audio captcha</a>.<br />" + "{{ image }}" + "<a href='#' class='info-captcha' data-toggle='tooltip' title='This image is intended to distinguish human from machine input. Typically, it is a way of thwarting spam and automated extraction of data from websites.' ><span class='glyphicon glyphicon-question-sign'></span> What's this?</a>",
+					var html = "<input type='hidden' value='{{ id }}' name='{{ name }}-id' />" + "Type the numbers which appear in the next image. <br />" + "Can't read it? Try a <a href='#' id='{{ name }}-reload' > different image</a> or an <a href='#' id='{{ name }}-audio'>audio captcha</a>.<br />" + "{{ image }}" + "<a href='#' class='info-captcha' data-toggle='tooltip' title='This image is intended to distinguish human from machine input. Typically, it is a way of thwarting spam and automated extraction of data from websites.' ><span class='glyphicon glyphicon-question-sign'></span> What's this?</a>",
 						values = {
 							image: image.outerHTML,
 							id: instance.ID,

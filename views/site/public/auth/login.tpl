@@ -33,11 +33,9 @@
             <div class="form-group text-left">
               <label for="login-captcha-value" class="col-lg-2 control-label">Verification</label>
               <div class="col-lg-10">
-                <input type='hidden' value='{{ .captcha.GetID }}' name='login-captcha-id' id="login-captcha-id" />
-                <div id="login-form-captcha">
-                    
+                <div id="login-form-page-captcha">
                 </div>
-                <input type="text" class="form-control" placeholder="Type the numbers" name="login-captcha-value" id="login-captcha-value" required  />
+                <input type="text" class="form-control" placeholder="Type the numbers" name="login-form-page-captcha-value" id="login-captcha-value" required  />
               </div>
             </div>
             {{ end }}

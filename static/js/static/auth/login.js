@@ -34,9 +34,8 @@ var LoginModule = function () {
       wisply.preloadLoadingImage();
       if(info.hasCaptcha) {
         var module = wisply.getModule("captcha"),
-          name = "login-form-captcha";
+          name = "login-form-page";
         new module.Captcha({
-          element: $("#" + name),
           ID: info.ID,
           name: name,
         }).show();

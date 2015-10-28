@@ -188,20 +188,6 @@ var HarvestListModule = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var harvest,
-		list,
-		repository,
-		decision,
-		stage,
-		manager,
-		stages;
-	harvest = wisply.getModule("harvest");
-	list = new HarvestListModule();
-	repository = wisply.repositriesModule;
-	decision = new list.DecisionManager();
-	stages = list.Stages;
-	stage = new harvest.StageManager(stages);
-	manager = new harvest.Manager(stage, decision);
-	wisply.manager = manager;
-	manager.start();
+	var module = new HarvestListModule();
+	wisply.loadModule("harvest-list", module);
 });

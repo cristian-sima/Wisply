@@ -4,13 +4,13 @@
  * @author Cristian Sima
  */
 /**
- * @namespace Websockets
+ * @namespace WebsocketsModule
  */
-var Websockets = function () {
+var WebsocketsModule = function () {
     'use strict';
     /**
      * Starts the connection and inits the listeners
-     * @memberof Websockets
+     * @memberof WebsocketsModule
      * @class Connection
      * @classdesc It represents a websocket connection
      * @param {string} host The host address
@@ -52,7 +52,7 @@ var Websockets = function () {
         this.status = "wait";
     };
     Connection.prototype =
-    /** @lends Websockets.Connection */
+    /** @lends WebsocketsModule.Connection */
     {
         /**
          * It sends a message
@@ -65,7 +65,7 @@ var Websockets = function () {
 
     /**
      * Gets the JQuery element and show waiting
-     * @memberof Websockets
+     * @memberof WebsocketsModule
      * @class Gui
      * @classdesc The GUI is used by the Connection to show the progress.
      */
@@ -74,7 +74,7 @@ var Websockets = function () {
         this.showWaiting();
     };
     GUI.prototype =
-        /** @lends Websockets.GUI */
+        /** @lends WebsocketsModule.GUI */
         {
             /**
              * It shows the wisply waiting message
@@ -106,3 +106,8 @@ var Websockets = function () {
         Connection: Connection
     };
 };
+$(document).ready(function() {
+	"use strict";
+	var module = new WebsocketsModule();
+	wisply.loadModule("websockets", module);
+});

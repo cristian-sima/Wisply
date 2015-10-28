@@ -127,3 +127,23 @@ server.host = {{ .host }};
 <script src="/static/js/admin/repository/list.js"></script>
 <script src="/static/js/admin/harvest/harvest.js"></script>
 <script src="/static/js/admin/harvest/list.js"></script>
+<script>
+$(document).ready(function(){
+  var harvest,
+		list,
+		repository,
+		decision,
+		stage,
+		manager,
+		stages;
+	harvest = wisply.getModule("harvest");
+	list = new HarvestListModule();
+	repository = wisply.repositriesModule;
+	decision = new list.DecisionManager();
+	stages = list.Stages;
+	stage = new harvest.StageManager(stages);
+	manager = new harvest.Manager(stage, decision);
+	wisply.manager = manager;
+	manager.start();
+});
+</script>

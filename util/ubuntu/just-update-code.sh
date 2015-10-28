@@ -20,7 +20,8 @@ processScript () {
   showMessage "${PWD##*/}"
   findWord="runmode = dev"
   replaceWith="runmode = pro"
-  content==$(<conf/app.conf)
+  content=$(<conf/app.conf)
+  showMessage $content
   result_string="${content/findWord/$replaceWith}"
   showMessage $result_string
   result_string > conf/app.conf

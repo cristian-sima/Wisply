@@ -1,4 +1,4 @@
-/* globals $, Websockets, server, wisply */
+/* globals $, server, wisply */
 /**
  * @file Encapsulates the functionality for harvest process.
  * @author Cristian Sima
@@ -110,16 +110,16 @@ var HarvestModule = function() {
 						var textClass = "",
 							content = "",
 							typeObject = {
-								"LOG" : {
+								"LOG": {
 									class: "",
-									content:"Event",
+									content: "Event",
 								},
 								"ERROR": {
 									class: "text-danger",
-									content : "Error",
+									content: "Error",
 								},
-								"WARN" : {
-									class : "text-warning",
+								"WARN": {
+									class: "text-warning",
 									content: "Warning",
 								},
 							},
@@ -139,7 +139,7 @@ var HarvestModule = function() {
 				}
 				var events = "<tbody>",
 					moreButton = "",
-					index, currentEvent,
+					index,
 					dif = this.data.length - this.see,
 					see = 0;
 				if (dif <= 0) {
@@ -149,7 +149,7 @@ var HarvestModule = function() {
 					moreButton = "You have seen " + this.see + " events. There are " + dif + " events more <br /><div class='text-center'><button id='harvest-history-see-more' class='btn btn-info'>See more</button></div>";
 				}
 				for (index = this.start; index <= see; index++) {
-						events += getHTMLEvent(this.data[index], (this.data.length - index));
+					events += getHTMLEvent(this.data[index], (this.data.length - index));
 				}
 				events += "</tbody>";
 				var html = "<table class='table table=condensed table-hover ''>";
@@ -226,9 +226,9 @@ var HarvestModule = function() {
 	var HarvestConnection = function HarvestConnection(manager) {
 		var instance = this;
 		this.manager = manager;
-		var websockets = new Websockets(),
+		var module = wisply.getModule("websockets"),
 			host = server.host + "/admin/harvest/init/ws";
-		this.connection = new websockets.Connection(host, this);
+		this.connection = new module.Connection(host, this);
 		var open = (function() {
 			var conn = instance;
 			return function() {

@@ -48,4 +48,3 @@
   </div>
 </div>
 <link href="/static/css/public/institution.css" property='stylesheet' type="text/css" rel="stylesheet" />
-<script src="/static/js/admin/institution/list.js"></script>

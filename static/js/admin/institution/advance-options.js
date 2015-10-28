@@ -6,15 +6,15 @@
 */
 
 /**
-* @namespace Institutions
+* @namespace InstitutionAdvanceOptionsModule
 */
-var Institutions = function () {
+var InstitutionAdvanceOptionsModule = function () {
   'use strict';
 
   /**
   * The constructor does nothing important
   * @class Institution
-  * @memberof Institutions
+  * @memberof InstitutionAdvanceOptionsModule
   * @classdesc It represents a institution
   * @param {object} info It contains the information regarding the institution (id, name and web address)
   */
@@ -26,14 +26,14 @@ var Institutions = function () {
 
   /**
   * The constructor activates the listeners
-  * @memberof Institutions
+  * @memberof InstitutionAdvanceOptionsModule
   * @class Manager
   * @classdesc It encapsulets the functionality for the institutions
   */
   var Manager = function Manager() {
   };
   Manager.prototype =
-  /** @lends Institutions.Manager */
+  /** @lends InstitutionAdvanceOptionsModule.Manager */
   {
     /**
     * It activates the listeners
@@ -43,7 +43,7 @@ var Institutions = function () {
     },
     /**
     * It activates the listener for deleting a institution
-    * @fires InstitutionsManager#confirmDelete
+    * @fires InstitutionAdvanceOptionsModule#confirmDelete
     */
     activateListeners: function () {
       var instance = this;
@@ -141,7 +141,7 @@ var Institutions = function () {
 
   /**
   * The constructor activates the listeners
-  * @memberof Institutions
+  * @memberof InstitutionAdvanceOptionsModule
   * @class GUI
   * @classdesc It encapsulets the GUI functionality
   */
@@ -177,8 +177,6 @@ var Institutions = function () {
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Institutions();
-  wisply.institutionsModule = module;
-  wisply.institutionsManager = new module.Manager();
-  wisply.institutionsManager.init();
+  var module = new InstitutionAdvanceOptionsModule();
+  wisply.loadModule("institution-advance-options", module);
 });

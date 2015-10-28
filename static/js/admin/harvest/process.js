@@ -4,9 +4,9 @@
  * @author Cristian Sima
  */
 /**
- * @namespace HarvestProcess
+ * @namespace HarvestProcessModule
  */
-var HarvestProcess = function() {
+var HarvestProcessModule = function() {
 	'use strict';
 	var Stages = [{
 		id: 0,
@@ -253,7 +253,7 @@ var HarvestProcess = function() {
 	}];
 	/**
 	 * The constructor does nothing
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class WisplyCounter
 	 * @classdesc It decides what to do with the messages from the server
 	 */
@@ -264,7 +264,7 @@ var HarvestProcess = function() {
 		this.stopped = false;
 	};
 	WisplyCounter.prototype =
-		/** @lends HarvestProcess.WisplyCounter */
+		/** @lends HarvestProcessModule.WisplyCounter */
 		{
 			/**
 			 * It updates the counter
@@ -348,13 +348,13 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * The constructor does nothing
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
 	var DecisionManager = function DecisionManager() {};
 	DecisionManager.prototype =
-		/** @lends HarvestProcess.DecisionManager */
+		/** @lends HarvestProcessModule.DecisionManager */
 		{
 			/**
 			 * It is called when a message has arrived from the server. It decides what to call
@@ -416,7 +416,7 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * Gets the JQuery elements and creates the indicator
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class StageGUI
 	 * @classdesc It contains the functionality for GUI
 	 */
@@ -427,7 +427,7 @@ var HarvestProcess = function() {
 		this.indicator = new Indicator();
 	};
 	StageGUI.prototype =
-		/** @lends HarvestProcess.StageGUI */
+		/** @lends HarvestProcessModule.StageGUI */
 		{
 			/**
 			 * It shows the stage, calls update and load listeners
@@ -592,7 +592,7 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * Gets the JQuery element
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class Indicator
 	 * @classdesc It represents a visual indicator for the current progress of the process
 	 */
@@ -602,7 +602,7 @@ var HarvestProcess = function() {
 		this.animation = undefined;
 	};
 	Indicator.prototype =
-		/** @lends HarvestProcess.Indicator */
+		/** @lends HarvestProcessModule.Indicator */
 		{
 			/**
 			 * It sets the indicator to a percent
@@ -668,21 +668,6 @@ var HarvestProcess = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var harvest,
-		process,
-		repository,
-		decision,
-		stage,
-		manager,
-		stages;
-	harvest = wisply.getModule("harvest");
-	process = new HarvestProcess();
-	repository = wisply.repositriesModule;
-	decision = new process.DecisionManager();
-	stages = process.Stages;
-	stage = new harvest.StageManager(stages);
-	stage.setGUI(new process.StageGUI(stage));
-	manager = new harvest.Manager(stage, decision);
-	wisply.manager = manager;
-	manager.start();
+	var module = new HarvestProcessModule();
+	wisply.loadModule("harvest-process", module);
 });

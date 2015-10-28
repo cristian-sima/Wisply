@@ -22,7 +22,7 @@ processScript () {
   replaceWith="runmode = pro"
   content=`cat conf/app.conf`
   showMessage $content
-  result_string="${content/findWord/$replaceWith}"
+  result_string="${$content/$findWord/$replaceWith}"
   showMessage $result_string
   result_string > conf/app.conf
   sleep 1

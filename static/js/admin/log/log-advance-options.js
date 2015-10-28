@@ -4,15 +4,15 @@
  * @author Cristian Sima
  */
 /**
- * @namespace Log
+ * @namespace LogAdvanceOptionsModule
  */
-var Log = function() {
+var LogAdvanceOptionsModule = function() {
 	'use strict';
 
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof Log
+	 * @memberof LogAdvanceOptionsModule
 	 * @classdesc It encapsulets the functions for the log
 	 */
 	var Manager = function Manager() {};
@@ -20,7 +20,7 @@ var Log = function() {
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends Log.Manager */
+		/** @lends LogAdvanceOptionsModule.Manager */
 		{
 			/**
 			 * It activates the listener for delete button
@@ -114,7 +114,6 @@ var Log = function() {
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new Log();
-	wisply.logManager = new module.Manager();
-	wisply.logManager.init();
+	var module = new LogAdvanceOptionsModule();
+	wisply.loadModule("log-advance-options");
 });

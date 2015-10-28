@@ -1,9 +1,6 @@
 package captcha
 
-import (
-	"fmt"
-	"time"
-)
+import "time"
 
 type action struct {
 	page      string
@@ -30,24 +27,17 @@ func (list *List) addAction(page, ip string) {
 		exists = false
 		i      int
 	)
-	fmt.Println("lista inainte de adaugare")
-	fmt.Println(list.actions)
 	for _, action := range list.actions {
-		fmt.Println("Actions")
-		fmt.Println(action)
 		if action.ip == ip && action.page == page {
-			fmt.Println("exista")
 			action.count++
 			exists = true
 		}
 		if action.isExpired() {
-			fmt.Print("expirat")
 			list.actions = append(list.actions[:i], list.actions[i+1:]...)
 		}
 		i++
 	}
 	if !exists {
-		fmt.Println("Adauga")
 		item := &action{
 			page:      page,
 			ip:        ip,
@@ -56,7 +46,6 @@ func (list *List) addAction(page, ip string) {
 		}
 		list.actions = append(list.actions, item)
 	}
-	fmt.Println(list.actions)
 }
 
 func newList() {
@@ -79,7 +68,6 @@ func RequireCaptcha(page, ip string) bool {
 
 // RegisterAction adds a new action for a page
 func RegisterAction(page, ip string) {
-	fmt.Println("ip" + ip)
 	currentListOfActions.addAction(page, ip)
 }
 

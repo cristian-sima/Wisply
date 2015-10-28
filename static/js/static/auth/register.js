@@ -1,38 +1,47 @@
 /* global jQuery, document, $, wisply*/
-var register;
+var RegisterModule;
 
 /**
-* @file Encapsulates the functionality for register page
+* @file Encapsulates the functionality for RegisterModule page
 * @author Cristian Sima
 */
 
 /**
-* @namespace Register
+* @namespace RegisterModule
 */
-var Register = function () {
+var RegisterModule = function () {
   'use strict';
 
   /**
   * It does nothing important
   * @class Form
-  * @memberof Register
-  * @classdesc It encapsulates the functionality for registering an account
+  * @memberof RegisterModule
+  * @classdesc It encapsulates the functionality for RegisterModuleing an account
   */
   var Form = function Form() {
   };
   Form.prototype =
   /**
-  * @lends Register.Form
+  * @lends RegisterModule.Form
   */
   {
     /**
     * It activates the listeners and focuses the name
     */
     init : function () {
+      var info = wisply.getModule("server").getData();
       this.loadListeners();
       this.checkConfirmPassword();
       this.focusName();
       wisply.preloadLoadingImage();
+      if(info.hasCaptcha) {
+        var module = wisply.getModule("captcha"),
+          name = "register-form-page";
+        new module.Captcha({
+          ID: info.ID,
+          name: name,
+        }).show();
+      }
     },
     /**
     * It activates the listeners for form submitted and password focused
@@ -45,7 +54,7 @@ var Register = function () {
     * It is called when the user clicks on the back button of the browser (or in the case Wisply detects problems with the form and the user goes back to the form). In case the value of the password is not empty, it shows the confirmation password field
     */
     checkConfirmPassword : function () {
-      if($("#register-password-confirm").val() !== "") {
+      if($("#RegisterModule-password-confirm").val() !== "") {
         $("#div-confirm-password").show();
       }
     },
@@ -53,34 +62,34 @@ var Register = function () {
     * It focuses the name field
     */
     focusName: function () {
-      $("#register-name").focus();
+      $("#RegisterModule-name").focus();
     },
     /**
     * It is called when the form has been submitted. It shows the loading button
     */
     submittedListener : function() {
-      $("#register-form").on("submit", this.FireSubmited);
+      $("#RegisterModule-form").on("submit", this.FireSubmited);
     },
     /**
-    * It is called when the register form has been submitted. It checks if the confirmation password is the same as the password. If so, it submits the form, else it shows a message
+    * It is called when the RegisterModule form has been submitted. It checks if the confirmation password is the same as the password. If so, it submits the form, else it shows a message
     * @param  {Event} event The event which is generated
     */
     FireSubmited: function(event) {
       event.preventDefault();
-      var password = $('#register-password').val(),
-      confirmationPassword = $("#register-password-confirm").val();
+      var password = $('#RegisterModule-password').val(),
+      confirmationPassword = $("#RegisterModule-password-confirm").val();
       if (password === confirmationPassword) {
-        register.showLoading();
+        RegisterModule.showLoading();
         this.submit();
       } else {
-        register.showPasswordsDoNotMatch();
+        RegisterModule.showPasswordsDoNotMatch();
       }
     },
     /**
     * It shows the confirmation password field
     */
     passwordCompletedListener : function () {
-      $("#register-password").focus(function() {
+      $("#RegisterModule-password").focus(function() {
         $("#div-confirm-password").show();
       });
     },
@@ -88,7 +97,7 @@ var Register = function () {
     * It shows the loading image
     */
     showLoading: function() {
-      wisply.showLoading('#register-submit-div', "medium");
+      wisply.showLoading('#RegisterModule-submit-div', "medium");
     },
     /**
     * It tells the account that the passwords do not match
@@ -114,9 +123,9 @@ var Register = function () {
       Form: Form
     };
   };
-  jQuery(document).ready(function() {
+  $(document).ready(function() {
     "use strict";
-    var module = new Register();
-    register = new module.Form();
+    var module = wisply.loadModule("register", new RegisterModule()),
+      register = new module.Form();
     register.init();
   });

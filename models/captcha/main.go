@@ -9,7 +9,7 @@ const (
 )
 
 var maxNumberOfTimes = map[string]int{
-	"default": 1,
+	"default": 10,
 }
 
 var currentListOfActions List

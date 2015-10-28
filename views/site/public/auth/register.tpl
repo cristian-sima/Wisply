@@ -36,6 +36,16 @@
                   <input type="email" value="{{.email}}" class="form-control" name="register-email" id="register-email" placeholder="E-mail address" required pattern=".{3,60}" title="You should provide a valid e-mail address.">
                 </div>
               </div>
+              {{ if .showCaptcha }}
+              <div class="form-group text-left">
+                <label for="register-captcha-value" class="col-lg-2 control-label">Verification</label>
+                <div class="col-lg-10">
+                  <div id="register-form-page-captcha">
+                  </div>
+                  <input type="text" class="form-control" placeholder="Type the numbers" name="register-form-page-captcha-value" id="register-captcha-value" required  />
+                </div>
+              </div>
+              {{ end }}
               <div class="form-group" >
                 <div class="text-center" id="register-submit-div">
                   <p class="text-muted">By creating this account, you agree to respect our <a target="_blank" href="/help#legal-aspects">legal aspects</a>.</p>
@@ -56,4 +66,32 @@
       </div>
     </div>
   </div>
+  <script src="/static/js/wisply/server.js"></script>
+
+  {{ if .showCaptcha }}
+
+  <script src="/static/js/wisply/captcha.js"></script>
+  <script>
+  $(document).ready(function() {
+      var data = {
+        hasCaptcha: true,
+        ID: "{{ .captcha.GetID }}",
+      };
+      wisply.getModule("server").set(data);
+  });
+  </script>
+
+  {{ else }}
+
+  <script>
+  $(document).ready(function() {
+      var data = {
+        hasCaptcha: false,
+      };
+      wisply.getModule("server").set(data);
+  });
+  </script>
+
+  {{ end }}
+
   <script src="/static/js/static/auth/register.js"></script>

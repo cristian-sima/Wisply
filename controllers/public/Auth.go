@@ -1,11 +1,11 @@
 package public
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	auth "github.com/cristian-sima/Wisply/models/auth"
-	captcha "github.com/cristian-sima/Wisply/models/captcha"
 )
 
 // AuthController inherits the WisplyController
@@ -32,20 +32,16 @@ func (controller *AuthController) showLoginForm() {
 	controller.SetCustomTitle("Login to Wisply")
 	controller.showForm("login")
 
-	page := "login-form-page"
-
-	controller.RegisterCaptchaAction(page)
-
-	if controller.IsCaptchaRequired(page) {
-		controller.Data["captcha"] = captcha.New()
-		controller.Data["showCaptcha"] = true
-	}
+	fmt.Println("Running in " + controller.GetApplicationMode())
+	controller.LoadCaptcha("login-form-page")
 }
 
 // ShowRegisterForm shows the form to register a new account
 func (controller *AuthController) ShowRegisterForm() {
 	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
+
+	controller.LoadCaptcha("register-form-page")
 }
 
 // showForm shows a form indicated by the parameter name.
@@ -60,7 +56,11 @@ func (controller *AuthController) showForm(name string) {
 // The parameters should be: register-name, register-password,
 // register-email and register-password-confirm
 func (controller *AuthController) CreateNewAccount() {
-	if !controller.IsCaptchaValid("register-form-page") {
+
+	page := "register-form-page"
+	controller.RegisterCaptchaAction(page)
+
+	if !controller.IsCaptchaValid(page) {
 		controller.DisplaySimpleError("Please enter a valid code!")
 	} else {
 		controller.createNewAccount()
@@ -99,7 +99,11 @@ func (controller *AuthController) processRegisterRequest(userDetails map[string]
 
 // LoginAccount checks if the details provided are good and it logins the account
 func (controller *AuthController) LoginAccount() {
-	if !controller.IsCaptchaValid("login-form-page") {
+
+	page := "login-form-page"
+	controller.RegisterCaptchaAction(page)
+
+	if !controller.IsCaptchaValid(page) {
 		controller.DisplaySimpleError("Please enter a valid code!")
 	} else {
 		controller.loginAccount()

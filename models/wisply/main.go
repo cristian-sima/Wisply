@@ -53,14 +53,14 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 
 		if record.ID == 0 {
 
-			sql := "SELECT `id`, `datestamp` FROM `repository_resource` WHERE identifier = ?"
+			sql := "SELECT `id`, `datestamp`, `repository` FROM `repository_resource` WHERE identifier = ?"
 			query, err := database.Connection.Prepare(sql)
 
 			if err != nil {
 				fmt.Println(err)
 			}
 
-			query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp)
+			query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp, &record.Repository)
 		}
 		sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
 		rows2, _ := database.Connection.Query(sql2, record.Identifier)
@@ -79,23 +79,35 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	return list
 }
 
+// GetRecordByID finds the record in the database by wisply ID
+func GetRecordByID(value string) (Record, error) {
+	return getRecord("`id`", value)
+}
+
 // GetRecordByIdentifier finds the record in the database by identifier
-func GetRecordByIdentifier(identifier string) Record {
+func GetRecordByIdentifier(value string) Record {
+	record, _ := getRecord("`identifier`", value)
+	return record
+}
+
+func getRecord(byFild, value string) (Record, error) {
 	record := Record{}
 
-	record.Identifier = identifier
-
-	sql := "SELECT `id`, `datestamp` FROM `repository_resource` WHERE identifier = ?"
+	sql := "SELECT `id`, `datestamp`, `identifier`, `repository` FROM `repository_resource` WHERE " + byFild + " = ?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
-		fmt.Println(err)
+		return record, err
 	}
 
-	query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp)
+	query.QueryRow(value).Scan(&record.ID, &record.Timestamp, &record.Identifier, &record.Repository)
 
 	sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
-	rows2, _ := database.Connection.Query(sql2, record.Identifier)
+	rows2, keyErr := database.Connection.Query(sql2, record.Identifier)
+
+	if keyErr != nil {
+		return record, keyErr
+	}
 
 	keys := &RecordKeys{}
 	for rows2.Next() {
@@ -104,7 +116,7 @@ func GetRecordByIdentifier(identifier string) Record {
 		keys.Add(name, value)
 	}
 	record.Keys = keys
-	return record
+	return record, nil
 }
 
 // ClearRepository deletes all the resources, formats, collections, identifiers, emails and the identificaiton details

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: wisply/captcha.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: wisply/captcha.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global $, wisply, Handlebars */
+/**
+ * @file Encapsulates the functionality for managing captcha images
+ * @author Cristian Sima
+ */
+/**
+ * @namespace CaptchaModule
+ */
+var CaptchaModule = function() {
+	'use strict';
+	var settings = {
+			noEscape: true,
+		},
+		pathToFolder = "/captcha/";
+	/**
+	 * It loads the image and it calls the callback when image is loaded
+	 * @param  {string}   path     The path of the image
+	 * @param  {Function} callback The function which is called after the image has loaded
+	 */
+	function loadImage(path, callback) {
+		$('&lt;img class="captcha-image thumbnail" alt="Catcha Image" src="' + path + '">').load(function() {
+			callback(this);
+		});
+	}
+	/**
+	 * The constructor does nothing
+	 * @class Captcha
+	 * @memberof CaptchaModule
+	 * @classdesc The Manager for Captcha images
+	 * @param {object} o The object which contains the options. It must have: ID and name
+	 */
+	function Captcha(o) {
+		this.ID = o.ID;
+		this.name = o.name + "-captcha";
+		this.element = $("#" + this.name);
+		this.reloadParameter = "";
+	}
+	Captcha.prototype =
+		/** @lends Captcha.CaptchaModule */
+		{
+			/**
+			 * It shows the loading icon
+			 */
+			_showLoading: function() {
+				var html = "&lt;div class='text-center' style='padding-top:100px'>{{ image }}&lt;/div>",
+					template = Handlebars.compile(html, settings),
+					data = {
+						image: wisply.getLoadingImage("medium"),
+					},
+					content = template(data);
+				this.element.html(content);
+			},
+			/**
+			 * It loads the image from the server and displays the DIV
+			 */
+			show: function() {
+				this._loadImage();
+			},
+			/**
+			 * It sets the reloadParameter as ?reload=timestamp and loads the
+			 * image from the server
+			 */
+			reload: function() {
+				/**
+				 * It returns the current timestamp
+				 * @return {string} The current timestamp
+				 */
+				function getCurrentTime() {
+					return new Date().getTime();
+				}
+				this.reloadParameter = "?reload=" + getCurrentTime();
+				this._loadImage();
+			},
+			/**
+			 * It shows the loading image, and calls the loadImage function with
+			 * _fired_imageLoaded as the callback
+			 */
+			_loadImage: function() {
+				this._showLoading();
+				var instance = this,
+					path = this._getPath();
+				loadImage(path, function(image) {
+					instance._fired_imageLoaded(image);
+				});
+			},
+			/**
+			 * It returns the path to the image
+			 * @return {string} The path to the image
+			 */
+			_getPath: function() {
+				return pathToFolder + this.ID + ".png" + this.reloadParameter;
+			},
+			/**
+			 * It is called when the image has been loaded. It creates the DIV and
+			 * shows it
+			 * @param  {object} image The DOM image element
+			 */
+			_fired_imageLoaded: function(image) {
+				/**
+				 * It returns the content of the div
+				 * @param  {object} image The DOM object of the image
+				 * @return {string} The string for the DIV
+				 */
+				function getContent(image) {
+					var html = "&lt;input type='hidden' value='{{ id }}' name='{{ name }}-id' />" + "Type the numbers which appear in the next image. &lt;br />" + "Can't read it? Try a &lt;a href='#' id='{{ name }}-reload' > different image&lt;/a> or an &lt;a href='#' id='{{ name }}-audio'>audio captcha&lt;/a>.&lt;br />" + "{{ image }}" + "&lt;a href='#' class='info-captcha' data-toggle='tooltip' title='This image is intended to distinguish human from machine input. Typically, it is a way of thwarting spam and automated extraction of data from websites.' >&lt;span class='glyphicon glyphicon-question-sign'>&lt;/span> What's this?&lt;/a>",
+						values = {
+							image: image.outerHTML,
+							id: instance.ID,
+							name: instance.name,
+						},
+						template = Handlebars.compile(html, settings);
+					return template(values);
+				}
+				var instance = this,
+					content = getContent(image);
+				this._updateHTML(content);
+			},
+			/**
+			 * It updates the HTML div
+			 * @param  {string} inner The HTML to be inserted
+			 */
+			_updateHTML: function(inner) {
+				var html = "&lt;div class='well' >" + inner + "&lt;/div>";
+				this.element.html(html);
+				this._activateListeners();
+			},
+			/**
+			 * It activates the listeners
+			 */
+			_activateListeners: function() {
+				var instance = this;
+				$("#" + this.name + "-reload").click(function(event) {
+					event.preventDefault();
+					instance.reload();
+				});
+				$("#" + this.name + "-audio").click(function(event) {
+					event.preventDefault();
+					/**
+					 * It returns the DIV with the HTML code for the audio player
+					 * @return {string} HTML code for the audio player
+					 */
+					function getMessage() {
+						var html = '&lt;div>&lt;audio id=audio controls autoplay src="/captcha/{{ id }}.wav" preload=none>         You browser does not support audio.         &lt;a href="/captcha/download/{{ id }}.wav">Download file&lt;/a> to play it in the external player. &lt;/audio>&lt;/div>',
+							values = {
+								id: instance.ID,
+							},
+							template = Handlebars.compile(html, settings);
+						return template(values);
+					}
+					wisply.message.dialog({
+						title: "Playing the audio captcha...",
+						message: getMessage(),
+						onEscape: true,
+					});
+				});
+				wisply.activateTooltip();
+			}
+		};
+	return {
+		Captcha: Captcha
+	};
+};
+$(document).ready(function() {
+  "use strict";
+	wisply.loadModule("captcha", new CaptchaModule());
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accounts.Account.html">Account</a></li><li><a href="Accounts.Manager.html">Manager</a></li><li><a href="AdanceOptionsProgram.Manager.html">Manager</a></li><li><a href="AdminAPI.GUI.html">GUI</a></li><li><a href="AdminAPI.Manager.html">Manager</a></li><li><a href="AdminAPI.Table.html">Table</a></li><li><a href="APITableList.Manager.html">Manager</a></li><li><a href="APITableList.Table.html">Table</a></li><li><a href="CaptchaModule.Captcha.html">Captcha</a></li><li><a href="Connection.Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.Manager.html">Manager</a></li><li><a href="Harvest.HarvestConnection.html">HarvestConnection</a></li><li><a href="Harvest.History.html">History</a></li><li><a href="Harvest.StageManager.html">StageManager</a></li><li><a href="HarvestList.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestList.GUI.html">GUI</a></li><li><a href="HarvestProcess.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcess.Indicator.html">Indicator</a></li><li><a href="HarvestProcess.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcess.WisplyCounter.html">WisplyCounter</a></li><li><a href="Institutions.GUI.html">GUI</a></li><li><a href="Institutions.Institution.html">Institution</a></li><li><a href="Institutions.Manager.html">Manager</a></li><li><a href="Log.Manager.html">Manager</a></li><li><a href="LoginModule.Form.html">Form</a></li><li><a href="Operations.Manager.html">Manager</a></li><li><a href="Processes.Manager.html">Manager</a></li><li><a href="Programs.Program.html">Program</a></li><li><a href="PublicRepository.BottomGUI.html">BottomGUI</a></li><li><a href="PublicRepository.Manager.html">Manager</a></li><li><a href="PublicRepository.SideGUI.html">SideGUI</a></li><li><a href="PublicRepository.TopGUI.html">TopGUI</a></li><li><a href="RegisterModule.Form.html">Form</a></li><li><a href="Repositories.GUI.html">GUI</a></li><li><a href="Repositories.Manager.html">Manager</a></li><li><a href="Repositories.Repository.html">Repository</a></li><li><a href="Search.Manager.html">Manager</a></li><li><a href="SearchModule.Cookies.html">Cookies</a></li><li><a href="SearchModule.Field.html">Field</a></li><li><a href="ServerModule.Manager.html">Manager</a></li><li><a href="Settings.Manager.html">Manager</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="Websockets.Connection.html">Connection</a></li><li><a href="Websockets.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="Accounts.html">Accounts</a></li><li><a href="AdanceOptionsProgram.html">AdanceOptionsProgram</a></li><li><a href="AdminAPI.html">AdminAPI</a></li><li><a href="APITableList.html">APITableList</a></li><li><a href="CaptchaModule.html">CaptchaModule</a></li><li><a href="Connection.html">Connection</a></li><li><a href="FunctionalityInstitution.html">FunctionalityInstitution</a></li><li><a href="Harvest.html">Harvest</a></li><li><a href="HarvestList%250DIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListIt holds the functionality to see a live list of repositories</a></li><li><a href="HarvestProcess.html">HarvestProcess</a></li><li><a href="Institutions.html">Institutions</a></li><li><a href="Log.html">Log</a></li><li><a href="LoginModule.html">LoginModule</a></li><li><a href="Operations.html">Operations</a></li><li><a href="Processes.html">Processes</a></li><li><a href="PublicRepository.html">PublicRepository</a></li><li><a href="RegisterModule.html">RegisterModule</a></li><li><a href="Repositories.html">Repositories</a></li><li><a href="Search.html">Search</a></li><li><a href="SearchModule.html">SearchModule</a></li><li><a href="ServerModule%250DThe%2520server%2520module%2520keep%2520the%2520data%2520from%2520server.html">ServerModuleThe server module keep the data from server</a></li><li><a href="Settings.html">Settings</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="Websockets.html">Websockets</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Oct 28 2015 09:06:07 GMT-0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

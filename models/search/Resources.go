@@ -20,7 +20,7 @@ func (search ResourcesSearch) Perform() {
 	for _, resource := range resources {
 		result := &Result{
 			Title:       resource.Keys.GetTitle(),
-			URL:         resource.Keys.GetURL(),
+			URL:         resource.GetWisplyURL(),
 			Description: search.getDescription(resource),
 			Icon:        "/static/img/public/repository/resource.png",
 			Category:    "Resource",

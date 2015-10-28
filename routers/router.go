@@ -71,7 +71,15 @@ func init() {
 	// ----------------------------- Repositories -------------------------------
 
 	publicRepositoryNS := beego.NewNamespace("/repository",
-		beego.NSRouter("/:id", &public.RepositoryController{}, "GET:ShowRepository"),
+		beego.NSNamespace("/:repository",
+			beego.NSRouter("", &public.Repository{}, "GET:ShowRepository"),
+			beego.NSNamespace("/resource",
+				beego.NSNamespace("/:resource",
+					beego.NSRouter("", &public.Repository{}, "GET:ShowResource"),
+					beego.NSRouter("/content", &public.Repository{}, "GET:GetResourceContent"),
+				),
+			),
+		),
 	)
 
 	// ----------------------------- ADMIN --------------------------------------

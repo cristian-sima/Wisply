@@ -20,9 +20,10 @@ processScript () {
   showMessage "${PWD##*/}"
   findWord="runmode = dev"
   replaceWith="runmode = pro"
-  content=`cat ./conf/app.conf`
+  file="conf/app.conf"
+  content==$(<file)
   result_string="${content/findWord/$replaceWith}"
-  $file="./conf/app.conf"
+  showMessage result_string
   result_string > $file
   sleep 1
   showSuccess "Done!"

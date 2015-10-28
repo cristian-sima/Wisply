@@ -17,7 +17,7 @@ processScript () {
   sleep 2
   showMessage "Changing the mode to production..."
   showMessage "Current directory "
-  showMessage basename "$PWD"
+  showMessage "${PWD##*/}"
   findWord="runmode = dev"
   replaceWith="runmode = pro"
   content=`cat ./conf/app.conf`

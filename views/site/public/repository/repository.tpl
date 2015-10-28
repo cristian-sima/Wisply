@@ -21,7 +21,7 @@
               <div class="text-left"></div>
               <hr />
               <div class="text-left">
-                <span class="text-muted">Address:</span> <a target="_blank" href="{{ .repository.PublicURL }}">Web page</a>
+                <a target="_blank" href="{{ .repository.PublicURL }}">Web page</a>
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6" >

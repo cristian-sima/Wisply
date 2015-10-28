@@ -31,32 +31,32 @@ li.admin-sidebar
   border-bottom-width:1px;
 }
 
-h1
+h1, .h1
 {
   font-size:28px;
 }
 
-h2
+h2, .h2
 {
   font-size:25px;
 }
 
-h3
+h3, .h3
 {
   font-size:22px;
 }
 
-h4
+h4, .h4
 {
   font-size:19px;
 }
 
-h5
+h5, .h5
 {
   font-size:16px;
 }
 
-h6
+h6, .h6
 {
   font-size:13px;
 }

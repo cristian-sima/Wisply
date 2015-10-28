@@ -88,7 +88,7 @@ var Settings = function() {
 				 * @ignore
 				 */
 				errorCallback = function() {
-					wisply.message.showError("There was a problem with your request");
+					wisply.message.showError("The request was not successful");
 				};
 				request = {
 					url: '/account/settings/delete',

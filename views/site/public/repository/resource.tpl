@@ -12,13 +12,14 @@
           </ul>
         </div>
         <div class="panel-body">
+          <h1>{{ .record.Keys }}</h1>
             <div class="top-info">
             </div>
 
             <div class="content-info">
               <div class="embed-responsive embed-responsive-16by9">
-                  <base target="_blank" />
-              <iframe id="the-iframe" sandbox class="embed-responsive-item the-iframe" src="http://facebook.com">
+
+              <iframe id="the-iframe" class="embed-responsive-item the-iframe" >
 
               </iframe>
             </div>
@@ -30,18 +31,28 @@
   </div>
 </div>
 <div>
-  <script>
-  $.ajax({
-  url: 'http://facebook.com',
-  type: 'GET',
-  success: function(res) {
-    $("#the-iframe").html(res.responseText)
-  }
-});
-  </script>
 <style scoped>
 .the-iframe {
 
 }
 </style>
 </div>
+<script src="/static/js/public/resource.js"></script>
+<script>
+$(document).ready(function() {
+  "use strict";
+  var data = {
+    repository : {
+      name : "{{ .repository.Name }}",
+      id: {{ .repository.ID }},
+    },
+    resource : {
+      id: "{{ .resource.ID }}",
+      identifier: "{{ .resource.Identifier }}",
+    },
+  },
+  module = wisply.getModule("public-resource");
+
+  module.init(data);
+});
+</script>

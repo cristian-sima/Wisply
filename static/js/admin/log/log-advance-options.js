@@ -8,7 +8,6 @@
  */
 var LogAdvanceOptionsModule = function() {
 	'use strict';
-
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
@@ -26,7 +25,11 @@ var LogAdvanceOptionsModule = function() {
 			 * It activates the listener for delete button
 			 */
 			init: function() {
-				$(".deleteLogButton").click(confirmDelete);
+				var instance = this;
+				$(".deleteLogButton").click(function(event) {
+					event.preventDefault();
+					instance.confirmDelete();
+				});
 			},
 			/**
 			 * It requests the user to confirm
@@ -83,7 +86,7 @@ var LogAdvanceOptionsModule = function() {
 				 */
 				successCallback = function() {
 					wisply.message.showSuccess("The log has been removed! Refreshing page...");
-					window.location="/admin/log";
+					window.location = "/admin/log";
 				};
 				/**
 				 * It is called when there has been problems
@@ -100,14 +103,6 @@ var LogAdvanceOptionsModule = function() {
 				wisply.executePostAjax(request);
 			}
 		};
-	/**
-	 * It is called when the user clicks the delete button. It requests the user to confirm
-	 * @param [event] event The event which is generated
-	 */
-	function confirmDelete(event) {
-		event.preventDefault();
-		wisply.logManager.confirmDelete();
-	}
 	return {
 		Manager: Manager,
 	};
@@ -115,5 +110,5 @@ var LogAdvanceOptionsModule = function() {
 jQuery(document).ready(function() {
 	"use strict";
 	var module = new LogAdvanceOptionsModule();
-	wisply.loadModule("log-advance-options");
+	wisply.loadModule("log-advance-options", module);
 });

@@ -205,3 +205,13 @@ $(document).ready(function(){
 </script>
 <script src="/static/js/admin/log/process.js"></script>
 <script src="/static/js/admin/log/operation.js"></script>
+<script>
+$(document).ready(function(){
+  var modules = {
+    operations : wisply.getModule("operations"),
+    process: wisply.getModule("processes"),
+  };
+  (new modules.operations.Manager()).init();
+  (new modules.process.Manager()).init();
+});
+</script>

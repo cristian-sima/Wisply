@@ -117,3 +117,10 @@
   </div>
 </div>
 <script src="/static/js/admin/log/operation.js"></script>
+<script>
+$(document).ready(function(){
+  var module = wisply.getModule("operations"),
+    manager = new module.Manager();
+    manager.init();
+});
+</script>

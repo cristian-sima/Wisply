@@ -1,4 +1,4 @@
-/* global $, Harvest, wisply, server, harvestHistory, CountUp */
+/* global $, wisply, server, harvestHistory, CountUp */
 /**
  * @file Encapsulates the functionality for the harvest process
  * @author Cristian Sima
@@ -56,7 +56,7 @@ var HarvestProcessModule = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				window.location="/admin/repositories";
+				window.location = "/admin/repositories";
 			} else {
 				harvestHistory.log("We start a new process");
 				this.initNewProcess();
@@ -209,16 +209,15 @@ var HarvestProcessModule = function() {
 		 * @param  {object} result The message from the server
 		 */
 		analyse: function(result) {
-				harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
-				if(!this.currentCounter || this.currentCounter.type != result.Operation) {
-					this.currentNumber = result.Number;
-					this.setCurrentCounter(result.Operation);
-					this.currentCounter.start(result.Number);
-				}
-				else {
-					this.currentNumber = parseInt(result.Number, 10) + parseInt(this.currentNumber, 10);
-				  this.getCounter(result.Operation).update(this.currentNumber);
-				}
+			harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
+			if (!this.currentCounter || this.currentCounter.type != result.Operation) {
+				this.currentNumber = result.Number;
+				this.setCurrentCounter(result.Operation);
+				this.currentCounter.start(result.Number);
+			} else {
+				this.currentNumber = parseInt(result.Number, 10) + parseInt(this.currentNumber, 10);
+				this.getCounter(result.Operation).update(this.currentNumber);
+			}
 		},
 		/**
 		 * It updates the counter
@@ -361,7 +360,6 @@ var HarvestProcessModule = function() {
 			 * @param  {object} message The message from the server
 			 */
 			decide: function(message) {
-
 				/**
 				 * It is called when the status of the repository has changed
 				 * It decides which operation to call
@@ -371,22 +369,22 @@ var HarvestProcessModule = function() {
 				function repositoryStatusChanged(decideManager, message) {
 					decideManager.stage.repository.status = message.Value;
 					decideManager.stage.GUI.updateRepositoryStatus();
-					switch(message.Value) {
+					switch (message.Value) {
 						case "verifying":
 							decideManager.stage.performStage(3);
-						break;
-							case "initializing":
+							break;
+						case "initializing":
 							decideManager.stage.firedStageFinished();
 							decideManager.stage.firedStageFinished();
-						break;
+							break;
 						case "verification-failed":
 							decideManager.stage.GUI.showCurrent("The verification failed");
 							decideManager.stage.pause();
 							decideManager.stage.stages[3].enableModifyURL();
-						break;
+							break;
 						case "verified":
 							decideManager.stage.firedStageFinished();
-						break;
+							break;
 					}
 				}
 				if (this.isGoogMessage(message)) {
@@ -396,13 +394,13 @@ var HarvestProcessModule = function() {
 							break;
 						case "harvest-update":
 							this.stage.stages[5].analyse(message.Value);
-						break;
+							break;
 						case "existing-process-on-server":
 							this.stage.currentStage.analyse(message);
 							break;
 						case "process-finished":
 							this.stage.firedStageFinished();
-						break;
+							break;
 					}
 				}
 			},

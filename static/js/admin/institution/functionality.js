@@ -4,26 +4,30 @@
  * @author Cristian Sima
  */
 /**
- * @namespace FunctionalityInstitution
+ * @namespace FunctionalityInstitutionModule
  */
-var FunctionalityInstitution = function() {
+var FunctionalityInstitutionModule = function() {
 	'use strict';
 	/**
 	 * The constructor activates the listeners
-	 * @memberof FunctionalityInstitution
+	 * @memberof FunctionalityInstitutionModule
 	 * @class Manager
 	 * @classdesc It encapsulets the functionality for adding an institution
 	 */
 	var Manager = function Manager() {
-		var instance = this;
-		this.nameTyper = new wisply.typerModule.Typer("institution-name", function() {
+		var instance = this,
+			modules = {
+				typer: wisply.getModule("typer"),
+				wikier: wisply.getModule("wikier"),
+			};
+		this.nameTyper = new modules.typer.Typer("institution-name", function() {
 			instance.getWikiByName();
 		});
-		this.wikier = new wisply.wikierModule.Wikier();
+		this.wikier = new modules.wikier.Wikier();
 		this.original = server.original;
 	};
 	Manager.prototype =
-		/** @lends FunctionalityInstitution.Manager */
+		/** @lends FunctionalityInstitutionModule.Manager */
 		{
 			/**
 			 * It activates the listeners
@@ -247,8 +251,6 @@ var FunctionalityInstitution = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var module = new FunctionalityInstitution();
-	wisply.functionalityInstitutionModule = module;
-	wisply.functionalityInstitutionModule.manager = new module.Manager();
-	wisply.functionalityInstitutionModule.manager.init();
+	var module = new FunctionalityInstitutionModule();
+	wisply.loadModule("functionality-institutions", module);
 });

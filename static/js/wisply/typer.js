@@ -66,5 +66,5 @@ var TyperModule = function () {
 $(document).ready(function() {
   "use strict";
   var module = new TyperModule();
-  wisply.typerModule = module;
+  wisply.loadModule("typer", module);
 });

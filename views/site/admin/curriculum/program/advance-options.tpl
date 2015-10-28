@@ -42,3 +42,10 @@
     </div>
   </div>
   <script src="/static/js/admin/curriculum/program/advance-options.js"></script>
+  <script>
+  $(document).ready(function(){
+      var module = wisply.getModule("admin-advance-options-program"),
+        manager = new module.Manager();
+        manager.init();
+  });
+  </script>

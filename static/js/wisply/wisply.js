@@ -365,7 +365,11 @@ var Wisply = function() {
 				if (this.modules[name]) {
 				 	console.warn("The module [" + name + "] has been loaded once");
 				} else {
-					this.modules[name] = content;
+					if(!content) {
+						console.warn("The object for the module [" + name + "] is undefined.");
+					} else {
+						this.modules[name] = content;
+					}
 				}
 				return this.modules[name];
 			},

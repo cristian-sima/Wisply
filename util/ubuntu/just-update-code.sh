@@ -15,17 +15,17 @@ processScript () {
   showMessage "Updating from GitHub..."
   go get -u github.com/cristian-sima/Wisply
   sleep 2
-  showMessage "Changing the mode to production..."
-  showMessage "Current directory "
-  showMessage "${PWD##*/}"
-  findWord="runmode = dev"
-  replaceWith="runmode = pro"
-  content=`cat conf/app.conf`
-  showMessage $content
-  result_string="${$content/$findWord/$replaceWith}"
-  showMessage $result_string
-  result_string > conf/app.conf
-  sleep 1
+  # showMessage "Changing the mode to production..."
+  # showMessage "Current directory "
+  # showMessage "${PWD##*/}"
+  # findWord="runmode = dev"
+  # replaceWith="runmode = pro"
+  # content=`cat conf/app.conf`
+  # showMessage $content
+  # result_string="${$content/$findWord/$replaceWith}"
+  # showMessage $result_string
+  # result_string > conf/app.conf
+  # sleep 1
   showSuccess "Done!"
 }
 

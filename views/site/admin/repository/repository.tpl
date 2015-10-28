@@ -158,9 +158,12 @@
   <script src="/static/js/admin/repository/list.js"></script>
   <script>
   $(document).ready(function(){
+    var module = wisply.getModule("repository"),
+      manager = new module.Manager();
+      manager.init();
     $(".repository-status").each(function(){
       var el = $(this),
-      status = wisply.repositoriesModule.GUI.getStatusColor(el.html())
+      status = module.GUI.getStatusColor(el.html())
       el.html(status)
     });
     wisply.activateTooltip()

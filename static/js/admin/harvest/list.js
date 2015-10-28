@@ -129,7 +129,7 @@ var HarvestListModule = function() {
 			 * It activates the listeners for the status actions
 			 */
 			activateActionListeners: function() {
-				wisply.repositoriesModule.GUI.activateActionListeners();
+				wisply.getModule("repository").GUI.activateActionListeners();
 			},
 			/**
 			 * It gets the HTML span for a status
@@ -137,7 +137,7 @@ var HarvestListModule = function() {
 			 * @return {string} The HTML span for a status
 			 */
 			getStatusColor: function(status) {
-				return wisply.repositoriesModule.GUI.getStatusColor(status);
+				return wisply.getModule("repository").GUI.getStatusColor(status);
 			},
 			/**
 			 * It returns the JQUERY ID of a repository

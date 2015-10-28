@@ -89,7 +89,6 @@ a.resource:focus{
 }
 </style>
 </div>
-<script src="/static/js/admin/repository/list.js"></script>
 <script>
 var server = {};
 server.repository = {

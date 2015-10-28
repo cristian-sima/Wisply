@@ -7,15 +7,15 @@
 
 
 /**
-* @namespace Repositories
+* @namespace RepositoryModule
 */
-var Repositories = function () {
+var RepositoryModule = function () {
   'use strict';
 
   /**
   * The constructor does nothing important
   * @class Repository
-  * @memberof Repositories
+  * @memberof RepositoryModule
   * @classdesc It represents a repository
   * @param {object} info It contains the information regarding the repository (id, name and url, status)
   */
@@ -28,14 +28,14 @@ var Repositories = function () {
 
   /**
   * The constructor activates the listeners
-  * @memberof Repositories
+  * @memberof RepositoryModule
   * @class Manager
   * @classdesc It encapsulets the functionality for the repositories
   */
   var Manager = function Manager() {
   };
   Manager.prototype =
-  /** @lends Repositories.Manager */
+  /** @lends RepositoryModule.Manager */
   {
     /**
     * It activates the listeners
@@ -106,7 +106,8 @@ var Repositories = function () {
       var buttons,
       cancelButton,
       msg,
-      mainButton;
+      mainButton,
+      instance = this;
 
       cancelButton = {
         label: "Cancel",
@@ -119,7 +120,7 @@ var Repositories = function () {
         label: "Delete",
         className: "btn-danger",
         callback: function () {
-          wisply.repositoriesManager.delete(repository);
+          instance.delete(repository);
         }
       };
       buttons = {
@@ -239,7 +240,7 @@ var Repositories = function () {
 
   /**
   * The constructor activates the listeners
-  * @memberof Repositories
+  * @memberof RepositoryModule
   * @class GUI
   * @classdesc It encapsulets the GUI functionality
   */
@@ -299,8 +300,6 @@ var Repositories = function () {
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Repositories();
-  wisply.repositoriesModule = module;
-  wisply.repositoriesManager = new module.Manager();
-  wisply.repositoriesManager.init();
+  var module = new RepositoryModule();
+  wisply.loadModule("repository", module);
 });

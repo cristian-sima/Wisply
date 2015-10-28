@@ -24,6 +24,8 @@ func (controller *Settings) DeleteAccount() {
 	isPasswordValid := auth.VerifyAccount(account, password)
 	if isPasswordValid {
 		controller.Account.Delete()
+	} else {
+		controller.Abort("404")
 	}
 	controller.TplNames = "site/blank.tpl"
 }

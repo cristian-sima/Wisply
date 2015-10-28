@@ -118,5 +118,6 @@ var AccountSearchModule = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	wisply.loadModule("account-search-list", new AccountSearchModule());
+	var module = new AccountSearchModule();
+	wisply.loadModule("account-search-list", module);
 });

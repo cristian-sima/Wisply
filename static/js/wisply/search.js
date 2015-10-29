@@ -338,5 +338,6 @@ var SearchModule = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	searchModule = new SearchModule();
+	var module = new SearchModule();
+	wisply.loadModule("search", module);
 });

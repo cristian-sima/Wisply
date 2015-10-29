@@ -6,22 +6,22 @@
 */
 
 /**
-* @namespace Connection
+* @namespace ConnectionModule
 */
-var Connection = function () {
+var ConnectionModule = function () {
   'use strict';
 
 
   /**
   * The constructor calls the init function
   * @class Connection
-  * @memberof Connection
+  * @memberof ConnectionModule
   * @classdesc The object manages the connection for an account.
   */
   var Connection = function Connection() {
   };
   Connection.prototype =
-  /** @lends Connection.Connection */
+  /** @lends ConnectionModule.Connection */
   {
     /**
     * It loads the listeners
@@ -38,7 +38,7 @@ var Connection = function () {
         "type": "keyup",
         "key": "Alt+l",
         "callback": function () {
-          wisply.connection.logout();
+          wisply.getModule("connection").logout();
         },
         "description": "It logs you out",
       }];
@@ -59,7 +59,7 @@ var Connection = function () {
     FireLogoutUser: function (event) {
       wisply.showLoading("#menu-top-left", "small");
       event.preventDefault();
-      wisply.connection.logout();
+      wisply.getModule("connection").logout();
     },
     /**
     * It creates and sends the AJAX request to log out.
@@ -102,13 +102,11 @@ var Connection = function () {
       wisply.executePostAjax(request);
     }
   };
-  return {
-    Connection: Connection
-  };
+  return new Connection();
 };
 $(document).ready(function() {
   "use strict";
-  var module = new Connection();
-  wisply.connection = new module.Connection();
-  wisply.connection.init();
+  var module = new ConnectionModule();
+  wisply.loadModule("connection", module);
+  module.init();
 });

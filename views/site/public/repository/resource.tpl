@@ -13,6 +13,11 @@
         </div>
         <div class="panel-body">
           <h1>{{ .resource.Keys.GetTitle }}</h1>
+          <div class="h6 text-muted">
+            {{range $index, $creator := .resource.Keys.Get "creator" }}
+            {{ $creator }}
+            {{ end }}
+          </div>
           <div class="top-info">
             {{range $index, $description := .resource.Keys.Get "description" }}
             {{ $description }}
@@ -36,10 +41,6 @@
             </div>
           </div>
           <div class="content-info">
-              <a href="http://bootswatch.com/paper/#" >
-                <span><span class="glyphicon glyphicon-download"></span> Download</a> &bull;</span>
-              <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>
-
             {{ if not .resource.IsVisible }}
             <div class="well">
               <div class="row">
@@ -49,16 +50,31 @@
                 <div class="col-md-11">
                   Wisply does not have access to the content of this resource.
                   <br />
-                  This may happen because this resource can not be previewed in the browser or that the author of the resource maked it as private.
-                </div>
+                  This may happen because this resource can not be previewed in the browser or that the author of the resource has maked it as private. <br />
+                    <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>                </div>
               </div>
             </div>
             {{ else }}
-            <div class="embed-responsive embed-responsive-16by9">
-              <div id="the-iframe" class="embed-responsive-item the-iframe" >
+            <div class="well well-sm">
+              <a class="download-file" href="http://www.edshare.soton.ac.uk/id/document/289262" >
+                <span><span class="glyphicon glyphicon-download"></span> Download</a> &bull;</span>
+              <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>
+            </div>
+            <div class="row text-center">
+              <div class="col-md-12 text-center">
+                <div id="resource-content text-center" >
+                  <img class="text-center img-responsive" src="http://www.edshare.soton.ac.uk/15322/6/page.jpg" />
+                </div>
               </div>
             </div>
             {{ end }}
+          </div>
+          <br />
+          <div class="panel panel-default">
+            <div class="panel-heading">{{ .repository.Name }} resources</div>
+            <div class="panel-body" id="div-same-collection">
+
+            </div>
           </div>
         </div>
       </div>

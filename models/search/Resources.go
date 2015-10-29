@@ -23,7 +23,8 @@ func (search ResourcesSearch) Perform() {
 			URL:         resource.GetWisplyURL(),
 			Description: search.getDescription(resource),
 			Icon:        "/static/img/public/repository/resource.png",
-			Category:    "Resource",
+			Category:    search.getCategory(resource),
+			IsVisible:   search.getVisibility(resource),
 		}
 		search.response.AppendItem(result)
 	}
@@ -57,6 +58,14 @@ func (search ResourcesSearch) getNonEmptyFromDB() []wisply.Record {
 
 func (search ResourcesSearch) getName(resource wisply.Record) string {
 	return "Name"
+}
+
+func (search ResourcesSearch) getCategory(resource wisply.Record) string {
+	return "Resource"
+}
+
+func (search ResourcesSearch) getVisibility(resource wisply.Record) bool {
+	return resource.IsVisible
 }
 
 func (search ResourcesSearch) getDescription(resource wisply.Record) string {

@@ -23,6 +23,7 @@ func (search CurriculaSearch) Perform() {
 			Description: "",
 			Icon:        "/static/img/public/search/curriculum.png",
 			Category:    "Curriculum",
+			IsVisible:   true,
 		}
 		search.response.AppendItem(result)
 	}

@@ -23,6 +23,7 @@ func (search InstitutionSearch) Perform() {
 			Description: institution.Description,
 			Icon:        institution.LogoURL,
 			Category:    "Institution",
+			IsVisible:   true,
 		}
 		search.response.AppendItem(result)
 	}

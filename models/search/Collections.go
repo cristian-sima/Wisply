@@ -36,6 +36,7 @@ func (search CollectionsSearch) Perform() {
 			Description: description,
 			Icon:        "/static/img/public/repository/collection.png",
 			Category:    "Collection",
+			IsVisible:   true,
 		}
 		search.response.AppendItem(result)
 	}

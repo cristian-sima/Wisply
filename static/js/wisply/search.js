@@ -114,6 +114,9 @@ var SearchModule = function() {
 								}, 100);
 							}
 						});
+						instance.object.bind('typeahead:render', function() {
+							 wisply.activateTooltip();
+						 });
 						instance.object.bind('typeahead:asyncrequest', function() {
 							 $(instance.selector + '-spinner').show();
 						 });
@@ -171,6 +174,18 @@ var SearchModule = function() {
 									cacheKey: 'ID',
 									url: instance.URL + '%QUERY',
 									wildcard: '%QUERY',
+									// transform: function(results) {
+									// 	var result, i, list = [];
+									// 	for(i=0; i < results.length; i++) {
+									// 		result = results[i];
+									// 		console.log(result);
+									// 		if(!result.IsVisible) {
+									// 			result.Visibility = "<span class='glyphicon glyphicon-lock'></span>";
+									// 		}
+									// 		list.unshift(result);
+									// 	}
+									// 	return list;
+									// }
 								}
 							});
 							return object;
@@ -182,7 +197,9 @@ var SearchModule = function() {
 							"</div>",
 							"<div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
 							"<span class='search-title'>{{ cutString Title 40 }}</span><br />",
-							"<span class='text-muted bold search-category'><small>{{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 90 }}</span></div>",
+							"<span class='text-muted bold search-category'><small> {{#unless IsVisible}} ",
+							"<span data-toggle='tooltip' data-placement='left' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'></span>",
+							"{{/unless}} {{ Category }}</small></span><br /><span class='text-muted search-description'>{{ cutString Description 90 }}</span></div>",
 						"</div></div>",
 					].join("\n");
 						footer = [

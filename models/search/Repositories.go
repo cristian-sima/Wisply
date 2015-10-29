@@ -24,6 +24,7 @@ func (search RepositoriesSearch) Perform() {
 			Description: repositoryObject.Description,
 			Icon:        "/static/img/public/repository/repository.png",
 			Category:    "Repository",
+			IsVisible:   true,
 		}
 		search.response.AppendItem(result)
 	}

@@ -8,4 +8,5 @@ type Result struct {
 	Description string
 	Icon        string
 	Category    string
+	IsVisible   bool
 }

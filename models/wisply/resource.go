@@ -9,6 +9,7 @@ type Record struct {
 	Timestamp  string
 	Keys       *RecordKeys
 	Repository int
+	IsVisible  bool
 }
 
 // GetIdentifier returns the unique identifier

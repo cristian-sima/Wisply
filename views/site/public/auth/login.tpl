@@ -87,3 +87,10 @@ $(document).ready(function() {
 {{ end }}
 
 <script src="/static/js/static/auth/login.js"></script>
+<script>
+$(document).ready(function(){
+    var module = wisply.getModule("login"),
+      form = new module.Form();
+      form.init();
+});
+</script>

@@ -95,3 +95,10 @@
   {{ end }}
 
   <script src="/static/js/static/auth/register.js"></script>
+  <script>
+  $(document).ready(function(){
+      var module = wisply.getModule("register"),
+        form = new module.Form();
+        form.init();
+  });
+  </script>

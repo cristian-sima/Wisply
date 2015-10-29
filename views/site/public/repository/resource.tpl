@@ -12,7 +12,12 @@
           </ul>
         </div>
         <div class="panel-body">
-        <h1>{{ .resource.Keys.GetTitle }}</h1>
+          <h1>{{ .resource.Keys.GetTitle }}</h1>
+          <div class="top-info">
+            {{range $index, $description := .resource.Keys.Get "description" }}
+            {{ $description }}
+            {{ end }}
+          </div>
           <div class="row">
             <div class="col-md-3">
               <table class="table h5">
@@ -27,17 +32,33 @@
               </table>
             </div>
             <div class="col-md-6">
-              <!-- Other information --> 
+              <!-- Other information -->
             </div>
           </div>
-          <div class="top-info">
-          </div>
           <div class="content-info">
+              <a href="http://bootswatch.com/paper/#" >
+                <span><span class="glyphicon glyphicon-download"></span> Download</a> &bull;</span>
+              <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>
+
+            {{ if not .resource.IsVisible }}
+            <div class="well">
+              <div class="row">
+                <div class="col-md-1 text-center">
+                  <span class="h3"><span class="glyphicon glyphicon-lock"></span></span>
+                </div>
+                <div class="col-md-11">
+                  Wisply does not have access to the content of this resource.
+                  <br />
+                  This may happen because this resource can not be previewed in the browser or that the author of the resource maked it as private.
+                </div>
+              </div>
+            </div>
+            {{ else }}
             <div class="embed-responsive embed-responsive-16by9">
               <div id="the-iframe" class="embed-responsive-item the-iframe" >
               </div>
             </div>
-            {{ .record }}
+            {{ end }}
           </div>
         </div>
       </div>

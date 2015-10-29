@@ -6,12 +6,12 @@
 /**
  * @namespace APITableList
  */
-var APITableList = function() {
+var APITableListModule = function() {
 	'use strict';
 	/**
 	 * The constructor does nothing
 	 * @class
-	 * @memberof APITableList
+	 * @memberof APITableListModule
 	 * @classdesc It represents a Wisply table
 	 * @param {number} id   The id of the table
 	 * @param {string} name The name of the table
@@ -23,15 +23,15 @@ var APITableList = function() {
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof APITableList
-	 * @classdesc It encapsulets the functions for APITableList.
+	 * @memberof APITableListModule
+	 * @classdesc It encapsulets the functions for APITableListModule.
 	 */
 	var Manager = function Manager() {};
 	/**
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends APITableList.Manager */
+		/** @lends APITableListModule.Manager */
 		{
 			/**
 			 * It activates the listener for all delete buttons
@@ -57,7 +57,7 @@ var APITableList = function() {
 			},
 			/**
 			 * It tells the server to download the table and shows a waiting message
-			 * @param  {APITableList.Table} table The table to be downloaded
+			 * @param  {APITableListModule.Table} table The table to be downloaded
 			 */
 			downloadTable: function(table) {
 				var request,
@@ -124,7 +124,6 @@ var APITableList = function() {
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new APITableList();
-	wisply.APITableListManager = new module.Manager();
-	wisply.APITableListManager.init();
+	var module = new APITableListModule();
+	wisply.loadModule("api-table-list", module);
 });

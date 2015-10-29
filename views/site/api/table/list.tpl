@@ -85,3 +85,10 @@
 </style>
 </div>
 <script src="/static/js/api/table/list.js"></script>
+<script>
+$(document).ready(function(){
+    var module = wisply.getModule("api-table-list"),
+      manager = new module.Manager();
+      manager.init();
+});
+</script>

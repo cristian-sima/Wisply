@@ -4,9 +4,9 @@
  * @author Cristian Sima
  */
 /**
- * @namespace PublicRepository
+ * @namespace PublicRepositoryModule
  */
-var PublicRepository = function() {
+var PublicRepositoryModule = function() {
 	'use strict';
 	// credits http://stackoverflow.com/a/881147/2415167
 	String.prototype.count = function(s1) {
@@ -20,7 +20,7 @@ var PublicRepository = function() {
 	}
 	/**
 	 * The constructor sets the default values
-	 * @memberof PublicRepository
+	 * @memberof PublicRepositoryModule
 	 * @class Manager
 	 * @classdesc It encapsulets the functionality for the public repository
 	 * @param {object} currentRepository Represents the current repository
@@ -41,7 +41,7 @@ var PublicRepository = function() {
 		this.bottomGUI = new BottomGUI(this);
 	};
 	Manager.prototype =
-		/** @lends PublicRepository.Manager */
+		/** @lends PublicRepositoryModule.Manager */
 		{
 			/**
 			 * It activates the listeners and adds the shortcuts
@@ -438,17 +438,17 @@ var PublicRepository = function() {
 		};
 	/**
 	 * Contains the functionality for top GUI
-	 * @memberof PublicRepository
+	 * @memberof PublicRepositoryModule
 	 * @class TopGUI
 	 * @classdesc It encapsulets the functionality for top GUI
-	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
 	 */
 	var TopGUI = function TopGUI(manager) {
 		this.element = $("#repository-top");
 		this.manager = manager;
 	};
 	TopGUI.prototype =
-		/** @lends PublicRepository.TopGUI */
+		/** @lends PublicRepositoryModule.TopGUI */
 		{
 			/**
 			 * Does nothing. It is here for cosistency (the other GUI has an init method)
@@ -663,10 +663,10 @@ var PublicRepository = function() {
 		};
 	/**
 	 * Contains the functionality for side GUI
-	 * @memberof PublicRepository
+	 * @memberof PublicRepositoryModule
 	 * @class SideGUI
 	 * @classdesc It encapsulets the functionality for side GUI
-	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
 	 */
 	var SideGUI = function SideGUI(manager) {
 		this.element = $("#repository-side");
@@ -675,7 +675,7 @@ var PublicRepository = function() {
 		this.hideEmptyCollections = true;
 	};
 	SideGUI.prototype =
-		/** @lends PublicRepository.SideGUI */
+		/** @lends PublicRepositoryModule.SideGUI */
 		{
 			/**
 			 * Does thing. It is present for consistency
@@ -950,10 +950,10 @@ var PublicRepository = function() {
 		};
 	/**
 	 * Contains the functionality for bottom GUI
-	 * @memberof PublicRepository
+	 * @memberof PublicRepositoryModule
 	 * @class BottomGUI
 	 * @classdesc It encapsulets the functionality for bottom GUI
-	 * @param {PublicRepository.Manager} manager Is a reference to the manager
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
 	 */
 	var BottomGUI = function BottomGUI(manager) {
 		this.element = $("#repository-bottom");
@@ -961,7 +961,7 @@ var PublicRepository = function() {
 		this.showMoreOptions = false;
 	};
 	BottomGUI.prototype =
-		/** @lends PublicRepository.BottomGUI */
+		/** @lends PublicRepositoryModule.BottomGUI */
 		{
 			/**
 			 * It activates the listeners for the bottom GUI
@@ -1144,8 +1144,6 @@ var PublicRepository = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var module = new PublicRepository();
-	wisply.publicRepositoryModule = module;
-	wisply.publicRepositoryModule.manager = new module.Manager(server.repository);
-	wisply.publicRepositoryModule.manager.init();
+	var module = new PublicRepositoryModule();
+	wisply.loadModule("public-repository", module);
 });

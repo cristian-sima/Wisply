@@ -8,10 +8,11 @@
             <li><a href="/institutions">Institutions</a></li>
             <li><a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
             <li><a href="/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
-            <li class="active">{{ .record.Keys.GetTitle }}</li>
+            <li class="active">{{ .resource.Keys.GetTitle }}</li>
           </ul>
         </div>
         <div class="panel-body">
+        <h1>{{ .resource.Keys.GetTitle }}</h1>
           <div class="row">
             <div class="col-md-3">
               <table class="table h5">
@@ -26,17 +27,14 @@
               </table>
             </div>
             <div class="col-md-6">
+              <!-- Other information --> 
             </div>
           </div>
-          <h1>{{ .record.Keys }}</h1>
           <div class="top-info">
           </div>
-
           <div class="content-info">
             <div class="embed-responsive embed-responsive-16by9">
-
               <div id="the-iframe" class="embed-responsive-item the-iframe" >
-
               </div>
             </div>
             {{ .record }}

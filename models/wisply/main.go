@@ -20,7 +20,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows *sql.Rows
 		err  error
 	)
-	fieldList := "record.`identifier`, record.`id`, record.`datestamp`"
+	fieldList := "record.`identifier`, record.`id`, record.`datestamp`, record.`repository`"
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
@@ -49,10 +49,9 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	for rows.Next() {
 		counter++
 		record := &Record{}
-		rows.Scan(&record.Identifier, &record.ID, &record.Timestamp)
+		rows.Scan(&record.Identifier, &record.ID, &record.Timestamp, &record.Repository)
 
 		if record.ID == 0 {
-
 			sql := "SELECT `id`, `datestamp`, `repository` FROM `repository_resource` WHERE identifier = ?"
 			query, err := database.Connection.Prepare(sql)
 

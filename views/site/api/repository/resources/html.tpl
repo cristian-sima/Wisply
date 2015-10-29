@@ -3,7 +3,7 @@
     {{range $index, $record := .records}}
     <tr>
       <td>
-          <a class="resource" href="{{ $record.Keys.GetURL }}">
+          <a class="resource" href="{{ $record.GetWisplyURL }}">
               <h4>
             {{range $index, $title := $record.Keys.Get "title" }}
             {{ $title }}

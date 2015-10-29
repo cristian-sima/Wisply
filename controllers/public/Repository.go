@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 
 	"github.com/PuerkitoBio/goquery"
@@ -33,6 +34,9 @@ func (controller *Repository) ShowResource() {
 	resourceID := controller.Ctx.Input.Param(":resource")
 	repo, errRepository := repository.NewRepository(repositoryID)
 	resource, errResource := wisply.GetRecordByID(resourceID)
+
+	fmt.Println(resource.Keys)
+
 	if errRepository != nil || errResource != nil {
 		controller.Abort("databaseError")
 	} else {

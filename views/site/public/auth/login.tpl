@@ -86,7 +86,7 @@ $(document).ready(function() {
 
 {{ end }}
 
-<script src="/static/js/static/auth/login.js"></script>
+<script src="/static/js/public/auth/login.js"></script>
 <script>
 $(document).ready(function(){
     var module = wisply.getModule("login"),

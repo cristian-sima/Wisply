@@ -50,7 +50,7 @@ var RegisterModule = function() {
 			 * It is called when the user clicks on the back button of the browser (or in the case Wisply detects problems with the form and the user goes back to the form). In case the value of the password is not empty, it shows the confirmation password field
 			 */
 			checkConfirmPassword: function() {
-				if ($("#RegisterModule-password-confirm").val() !== "") {
+				if ($("#register-password-confirm").val() !== "") {
 					$("#div-confirm-password").show();
 				}
 			},
@@ -58,13 +58,13 @@ var RegisterModule = function() {
 			 * It focuses the name field
 			 */
 			focusName: function() {
-				$("#RegisterModule-name").focus();
+				$("#register-name").focus();
 			},
 			/**
 			 * It is called when the form has been submitted. It shows the loading button
 			 */
 			submittedListener: function() {
-				$("#RegisterModule-form").on("submit", this.FireSubmited);
+				$("#register-form").on("submit", this.FireSubmited);
 			},
 			/**
 			 * It is called when the RegisterModule form has been submitted. It checks if the confirmation password is the same as the password. If so, it submits the form, else it shows a message
@@ -72,8 +72,8 @@ var RegisterModule = function() {
 			 */
 			FireSubmited: function(event) {
 				event.preventDefault();
-				var password = $('#RegisterModule-password').val(),
-					confirmationPassword = $("#RegisterModule-password-confirm").val();
+				var password = $('#register-password').val(),
+					confirmationPassword = $("#register-password-confirm").val();
 				if (password === confirmationPassword) {
 					RegisterModule.showLoading();
 					this.submit();
@@ -85,7 +85,7 @@ var RegisterModule = function() {
 			 * It shows the confirmation password field
 			 */
 			passwordCompletedListener: function() {
-				$("#RegisterModule-password").focus(function() {
+				$("#register-password").focus(function() {
 					$("#div-confirm-password").show();
 				});
 			},
@@ -93,7 +93,7 @@ var RegisterModule = function() {
 			 * It shows the loading image
 			 */
 			showLoading: function() {
-				wisply.showLoading('#RegisterModule-submit-div', "medium");
+				wisply.showLoading('#register-submit-div', "medium");
 			},
 			/**
 			 * It tells the account that the passwords do not match

@@ -858,9 +858,9 @@ var PublicRepositoryModule = function() {
 						if (instance.manager.collection) {
 							var text = "";
 							if (!instance.showAll) {
-								text = "Show all";
+								text = "<span class='glyphicon glyphicon-collapse-down'></span> Show all";
 							} else {
-								text = "Hide all";
+								text = "<span class='glyphicon glyphicon-collapse-up'></span> Hide all";
 							}
 							htmlLeft = "<span href='' class='hover link show-all-collections text-muted'>" + text + "</span>";
 						}
@@ -874,9 +874,9 @@ var PublicRepositoryModule = function() {
 						var text = "",
 							htmlRight = "";
 						if (instance.hideEmptyCollections) {
-							text = "Display empty";
+							text = "<span class='glyphicon glyphicon-chevron-down'></span> Display empty";
 						} else {
-							text = "Hide empty";
+							text = "<span class='glyphicon glyphicon-chevron-up'></span> Hide empty";
 						}
 						htmlRight = "<span href='' class='hover link hide-empty-collections text-muted'>" + text + "</span>";
 						return htmlRight;
@@ -1014,9 +1014,9 @@ var PublicRepositoryModule = function() {
 					var advanceHTML = "",
 						text = "";
 					if (instance.showMoreOptions) {
-						text = "<span class='glyphicon glyphicon-remove'></span> Hide options";
+						text = "<span class='glyphicon glyphicon-chevron-up'></span>  Hide options";
 					} else {
-						text = "Show more options";
+						text = "<span class='glyphicon glyphicon-chevron-down'></span> Show more options";
 					}
 					advanceHTML = "<span class='show-more-options hover text-muted'>" + text + "</span>";
 					return advanceHTML;

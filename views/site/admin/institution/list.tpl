@@ -57,4 +57,3 @@
     </section>
   </div>
 </div>
-<script src="/static/js/admin/institution/list.js"></script>

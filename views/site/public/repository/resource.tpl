@@ -12,19 +12,35 @@
           </ul>
         </div>
         <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <table class="table h5">
+                <tbody>
+                  <tr>
+                    <td> <span class="glyphicon glyphicon-education"></span> <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></td>
+                  </tr>
+                  <tr>
+                    <td> <span class="glyphicon glyphicon glyphicon-equalizer "></span> <a href="/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6">
+            </div>
+          </div>
           <h1>{{ .record.Keys }}</h1>
-            <div class="top-info">
-            </div>
+          <div class="top-info">
+          </div>
 
-            <div class="content-info">
-              <div class="embed-responsive embed-responsive-16by9">
+          <div class="content-info">
+            <div class="embed-responsive embed-responsive-16by9">
 
-              <iframe id="the-iframe" class="embed-responsive-item the-iframe" >
+              <div id="the-iframe" class="embed-responsive-item the-iframe" >
 
-              </iframe>
+              </div>
             </div>
-                {{ .record }}
-            </div>
+            {{ .record }}
+          </div>
         </div>
       </div>
     </div>
@@ -32,9 +48,6 @@
 </div>
 <div>
 <style scoped>
-.the-iframe {
-
-}
 </style>
 </div>
 <script src="/static/js/public/resource.js"></script>

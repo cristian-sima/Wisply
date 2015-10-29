@@ -60,7 +60,6 @@
 }
 .counter-name {
   font-size: 16px;
-
 }
 </style>
 </div>
@@ -86,3 +85,20 @@ server.process = {{ .currentProcesses }};
 <script src="/static/js/admin/harvest/harvest.js"></script>
 <script src="/static/js/admin/harvest/process.js"></script>
 <script src="/static/3rd_party/others/js/countUp.min.js"></script>
+<script>
+$(document).ready(function(){
+  var modules = {
+    harvest : wisply.getModule("harvest"),
+    process : wisply.getModule("harvest-process"),
+  }
+  
+  var decision = new modules.process.DecisionManager(),
+  stages = modules.process.Stages,
+  stage = new modules.harvest.StageManager(stages);
+  stage.setGUI(new modules.process.StageGUI(stage));
+
+  var manager = new modules.harvest.Manager(stage, decision);
+  wisply.manager = manager;
+  manager.start();
+});
+</script>

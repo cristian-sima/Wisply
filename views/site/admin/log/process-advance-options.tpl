@@ -22,3 +22,10 @@
   </div>
 </div>
 <script src="/static/js/admin/log/process.js"></script>
+<script>
+$(document).ready(function(){
+  var module = wisply.getModule("processes"),
+    manager = new module.Manager();
+    manager.init();
+});
+</script>

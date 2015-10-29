@@ -57,7 +57,7 @@
 						</label>
 						<div class="col-lg-10">
 							<textarea class="form-control" rows="3" name="institution-description" id="institution-description" maxlength="1000">{{.institution.Description}}</textarea>
-	
+
 								<span class="description-modified hideMe">
 									<span class="text-warning">
 										<span class="glyphicon glyphicon-warning-sign"></span> Auto receiving from Wikipedia off
@@ -121,8 +121,19 @@
 		{{ end }}
 	};
 	</script>
+
 	<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
+
 	<script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
+
 	<script src="/static/js/wisply/typer.js"></script>
 	<script src="/static/js/wisply/wikier.js"></script>
 	<script src="/static/js/admin/institution/functionality.js"></script>
+
+	<script>
+	$(document).ready(function(){
+		var module = wisply.getModule("functionality-institutions"),
+			manager = new module.Manager();
+			manager.init();
+	});
+	</script>

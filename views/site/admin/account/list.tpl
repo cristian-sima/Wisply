@@ -46,3 +46,10 @@
   </div>
 </div>
 <script src="/static/js/admin/account/list.js"></script>
+<script>
+$(document).ready(function(){
+    var module = wisply.getModule("admin-accounts"),
+      list = new module.List();
+      list.init();
+});
+</script>

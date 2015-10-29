@@ -16,3 +16,10 @@
   </div>
 </div>
 <script src="/static/js/account/settings/home.js"></script>
+<script>
+$(document).ready(function() {
+  var module = wisply.getModule("account-settings"),
+    page = new module.Page();
+    page.init();
+});
+</script>

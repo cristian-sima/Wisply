@@ -41,4 +41,11 @@
       </div>
     </div>
   </div>
-  <script src="/static/js/admin/institution/list.js"></script>
+  <script src="/static/js/admin/institution/advance-options.js"></script>
+  <script>
+  $(document).ready(function(){
+    var module = wisply.getModule("institution-advance-options"),
+    manager = new module.Manager();
+    manager.init();
+  });
+  </script>

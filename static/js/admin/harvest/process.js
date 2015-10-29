@@ -1,12 +1,12 @@
-/* global $, Harvest, wisply, server, harvestHistory, CountUp */
+/* global $, wisply, server, harvestHistory, CountUp */
 /**
  * @file Encapsulates the functionality for the harvest process
  * @author Cristian Sima
  */
 /**
- * @namespace HarvestProcess
+ * @namespace HarvestProcessModule
  */
-var HarvestProcess = function() {
+var HarvestProcessModule = function() {
 	'use strict';
 	var Stages = [{
 		id: 0,
@@ -31,7 +31,8 @@ var HarvestProcess = function() {
 				this._send(msg);
 			};
 			// load Repository
-			repository = new wisply.repositoriesModule.Repository(server.repository);
+			var module = wisply.getModule("repository");
+			repository = new module.Repository(server.repository);
 			// load Repository
 			this.manager.repository = repository;
 			this.manager.GUI.updateRepositoryStatus();
@@ -56,7 +57,7 @@ var HarvestProcess = function() {
 		 */
 		analyse: function(message) {
 			if (message.Value !== null) {
-				window.location="/admin/repositories";
+				window.location = "/admin/repositories";
 			} else {
 				harvestHistory.log("We start a new process");
 				this.initNewProcess();
@@ -209,16 +210,15 @@ var HarvestProcess = function() {
 		 * @param  {object} result The message from the server
 		 */
 		analyse: function(result) {
-				harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
-				if(!this.currentCounter || this.currentCounter.type != result.Operation) {
-					this.currentNumber = result.Number;
-					this.setCurrentCounter(result.Operation);
-					this.currentCounter.start(result.Number);
-				}
-				else {
-					this.currentNumber = parseInt(result.Number, 10) + parseInt(this.currentNumber, 10);
-				  this.getCounter(result.Operation).update(this.currentNumber);
-				}
+			harvestHistory.log("Server told me that Wisply harvested " + result.Number + " " + result.Operation);
+			if (!this.currentCounter || this.currentCounter.type != result.Operation) {
+				this.currentNumber = result.Number;
+				this.setCurrentCounter(result.Operation);
+				this.currentCounter.start(result.Number);
+			} else {
+				this.currentNumber = parseInt(result.Number, 10) + parseInt(this.currentNumber, 10);
+				this.getCounter(result.Operation).update(this.currentNumber);
+			}
 		},
 		/**
 		 * It updates the counter
@@ -253,7 +253,7 @@ var HarvestProcess = function() {
 	}];
 	/**
 	 * The constructor does nothing
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class WisplyCounter
 	 * @classdesc It decides what to do with the messages from the server
 	 */
@@ -264,7 +264,7 @@ var HarvestProcess = function() {
 		this.stopped = false;
 	};
 	WisplyCounter.prototype =
-		/** @lends HarvestProcess.WisplyCounter */
+		/** @lends HarvestProcessModule.WisplyCounter */
 		{
 			/**
 			 * It updates the counter
@@ -348,20 +348,19 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * The constructor does nothing
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
 	var DecisionManager = function DecisionManager() {};
 	DecisionManager.prototype =
-		/** @lends HarvestProcess.DecisionManager */
+		/** @lends HarvestProcessModule.DecisionManager */
 		{
 			/**
 			 * It is called when a message has arrived from the server. It decides what to call
 			 * @param  {object} message The message from the server
 			 */
 			decide: function(message) {
-
 				/**
 				 * It is called when the status of the repository has changed
 				 * It decides which operation to call
@@ -371,22 +370,22 @@ var HarvestProcess = function() {
 				function repositoryStatusChanged(decideManager, message) {
 					decideManager.stage.repository.status = message.Value;
 					decideManager.stage.GUI.updateRepositoryStatus();
-					switch(message.Value) {
+					switch (message.Value) {
 						case "verifying":
 							decideManager.stage.performStage(3);
-						break;
-							case "initializing":
+							break;
+						case "initializing":
 							decideManager.stage.firedStageFinished();
 							decideManager.stage.firedStageFinished();
-						break;
+							break;
 						case "verification-failed":
 							decideManager.stage.GUI.showCurrent("The verification failed");
 							decideManager.stage.pause();
 							decideManager.stage.stages[3].enableModifyURL();
-						break;
+							break;
 						case "verified":
 							decideManager.stage.firedStageFinished();
-						break;
+							break;
 					}
 				}
 				if (this.isGoogMessage(message)) {
@@ -396,13 +395,13 @@ var HarvestProcess = function() {
 							break;
 						case "harvest-update":
 							this.stage.stages[5].analyse(message.Value);
-						break;
+							break;
 						case "existing-process-on-server":
 							this.stage.currentStage.analyse(message);
 							break;
 						case "process-finished":
 							this.stage.firedStageFinished();
-						break;
+							break;
 					}
 				}
 			},
@@ -416,7 +415,7 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * Gets the JQuery elements and creates the indicator
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class StageGUI
 	 * @classdesc It contains the functionality for GUI
 	 */
@@ -427,7 +426,7 @@ var HarvestProcess = function() {
 		this.indicator = new Indicator();
 	};
 	StageGUI.prototype =
-		/** @lends HarvestProcess.StageGUI */
+		/** @lends HarvestProcessModule.StageGUI */
 		{
 			/**
 			 * It shows the stage, calls update and load listeners
@@ -518,8 +517,9 @@ var HarvestProcess = function() {
 			updateRepositoryStatus: function() {
 				var status = this.manager.repository.status,
 					html = "Status: ",
-					span = "";
-				span = wisply.repositoriesModule.GUI.getStatusColor(status);
+					span = "",
+					module = wisply.getModule("repository");
+				span = module.GUI.getStatusColor(status);
 				html += span;
 				$("#repository-status").html(html);
 			},
@@ -592,7 +592,7 @@ var HarvestProcess = function() {
 		};
 	/**
 	 * Gets the JQuery element
-	 * @memberof HarvestProcess
+	 * @memberof HarvestProcessModule
 	 * @class Indicator
 	 * @classdesc It represents a visual indicator for the current progress of the process
 	 */
@@ -602,7 +602,7 @@ var HarvestProcess = function() {
 		this.animation = undefined;
 	};
 	Indicator.prototype =
-		/** @lends HarvestProcess.Indicator */
+		/** @lends HarvestProcessModule.Indicator */
 		{
 			/**
 			 * It sets the indicator to a percent
@@ -668,21 +668,6 @@ var HarvestProcess = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var harvest,
-		process,
-		repository,
-		decision,
-		stage,
-		manager,
-		stages;
-	harvest = new Harvest();
-	process = new HarvestProcess();
-	repository = wisply.repositriesModule;
-	decision = new process.DecisionManager();
-	stages = process.Stages;
-	stage = new harvest.StageManager(stages);
-	stage.setGUI(new process.StageGUI(stage));
-	manager = new harvest.Manager(stage, decision);
-	wisply.manager = manager;
-	manager.start();
+	var module = new HarvestProcessModule();
+	wisply.loadModule("harvest-process", module);
 });

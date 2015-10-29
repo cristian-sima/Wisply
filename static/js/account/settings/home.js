@@ -1,45 +1,45 @@
-/* global jQuery,$, wisply, bootbox */
+/* global $, wisply, bootbox */
 /**
- * @file Encapsulates the functionality for managing the Settings
+ * @file Encapsulates the functionality for managing the settings page for
+ * account
  * @author Cristian Sima
  */
 /**
- * @namespace Settings
+ * @namespace AccountSettingsModule
  */
-var Settings = function() {
+var AccountSettingsModule = function() {
 	'use strict';
-
 	/**
-	 * The constructor activates the listeners
-	 * @class Manager
-	 * @memberof Settings
-	 * @classdesc It encapsulets the functions for Settings.
+	 * The constructor does nothing
+	 * @class Page
+	 * @memberof AccountSettingsModule
+	 * @classdesc It encapsulets the functions for settings page of the account.
 	 */
-	var Manager = function Manager() {};
+	var Page = function Page() {};
 	/**
-	 * @memberof Manager
+	 * @memberof Page
 	 */
-	Manager.prototype =
-		/** @lends Settings.Manager */
+	Page.prototype =
+		/** @lends AccountSettingsModule.Page */
 		{
 			/**
-			 * It activates the listener for all delete buttons
+			 * It activates the listener for delete button
 			 * @param [event] event The event which has been fired
-			 * @fires SettingsManager#confirmDelete
+			 * @fires AccountSettingsModule#confirmDelete
 			 */
 			init: function() {
 				var instance = this;
-				$("#deleteAccountButton").click(function(event){
+				$("#deleteAccountButton").click(function(event) {
 					event.preventDefault();
 					instance.confirmDelete();
 				});
 			},
 			/**
-			 * It requests the account to confirm
+			 * It shows the promt for typing the password
 			 */
 			confirmDelete: function() {
 				var instance = this,
-					cancelButton  = {
+					cancelButton = {
 						label: "Cancel",
 						className: "btn-primary",
 						callback: function() {
@@ -47,8 +47,8 @@ var Settings = function() {
 						}
 					},
 					mainButton = {
-					label: "Delete Account",
-					className: "btn-danger",
+						label: "Delete Account",
+						className: "btn-danger",
 						callback: function() {
 							var password = $("#promt-password").val();
 							instance.delete(password);
@@ -56,7 +56,7 @@ var Settings = function() {
 					},
 					buttons = {
 						cancel: cancelButton,
-							main: mainButton,
+						main: mainButton,
 					},
 					options = {
 						title: "Type your password",
@@ -64,31 +64,31 @@ var Settings = function() {
 						onEscape: true,
 						message: '<input class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="password" id="promt-password" />',
 					};
-					bootbox.dialog(options);
-					setTimeout(function(){
-						$("#promt-password").focus();
-					}, 500);
+				bootbox.dialog(options);
+				setTimeout(function() {
+					$("#promt-password").focus();
+				}, 500);
 			},
 			/**
-			 * It deletes the history
+			 * It sends a request to the server to delete the account
 			 */
 			delete: function(password) {
 				var request,
 					successCallback,
 					errorCallback;
 				/**
-				 * It is called when request has been performed
+				 * It is called when the account has been deleted. It refreshes the page
 				 * @ignore
 				 */
 				successCallback = function() {
 					wisply.reloadPage();
 				};
 				/**
-				 * It is called when there has been problems
+				 * It is called when the password is not good
 				 * @ignore
 				 */
 				errorCallback = function() {
-					wisply.message.showError("There was a problem with your request");
+					wisply.message.showError("The request was not successful");
 				};
 				request = {
 					url: '/account/settings/delete',
@@ -102,12 +102,11 @@ var Settings = function() {
 			}
 		};
 	return {
-		Manager: Manager,
+		Page: Page,
 	};
 };
-jQuery(document).ready(function() {
+$(document).ready(function() {
 	"use strict";
-	var module = new Settings();
-	wisply.SettingsManager = new module.Manager();
-	wisply.SettingsManager.init();
+	var module = new AccountSettingsModule();
+	wisply.loadModule("account-settings", module);
 });

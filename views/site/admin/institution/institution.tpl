@@ -74,7 +74,6 @@
       }
       </style>
     </div>
-    <script src="/static/js/admin/institution/list.js"></script>
     <script>
     $(document).ready(function(){
       $(".institution-status").each(function(){

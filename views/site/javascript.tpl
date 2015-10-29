@@ -13,9 +13,9 @@
 <script src="/static/3rd_party/others/js/handlebars-v4.0.2.js"></script>
 <script src="/static/3rd_party/others/js/typeahead.bundle.js"></script>
 
-<script src="/static/js/wisply/search.js"></script>
-
 <script src="/static/js/wisply/wisply.js"></script>
+
+<script src="/static/js/wisply/search.js"></script>
 
 {{ if .accountConnected }}
 <script src="/static/js/wisply/connection.js"></script>
@@ -34,5 +34,16 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-67059306-1', 'auto');
   ga('send', 'pageview');
+</script>
+
+<script>
+$(document).ready(function(){
+  var module = wisply.getModule("search");
+  wisply.search = new module.Field({
+    selector: '.wisply-search-field',
+    URL: "/api/search/anything/",
+    saveSearches: true,
+  });
+});
 </script>
 {{ end }}

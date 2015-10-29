@@ -4,15 +4,14 @@
  * @author Cristian Sima
  */
 /**
- * @namespace Log
+ * @namespace LogAdvanceOptionsModule
  */
-var Log = function() {
+var LogAdvanceOptionsModule = function() {
 	'use strict';
-
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof Log
+	 * @memberof LogAdvanceOptionsModule
 	 * @classdesc It encapsulets the functions for the log
 	 */
 	var Manager = function Manager() {};
@@ -20,13 +19,17 @@ var Log = function() {
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends Log.Manager */
+		/** @lends LogAdvanceOptionsModule.Manager */
 		{
 			/**
 			 * It activates the listener for delete button
 			 */
 			init: function() {
-				$(".deleteLogButton").click(confirmDelete);
+				var instance = this;
+				$(".deleteLogButton").click(function(event) {
+					event.preventDefault();
+					instance.confirmDelete();
+				});
 			},
 			/**
 			 * It requests the user to confirm
@@ -83,7 +86,7 @@ var Log = function() {
 				 */
 				successCallback = function() {
 					wisply.message.showSuccess("The log has been removed! Refreshing page...");
-					window.location="/admin/log";
+					window.location = "/admin/log";
 				};
 				/**
 				 * It is called when there has been problems
@@ -100,21 +103,12 @@ var Log = function() {
 				wisply.executePostAjax(request);
 			}
 		};
-	/**
-	 * It is called when the user clicks the delete button. It requests the user to confirm
-	 * @param [event] event The event which is generated
-	 */
-	function confirmDelete(event) {
-		event.preventDefault();
-		wisply.logManager.confirmDelete();
-	}
 	return {
 		Manager: Manager,
 	};
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new Log();
-	wisply.logManager = new module.Manager();
-	wisply.logManager.init();
+	var module = new LogAdvanceOptionsModule();
+	wisply.loadModule("log-advance-options", module);
 });

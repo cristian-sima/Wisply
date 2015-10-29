@@ -4,10 +4,10 @@
  * @author Cristian Sima
  */
 /**
- * @namespace HarvestList
+ * @namespace HarvestListModule
  * It holds the functionality to see a live list of repositories
  */
-var HarvestList = function() {
+var HarvestListModule = function() {
 	'use strict';
 	var Stages = [{
 		id: 0,
@@ -32,7 +32,7 @@ var HarvestList = function() {
 	}];
 	/**
 	 * Creates a GUI
-	 * @memberof HarvestList
+	 * @memberof HarvestListModule
 	 * @class DecisionManager
 	 * @classdesc It decides what to do with the messages from the server
 	 */
@@ -40,7 +40,7 @@ var HarvestList = function() {
 		this.GUI = new GUI();
 	};
 	DecisionManager.prototype =
-		/** @lends HarvestList.DecisionManager */
+		/** @lends HarvestListModule.DecisionManager */
 		{
 			/**
 			 * It is called when a message has arrived from the server. It decides what to call
@@ -77,7 +77,7 @@ var HarvestList = function() {
 		};
 	/**
 	 * It gets the JQUERY element
-	 * @memberof HarvestList
+	 * @memberof HarvestListModule
 	 * @class GUI
 	 * @classdesc It encapsulates the UX functionality
 	 */
@@ -85,7 +85,7 @@ var HarvestList = function() {
 		this.list = $("#repositories-list");
 	};
 	GUI.prototype =
-		/** @lends HarvestList.GUI */
+		/** @lends HarvestListModule.GUI */
 		{
 			/**
 			 * It changes the status of all the repositories
@@ -129,7 +129,7 @@ var HarvestList = function() {
 			 * It activates the listeners for the status actions
 			 */
 			activateActionListeners: function() {
-				wisply.repositoriesModule.GUI.activateActionListeners();
+				wisply.getModule("repository").GUI.activateActionListeners();
 			},
 			/**
 			 * It gets the HTML span for a status
@@ -137,7 +137,7 @@ var HarvestList = function() {
 			 * @return {string} The HTML span for a status
 			 */
 			getStatusColor: function(status) {
-				return wisply.repositoriesModule.GUI.getStatusColor(status);
+				return wisply.getModule("repository").GUI.getStatusColor(status);
 			},
 			/**
 			 * It returns the JQUERY ID of a repository
@@ -188,20 +188,6 @@ var HarvestList = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var harvest,
-		list,
-		repository,
-		decision,
-		stage,
-		manager,
-		stages;
-	harvest = new Harvest();
-	list = new HarvestList();
-	repository = wisply.repositriesModule;
-	decision = new list.DecisionManager();
-	stages = list.Stages;
-	stage = new harvest.StageManager(stages);
-	manager = new harvest.Manager(stage, decision);
-	wisply.manager = manager;
-	manager.start();
+	var module = new HarvestListModule();
+	wisply.loadModule("harvest-list", module);
 });

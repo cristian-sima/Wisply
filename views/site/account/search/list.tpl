@@ -6,9 +6,9 @@
     </ul>
   </div>
   <div class="panel-body">
-  {{ if eq (.searches | len ) 0 }}
-  There is no search available
-  {{ else }}
+    {{ if eq (.searches | len ) 0 }}
+    There is no search available
+    {{ else }}
     <div class="table-responsive">
       This is a list of the words(or queries) which you have searched for. <br />
       This list is only visible to you and Wisply <br />
@@ -45,3 +45,10 @@
   </div>
 </div>
 <script src="/static/js/account/search/list.js"></script>
+<script>
+$(document).ready(function() {
+  var module = wisply.getModule("account-search-list"),
+  manager = new module.List();
+  manager.init();
+});
+</script>

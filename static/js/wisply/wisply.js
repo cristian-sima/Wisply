@@ -95,7 +95,7 @@ var Wisply = function() {
 				wisply.search.object.focus();
 			},
 			description: "Activates the searching",
-		},];
+		}, ];
 	}
 	ShortcutManager.prototype =
 		/**
@@ -158,7 +158,8 @@ var Wisply = function() {
 						}
 						return htmlKey;
 					}
-					var keysHTML = [], index,
+					var keysHTML = [],
+						index,
 						elements = keys.toUpperCase().split("+");
 					for (index = 0; index < elements.length; index++) {
 						keysHTML.push("<kbd>" + getKey(elements[index]) + "</kbd>");
@@ -293,7 +294,7 @@ var Wisply = function() {
 			 * It is a private method
 			 */
 			_clear: function() {
-				if(this.currentMessage) {
+				if (this.currentMessage) {
 					this.currentMessage.modal('hide');
 				}
 			}
@@ -328,30 +329,26 @@ var Wisply = function() {
 			 */
 			init: function() {
 				var instance = this;
+
 				function initSearch() {
-						function showSmallSearch(element) {
-							var smallSearch = $("#search-small-input"),
+					function showSmallSearch(element) {
+						var smallSearch = $("#search-small-input"),
 							button = $(element);
-							$("#full-logo").hide();
-							$("#search-small").show();
-							button.html("");
-							smallSearch.focus();
+						$("#full-logo").hide();
+						$("#search-small").show();
+						button.html("");
+						smallSearch.focus();
+					}
+					$("#show-small-search-button").click(function() {
+						if (!instance.isSmallSearchDisplayed) {
+							showSmallSearch(this);
 						}
-						$("#show-small-search-button").click(function() {
-							if(!instance.isSmallSearchDisplayed) {
-								showSmallSearch(this);
-							}
-							instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
-						});
+						instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
+					});
 				}
 				this.shortcutManager.init();
 				this.solveHashProblem();
 				initSearch();
-				this.search = new searchModule.Field({
-					selector: '.wisply-search-field',
-					URL: "/api/search/anything/",
-					saveSearches: true,
-				});
 				this.activateTooltip();
 			},
 			/**
@@ -361,11 +358,15 @@ var Wisply = function() {
 			 * @param  {object} content The module object
 			 * @return {object} It returns the reference to the module
 			 */
-			loadModule: function(name, content){
+			loadModule: function(name, content) {
 				if (this.modules[name]) {
-				 	console.warn("The module [" + name + "] has been loaded once");
+					console.warn("The module [" + name + "] has been loaded once");
 				} else {
-					this.modules[name] = content;
+					if (!content) {
+						console.warn("The object for the module [" + name + "] is undefined.");
+					} else {
+						this.modules[name] = content;
+					}
 				}
 				return this.modules[name];
 			},
@@ -377,8 +378,8 @@ var Wisply = function() {
 			 */
 			getModule: function(name) {
 				var module = this.modules[name];
-				if(!module) {
-					throw("Wisply did not has the module [" + name + "]");
+				if (!module) {
+					throw ("Wisply did not has the module [" + name + "]");
 				}
 				return module;
 			},
@@ -514,7 +515,7 @@ var Wisply = function() {
 				/**
 				 * It returns the HTML code for the loading element
 				 * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
-			 	 * @param  {number} dimension The size of the image in px
+				 * @param  {number} dimension The size of the image in px
 				 * @return {string}           The HTML code for loading element
 				 */
 				function getHTML(size, dimension) {

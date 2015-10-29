@@ -64,4 +64,3 @@
 </style>
 </div>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
-<script src="/static/js/admin/institution/list.js"></script>

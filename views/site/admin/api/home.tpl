@@ -53,3 +53,10 @@
   </div>
 </div>
 <script src="/static/js/admin/api/list.js"></script>
+<script>
+$(document).ready(function(){
+    var module = wisply.getModule("admin-api"),
+      list = new module.List();
+      list.init();
+});
+</script>

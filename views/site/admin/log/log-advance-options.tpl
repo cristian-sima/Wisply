@@ -21,3 +21,10 @@
   </div>
 </div>
 <script src="/static/js/admin/log/log-advance-options.js"></script>
+<script>
+$(document).ready(function(){
+    var module = wisply.getModule("log-advance-options"),
+      manager = new module.Manager();      
+      manager.init();
+});
+</script>

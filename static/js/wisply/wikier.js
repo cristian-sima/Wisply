@@ -135,5 +135,5 @@ var WikierModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new WikierModule();
-	wisply.wikierModule = module;
+	wisply.loadModule("wikier", module);
 });

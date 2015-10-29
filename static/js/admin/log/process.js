@@ -1,18 +1,18 @@
-/* global jQuery,$, wisply */
+/* global $, wisply */
 /**
  * @file Encapsulates the functionality for managing the processes
  * @author Cristian Sima
  */
 /**
- * @namespace Processes
+ * @namespace ProcessesModule
  */
-var Processes = function() {
+var ProcessesModule = function() {
 	'use strict';
 
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof Processes
+	 * @memberof ProcessesModule
 	 * @classdesc It encapsulets the functions for processes
 	 */
 	var Manager = function Manager() {};
@@ -20,7 +20,7 @@ var Processes = function() {
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends Processes.Manager */
+		/** @lends ProcessesModule.Manager */
 		{
 			/**
 			 * It activates the listener for all delete buttons
@@ -121,7 +121,6 @@ var Processes = function() {
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new Processes();
-	wisply.processManager = new module.Manager();
-	wisply.processManager.init();
+	var module = new ProcessesModule();
+	wisply.loadModule("processes", module);
 });

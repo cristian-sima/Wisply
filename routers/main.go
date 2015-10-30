@@ -6,13 +6,13 @@ package routers
 import (
 	"github.com/cristian-sima/Wisply/routers/account"
 	"github.com/cristian-sima/Wisply/routers/admin"
-	"github.com/cristian-sima/Wisply/routers/developers"
+	"github.com/cristian-sima/Wisply/routers/developer"
 	"github.com/cristian-sima/Wisply/routers/public"
 )
 
 func init() {
 	account.Load()
 	admin.Load()
+	developer.Load()
 	public.Load()
-	developers.Load()
 }

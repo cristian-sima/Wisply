@@ -17,19 +17,25 @@ func init() {
 	// Note: I can not group these into namespace because they share "/" path
 	// Note: The public namespace should be created (NewNamespace)
 
-	beego.Router("/", &public.StaticController{}, "*:ShowIndex")
-	beego.Router("/about", &public.StaticController{}, "*:ShowAbout")
-	beego.Router("/learn-more", &public.StaticController{}, "*:ShowAbout")
-	beego.Router("/contact", &public.StaticController{}, "*:ShowContact")
-	beego.Router("/sample", &public.StaticController{}, "*:ShowSample")
-	beego.Router("/accessibility", &public.StaticController{}, "*:ShowAccessibility")
-	beego.Router("/help", &public.StaticController{}, "*:ShowHelp")
-	beego.Router("/privacy", &public.StaticController{}, "*:ShowPrivacyPolicy")
-	beego.Router("/cookies", &public.StaticController{}, "*:ShowCookiesPolicy")
-	beego.Router("/terms-and-conditions", &public.StaticController{}, "*:ShowTerms")
-	beego.Router("/thank-you", &public.StaticController{}, "*:ShowThankYouPage")
+	beego.Router("/", &public.Static{}, "*:ShowIndex")
+	beego.Router("/about", &public.Static{}, "*:ShowAbout")
+	beego.Router("/learn-more", &public.Static{}, "*:ShowAbout")
+	beego.Router("/contact", &public.Static{}, "*:ShowContact")
+	beego.Router("/sample", &public.Static{}, "*:ShowSample")
+	beego.Router("/accessibility", &public.Static{}, "*:ShowAccessibility")
+
+	beego.Router("/help", &public.Static{}, "*:ShowHelp")
+
+	beego.Router("/privacy", &public.Static{}, "*:ShowPrivacyPolicy")
+	beego.Router("/cookies", &public.Static{}, "*:ShowCookiesPolicy")
+	beego.Router("/terms-and-conditions", &public.Static{}, "*:ShowTerms")
+	beego.Router("/take-down-policy", &public.Static{}, "*:ShowTakeDownPolicy")
+
+	beego.Router("/thank-you", &public.Static{}, "*:ShowThankYouPage")
 
 	beego.Router("/curricula", &public.Curriculum{}, "*:ShowCurricula")
+
+	beego.Router("/test", &admin.Analyse{}, "*:AnalyseText")
 
 	beego.Router("/captcha/:id\\.:type", &general.Captcha{}, "*:Serve")
 

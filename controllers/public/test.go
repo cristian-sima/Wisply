@@ -1,4 +1,4 @@
-package admin
+package public
 
 import "github.com/cristian-sima/Wisply/models/analyse/word"
 

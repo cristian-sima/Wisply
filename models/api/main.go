@@ -14,17 +14,29 @@ func GetAllWisplyTables() []string {
 	for rows.Next() {
 		table := ""
 		rows.Scan(&table)
-		if IsAllowedTable(table) {
+		if !IsRestrictedTable(table) {
 			list = append(list, table)
 		}
 	}
 	return list
 }
 
+// IsAllowedTableToAdd checks if a table name is allowed to be downloaded
+func IsAllowedTableToAdd(name string) bool {
+	allowedTables := GetAllWisplyTables()
+	// check it is not rejected
+	for _, allowedTable := range allowedTables {
+		if name == allowedTable {
+			return true
+		}
+	}
+	return false
+}
+
 // AreValidDetails checks if the table is allowed and
 // the description is valid
 func AreValidDetails(table Table) bool {
-	return !IsAllowedTable(table.Name) && isValidDescription(table.Description)
+	return IsAllowedTableToAdd(table.Name) && isValidDescription(table.Description)
 }
 
 // InsertNewTable adds the table name on the list of the tables
@@ -104,12 +116,12 @@ func GetWisplyTablesNamesNotAllowed() []string {
 	return list
 }
 
-// IsAllowedTable checks if a table name is allowed to be downloaded
-func IsAllowedTable(name string) bool {
+// IsRestrictedTable checks if a table name is on the restricted list
+func IsRestrictedTable(name string) bool {
 	for _, rejectedName := range sensitiveTableList {
 		if name == rejectedName {
-			return false
+			return true
 		}
 	}
-	return true
+	return false
 }

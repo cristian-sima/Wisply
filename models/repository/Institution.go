@@ -55,7 +55,7 @@ func (institution *Institution) Modify(institutionDetails map[string]interface{}
 	var problem = adapter.WisplyError{}
 	result := hasValidInstitutionModifyDetails(institutionDetails)
 	if !result.IsValid {
-		problem.Data = result.Errors
+		problem.Data = result
 		return problem, errors.New("It does not have valid details")
 	}
 	err := institution.updateInstitutionInDatabase(institutionDetails)

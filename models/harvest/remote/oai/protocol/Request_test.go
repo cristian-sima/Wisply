@@ -11,16 +11,16 @@ func TestRequestURL(t *testing.T) {
 		BaseURL: "http://eprints.uwe.ac.uk/",
 	}
 	Convey("get just address", t, func() {
-		So(request.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?")
+		So(request.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?")
 	})
 
 	Convey("get request URL with verb", t, func() {
 		request2 := Request{
 			BaseURL: "http://eprints.uwe.ac.uk/",
-			Verb:    "identify",
+			verb:    "identify",
 		}
 
-		So(request2.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?verb=identify")
+		So(request2.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?verb=identify")
 	})
 
 	Convey("get request URL with set", t, func() {
@@ -28,7 +28,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL: "http://eprints.uwe.ac.uk/",
 			Set:     "history",
 		}
-		So(request3.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?set=history")
+		So(request3.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?set=history")
 	})
 
 	Convey("get request URL with prefix", t, func() {
@@ -36,7 +36,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL:        "http://eprints.uwe.ac.uk/",
 			MetadataPrefix: "prefix",
 		}
-		So(request4.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?metadataPrefix=prefix")
+		So(request4.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?metadataPrefix=prefix")
 	})
 
 	Convey("get request URL with prefix, verb and set", t, func() {
@@ -44,9 +44,9 @@ func TestRequestURL(t *testing.T) {
 			BaseURL:        "http://eprints.uwe.ac.uk/",
 			Set:            "history",
 			MetadataPrefix: "prefix",
-			Verb:           "identify",
+			verb:           "identify",
 		}
-		So(request5.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?verb=identify&set=history&metadataPrefix=prefix")
+		So(request5.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?verb=identify&set=history&metadataPrefix=prefix")
 	})
 
 	Convey("get request URL with resumptionToken", t, func() {
@@ -54,7 +54,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL:         "http://eprints.uwe.ac.uk/",
 			ResumptionToken: "metadataPrefix%3Doai_dc%26offset%3D275",
 		}
-		So(request6.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?resumptionToken=metadataPrefix%3Doai_dc%26offset%3D275")
+		So(request6.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?resumptionToken=metadataPrefix%3Doai_dc%26offset%3D275")
 	})
 
 	Convey("get request URL with identifier", t, func() {
@@ -62,7 +62,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL:    "http://eprints.uwe.ac.uk/",
 			Identifier: "79",
 		}
-		So(request7.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?identifier=79")
+		So(request7.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?identifier=79")
 	})
 
 	Convey("get request URL with from", t, func() {
@@ -70,7 +70,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL: "http://eprints.uwe.ac.uk/",
 			From:    "2009",
 		}
-		So(request8.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?from=2009")
+		So(request8.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?from=2009")
 	})
 
 	Convey("get request URL with until", t, func() {
@@ -78,7 +78,7 @@ func TestRequestURL(t *testing.T) {
 			BaseURL: "http://eprints.uwe.ac.uk/",
 			Until:   "2015",
 		}
-		So(request9.GetFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?until=2015")
+		So(request9.getFullURL(), ShouldEqual, "http://eprints.uwe.ac.uk/?until=2015")
 	})
 
 	Convey("get request full URL: prefix, verb, set, identifier, from, until and resumptionTokenidentifier", t, func() {
@@ -86,14 +86,14 @@ func TestRequestURL(t *testing.T) {
 			BaseURL:         "http://eprints.uwe.ac.uk/",
 			Set:             "history",
 			MetadataPrefix:  "prefix",
-			Verb:            "identify",
+			verb:            "identify",
 			Identifier:      "79",
 			From:            "2009",
 			Until:           "2015",
 			ResumptionToken: "metadataPrefix%3Doai_dc%26offset%3D275",
 		}
 		expectedURL := "http://eprints.uwe.ac.uk/?verb=identify&set=history&metadataPrefix=prefix&identifier=79&from=2009&until=2015&resumptionToken=metadataPrefix%3Doai_dc%26offset%3D275"
-		So(request10.GetFullURL(), ShouldEqual, expectedURL)
+		So(request10.getFullURL(), ShouldEqual, expectedURL)
 	})
 }
 

@@ -40,7 +40,7 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 
 	result := hasValidInstitutionInsertDetails(institutionDetails)
 	if !result.IsValid {
-		problem.Data = result.Errors
+		problem.Data = result
 		return problem, errors.New("Error")
 	}
 
@@ -145,7 +145,7 @@ func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}
 
 	result := hasValidInsertDetails(repositoryDetails)
 	if !result.IsValid {
-		problem.Data = result.Errors
+		problem.Data = result
 		return problem, errors.New("Error")
 	}
 

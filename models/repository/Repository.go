@@ -51,7 +51,7 @@ func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (
 	var problem = adapter.WisplyError{}
 	result := hasValidModificationDetails(repositoryDetails)
 	if !result.IsValid {
-		problem.Data = result.Errors
+		problem.Data = result
 		return problem, errors.New("It does not have valid details")
 	}
 	err := repository.updateDatabase(repositoryDetails)

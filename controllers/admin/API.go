@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/cristian-sima/Wisply/models/api"
@@ -14,15 +13,19 @@ type Developers struct {
 
 // RemoveAllowedTable removes the table from the list
 func (controller *Developers) RemoveAllowedTable() {
-	IDString := strings.TrimSpace(controller.GetString("table-id"))
-	ID, _ := strconv.Atoi(IDString)
-	err := api.RemoveAllowedTable(ID)
+	ID := strings.TrimSpace(controller.GetString("table-id"))
+	table, err := api.NewTable(ID)
 	if err != nil {
 		controller.DisplaySimpleError(err.Error())
 	} else {
-		message := "The table has been removed from the list!"
-		goTo := "/admin/api"
-		controller.DisplaySuccessMessage(message, goTo)
+		err = table.Delete()
+		if err != nil {
+			controller.Abort("404")
+		} else {
+			message := "The table " + table.Name + " is no longer available to download."
+			goTo := "/admin/api"
+			controller.DisplaySuccessMessage(message, goTo)
+		}
 	}
 }
 
@@ -34,8 +37,8 @@ func (controller *Developers) InsertNewTable() {
 		Name:        name,
 		Description: description,
 	}
-	if api.AreValidDetails(table) {
-		controller.DisplaySimpleError("This table name is restricted.")
+	if !api.AreValidDetails(table) {
+		controller.DisplaySimpleError("This table name can't be inserted.")
 	} else {
 		err := api.InsertNewTable(table)
 		if err != nil {

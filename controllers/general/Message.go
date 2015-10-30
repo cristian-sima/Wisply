@@ -2,7 +2,7 @@ package general
 
 import adapter "github.com/cristian-sima/Wisply/models/adapter"
 
-// MessageController encapsulates the operations for showing messages
+// Message encapsulates the operations for showing messages
 type Message struct {
 	Controller
 }
@@ -19,7 +19,7 @@ func (controller *Message) DisplaySimpleError(msg string) {
 // (ussually after the validation of fields)
 func (controller *Message) DisplayError(err adapter.WisplyError) {
 	content := err.GetMessage()
-	if len(err.Data) != 0 {
+	if len(err.Data.Errors) != 0 {
 		controller.Data["validationFailed"] = true
 		controller.Data["validationErrors"] = err.Data
 	}

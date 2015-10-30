@@ -4,10 +4,11 @@ package api
 
 import "github.com/cristian-sima/Wisply/models/database"
 
-var sensitiveTableList = []string{"account", "account_token", "account_search", "api_table_setting"}
+var rejectedTables = []string{"account", "account_token", "account_search", "api_table_setting"}
 
-// GetAllWisplyTables returns the list of all the tables which MAY BE downloaded
-func GetAllWisplyTables() []string {
+// GetAllTables returns the entire list of tables which are not restricted
+// from being downloaded
+func GetAllTables() []string {
 	var list []string
 	sql := "SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema`='wisply'"
 	rows, _ := database.Connection.Query(sql)
@@ -21,9 +22,10 @@ func GetAllWisplyTables() []string {
 	return list
 }
 
-// IsAllowedTableToAdd checks if a table name is allowed to be downloaded
-func IsAllowedTableToAdd(name string) bool {
-	allowedTables := GetAllWisplyTables()
+// IsTableAllowedToDownload checks if a table name exists and if
+// it is not on the reject list
+func IsTableAllowedToDownload(name string) bool {
+	allowedTables := GetAllTables()
 	// check it is not rejected
 	for _, allowedTable := range allowedTables {
 		if name == allowedTable {
@@ -36,7 +38,7 @@ func IsAllowedTableToAdd(name string) bool {
 // AreValidDetails checks if the table is allowed and
 // the description is valid
 func AreValidDetails(table Table) bool {
-	return IsAllowedTableToAdd(table.Name) && isValidDescription(table.Description)
+	return IsTableAllowedToDownload(table.Name) && isValidDescription(table.Description)
 }
 
 // InsertNewTable adds the table name on the list of the tables
@@ -45,14 +47,6 @@ func InsertNewTable(table Table) error {
 	sql := "INSERT INTO `api_table_setting` (`name`, `description`) VALUES (?, ?)"
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(table.Name, table.Description)
-	return err
-}
-
-// RemoveAllowedTable removes the table from the list of allowed tables
-func RemoveAllowedTable(ID int) error {
-	sql := "DELETE FROM `api_table_setting` WHERE `id`=? "
-	query, err := database.Connection.Prepare(sql)
-	query.Exec(ID)
 	return err
 }
 
@@ -69,36 +63,12 @@ func GetAllowedTables() []Table {
 	return list
 }
 
-// NewTable creates a new table by ID
-func NewTable(ID string) (*Table, error) {
-	table := &Table{}
-	fieldList := "`id`, `name`, `description`"
-	sql := "SELECT " + fieldList + " FROM `api_table_setting` WHERE id=? "
-	query, err := database.Connection.Prepare(sql)
-	if err != nil {
-		return table, err
-	}
-	query.QueryRow(ID).Scan(&table.ID, &table.Name, &table.Description)
-	return table, nil
-}
-
-// ModifyDetails changes the details of the table
-func ModifyDetails(table *Table, newDescription string) error {
-	sql := "UPDATE `api_table_setting` SET `description`=? WHERE `id`=? "
-	query, err1 := database.Connection.Prepare(sql)
-	if err1 != nil {
-		return err1
-	}
-	_, err2 := query.Exec(newDescription, table.ID)
-	return err2
-}
-
 // GetWisplyTablesNamesNotAllowed returns the list of wisply tables which
 // can be downloaded, but are not yet on the list
 func GetWisplyTablesNamesNotAllowed() []string {
 	var (
 		list          []string
-		allWisply     = GetAllWisplyTables()
+		allWisply     = GetAllTables()
 		allowedTables = GetAllowedTables()
 	)
 
@@ -118,7 +88,7 @@ func GetWisplyTablesNamesNotAllowed() []string {
 
 // IsRestrictedTable checks if a table name is on the restricted list
 func IsRestrictedTable(name string) bool {
-	for _, rejectedName := range sensitiveTableList {
+	for _, rejectedName := range rejectedTables {
 		if name == rejectedName {
 			return true
 		}

@@ -16,9 +16,9 @@ type Register struct {
 func (register *Register) Try(userDetails map[string]interface{}) (adapter.WisplyError, error) {
 	var problem = adapter.WisplyError{}
 
-	registerDetails := isValidRegister(userDetails)
-	if !registerDetails.IsValid {
-		problem.Data = registerDetails.Errors
+	result := isValidRegister(userDetails)
+	if !result.IsValid {
+		problem.Data = result
 		return problem, errors.New("Error")
 	}
 

@@ -20,9 +20,9 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 
 	problem := adapter.WisplyError{}
 
-	goodLoginDetails := isValidLogin(loginDetails)
-	if !goodLoginDetails.IsValid {
-		problem.Data = goodLoginDetails.Errors
+	result := isValidLogin(loginDetails)
+	if !result.IsValid {
+		problem.Data = result
 		return problem, errors.New("Error")
 	}
 

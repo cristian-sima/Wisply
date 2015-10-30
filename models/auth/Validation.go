@@ -1,8 +1,9 @@
 package auth
 
 import (
+	validity "local-projects/validity"
+
 	wisply "github.com/cristian-sima/Wisply/models/adapter"
-	validity "github.com/cristian-sima/validity"
 )
 
 var (

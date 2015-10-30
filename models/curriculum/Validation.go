@@ -2,7 +2,7 @@ package curriculum
 
 import (
 	wisply "github.com/cristian-sima/Wisply/models/adapter"
-	validity "github.com/cristian-sima/validity"
+	validity "local-projects/validity"
 )
 
 var (

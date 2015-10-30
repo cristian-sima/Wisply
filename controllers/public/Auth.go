@@ -71,7 +71,6 @@ func (controller *Auth) createNewAccount() {
 
 	confirmPassowrd := strings.TrimSpace(controller.GetString("register-password-confirm"))
 	password := strings.TrimSpace(controller.GetString("register-password"))
-
 	userDetails := make(map[string]interface{})
 	userDetails["name"] = strings.TrimSpace(controller.GetString("register-name"))
 	userDetails["password"] = password

@@ -17,17 +17,28 @@
               </div>
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <blockquote>
-                  <h2><span class="text-muted"><span class="glyphicon glyphicon-align-left"></span></span> Free to <span class="text-muted">re</span>-use</h2>
+                  <h2>
+                    <span class="text-muted">
+                      <span class="glyphicon glyphicon-align-left"></span>
+                  </span>
+                   Free to
+                    <span class="text-muted">re</span>-use
+                  </h2>
                   If you want to understand how Wisply is spinning the wheels, you can download the source code from our <a href="https://github.com/cristian-sima/Wisply" target="_blank">GitHub page</a>.
                 </blockquote>
                 <blockquote>
-                  <h2><span class="text-muted"><span class="glyphicon glyphicon-stats"></span></span> Open data</h2>
+                  <h2>
+                    <span class="text-muted">
+                      <span class="glyphicon glyphicon-stats"></span>
+                  </span>
+                  Open data
+                  </h2>
                   Wisply is making available all possible data in <a class="scroll" href="#open-data">open data</a> format.
                 </blockquote>
-                <blockquote>
+                <!-- <blockquote>
                   <h2><span class="text-muted"><span class="glyphicon glyphicon-dashboard"></span></span> Research tools</h2>
-                  We provide a <a href="#tools">list of tools</a> which Wisply is using and you may find useful in your research.
-                </blockquote>
+                  We provide a <a href="#tools">list of tools</a> which Wisply is using and you may find useful for your research.
+                </blockquote> -->
               </div>
             </div>
           </div>
@@ -64,6 +75,8 @@
                     Type <span class="label label-info">GET</span>
                     <br />
                     <pre>api/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&amp;format={<strong>format</strong>}</pre>
+                    Response format: <span class="label label-success">JSON</span> or  <span class="label label-success">HTML</span>
+                    <br />
                     Where:
                     <br />
                     <ul>
@@ -81,7 +94,7 @@
                     Type <span class="label label-info">GET</span>
                     <br />
                     <pre>api/search/anything/{<strong>query</strong>}</pre>
-                    <span class="label label-success">JSON</span>
+                    Response format: <span class="label label-success">JSON</span>
                     <br />
                     <blockquote>
                       This request gets (in this order): <br />

@@ -9,15 +9,15 @@ import (
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
-// RepositoryController manages the operations for repositories
+// Repository manages the operations for repositories
 // For example: (list, delete, add)
-type RepositoryController struct {
+type Repository struct {
 	Controller
 	model repository.Model
 }
 
 // List shows all the repositories
-func (controller *RepositoryController) List() {
+func (controller *Repository) List() {
 	list := controller.model.GetAllRepositories()
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
@@ -26,14 +26,14 @@ func (controller *RepositoryController) List() {
 }
 
 // ShowTypes displays the types which are available
-func (controller *RepositoryController) ShowTypes() {
+func (controller *Repository) ShowTypes() {
 	controller.Data["institution"] = strings.TrimSpace(controller.GetString("institution"))
 	controller.TplNames = "site/admin/repository/add/category.tpl"
 	controller.SetCustomTitle("Add Repository")
 }
 
 // Add shows the form to add a new repository
-func (controller *RepositoryController) Add() {
+func (controller *Repository) Add() {
 	controller.Data["institutions"] = controller.model.GetAllInstitutions()
 	selected, _ := strconv.Atoi(strings.TrimSpace(controller.GetString("institution")))
 	controller.Data["selectedInstitution"] = selected
@@ -43,7 +43,7 @@ func (controller *RepositoryController) Add() {
 }
 
 // Insert inserts a repository in the database
-func (controller *RepositoryController) Insert() {
+func (controller *Repository) Insert() {
 
 	repositoryDetails := make(map[string]interface{})
 	repositoryDetails["name"] = strings.TrimSpace(controller.GetString("repository-name"))
@@ -64,7 +64,7 @@ func (controller *RepositoryController) Insert() {
 }
 
 // Modify shows the form to modify a repository's details
-func (controller *RepositoryController) Modify() {
+func (controller *Repository) Modify() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
@@ -76,7 +76,7 @@ func (controller *RepositoryController) Modify() {
 }
 
 // ShowFilter shows the page for modifying the filter
-func (controller *RepositoryController) ShowFilter() {
+func (controller *Repository) ShowFilter() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
@@ -89,7 +89,7 @@ func (controller *RepositoryController) ShowFilter() {
 }
 
 // ChangeFilter changes the filter
-func (controller *RepositoryController) ChangeFilter() {
+func (controller *Repository) ChangeFilter() {
 	ID := controller.Ctx.Input.Param(":id")
 	filter := strings.TrimSpace(controller.GetString("repository-filter"))
 	repository, err := repository.NewRepository(ID)
@@ -108,7 +108,7 @@ func (controller *RepositoryController) ChangeFilter() {
 }
 
 // Update updates a repository in the database
-func (controller *RepositoryController) Update() {
+func (controller *Repository) Update() {
 
 	var ID string
 	repositoryDetails := make(map[string]interface{})
@@ -137,7 +137,7 @@ func (controller *RepositoryController) Update() {
 
 // EmptyRepository deletes all records, formats, collections,
 // emails and information about the repository
-func (controller *RepositoryController) EmptyRepository() {
+func (controller *Repository) EmptyRepository() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
@@ -154,7 +154,7 @@ func (controller *RepositoryController) EmptyRepository() {
 }
 
 // Delete deletes the repository specified by parameter id
-func (controller *RepositoryController) Delete() {
+func (controller *Repository) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
@@ -176,15 +176,15 @@ func (controller *RepositoryController) Delete() {
 	}
 }
 
-func (controller *RepositoryController) showModifyForm() {
+func (controller *Repository) showModifyForm() {
 	controller.showForm("Modify", "Modify this repository")
 }
 
-func (controller *RepositoryController) showAddForm() {
+func (controller *Repository) showAddForm() {
 	controller.showForm("Add", "Add a new repository")
 }
 
-func (controller *RepositoryController) showForm(action string, legend string) {
+func (controller *Repository) showForm(action string, legend string) {
 	controller.GenerateXSRF()
 	controller.Data["action"] = action
 	controller.Data["legend"] = legend
@@ -194,7 +194,7 @@ func (controller *RepositoryController) showForm(action string, legend string) {
 }
 
 // ShowRepository shows the administrative information regarding a repository
-func (controller *RepositoryController) ShowRepository() {
+func (controller *Repository) ShowRepository() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
@@ -209,7 +209,7 @@ func (controller *RepositoryController) ShowRepository() {
 }
 
 // ShowAdvanceOptions displays the page with further options such as modify or delete
-func (controller *RepositoryController) ShowAdvanceOptions() {
+func (controller *Repository) ShowAdvanceOptions() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {

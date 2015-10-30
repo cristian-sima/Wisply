@@ -8,20 +8,20 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// LogController manages the operations for showing the logs
-type LogController struct {
+// Log manages the operations for showing the logs
+type Log struct {
 	Controller
 }
 
 // ShowGeneralPage displays the processes
-func (controller *LogController) ShowGeneralPage() {
+func (controller *Log) ShowGeneralPage() {
 	controller.Data["processes"] = action.GetAllProcesses()
 	controller.SetCustomTitle("Admin - Event Log")
 	controller.TplNames = "site/admin/log/all-processes.tpl"
 }
 
 // ShowProcessAdvanceOptions displays the advance options for a process
-func (controller *LogController) ShowProcessAdvanceOptions() {
+func (controller *Log) ShowProcessAdvanceOptions() {
 	controller.SetCustomTitle("Advance options")
 	idString := controller.Ctx.Input.Param(":process")
 	ID, _ := strconv.Atoi(idString)
@@ -30,20 +30,20 @@ func (controller *LogController) ShowProcessAdvanceOptions() {
 }
 
 // ShowLogAdvanceOptions displays the advance options for the entire log
-func (controller *LogController) ShowLogAdvanceOptions() {
+func (controller *Log) ShowLogAdvanceOptions() {
 	controller.SetCustomTitle("Log - Advance options")
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
 // DeleteEntireLog deletes the entire log
-func (controller *LogController) DeleteEntireLog() {
+func (controller *Log) DeleteEntireLog() {
 	action.DeleteLog()
 	repository.ResetAllRepositories()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
 // DeleteProcess deletes a process
-func (controller *LogController) DeleteProcess() {
+func (controller *Log) DeleteProcess() {
 	idString := controller.Ctx.Input.Param(":process")
 	ID, _ := strconv.Atoi(idString)
 	process := action.NewProcess(ID)
@@ -51,26 +51,26 @@ func (controller *LogController) DeleteProcess() {
 }
 
 // DeleteProcess deletes the process
-func (controller *LogController) deleteProcess(process *action.Process) {
+func (controller *Log) deleteProcess(process *action.Process) {
 
 	process.Delete()
 	controller.TplNames = "site/admin/log/log-advance-options.tpl"
 }
 
 // ShowProcess displays the log of a process
-func (controller *LogController) ShowProcess() {
+func (controller *Log) ShowProcess() {
 	controller.showProcess()
 	controller.TplNames = "site/admin/log/process.tpl"
 }
 
 // ShowProgressHistory displays the entire log of a process
-func (controller *LogController) ShowProgressHistory() {
+func (controller *Log) ShowProgressHistory() {
 	controller.showProcess()
 	controller.TplNames = "site/admin/log/progress-history.tpl"
 }
 
 // ShowProcess displays the log of a process
-func (controller *LogController) showProcess() {
+func (controller *Log) showProcess() {
 	idString := controller.Ctx.Input.Param(":process")
 	ID, _ := strconv.Atoi(idString)
 	process := action.NewProcess(ID)
@@ -91,12 +91,12 @@ func (controller *LogController) showProcess() {
 	}
 }
 
-func (controller *LogController) showHarvestProcess(process *action.Process) {
+func (controller *Log) showHarvestProcess(process *action.Process) {
 	controller.Data["harvestProcess"] = harvest.NewProcess(process.Action.ID)
 }
 
 // ShowOperation display the
-func (controller *LogController) ShowOperation() {
+func (controller *Log) ShowOperation() {
 	processID := controller.Ctx.Input.Param(":process")
 	operationID := controller.Ctx.Input.Param(":operation")
 

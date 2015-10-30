@@ -7,13 +7,13 @@ import (
 	"github.com/cristian-sima/Wisply/models/api"
 )
 
-// APIController manages the operation for API
-type APIController struct {
+// Developers manages the operation for API
+type Developers struct {
 	Controller
 }
 
 // RemoveAllowedTable removes the table from the list
-func (controller *APIController) RemoveAllowedTable() {
+func (controller *Developers) RemoveAllowedTable() {
 	IDString := strings.TrimSpace(controller.GetString("table-id"))
 	ID, _ := strconv.Atoi(IDString)
 	err := api.RemoveAllowedTable(ID)
@@ -27,7 +27,7 @@ func (controller *APIController) RemoveAllowedTable() {
 }
 
 // InsertNewTable inserts the new table name into the list
-func (controller *APIController) InsertNewTable() {
+func (controller *Developers) InsertNewTable() {
 	name := strings.TrimSpace(controller.GetString("table-name"))
 	description := strings.TrimSpace(controller.GetString("table-description"))
 	table := api.Table{
@@ -49,14 +49,14 @@ func (controller *APIController) InsertNewTable() {
 }
 
 // ShowAddForm shows the form to add a table to the download list
-func (controller *APIController) ShowAddForm() {
+func (controller *Developers) ShowAddForm() {
 	controller.Data["type"] = "Add"
 	controller.SetCustomTitle("Admin - API - Add table")
 	controller.showForm()
 }
 
 // ShowModifyForm shows the form to modify a tanl
-func (controller *APIController) ShowModifyForm() {
+func (controller *Developers) ShowModifyForm() {
 	controller.Data["type"] = "Modify"
 	id := controller.Ctx.Input.Param(":id")
 	table, _ := api.NewTable(id)
@@ -66,7 +66,7 @@ func (controller *APIController) ShowModifyForm() {
 }
 
 // ModifyTable changes the description
-func (controller *APIController) ModifyTable() {
+func (controller *Developers) ModifyTable() {
 	id := strings.TrimSpace(controller.GetString("table-id"))
 	description := strings.TrimSpace(controller.GetString("table-description"))
 	table, err := api.NewTable(id)
@@ -84,7 +84,7 @@ func (controller *APIController) ModifyTable() {
 	}
 }
 
-func (controller *APIController) showForm() {
+func (controller *Developers) showForm() {
 	controller.GenerateXSRF()
 	controller.Data["tables"] = api.GetWisplyTablesNamesNotAllowed()
 	controller.Data["action"] = "Allow table to be downloaded"
@@ -92,7 +92,7 @@ func (controller *APIController) showForm() {
 }
 
 // ShowHomePage displays the home page
-func (controller *APIController) ShowHomePage() {
+func (controller *Developers) ShowHomePage() {
 	controller.GenerateXSRF()
 	controller.Data["tables"] = api.GetAllowedTables()
 	controller.SetCustomTitle("Admin - API")

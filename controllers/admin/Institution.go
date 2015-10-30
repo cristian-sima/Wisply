@@ -7,14 +7,14 @@ import (
 	repository "github.com/cristian-sima/Wisply/models/repository"
 )
 
-// InstitutionController manages the operations for institutions
-type InstitutionController struct {
+// Institution manages the operations for institutions
+type Institution struct {
 	Controller
 	model repository.Model
 }
 
 // DisplayAll shows all the institutions
-func (controller *InstitutionController) DisplayAll() {
+func (controller *Institution) DisplayAll() {
 	var exists bool
 	list := controller.model.GetAllInstitutions()
 	exists = (len(list) != 0)
@@ -26,13 +26,13 @@ func (controller *InstitutionController) DisplayAll() {
 }
 
 // Add shows the form to add an institution
-func (controller *InstitutionController) Add() {
+func (controller *Institution) Add() {
 	controller.SetCustomTitle("Add Institution")
 	controller.showAddForm()
 }
 
 // Insert inserts an institution in the database
-func (controller *InstitutionController) Insert() {
+func (controller *Institution) Insert() {
 
 	institutionDetails := make(map[string]interface{})
 	institutionDetails["name"] = strings.TrimSpace(controller.GetString("institution-name"))
@@ -57,7 +57,7 @@ func (controller *InstitutionController) Insert() {
 }
 
 // Modify shows the form to modify a institution's details
-func (controller *InstitutionController) Modify() {
+func (controller *Institution) Modify() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
@@ -81,7 +81,7 @@ func (controller *InstitutionController) Modify() {
 }
 
 // Update updates an institution in the database
-func (controller *InstitutionController) Update() {
+func (controller *Institution) Update() {
 	institutionDetails := make(map[string]interface{})
 
 	ID := controller.Ctx.Input.Param(":id")
@@ -111,7 +111,7 @@ func (controller *InstitutionController) Update() {
 }
 
 // Delete deletes the institution specified by parameter id
-func (controller *InstitutionController) Delete() {
+func (controller *Institution) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
 
@@ -140,7 +140,7 @@ func (controller *InstitutionController) Delete() {
 }
 
 // ShowInstitution shows the administrative page for an institution
-func (controller *RepositoryController) ShowInstitution() {
+func (controller *Repository) ShowInstitution() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
@@ -154,7 +154,7 @@ func (controller *RepositoryController) ShowInstitution() {
 
 // ShowAdvanceInstitutionOptions displays the page with further options
 // For instance, further options may be modify or delete
-func (controller *RepositoryController) ShowAdvanceInstitutionOptions() {
+func (controller *Repository) ShowAdvanceInstitutionOptions() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
@@ -165,17 +165,17 @@ func (controller *RepositoryController) ShowAdvanceInstitutionOptions() {
 	}
 }
 
-func (controller *InstitutionController) showModifyForm() {
+func (controller *Institution) showModifyForm() {
 	controller.showForm("Modify", "Modify this institution")
 }
 
-func (controller *InstitutionController) showAddForm() {
+func (controller *Institution) showAddForm() {
 	controller.showForm("Add", "Add a new institution")
 	controller.Data["wikiID"] = "NULL"
 	controller.Data["wikiReceive"] = false
 }
 
-func (controller *InstitutionController) showForm(action string, legend string) {
+func (controller *Institution) showForm(action string, legend string) {
 	controller.GenerateXSRF()
 	controller.Data["action"] = action
 	controller.Data["legend"] = legend

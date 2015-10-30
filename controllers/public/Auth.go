@@ -8,16 +8,16 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// AuthController inherits the WisplyController
+// Auth inherits the WisplyController
 // It manages the operations with the authentication
-type AuthController struct {
+type Auth struct {
 	Controller
 	Model auth.Model
 }
 
 // ShowLoginPage shows the login form in case user is not connected or otherwise
 // it redirects to "/"
-func (controller *AuthController) ShowLoginPage() {
+func (controller *Auth) ShowLoginPage() {
 	if controller.AccountConnected {
 		controller.Redirect("/", 200)
 	} else {
@@ -26,7 +26,7 @@ func (controller *AuthController) ShowLoginPage() {
 }
 
 // ShowLoginForm shows the login form
-func (controller *AuthController) showLoginForm() {
+func (controller *Auth) showLoginForm() {
 	rawSendMe := controller.GetString("sendMe")
 	controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
 	controller.SetCustomTitle("Login to Wisply")
@@ -37,7 +37,7 @@ func (controller *AuthController) showLoginForm() {
 }
 
 // ShowRegisterForm shows the form to register a new account
-func (controller *AuthController) ShowRegisterForm() {
+func (controller *Auth) ShowRegisterForm() {
 	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
 
@@ -46,7 +46,7 @@ func (controller *AuthController) ShowRegisterForm() {
 
 // showForm shows a form indicated by the parameter name.
 // It can be "login" or "register"
-func (controller *AuthController) showForm(name string) {
+func (controller *Auth) showForm(name string) {
 	controller.GenerateXSRF()
 	controller.TplNames = "site/public/auth/" + name + ".tpl"
 }
@@ -55,7 +55,7 @@ func (controller *AuthController) showForm(name string) {
 // If so it sends the details of the user to processRegisterRequest
 // The parameters should be: register-name, register-password,
 // register-email and register-password-confirm
-func (controller *AuthController) CreateNewAccount() {
+func (controller *Auth) CreateNewAccount() {
 
 	page := "register-form-page"
 	controller.RegisterCaptchaAction(page)
@@ -67,7 +67,7 @@ func (controller *AuthController) CreateNewAccount() {
 	}
 }
 
-func (controller *AuthController) createNewAccount() {
+func (controller *Auth) createNewAccount() {
 
 	confirmPassowrd := strings.TrimSpace(controller.GetString("register-password-confirm"))
 	password := strings.TrimSpace(controller.GetString("register-password"))
@@ -84,7 +84,7 @@ func (controller *AuthController) createNewAccount() {
 	}
 }
 
-func (controller *AuthController) processRegisterRequest(userDetails map[string]interface{}) {
+func (controller *Auth) processRegisterRequest(userDetails map[string]interface{}) {
 
 	register := auth.Register{}
 	problem, err := register.Try(userDetails)
@@ -98,7 +98,7 @@ func (controller *AuthController) processRegisterRequest(userDetails map[string]
 }
 
 // LoginAccount checks if the details provided are good and it logins the account
-func (controller *AuthController) LoginAccount() {
+func (controller *Auth) LoginAccount() {
 
 	page := "login-form-page"
 	controller.RegisterCaptchaAction(page)
@@ -111,7 +111,7 @@ func (controller *AuthController) LoginAccount() {
 }
 
 // LoginAccount checks if the details provided are good and it logins the account
-func (controller *AuthController) loginAccount() {
+func (controller *Auth) loginAccount() {
 
 	sendMeAddress := strings.TrimSpace(controller.GetString("login-send-me"))
 	rememberMe := strings.TrimSpace(controller.GetString("login-remember-me"))
@@ -134,19 +134,19 @@ func (controller *AuthController) loginAccount() {
 }
 
 // connectAccount creates a session for the account and redirects
-func (controller *AuthController) connectAccount(account *auth.Account, sendMeAddress string) {
+func (controller *Auth) connectAccount(account *auth.Account, sendMeAddress string) {
 	controller.saveLoginDetails(account)
 	controller.safeRedilectAccount(sendMeAddress)
 }
 
 // saveLoginDetails creates a new session for the account
-func (controller *AuthController) saveLoginDetails(account *auth.Account) {
+func (controller *Auth) saveLoginDetails(account *auth.Account) {
 	accountID := strconv.Itoa(account.ID)
 	controller.SetSession("account-id", accountID)
 }
 
 // rememberConnection remembers the account by using a connection cookie
-func (controller *AuthController) rememberConnection(account *auth.Account) {
+func (controller *Auth) rememberConnection(account *auth.Account) {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookie := account.GenerateConnectionCookie()
 	controller.DeleteConnectionCookie()
@@ -155,13 +155,13 @@ func (controller *AuthController) rememberConnection(account *auth.Account) {
 
 // safeRedilectAccount gets the safe address where to redirects the account
 // It redirects the account
-func (controller *AuthController) safeRedilectAccount(sendMe string) {
+func (controller *Auth) safeRedilectAccount(sendMe string) {
 	var safeAddress string
 	safeAddress = controller.getSafeURL(sendMe)
 	controller.Redirect(safeAddress, 302)
 }
 
-func (controller *AuthController) getSafeURL(urlToTest string) string {
+func (controller *Auth) getSafeURL(urlToTest string) string {
 	var safeURL string
 	if urlToTest == "" || urlToTest == "/auth/login/" || urlToTest == "/auth/login" {
 		safeURL = "/"
@@ -175,20 +175,20 @@ func (controller *AuthController) getSafeURL(urlToTest string) string {
 	return safeURL
 }
 
-func (controller *AuthController) isSafeRedirection(urlToTest string) bool {
+func (controller *Auth) isSafeRedirection(urlToTest string) bool {
 	var isSafe bool
 	isSafe = strings.HasPrefix(urlToTest, "/")
 	return isSafe
 }
 
 // Logout It logs out the account
-func (controller *AuthController) Logout() {
+func (controller *Auth) Logout() {
 	controller.distroySession()
 	controller.DeleteConnectionCookie()
 	controller.Redirect("/", 200)
 }
 
-func (controller *AuthController) distroySession() {
+func (controller *Auth) distroySession() {
 	controller.DelSession("session")
 	controller.DestroySession()
 }

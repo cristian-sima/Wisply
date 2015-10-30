@@ -44,15 +44,15 @@ func init() {
 
 	publicAuthNS := beego.NewNamespace("auth",
 		beego.NSNamespace("/login",
-			beego.NSRouter("", &public.AuthController{}, "GET:ShowLoginPage"),
-			beego.NSRouter("", &public.AuthController{}, "POST:LoginAccount"),
+			beego.NSRouter("", &public.Auth{}, "GET:ShowLoginPage"),
+			beego.NSRouter("", &public.Auth{}, "POST:LoginAccount"),
 		),
 		beego.NSNamespace("/register",
-			beego.NSRouter("", &public.AuthController{}, "GET:ShowRegisterForm"),
-			beego.NSRouter("", &public.AuthController{}, "POST:CreateNewAccount"),
+			beego.NSRouter("", &public.Auth{}, "GET:ShowRegisterForm"),
+			beego.NSRouter("", &public.Auth{}, "POST:CreateNewAccount"),
 		),
 		beego.NSNamespace("/logout",
-			beego.NSRouter("", &public.AuthController{}, "POST:Logout"),
+			beego.NSRouter("", &public.Auth{}, "POST:Logout"),
 		),
 	)
 
@@ -69,8 +69,8 @@ func init() {
 	// ----------------------------- Institutions -------------------------------
 
 	publicInstitutionsNS := beego.NewNamespace("/institutions",
-		beego.NSRouter("", &public.InstitutionController{}, "*:List"),
-		beego.NSRouter("/:id", &public.InstitutionController{}, "GET:ShowInstitution"),
+		beego.NSRouter("", &public.Institution{}, "*:List"),
+		beego.NSRouter("/:id", &public.Institution{}, "GET:ShowInstitution"),
 	)
 
 	// public
@@ -94,32 +94,32 @@ func init() {
 	// ----------------------------- Repositories -------------------------------
 
 	adminRepositoryNS := beego.NSNamespace("/repositories",
-		beego.NSRouter("", &admin.RepositoryController{}, "*:List"),
+		beego.NSRouter("", &admin.Repository{}, "*:List"),
 		beego.NSNamespace("/add",
-			beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowTypes"),
+			beego.NSRouter("", &admin.Repository{}, "GET:ShowTypes"),
 		),
 		beego.NSNamespace("/newRepository",
-			beego.NSRouter("", &admin.RepositoryController{}, "GET:Add"),
-			beego.NSRouter("", &admin.RepositoryController{}, "POST:Insert"),
+			beego.NSRouter("", &admin.Repository{}, "GET:Add"),
+			beego.NSRouter("", &admin.Repository{}, "POST:Insert"),
 		),
 		beego.NSNamespace("/repository/:id",
-			beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowRepository"),
+			beego.NSRouter("", &admin.Repository{}, "GET:ShowRepository"),
 			beego.NSNamespace("/advance-options",
-				beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowAdvanceOptions"),
+				beego.NSRouter("", &admin.Repository{}, "GET:ShowAdvanceOptions"),
 				beego.NSNamespace("/modify",
-					beego.NSRouter("", &admin.RepositoryController{}, "GET:Modify"),
-					beego.NSRouter("", &admin.RepositoryController{}, "POST:Update"),
+					beego.NSRouter("", &admin.Repository{}, "GET:Modify"),
+					beego.NSRouter("", &admin.Repository{}, "POST:Update"),
 					beego.NSNamespace("/filter",
-						beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowFilter"),
-						beego.NSRouter("", &admin.RepositoryController{}, "POST:ChangeFilter"),
+						beego.NSRouter("", &admin.Repository{}, "GET:ShowFilter"),
+						beego.NSRouter("", &admin.Repository{}, "POST:ChangeFilter"),
 					),
 				),
 			),
 			beego.NSNamespace("/empty",
-				beego.NSRouter("", &admin.RepositoryController{}, "POST:EmptyRepository"),
+				beego.NSRouter("", &admin.Repository{}, "POST:EmptyRepository"),
 			),
 			beego.NSNamespace("/delete",
-				beego.NSRouter("", &admin.RepositoryController{}, "POST:Delete"),
+				beego.NSRouter("", &admin.Repository{}, "POST:Delete"),
 			),
 		),
 	)
@@ -128,22 +128,22 @@ func init() {
 	// ----------------------------- Institutions -------------------------------
 
 	adminInstitutionsNS := beego.NSNamespace("/institutions",
-		beego.NSRouter("", &admin.InstitutionController{}, "*:DisplayAll"),
+		beego.NSRouter("", &admin.Institution{}, "*:DisplayAll"),
 		beego.NSNamespace("/add",
-			beego.NSRouter("", &admin.InstitutionController{}, "GET:Add"),
-			beego.NSRouter("", &admin.InstitutionController{}, "POST:Insert"),
+			beego.NSRouter("", &admin.Institution{}, "GET:Add"),
+			beego.NSRouter("", &admin.Institution{}, "POST:Insert"),
 		),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &admin.InstitutionController{}, "GET:Modify"),
-			beego.NSRouter(":id", &admin.InstitutionController{}, "POST:Update"),
+			beego.NSRouter(":id", &admin.Institution{}, "GET:Modify"),
+			beego.NSRouter(":id", &admin.Institution{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &admin.InstitutionController{}, "POST:Delete"),
+			beego.NSRouter(":id", &admin.Institution{}, "POST:Delete"),
 		),
 		beego.NSNamespace("/institution",
 			beego.NSNamespace("/:id",
-				beego.NSRouter("", &admin.RepositoryController{}, "GET:ShowInstitution"),
-				beego.NSRouter("/advance-options", &admin.RepositoryController{}, "GET:ShowAdvanceInstitutionOptions"),
+				beego.NSRouter("", &admin.Repository{}, "GET:ShowInstitution"),
+				beego.NSRouter("/advance-options", &admin.Repository{}, "GET:ShowAdvanceInstitutionOptions"),
 			),
 		),
 	)
@@ -153,14 +153,14 @@ func init() {
 
 	adminHarvestNS := beego.NSNamespace("/harvest",
 		beego.NSNamespace("/init",
-			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ShowPanel"),
-			beego.NSRouter("/ws", &admin.HarvestController{}, "GET:InitWebsocketConnection"),
+			beego.NSRouter(":id", &admin.Harvest{}, "POST:ShowPanel"),
+			beego.NSRouter("/ws", &admin.Harvest{}, "GET:InitWebsocketConnection"),
 		),
 		beego.NSNamespace("/recover",
-			beego.NSRouter(":id", &admin.HarvestController{}, "POST:RecoverProcess"),
+			beego.NSRouter(":id", &admin.Harvest{}, "POST:RecoverProcess"),
 		),
 		beego.NSNamespace("/finish",
-			beego.NSRouter(":id", &admin.HarvestController{}, "POST:ForceFinishProcess"),
+			beego.NSRouter(":id", &admin.Harvest{}, "POST:ForceFinishProcess"),
 		),
 	)
 
@@ -168,31 +168,31 @@ func init() {
 	// ----------------------------- Log -----------------------------------
 
 	adminLogNS := beego.NSNamespace("/log",
-		beego.NSRouter("", &admin.LogController{}, "*:ShowGeneralPage"),
+		beego.NSRouter("", &admin.Log{}, "*:ShowGeneralPage"),
 		beego.NSNamespace("/process",
-			beego.NSRouter(":process", &admin.LogController{}, "*:ShowProcess"),
+			beego.NSRouter(":process", &admin.Log{}, "*:ShowProcess"),
 			beego.NSNamespace(":process/operation",
-				beego.NSRouter(":operation", &admin.LogController{}, "*:ShowOperation"),
+				beego.NSRouter(":operation", &admin.Log{}, "*:ShowOperation"),
 			),
-			beego.NSRouter(":process/history", &admin.LogController{}, "*:ShowProgressHistory"),
-			beego.NSRouter(":process/advance-options", &admin.LogController{}, "*:ShowProcessAdvanceOptions"),
-			beego.NSRouter("/delete/:process", &admin.LogController{}, "POST:DeleteProcess"),
+			beego.NSRouter(":process/history", &admin.Log{}, "*:ShowProgressHistory"),
+			beego.NSRouter(":process/advance-options", &admin.Log{}, "*:ShowProcessAdvanceOptions"),
+			beego.NSRouter("/delete/:process", &admin.Log{}, "POST:DeleteProcess"),
 		),
-		beego.NSRouter("/advance-options", &admin.LogController{}, "*:ShowLogAdvanceOptions"),
-		beego.NSRouter("/delete", &admin.LogController{}, "POST:DeleteEntireLog"),
+		beego.NSRouter("/advance-options", &admin.Log{}, "*:ShowLogAdvanceOptions"),
+		beego.NSRouter("/delete", &admin.Log{}, "POST:DeleteEntireLog"),
 	)
 
 	// admin
 	// ----------------------------- Accounts ----------------------------------
 
 	adminAccountsNS := beego.NSNamespace("/accounts",
-		beego.NSRouter("", &admin.AccountController{}, "*:List"),
+		beego.NSRouter("", &admin.Account{}, "*:List"),
 		beego.NSNamespace("/modify",
-			beego.NSRouter(":id", &admin.AccountController{}, "GET:Modify"),
-			beego.NSRouter(":id", &admin.AccountController{}, "POST:Update"),
+			beego.NSRouter(":id", &admin.Account{}, "GET:Modify"),
+			beego.NSRouter(":id", &admin.Account{}, "POST:Update"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter(":id", &admin.AccountController{}, "POST:Delete"),
+			beego.NSRouter(":id", &admin.Account{}, "POST:Delete"),
 		),
 	)
 
@@ -223,7 +223,7 @@ func init() {
 			beego.NSRouter("", &admin.Curriculum{}, "POST:CreateProgram"),
 		),
 		// beego.NSNamespace("/delete",
-		// 	beego.NSRouter(":id", &admin.AccountController{}, "POST:Delete"),
+		// 	beego.NSRouter(":id", &admin.Account{}, "POST:Delete"),
 		// ),
 	)
 
@@ -231,17 +231,17 @@ func init() {
 	// ----------------------------- Admin API ----------------------------------
 
 	adminAPINS := beego.NSNamespace("/api",
-		beego.NSRouter("", &admin.APIController{}, "*:ShowHomePage"),
+		beego.NSRouter("", &admin.Developers{}, "*:ShowHomePage"),
 		beego.NSNamespace("/add",
-			beego.NSRouter("", &admin.APIController{}, "GET:ShowAddForm"),
-			beego.NSRouter("", &admin.APIController{}, "POST:InsertNewTable"),
+			beego.NSRouter("", &admin.Developers{}, "GET:ShowAddForm"),
+			beego.NSRouter("", &admin.Developers{}, "POST:InsertNewTable"),
 		),
 		beego.NSNamespace("/delete",
-			beego.NSRouter("", &admin.APIController{}, "POST:RemoveAllowedTable"),
+			beego.NSRouter("", &admin.Developers{}, "POST:RemoveAllowedTable"),
 		),
 		beego.NSNamespace("/modify/:id",
-			beego.NSRouter("", &admin.APIController{}, "GET:ShowModifyForm"),
-			beego.NSRouter("", &admin.APIController{}, "POST:ModifyTable"),
+			beego.NSRouter("", &admin.Developers{}, "GET:ShowModifyForm"),
+			beego.NSRouter("", &admin.Developers{}, "POST:ModifyTable"),
 		),
 	)
 

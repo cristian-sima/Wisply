@@ -7,16 +7,16 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// AccountController manages the operations with the accounts
+// Account manages the operations with the accounts
 // For instance (delete, modify type, list all)
 // It inherits the AdminController, thus an administrator account is required
-type AccountController struct {
+type Account struct {
 	Controller
 	model auth.Model
 }
 
 // List lists all the Wisply accounts
-func (controller *AccountController) List() {
+func (controller *Account) List() {
 	accounts := controller.model.GetAllAccounts()
 	controller.Data["accounts"] = accounts
 	controller.SetCustomTitle("Admin - Accounts")
@@ -25,7 +25,7 @@ func (controller *AccountController) List() {
 
 // Modify shows the form to modify the type of an account
 // There must be provided a paramater "id" which is the id of the account
-func (controller *AccountController) Modify() {
+func (controller *Account) Modify() {
 	var id string
 	id = controller.Ctx.Input.Param(":id")
 	account, err := auth.NewAccount(id)
@@ -37,7 +37,7 @@ func (controller *AccountController) Modify() {
 }
 
 // Update modifies the type of the account given by parameter id
-func (controller *AccountController) Update() {
+func (controller *Account) Update() {
 	accountID := controller.Ctx.Input.Param(":id")
 	newType := strings.TrimSpace(controller.GetString("modify-administrator"))
 	account, err := auth.NewAccount(accountID)
@@ -56,7 +56,7 @@ func (controller *AccountController) Update() {
 }
 
 // Delete deletes the account given by parameter id
-func (controller *AccountController) Delete() {
+func (controller *Account) Delete() {
 	var ID string
 	ID = controller.Ctx.Input.Param(":id")
 	account, err := auth.NewAccount(ID)
@@ -71,7 +71,7 @@ func (controller *AccountController) Delete() {
 }
 
 // showModifyForm shows the form to modify an account
-func (controller *AccountController) showModifyForm(account *auth.Account) {
+func (controller *Account) showModifyForm(account *auth.Account) {
 	controller.GenerateXSRF()
 	controller.Data["accountName"] = account.Name
 	if account.IsAdministrator {

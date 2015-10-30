@@ -33,14 +33,14 @@ func init() {
 	go run()
 }
 
-// HarvestController manages the operations for repository
-type HarvestController struct {
+// Harvest manages the operations for repository
+type Harvest struct {
 	Controller
 	Model repository.Model
 }
 
 // RecoverProcess tries to recover a process
-func (controller *HarvestController) RecoverProcess() {
+func (controller *Harvest) RecoverProcess() {
 	ID := controller.Ctx.Input.Param(":id")
 	// check if it is running
 	intID, _ := strconv.Atoi(ID)
@@ -58,7 +58,7 @@ func (controller *HarvestController) RecoverProcess() {
 }
 
 // ForceFinishProcess terminates a process in an error state
-func (controller *HarvestController) ForceFinishProcess() {
+func (controller *Harvest) ForceFinishProcess() {
 	ID := controller.Ctx.Input.Param(":id")
 	// check if it is running
 	intID, _ := strconv.Atoi(ID)
@@ -68,7 +68,7 @@ func (controller *HarvestController) ForceFinishProcess() {
 }
 
 // GetConduit returns the channel for sending and receiving messages
-func (controller *HarvestController) GetConduit() chan harvest.ProcessMessager {
+func (controller *Harvest) GetConduit() chan harvest.ProcessMessager {
 	if conduit == nil {
 		panic("conduit nil stop")
 	}
@@ -76,7 +76,7 @@ func (controller *HarvestController) GetConduit() chan harvest.ProcessMessager {
 }
 
 // InitWebsocketConnection initiats the websocket connection
-func (controller *HarvestController) InitWebsocketConnection() {
+func (controller *Harvest) InitWebsocketConnection() {
 	controller.TplNames = "site/admin/harvest/init.tpl"
 	response := controller.Ctx.ResponseWriter
 	request := controller.Ctx.Request
@@ -87,7 +87,7 @@ func (controller *HarvestController) InitWebsocketConnection() {
 }
 
 // ShowPanel shows the panel to collect data from repository
-func (controller *HarvestController) ShowPanel() {
+func (controller *Harvest) ShowPanel() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
@@ -99,7 +99,7 @@ func (controller *HarvestController) ShowPanel() {
 }
 
 // DecideAction decides a certain action for the incoming message
-func (controller *HarvestController) DecideAction(message *ws.Message, connection *ws.Connection) {
+func (controller *Harvest) DecideAction(message *ws.Message, connection *ws.Connection) {
 	if message.Repository != 0 {
 		controller.decideOneRepository(message, connection)
 	} else {
@@ -108,7 +108,7 @@ func (controller *HarvestController) DecideAction(message *ws.Message, connectio
 }
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
-func (controller *HarvestController) decideOneRepository(message *ws.Message, connection *ws.Connection) {
+func (controller *Harvest) decideOneRepository(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
 	case "start-progress":
 		{
@@ -122,7 +122,7 @@ func (controller *HarvestController) decideOneRepository(message *ws.Message, co
 }
 
 // CreateNewProcess starts the initializing proccess
-func (controller *HarvestController) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
+func (controller *Harvest) CreateNewProcess(message *ws.Message, connection *ws.Connection) {
 	_, processExists := CurrentSessions[message.Repository]
 	if !processExists {
 		ID := message.Repository
@@ -139,7 +139,7 @@ func (controller *HarvestController) CreateNewProcess(message *ws.Message, conne
 }
 
 // ChangeRepositoryBaseURL verifies if an address can be reached
-func (controller *HarvestController) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
+func (controller *Harvest) decideManyRepositories(message *ws.Message, connection *ws.Connection) {
 	switch message.Name {
 	case "get-all-status":
 		{
@@ -196,7 +196,7 @@ func ConvertToWebsocketMessage(old harvest.ProcessMessager) *ws.Message {
 }
 
 // GetProcess sends the current process on the server for a repository
-func (controller *HarvestController) GetProcess(message *ws.Message, connection *ws.Connection) {
+func (controller *Harvest) GetProcess(message *ws.Message, connection *ws.Connection) {
 	process, processExists := CurrentSessions[message.Repository]
 	if !processExists {
 		IDString := strconv.Itoa(message.Repository)
@@ -211,13 +211,13 @@ func (controller *HarvestController) GetProcess(message *ws.Message, connection 
 
 }
 
-func (controller *HarvestController) log(message string) {
+func (controller *Harvest) log(message string) {
 	fmt.Println("<-->  Harvest Controller: " + message)
 }
 
 // SendAllRepositoriesStatus gets all repositories' status
 // It only sends messages to a connection
-func (controller *HarvestController) SendAllRepositoriesStatus(connection *ws.Connection) {
+func (controller *Harvest) SendAllRepositoriesStatus(connection *ws.Connection) {
 	list := controller.Model.GetAllStatus()
 	hub.SendMessage(&ws.Message{
 		Name:  "repositories-status-list",

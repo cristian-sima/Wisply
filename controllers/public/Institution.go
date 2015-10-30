@@ -2,15 +2,15 @@ package public
 
 import repository "github.com/cristian-sima/Wisply/models/repository"
 
-// InstitutionController managers the operations for displaying the institutions
+// Institution managers the operations for displaying the institutions
 // It displays the pages which are accessed by the public (no connection)
-type InstitutionController struct {
+type Institution struct {
 	Controller
 	model repository.Model
 }
 
 // List shows all the institutions
-func (controller *InstitutionController) List() {
+func (controller *Institution) List() {
 	var exists bool
 	list := controller.model.GetAllInstitutions()
 	exists = (len(list) != 0)
@@ -22,7 +22,7 @@ func (controller *InstitutionController) List() {
 }
 
 // ShowInstitution shows the details regarding an institution
-func (controller *InstitutionController) ShowInstitution() {
+func (controller *Institution) ShowInstitution() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {

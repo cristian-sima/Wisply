@@ -1,4 +1,4 @@
-package routers
+package public
 
 import (
 	"github.com/astaxie/beego"
@@ -6,11 +6,8 @@ import (
 	"github.com/cristian-sima/Wisply/controllers/public"
 )
 
-func loadPublic() {
-	// ----------------------------- PUBLIC  --------------------------------------
-
-	// Note: I can not group these into namespace because they share "/" path
-	// Note: The public namespace should be created (NewNamespace)
+// Load tells the framework to load the addresses for the router
+func Load() {
 
 	beego.Router("/", &public.Static{}, "*:ShowIndex")
 	beego.Router("/about", &public.Static{}, "*:ShowAbout")

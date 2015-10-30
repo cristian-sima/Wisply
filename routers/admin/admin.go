@@ -1,16 +1,12 @@
-package routers
+package admin
 
 import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 )
 
-func loadAdmin() {
-
-	// ----------------------------- ADMIN --------------------------------------
-
-	// admin
-	// ----------------------------- Repositories -------------------------------
+// Load tells the framework to load the addresses for the router
+func Load() {
 
 	adminRepositoryNS := beego.NSNamespace("/repositories",
 		beego.NSRouter("", &admin.Repository{}, "*:List"),

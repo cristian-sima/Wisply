@@ -1,11 +1,11 @@
-package routers
+package developers
 
 import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/api"
 )
 
-func loadDevelopers() {
+func Load() {
 
 	// api
 	// ----------------------------- Repository ----------------------------------

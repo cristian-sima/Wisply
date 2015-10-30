@@ -874,7 +874,7 @@ var PublicRepositoryModule = function() {
 						var text = "",
 							htmlRight = "";
 						if (instance.hideEmptyCollections) {
-							text = "<span class='glyphicon glyphicon-chevron-down'></span> Display empty";
+							text = "<span data-toggle='tooltip' title='Show the empty categories'><span class='glyphicon glyphicon-chevron-down'></span> Display empty</span>";
 						} else {
 							text = "<span class='glyphicon glyphicon-chevron-up'></span> Hide empty";
 						}
@@ -906,14 +906,16 @@ var PublicRepositoryModule = function() {
 					 * It activates the listeners for "Show all" and "Hide empty" buttons
 					 */
 					function activateTop() {
+						var hideEmpty = $(".hide-empty-collections");
 						$(".show-all-collections").click(function(event) {
 							event.preventDefault();
 							instance.toggleAllCollections();
 						});
-						$(".hide-empty-collections").click(function(event) {
+						hideEmpty.click(function(event) {
 							event.preventDefault();
 							instance.toggleEmptyCollections();
 						});
+						wisply.activateTooltip();
 					}
 					activateTop();
 					instance.activateCollection();

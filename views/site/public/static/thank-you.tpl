@@ -16,14 +16,18 @@
           In this way, Wisply thanks:<br />
           <div style="width:200px">
             <div class="list-group">
+              <a target="_blank" class="list-group-item" href="https://github.com/"><span class="glyphicon glyphicon-star-empty"></span> GitHub</a>
               <a target="_blank" class="list-group-item" href="http://getbootstrap.com/"><span class="glyphicon glyphicon-star-empty"></span> Bootstrap</a>
               <a target="_blank" class="list-group-item" href="http://glyphicons.com/"><span class="glyphicon glyphicon-star-empty"></span> Glyphicons</a>
+              <a target="_blank" class="list-group-item" href="https://golang.org/"><span class="glyphicon glyphicon-star-empty"></span> beego framework</a>
               <a target="_blank" class="list-group-item" href="https://golang.org/"><span class="glyphicon glyphicon-star-empty"></span> Go lang</a>
               <a target="_blank" class="list-group-item" href="http://stackoverflow.com/"><span class="glyphicon glyphicon-star-empty"></span> Stackoverflow</a>
               <a target="_blank" class="list-group-item" href="https://bootswatch.com/"><span class="glyphicon glyphicon-star-empty"></span> Bootswatch</a>
-              <a target="_blank" class="list-group-item" href="https://github.com/"><span class="glyphicon glyphicon-star-empty"></span> GitHub</a>
               <a target="_blank" class="list-group-item" href="https://atom.io/"><span class="glyphicon glyphicon-star-empty"></span> Atom</a>
-              <a target="_blank" class="list-group-item" href="http://bootboxjs.com/"><span class="glyphicon glyphicon-star-empty"></span> Bootboxjs/</a>
+              <a target="_blank" class="list-group-item" href="http://bootboxjs.com/"><span class="glyphicon glyphicon-star-empty"></span> Bootboxjs</a>
+              <a target="_blank" class="list-group-item" href="https://jquery.com//"><span class="glyphicon glyphicon-star-empty"></span> JQuery</a>
+              <a target="_blank" class="list-group-item" href="https://gitter.im"><span class="glyphicon glyphicon-star-empty"></span> Gitter.im</a>
+              <a target="_blank" class="list-group-item" href="http://twitter.github.io/typeahead.js/"><span class="glyphicon glyphicon-star-empty"></span> typeahead</a>
             </div>
           </div>
         </section>

@@ -5,6 +5,7 @@ type Home struct {
 	Controller
 }
 
+
 // Show displays the dashboard of an account
 func (controller *Home) Show() {
 	controller.SetCustomTitle("Account - Dashboard")

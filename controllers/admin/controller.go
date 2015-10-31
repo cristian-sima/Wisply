@@ -1,21 +1,19 @@
-// Package admin contains the controllers used on administration pages
-// The administration page is a restricted area and an account needs special priviledges
 package admin
 
-import general "github.com/cristian-sima/Wisply/controllers/general"
+import "github.com/cristian-sima/Wisply/controllers/wisply"
 
 // Controller must be inherited by all the pages that are for administrators
 // It ensures that an account is connected when accesing the page.
 type Controller struct {
-	general.WisplyController
+	wisply.Controller
 }
 
 // Prepare redirects to a login page in case the account is not connected,
 // else it loads the page
 func (controller *Controller) Prepare() {
-	controller.WisplyController.Prepare()
+	controller.Controller.Prepare()
 	if !controller.AccountConnected || !controller.Account.IsAdministrator {
-		controller.WisplyController.RedirectToLoginPage()
+		controller.Controller.RedirectToLoginPage()
 	} else {
 		controller.initPage()
 	}

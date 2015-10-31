@@ -8,10 +8,10 @@ import (
 func getSearch() func(*beego.Namespace) {
 	ns := beego.NSNamespace("/search",
 		beego.NSNamespace("/anything/:query",
-			beego.NSRouter("", &api.Search{}, "*:SearchAnything"),
+			beego.NSRouter("", &developer.Search{}, "*:SearchAnything"),
 		),
 		beego.NSNamespace("/save/:query",
-			beego.NSRouter("", &api.Search{}, "POST:JustSaveAccountQuery"),
+			beego.NSRouter("", &developer.Search{}, "POST:JustSaveAccountQuery"),
 		),
 	)
 	return ns

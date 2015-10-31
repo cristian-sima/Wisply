@@ -1,4 +1,4 @@
-package general
+package wisply
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 
 // Captcha encapsulates the operations for Captcha
 type Captcha struct {
-	Controller
+	Adapter
 }
 
 // Serve is an adaptation for beegoo for the captcha package

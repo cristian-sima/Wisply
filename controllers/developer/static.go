@@ -1,4 +1,4 @@
-package api
+package developer
 
 // Static shows the public HTML page for the API
 type Static struct {

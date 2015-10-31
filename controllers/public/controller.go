@@ -1,19 +1,16 @@
-// Package public manages all the public pages that do not require a connection
 package public
 
-import (
-	general "github.com/cristian-sima/Wisply/controllers/general"
-)
+import "github.com/cristian-sima/Wisply/controllers/wisply"
 
 // Controller can be accsed by the users who are not connected
 type Controller struct {
-	general.WisplyController
+	wisply.Controller
 }
 
 // Prepare redirects to a login page in case the account is not connected,
 // else it loads the page
 func (controller *Controller) Prepare() {
-	controller.WisplyController.Prepare()
+	controller.Controller.Prepare()
 	controller.loadLayout()
 }
 

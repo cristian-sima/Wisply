@@ -8,7 +8,7 @@ import (
 	auth "github.com/cristian-sima/Wisply/models/auth"
 )
 
-// Auth inherits the WisplyController
+// Auth inherits the Controller
 // It manages the operations with the authentication
 type Auth struct {
 	Controller

@@ -1,4 +1,3 @@
-// Package admin contains all the controllers of the application
 package admin
 
 import (

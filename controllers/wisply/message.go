@@ -1,4 +1,4 @@
-package general
+package wisply
 
 import (
 	"github.com/astaxie/beego"
@@ -7,7 +7,7 @@ import (
 
 // Message encapsulates the operations for showing messages
 type Message struct {
-	Controller
+	Adapter
 }
 
 // DisplaySimpleError shows an simple error message (string)

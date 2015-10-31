@@ -1,9 +1,6 @@
-// Package api contains all the objects which manage the API requests
-package api
+package developer
 
-import (
-	"github.com/cristian-sima/Wisply/controllers/general"
-)
+import "github.com/cristian-sima/Wisply/controllers/wisply"
 
 var messages = map[string]string{
 	"tableNotAllowed": "Wisply does not know this table :(",
@@ -11,7 +8,7 @@ var messages = map[string]string{
 
 // Controller represents the basic API controller
 type Controller struct {
-	general.WisplyController
+	wisply.Controller
 }
 
 // ShowHomePage shows the static home page for API

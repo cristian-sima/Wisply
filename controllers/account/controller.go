@@ -1,22 +1,20 @@
-// Package account contrains the controllers which manage the account activity
-// A controller from this package is access only BY THE CONNECTED ACCOUNTS
 package account
 
 import (
-	"github.com/cristian-sima/Wisply/controllers/general"
+	"github.com/cristian-sima/Wisply/controllers/wisply"
 )
 
 // Controller represents the basic Account controller
 type Controller struct {
-	general.WisplyController
+	wisply.Controller
 }
 
 // Prepare redirects to a login page in case the account is not connected,
 // else it loads the page
 func (controller *Controller) Prepare() {
-	controller.WisplyController.Prepare()
+	controller.Controller.Prepare()
 	if !controller.AccountConnected {
-		controller.WisplyController.RedirectToLoginPage()
+		controller.Controller.RedirectToLoginPage()
 	}
 	controller.loadLayout()
 }

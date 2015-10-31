@@ -1,6 +1,6 @@
-// Package general is not used on any page, but it is inherited by the other controllers
+// Package wisply is not used on any page, but it is inherited by the other controllers
 // Contains basic functions such as generating XSRF token or connecting the account
-package general
+package wisply
 
 import (
 	"html/template"
@@ -10,26 +10,26 @@ import (
 	"github.com/cristian-sima/Wisply/models/curriculum"
 )
 
-// WisplyController inherits the MessageController
+// Controller inherits the MessageController
 // Its role is to maintain the connection of the account
-type WisplyController struct {
+type Controller struct {
 	Message
 	AccountConnected bool
 	Account          *auth.Account
 }
 
 // GenerateXSRF generates and sends to template the XSRF code
-func (controller *WisplyController) GenerateXSRF() {
+func (controller *Controller) GenerateXSRF() {
 	code := controller.XsrfFormHtml()
 	controller.Data["xsrf_input"] = template.HTML(code)
 }
 
 // Prepare checks the state of connection and inits the database
-func (controller *WisplyController) Prepare() {
+func (controller *Controller) Prepare() {
 	controller.initState()
 }
 
-func (controller *WisplyController) initState() {
+func (controller *Controller) initState() {
 	session := controller.GetSession("account-id")
 	if session != nil {
 		id := (session).(string)
@@ -40,11 +40,11 @@ func (controller *WisplyController) initState() {
 	controller.loadPrograms()
 }
 
-func (controller *WisplyController) loadPrograms() {
+func (controller *Controller) loadPrograms() {
 	controller.Data["programs"] = curriculum.GetAllPrograms()
 }
 
-func (controller *WisplyController) checkConnectionCookie() {
+func (controller *Controller) checkConnectionCookie() {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
 	if cookie != "" {
@@ -61,7 +61,7 @@ func (controller *WisplyController) checkConnectionCookie() {
 }
 
 // DeleteConnectionCookie deletes the cookies
-func (controller *WisplyController) DeleteConnectionCookie() {
+func (controller *Controller) DeleteConnectionCookie() {
 	cookieName := auth.Settings["cookieName"].(string)
 	cookiePath := auth.Settings["cookiePath"].(string)
 	cookie := controller.Ctx.GetCookie(cookieName)
@@ -70,12 +70,12 @@ func (controller *WisplyController) DeleteConnectionCookie() {
 	}
 }
 
-func (controller *WisplyController) initDisconnectedState() {
+func (controller *Controller) initDisconnectedState() {
 	controller.AccountConnected = false
 	controller.Data["accountDisconnected"] = true
 }
 
-func (controller *WisplyController) initConnectedState(id string) {
+func (controller *Controller) initConnectedState(id string) {
 	account, _ := auth.NewAccount(id)
 	controller.Account = account
 	controller.AccountConnected = true
@@ -84,13 +84,13 @@ func (controller *WisplyController) initConnectedState(id string) {
 }
 
 // IsAccountConnected checks if there is any account connected
-func (controller *WisplyController) IsAccountConnected() bool {
+func (controller *Controller) IsAccountConnected() bool {
 	return controller.AccountConnected
 }
 
 // IndicateLastModification shows in the footer the data when the page has been last modified
 // Please use http://www.timestampgenerator.com/
-func (controller *WisplyController) IndicateLastModification(timestamp int64) {
+func (controller *Controller) IndicateLastModification(timestamp int64) {
 	formatedString := time.Unix(timestamp, 0).Format(time.ANSIC)
 	controller.Data["indicateLastModification"] = true
 	controller.Data["lastModification"] = formatedString
@@ -98,18 +98,18 @@ func (controller *WisplyController) IndicateLastModification(timestamp int64) {
 
 // SetCustomTitle sets a custom title for the page.
 // If the function is not called, it sets the title "Wisply"
-func (controller *WisplyController) SetCustomTitle(title string) {
+func (controller *Controller) SetCustomTitle(title string) {
 	controller.Data["customTitle"] = title
 }
 
 // ShowBlankPage displays a blank page
-func (controller *WisplyController) ShowBlankPage() {
+func (controller *Controller) ShowBlankPage() {
 	controller.Layout = "site/blank-layout.tpl"
 	controller.TplNames = "site/blank.tpl"
 }
 
 // RedirectToLoginPage redirects the account to the login page
-func (controller *WisplyController) RedirectToLoginPage() {
+func (controller *Controller) RedirectToLoginPage() {
 
 	loginPath := "/auth/login"
 	addressParameter := "sendMe"

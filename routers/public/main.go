@@ -4,8 +4,8 @@ package public
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/cristian-sima/Wisply/controllers/general"
 	"github.com/cristian-sima/Wisply/controllers/public"
+	"github.com/cristian-sima/Wisply/controllers/wisply"
 )
 
 // Load tells the framework to load the addresses for the router
@@ -52,7 +52,7 @@ func loadHelp() {
 }
 
 func loadCaptcha() {
-	beego.Router("/captcha/:id\\.:type", &general.Captcha{}, "*:Serve")
+	beego.Router("/captcha/:id\\.:type", &wisply.Captcha{}, "*:Serve")
 }
 
 func loadOthers() {

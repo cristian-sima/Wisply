@@ -14,11 +14,11 @@ func Load() {
 
 	developer :=
 		beego.NewNamespace("/api",
-			beego.NSRouter("", &api.Static{}, "GET:ShowHomePage"),
+			beego.NSRouter("", &developer.Static{}, "GET:ShowHomePage"),
 			beego.NSNamespace("/table/",
-				beego.NSRouter("list", &api.Table{}, "GET:ShowList"),
-				beego.NSRouter("generate/:name", &api.Table{}, "*:GenerateTable"),
-				beego.NSRouter("download/:name", &api.Table{}, "*:DownloadTable"),
+				beego.NSRouter("list", &developer.Table{}, "GET:ShowList"),
+				beego.NSRouter("generate/:name", &developer.Table{}, "*:GenerateTable"),
+				beego.NSRouter("download/:name", &developer.Table{}, "*:DownloadTable"),
 			),
 			search,
 			repository,

@@ -20,7 +20,7 @@ var PublicResourceModule = function() {
 	var Page = function Page(o) {
 		this.similarCategory = new DIV(this, {
 			selector: "#div-same-collection",
-			url: "/api/repository/resources/" + o.repository.id + "/get/0/10?collection=&format=html",
+			url: "/developer/repository/resources/" + o.repository.id + "/get/0/10?collection=&format=html",
 		});
 		this.repository = o.repository;
 		this.resource = o.resource;

@@ -1,22 +1,22 @@
 
-describe('API & Developers', function() {
-      it('goes to API & Developers page', function(done){
+describe('Developers & Research', function() {
+      it('goes to Developers & Research page', function(done){
         browser.
-          url('/api')
+          url('/developer')
           .pause(1000)
           .getTitle(function(err, title) {
               expect(err).toBe(undefined);
-              expect(title).toBe("API & Developers");
+              expect(title).toBe("Developers & Research");
           })
           .call(done);
       });
-      it('goes to API page for tables', function(done){
+      it('goes to developer page for tables', function(done){
         browser.
-            url('/api/table/list')
+            url('/developer/table/list')
             .pause(1000)
             .getTitle(function(err, title) {
                 expect(err).toBe(undefined);
-                expect(title).toBe("API & Developers");
+                expect(title).toBe("Developers & Research");
             })
             .call(done);
       });
@@ -30,7 +30,7 @@ describe('API & Developers', function() {
               .pause(2000)
               .getTitle(function(err, title) {
                   expect(err).toBe(undefined);
-                  expect(title).toBe("API & Developers");
+                  expect(title).toBe("Developers & Research");
               })
               .pause(1500)
               .call(done);

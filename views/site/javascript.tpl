@@ -41,7 +41,7 @@ $(document).ready(function(){
   var module = wisply.getModule("search");
   wisply.search = new module.Field({
     selector: '.wisply-search-field',
-    URL: "/api/search/anything/",
+    URL: "/developer/search/anything/",
     saveSearches: true,
   });
 });

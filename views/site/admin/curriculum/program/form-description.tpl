@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
           <div class="col-lg-10 col-lg-offset-2">
-            <input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" /> <a href="/admin/api" class="btn btn-default">Cancel</a> </div>
+            <input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" /> <a href="/admin/developer" class="btn btn-default">Cancel</a> </div>
           </div>
         </fieldset>
       </form>

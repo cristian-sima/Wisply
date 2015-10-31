@@ -65,8 +65,8 @@
                 Of course! <br />
                 There are two main ways to get Wisply data <br />
                 <ol>
-                  <li>HTTP requests using our Application Programming Interface (API). The list of requests is on <a href="api#http">API page</a>.</li>
-                  <li>You can download the entire tables which Wisply is using. <a class="btn btn-xs btn-primary" href="api/table/list">See list of tables</a></li>
+                  <li>HTTP requests using our Application Programming Interface (developer). The list of requests is on <a href="developer#http">developer page</a>.</li>
+                  <li>You can download the entire tables which Wisply is using. <a class="btn btn-xs btn-primary" href="developer/table/list">See list of tables</a></li>
                 </ol>
               </article>
               <article id="help-answers-3" class="well">

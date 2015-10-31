@@ -1041,7 +1041,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  templateSpec.main.decorator = templateSpec.main_d;
 
 	  // Note: Using env.VM references rather than local var references throughout this section to allow
-	  // for external users to override these as psuedo-supported APIs.
+	  // for external users to override these as psuedo-supported developers.
 	  env.VM.checkRevision(templateSpec.compiler);
 
 	  function invokePartialWrapper(partial, context, options) {
@@ -1309,7 +1309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.__esModule = true;
 	var AST = {
-	  // Public API used to evaluate derived attributes regarding AST nodes
+	  // Public developer used to evaluate derived attributes regarding AST nodes
 	  helpers: {
 	    // a mustache is definitely a helper if:
 	    // * it is an eligible helper, and
@@ -3329,7 +3329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function JavaScriptCompiler() {}
 
 	JavaScriptCompiler.prototype = {
-	  // PUBLIC API: You can override these methods in a subclass to provide
+	  // PUBLIC developer: You can override these methods in a subclass to provide
 	  // alternative compiled forms for name lookup and buffering semantics
 	  nameLookup: function nameLookup(parent, name /* , type*/) {
 	    if (JavaScriptCompiler.isValidJavaScriptVariableName(name)) {
@@ -3371,7 +3371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  initializeBuffer: function initializeBuffer() {
 	    return this.quotedString('');
 	  },
-	  // END PUBLIC API
+	  // END PUBLIC developer
 
 	  compile: function compile(environment, options, context, asObject) {
 	    this.environment = environment;

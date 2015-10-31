@@ -8925,7 +8925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    text.wrap = "off";
 	    text.autocorrect = "off";
-	    text.autocapitalize = "off";
+	    text.autocdevelopertalize = "off";
 	    text.spellcheck = false;
 
 	    text.style.opacity = "0";

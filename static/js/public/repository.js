@@ -166,7 +166,7 @@ var PublicRepositoryModule = function() {
 				}
 				this.showLoading();
 				$.ajax({
-					url: "/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcesPerPage,
+					url: "/developer/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcesPerPage,
 					data: {
 						"collection": getCollection(),
 						"format": "html",

@@ -165,7 +165,7 @@
           <ul >
             <li>use excessive bandwidth</li>
             <li>initiate excessive file uploads</li>
-            <li>initiate excessive application programming interface (API) calls</li>
+            <li>initiate excessive application programming interface (developer) calls</li>
             <li>reproduce, duplicate, copy or re-sell any part of Wisply in contravention of the provisions of our terms of use</li>
             <li>access without authority, interfere with, damage or disrupt:
               <ul>

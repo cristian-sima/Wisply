@@ -1,2 +1,2 @@
-// Package curriculum contains all the information about the curriculum
+// Package curriculum manages the operations regarding the curriculum
 package curriculum

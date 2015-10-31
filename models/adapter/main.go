@@ -1,4 +1,4 @@
-// Package adapter contains the functionality for adapting 3rd party modules to wisply
+// Package adapter contains the functionality for adapting 3rd party modules to Wisply
 package adapter
 
 import (

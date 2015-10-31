@@ -1,4 +1,4 @@
-// Package search contains all the objects for searching
+// Package search manages the search operations
 package search
 
 var (

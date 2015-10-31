@@ -1,4 +1,4 @@
-package api
+package developer
 
 import (
 	wisply "github.com/cristian-sima/Wisply/models/adapter"

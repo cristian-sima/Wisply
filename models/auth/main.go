@@ -1,3 +1,4 @@
+// Package auth manages the authentication's operations for the account
 package auth
 
 import (

@@ -1,5 +1,5 @@
-// Package wisply represents a Wisply repository
-// It contains the metadata from the remote repository and the processed data
+// Package wisply contains the metadata from the remote repository and the
+// processed data
 package wisply
 
 import (

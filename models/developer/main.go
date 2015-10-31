@@ -1,6 +1,5 @@
-// Package api contains the methods to export data as API requests or
-// by downloading entire tables
-package api
+// Package developer manages the operations for developers and research community
+package developer
 
 import "github.com/cristian-sima/Wisply/models/database"
 

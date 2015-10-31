@@ -19,11 +19,11 @@ type Table struct {
 
 // ShowList displays the list of available tables to be downloaded
 func (controller *Table) ShowList() {
-	controller.Data["tables"] = api.GetAllowedTables()
+	controller.Data["tables"] = developer.GetAllowedTables()
 	controller.Layout = "site/public-layout.tpl"
-	controller.TplNames = "site/api/table/list.tpl"
+	controller.TplNames = "site/developer/table/list.tpl"
 	// Please use http://www.timestampgenerator.com/
-	controller.SetCustomTitle("API & Developers")
+	controller.SetCustomTitle("Developers & Research")
 	controller.IndicateLastModification(1445250987)
 }
 
@@ -35,16 +35,16 @@ func (controller *Table) GenerateTable() {
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	pathToFolder := "cache/api/tables/"
+	pathToFolder := "cache/developer/tables/"
 	fullPath := pathToFolder + "/" + filename
 	file, err := controller.getTable(fullPath)
 	if err != nil {
-		api.GenerateTableFile(tableName, format)
+		developer.GenerateTableFile(tableName, format)
 	} else {
 		if controller.checkFileIsStillValid(fullPath) {
 			controller.closeFile(file)
 			controller.deleteFile(fullPath)
-			api.GenerateTableFile(tableName, format)
+			developer.GenerateTableFile(tableName, format)
 		}
 	}
 	controller.ShowBlankPage()
@@ -58,9 +58,9 @@ func (controller *Table) DownloadTable() {
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	folderPath := "cache/api/tables/"
+	folderPath := "cache/developer/tables/"
 	fullPath := folderPath + "/" + filename
-	if api.IsRestrictedTable(tableName) {
+	if developer.IsRestrictedTable(tableName) {
 		controller.DisplaySimpleError(messages["tableNotAllowed"])
 	} else {
 		var (

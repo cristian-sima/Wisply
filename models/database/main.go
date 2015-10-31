@@ -1,5 +1,4 @@
-// Package database contains the functions to connect to database
-// Also, it provides some useful objects such as SQLBuffer or SQLOptions
+// Package database manages the operations for database
 package database
 
 import (
@@ -11,6 +10,11 @@ import (
 
 	// the driver
 	_ "github.com/go-sql-driver/mysql"
+)
+
+// Connection represents the object which holds the connection to the database
+var (
+	Connection *sql.DB
 )
 
 // GetBoolFromInt transforms the int to bool
@@ -28,11 +32,6 @@ func GetIntFromBool(boolValue bool) int {
 	}
 	return 0
 }
-
-// Connection represents the object which holds the connection to the database
-var (
-	Connection *sql.DB
-)
 
 // Db manages the connection to database
 type Db struct {

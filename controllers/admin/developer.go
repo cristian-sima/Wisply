@@ -6,7 +6,7 @@ import (
 	"github.com/cristian-sima/Wisply/models/developer"
 )
 
-// Developers manages the operation for API
+// Developers manages the operation for developer
 type Developers struct {
 	Controller
 }
@@ -14,7 +14,7 @@ type Developers struct {
 // RemoveAllowedTable removes the table from the list
 func (controller *Developers) RemoveAllowedTable() {
 	ID := strings.TrimSpace(controller.GetString("table-id"))
-	table, err := api.NewTable(ID)
+	table, err := developer.NewTable(ID)
 	if err != nil {
 		controller.DisplaySimpleError(err.Error())
 	} else {
@@ -23,7 +23,7 @@ func (controller *Developers) RemoveAllowedTable() {
 			controller.Abort("404")
 		} else {
 			message := "The table " + table.Name + " is no longer available to download."
-			goTo := "/admin/api"
+			goTo := "/admin/developer"
 			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
@@ -33,19 +33,19 @@ func (controller *Developers) RemoveAllowedTable() {
 func (controller *Developers) InsertNewTable() {
 	name := strings.TrimSpace(controller.GetString("table-name"))
 	description := strings.TrimSpace(controller.GetString("table-description"))
-	table := api.Table{
+	table := developer.Table{
 		Name:        name,
 		Description: description,
 	}
-	if !api.AreValidDetails(table) {
+	if !developer.AreValidDetails(table) {
 		controller.DisplaySimpleError("This table name can't be inserted.")
 	} else {
-		err := api.InsertNewTable(table)
+		err := developer.InsertNewTable(table)
 		if err != nil {
 			controller.DisplaySimpleError(err.Error())
 		} else {
 			message := "The table is now available to be downloaded!"
-			goTo := "/admin/api"
+			goTo := "/admin/developer"
 			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
@@ -54,7 +54,7 @@ func (controller *Developers) InsertNewTable() {
 // ShowAddForm shows the form to add a table to the download list
 func (controller *Developers) ShowAddForm() {
 	controller.Data["type"] = "Add"
-	controller.SetCustomTitle("Admin - API - Add table")
+	controller.SetCustomTitle("Admin - developer - Add table")
 	controller.showForm()
 }
 
@@ -62,7 +62,7 @@ func (controller *Developers) ShowAddForm() {
 func (controller *Developers) ShowModifyForm() {
 	controller.Data["type"] = "Modify"
 	id := controller.Ctx.Input.Param(":id")
-	table, _ := api.NewTable(id)
+	table, _ := developer.NewTable(id)
 	controller.Data["currentTable"] = table
 	controller.SetCustomTitle("Modify table")
 	controller.showForm()
@@ -72,16 +72,16 @@ func (controller *Developers) ShowModifyForm() {
 func (controller *Developers) ModifyTable() {
 	id := strings.TrimSpace(controller.GetString("table-id"))
 	description := strings.TrimSpace(controller.GetString("table-description"))
-	table, err := api.NewTable(id)
+	table, err := developer.NewTable(id)
 	if err != nil {
 		controller.DisplaySimpleError("This table is not found")
 	} else {
-		err := api.ModifyDetails(table, description)
+		err := developer.ModifyDetails(table, description)
 		if err != nil {
 			controller.DisplaySimpleError(err.Error())
 		} else {
 			message := "The table is now available to be downloaded!"
-			goTo := "/admin/api"
+			goTo := "/admin/developer"
 			controller.DisplaySuccessMessage(message, goTo)
 		}
 	}
@@ -89,15 +89,15 @@ func (controller *Developers) ModifyTable() {
 
 func (controller *Developers) showForm() {
 	controller.GenerateXSRF()
-	controller.Data["tables"] = api.GetWisplyTablesNamesNotAllowed()
+	controller.Data["tables"] = developer.GetWisplyTablesNamesNotAllowed()
 	controller.Data["action"] = "Allow table to be downloaded"
-	controller.TplNames = "site/admin/api/form.tpl"
+	controller.TplNames = "site/admin/developer/form.tpl"
 }
 
 // ShowHomePage displays the home page
 func (controller *Developers) ShowHomePage() {
 	controller.GenerateXSRF()
-	controller.Data["tables"] = api.GetAllowedTables()
-	controller.SetCustomTitle("Admin - API")
-	controller.TplNames = "site/admin/api/home.tpl"
+	controller.Data["tables"] = developer.GetAllowedTables()
+	controller.SetCustomTitle("Admin - developer")
+	controller.TplNames = "site/admin/developer/home.tpl"
 }

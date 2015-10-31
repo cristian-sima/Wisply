@@ -22,6 +22,7 @@
               <hr />
               <div class="text-left">
                 <a target="_blank" href="{{ .repository.PublicURL }}">Web page</a>
+                <div>{{ .repository.Category }} repository</div>
               </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6" >
@@ -35,7 +36,6 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <div>Part of <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
-              <div><i>{{ .repository.Category }}</i> repository</div>
             </div>
           </div>
           <div>

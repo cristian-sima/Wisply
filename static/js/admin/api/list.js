@@ -65,7 +65,8 @@ var AdminAPIModule = function() {
 				var buttons,
 					cancelButton,
 					msg,
-					mainButton;
+					mainButton,
+					instance = this;
 				cancelButton = {
 					label: "No, thanks",
 					className: "btn-success",
@@ -77,7 +78,7 @@ var AdminAPIModule = function() {
 					label: "Yes",
 					className: "btn-danger",
 					callback: function() {
-						wisply.tablesManager.delete(table);
+						instance.delete(table);
 					}
 				};
 				buttons = {

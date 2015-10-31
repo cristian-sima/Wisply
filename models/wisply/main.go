@@ -20,24 +20,15 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows *sql.Rows
 		err  error
 	)
-	fieldList := "record.`identifier`, record.`id`, record.`datestamp`"
+	fieldList := "record.`identifier`, record.`id`, record.`datestamp`, record.`repository`, record.`isVisible`"
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
 		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
-		fmt.Println(sql)
 		rows, err = database.Connection.Query(sql, repositoryID)
 	} else {
-
-		// this takes too long
-		//sql := "SELECT " + fieldList + " FROM `repository_resource` AS record INNER JOIN `identifier_set` ON `record`.`identifier` = `identifier_set`.`identifier` WHERE `identifier_set`.`setSpec` = ? ORDER BY record.id DESC " + options.GetLimit()
-
-		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
-
+		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
 		rows, err = database.Connection.Query(sql, options.Where["collection"])
-
-		fmt.Println(sql)
-		fmt.Println()
 	}
 
 	if err != nil {
@@ -47,20 +38,25 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 
 	counter := 0
 	for rows.Next() {
+		var isVisibleInt int
+
 		counter++
 		record := &Record{}
-		rows.Scan(&record.Identifier, &record.ID, &record.Timestamp)
+
+		rows.Scan(&record.Identifier, &record.ID, &record.Timestamp, &record.Repository, &isVisibleInt)
+		record.IsVisible = database.GetBoolFromInt(isVisibleInt)
 
 		if record.ID == 0 {
-
-			sql := "SELECT `id`, `datestamp`, `repository` FROM `repository_resource` WHERE identifier = ?"
+			sql := "SELECT `id`, `datestamp`, `repository`, `isVisible` FROM `repository_resource` WHERE identifier = ?"
 			query, err := database.Connection.Prepare(sql)
 
 			if err != nil {
 				fmt.Println(err)
 			}
-
-			query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp, &record.Repository)
+			fmt.Println(record.Identifier)
+			err = query.QueryRow(record.Identifier).Scan(&record.ID, &record.Timestamp, &record.Repository, &isVisibleInt)
+			record.IsVisible = database.GetBoolFromInt(isVisibleInt)
+			fmt.Println(err)
 		}
 		sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
 		rows2, _ := database.Connection.Query(sql2, record.Identifier)
@@ -91,16 +87,19 @@ func GetRecordByIdentifier(value string) Record {
 }
 
 func getRecord(byFild, value string) (Record, error) {
+	var isVisibleInt int
 	record := Record{}
 
-	sql := "SELECT `id`, `datestamp`, `identifier`, `repository` FROM `repository_resource` WHERE " + byFild + " = ?"
+	sql := "SELECT `id`, `datestamp`, `identifier`, `repository`, `isVisible` FROM `repository_resource` WHERE " + byFild + " = ?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {
 		return record, err
 	}
 
-	query.QueryRow(value).Scan(&record.ID, &record.Timestamp, &record.Identifier, &record.Repository)
+	query.QueryRow(value).Scan(&record.ID, &record.Timestamp, &record.Identifier, &record.Repository, &isVisibleInt)
+
+	record.IsVisible = database.GetBoolFromInt(isVisibleInt)
 
 	sql2 := "SELECT `resource_key`, `value` FROM `resource_key` WHERE `resource`=? "
 	rows2, keyErr := database.Connection.Query(sql2, record.Identifier)

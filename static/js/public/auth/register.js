@@ -64,22 +64,18 @@ var RegisterModule = function() {
 			 * It is called when the form has been submitted. It shows the loading button
 			 */
 			submittedListener: function() {
-				$("#register-form").on("submit", this.FireSubmited);
-			},
-			/**
-			 * It is called when the RegisterModule form has been submitted. It checks if the confirmation password is the same as the password. If so, it submits the form, else it shows a message
-			 * @param  {Event} event The event which is generated
-			 */
-			FireSubmited: function(event) {
-				event.preventDefault();
-				var password = $('#register-password').val(),
-					confirmationPassword = $("#register-password-confirm").val();
-				if (password === confirmationPassword) {
-					RegisterModule.showLoading();
-					this.submit();
-				} else {
-					RegisterModule.showPasswordsDoNotMatch();
-				}
+				var instance = this;
+				$("#register-form").on("submit", function(event){
+					event.preventDefault();
+					var password = $('#register-password').val(),
+						confirmationPassword = $("#register-password-confirm").val();
+					if (password === confirmationPassword) {
+						instance.showLoading();
+						this.submit();
+					} else {
+						instance.showPasswordsDoNotMatch();
+					}
+				});
 			},
 			/**
 			 * It shows the confirmation password field
@@ -106,7 +102,7 @@ var RegisterModule = function() {
 					buttons: {
 						cancel: {
 							label: "Ok",
-							className: "btn-default",
+							className: "btn-primary",
 							callback: function() {
 								this.modal('hide');
 							}

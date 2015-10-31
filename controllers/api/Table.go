@@ -60,7 +60,7 @@ func (controller *Table) DownloadTable() {
 	filename := tableName + "." + format
 	folderPath := "cache/api/tables/"
 	fullPath := folderPath + "/" + filename
-	if !api.IsAllowedTable(tableName) {
+	if api.IsRestrictedTable(tableName) {
 		controller.DisplaySimpleError(messages["tableNotAllowed"])
 	} else {
 		var (

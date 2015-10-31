@@ -67,14 +67,14 @@ var PublicRepositoryModule = function() {
 						"type": "keyup",
 						"key": "Ctrl+left",
 						"callback": function() {
-							wisply.publicRepositoryModule.manager.showPrevious();
+							instance.showPrevious();
 						},
 						"description": "Receives the next page of resources",
 					}, {
 						"type": "keyup",
 						"key": "Ctrl+right",
 						"callback": function() {
-							wisply.publicRepositoryModule.manager.showNext();
+							instance.showNext();
 						},
 						"description": "Receives the previous page of resources",
 					}, {
@@ -858,9 +858,9 @@ var PublicRepositoryModule = function() {
 						if (instance.manager.collection) {
 							var text = "";
 							if (!instance.showAll) {
-								text = "Show all";
+								text = "<span class='glyphicon glyphicon-collapse-down'></span> Show all";
 							} else {
-								text = "Hide all";
+								text = "<span class='glyphicon glyphicon-collapse-up'></span> Hide all";
 							}
 							htmlLeft = "<span href='' class='hover link show-all-collections text-muted'>" + text + "</span>";
 						}
@@ -874,9 +874,9 @@ var PublicRepositoryModule = function() {
 						var text = "",
 							htmlRight = "";
 						if (instance.hideEmptyCollections) {
-							text = "Display empty";
+							text = "<span data-toggle='tooltip' title='Show the empty categories'><span class='glyphicon glyphicon-chevron-down'></span> Display empty</span>";
 						} else {
-							text = "Hide empty";
+							text = "<span class='glyphicon glyphicon-chevron-up'></span> Hide empty";
 						}
 						htmlRight = "<span href='' class='hover link hide-empty-collections text-muted'>" + text + "</span>";
 						return htmlRight;
@@ -906,14 +906,16 @@ var PublicRepositoryModule = function() {
 					 * It activates the listeners for "Show all" and "Hide empty" buttons
 					 */
 					function activateTop() {
+						var hideEmpty = $(".hide-empty-collections");
 						$(".show-all-collections").click(function(event) {
 							event.preventDefault();
 							instance.toggleAllCollections();
 						});
-						$(".hide-empty-collections").click(function(event) {
+						hideEmpty.click(function(event) {
 							event.preventDefault();
 							instance.toggleEmptyCollections();
 						});
+						wisply.activateTooltip();
 					}
 					activateTop();
 					instance.activateCollection();
@@ -1014,9 +1016,9 @@ var PublicRepositoryModule = function() {
 					var advanceHTML = "",
 						text = "";
 					if (instance.showMoreOptions) {
-						text = "<span class='glyphicon glyphicon-remove'></span> Hide options";
+						text = "<span class='glyphicon glyphicon-chevron-up'></span>  Hide options";
 					} else {
-						text = "Show more options";
+						text = "<span class='glyphicon glyphicon-chevron-down'></span> Show more options";
 					}
 					advanceHTML = "<span class='show-more-options hover text-muted'>" + text + "</span>";
 					return advanceHTML;

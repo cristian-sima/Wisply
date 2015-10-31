@@ -55,7 +55,7 @@
           </a>
           <ul class="dropdown-menu multi-level">
             <li>
-              <a href="/curricula" >
+              <a href="/curriculum" >
                 Curricula
               </a>
             </li>

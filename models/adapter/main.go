@@ -17,14 +17,14 @@ func Validate(rawData map[string]interface{}, rules validity.ValidationRules) *v
 // It can contain a simple message in the Message field
 // or it can encapsulets an entire validation result
 type WisplyError struct {
-	Data    map[string][]string
+	Data    *validity.ValidationResults
 	Message string
 }
 
 // GetMessage returns the message of the error message.
 // In case it is not only a string message, it checks how many error there are.
 func (err *WisplyError) GetMessage() string {
-	if len(err.Data) == 0 {
+	if err.Data == nil {
 		return err.getSimpleMessage()
 	}
 	return err.getFullMessage()
@@ -39,7 +39,7 @@ func (err *WisplyError) getSimpleMessage() string {
 }
 
 func (err *WisplyError) getFullMessage() string {
-	number := len(err.Data)
+	number := len(err.Data.Errors)
 	tempMsg := "Your request was not successful. There were problems with "
 	correctForm := ""
 	if number == 1 {

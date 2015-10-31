@@ -3,8 +3,11 @@
     {{range $index, $record := .records}}
     <tr>
       <td>
-          <a class="resource" href="{{ $record.Keys.GetURL }}">
+          <a class="resource" href="{{ $record.GetWisplyURL }}">
               <h4>
+                {{ if not $record.IsVisible }}
+                <small><span data-toggle='tooltip' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'></span></small>
+                {{ end }}
             {{range $index, $title := $record.Keys.Get "title" }}
             {{ $title }}
             {{ end }}

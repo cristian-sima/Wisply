@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/cristian-sima/validity"
+
 	. "github.com/smartystreets/goconvey/convey"
 )
 

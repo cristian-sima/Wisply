@@ -13,6 +13,22 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// GetBoolFromInt transforms the int to bool
+func GetBoolFromInt(intValue int) bool {
+	if intValue == 0 {
+		return false
+	}
+	return true
+}
+
+// GetIntFromBool transforms the bool to int
+func GetIntFromBool(boolValue bool) int {
+	if boolValue {
+		return 1
+	}
+	return 0
+}
+
 // Connection represents the object which holds the connection to the database
 var (
 	Connection *sql.DB

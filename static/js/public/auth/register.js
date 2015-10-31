@@ -70,7 +70,7 @@ var RegisterModule = function() {
 					var password = $('#register-password').val(),
 						confirmationPassword = $("#register-password-confirm").val();
 					if (password === confirmationPassword) {
-						RegisterModule.showLoading();
+						instance.showLoading();
 						this.submit();
 					} else {
 						instance.showPasswordsDoNotMatch();

@@ -10,6 +10,7 @@ import (
 )
 
 // Controller is the objects which connects Wisply with the framework controller
+// It is the most basic type of controller
 type Controller struct {
 	beego.Controller
 }

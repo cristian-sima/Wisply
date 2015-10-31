@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 
 	adapter "github.com/cristian-sima/Wisply/models/adapter"
 )
@@ -19,10 +20,10 @@ func (login *Login) Try(loginDetails map[string]interface{}) (adapter.WisplyErro
 	genericMessage := "There was a problem while login. " + thinkMessage
 
 	problem := adapter.WisplyError{}
-
 	result := isValidLogin(loginDetails)
 	if !result.IsValid {
 		problem.Data = result
+		fmt.Println(result.Errors)
 		return problem, errors.New("Error")
 	}
 

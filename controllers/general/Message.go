@@ -1,6 +1,9 @@
 package general
 
-import adapter "github.com/cristian-sima/Wisply/models/adapter"
+import (
+	"github.com/astaxie/beego"
+	adapter "github.com/cristian-sima/Wisply/models/adapter"
+)
 
 // Message encapsulates the operations for showing messages
 type Message struct {
@@ -20,8 +23,9 @@ func (controller *Message) DisplaySimpleError(msg string) {
 func (controller *Message) DisplayError(err adapter.WisplyError) {
 	content := err.GetMessage()
 	if len(err.Data.Errors) != 0 {
+		language := beego.AppConfig.String("language")
 		controller.Data["validationFailed"] = true
-		controller.Data["validationErrors"] = err.Data
+		controller.Data["validationErrors"] = err.Data.TranslateTo(language)
 	}
 	controller.displayMessage("error", content)
 }

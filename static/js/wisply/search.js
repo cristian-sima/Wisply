@@ -87,7 +87,7 @@ var SearchModule = function() {
 								 */
 								function saveQuery(suggestion) {
 									var requestObject = {
-										url: "/developer/search/save/" + suggestion.Title,
+										url: "/api/search/save/" + suggestion.Title,
 										success: function() {
 											window.location = suggestion.URL;
 										},

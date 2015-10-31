@@ -6,7 +6,7 @@ import (
 )
 
 func getDeveloper() func(*beego.Namespace) {
-	ns := beego.NSNamespace("/developer",
+	ns := beego.NSNamespace("/api",
 		beego.NSRouter("", &admin.Developers{}, "*:ShowHomePage"),
 		beego.NSNamespace("/add",
 			beego.NSRouter("", &admin.Developers{}, "GET:ShowAddForm"),

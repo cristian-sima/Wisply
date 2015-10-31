@@ -71,5 +71,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /nbproject/private/
-/cache/developer/tables/*.csv
+/cache/api/tables/*.csv
 Wisply.exe~

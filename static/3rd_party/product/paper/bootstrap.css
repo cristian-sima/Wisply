@@ -1,4 +1,4 @@
-@import url("https://fonts.googledevelopers.com/css?family=Roboto:300,400,500,700");
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700");
 /*!
  * bootswatch v3.3.5
  * Homepage: http://bootswatch.com
@@ -1335,8 +1335,8 @@ mark,
 .text-uppercase {
   text-transform: uppercase;
 }
-.text-cdevelopertalize {
-  text-transform: cdevelopertalize;
+.text-capitalize {
+  text-transform: capitalize;
 }
 .text-muted {
   color: #bbbbbb;

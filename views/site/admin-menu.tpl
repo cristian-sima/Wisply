@@ -32,10 +32,10 @@
       </a>
     </li>
     <li>
-      <a href="/admin/developer" >
-        <span class="glyphicon glyphicon-dashboard"></span>
+      <a href="/admin/api" >
+        <span class="glyphicon glyphicon-save"></span>
         <span class="hidden-sm hidden-xs">
-          Developers
+          API Settings
         </span>
       </a>
     </li>

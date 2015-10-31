@@ -27,7 +27,7 @@ var WikierModule = function() {
 	 * @classdesc It encapsulates the operations for wiki
 	 */
 	var Wikier = function Wikier() {
-		this.wikiURL = 'http://en.wikipedia.org/w/developer.php';
+		this.wikiURL = 'http://en.wikipedia.org/w/api.php';
     this.id = "";
 	};
 	Wikier.prototype =

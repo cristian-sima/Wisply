@@ -410,7 +410,7 @@
           <div class="col-lg-4">
             <div class="bs-component">
               <h2>Emphasis classes</h2>
-              <p class="text-muted">Fusce ddeveloperbus, tellus ac cursus commodo, tortor mauris nibh.</p>
+              <p class="text-muted">Fusce dapibus, tellus ac cursus commodo, tortor mauris nibh.</p>
               <p class="text-primary">Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
               <p class="text-warning">Etiam porta sem malesuada magna mollis euismod.</p>
               <p class="text-danger">Donec ullamcorper nulla non metus auctor fringilla.</p>
@@ -1014,7 +1014,7 @@
                 </li>
                 <li class="list-group-item">
                   <span class="badge">2</span>
-                  Ddeveloperbus ac facilisis in
+                  Dapibus ac facilisis in
                 </li>
                 <li class="list-group-item">
                   <span class="badge">1</span>
@@ -1029,7 +1029,7 @@
                 <a href="http://bootswatch.com/paper/#" class="list-group-item active">
                   Cras justo odio
                 </a>
-                <a href="http://bootswatch.com/paper/#" class="list-group-item">Ddeveloperbus ac facilisis in
+                <a href="http://bootswatch.com/paper/#" class="list-group-item">Dapibus ac facilisis in
                 </a>
                 <a href="http://bootswatch.com/paper/#" class="list-group-item">Morbi leo risus
                 </a>
@@ -1249,7 +1249,7 @@
               <li><a href="http://feeds.feedburner.com/bootswatch">RSS</a></li>
               <li><a href="https://twitter.com/bootswatch">Twitter</a></li>
               <li><a href="https://github.com/thomaspark/bootswatch/">GitHub</a></li>
-              <li><a href="http://bootswatch.com/help/#developer">developer</a></li>
+              <li><a href="http://bootswatch.com/help/#api">API</a></li>
               <li><a href="http://bootswatch.com/help/#support">Support</a></li>
             </ul>
             <p>Made by <a href="http://thomaspark.co/" rel="nofollow">Thomas Park</a>. Contact him at <a href="mailto:thomas@bootswatch.com">thomas@bootswatch.com<script cf-hash="f9e31" type="text/javascript">

@@ -38,7 +38,7 @@ var Wisply = function() {
 					document.getElementsByTagName('head')[0].appendChild(jf);
 				}
 				/**
-				 * It moves the Wisply navigation bar 41px down. (it prevents overldeveloperng with the bar). Also, it sets a listener for closing button, such that the bar goes back to original position
+				 * It moves the Wisply navigation bar 41px down. (it prevents overlaping with the bar). Also, it sets a listener for closing button, such that the bar goes back to original position
 				 */
 				function moveWisply() {
 					$(".navbar-fixed-top").css({
@@ -388,7 +388,7 @@ var Wisply = function() {
 			 */
 			solveHashProblem: function() {
 				/**
-				 * It scrolls up 80 px and thus it prevents overldeveloperng the elements
+				 * It scrolls up 80 px and thus it prevents overlaping the elements
 				 * This is caused of the fixed navigation
 				 */
 				function preventNavOverlap() {
@@ -446,7 +446,7 @@ var Wisply = function() {
 			/**
 			 * It executes a JQuery post request, adding to it the xsrf token value
 			 * @param  {object} args Same arguments for as for a JQuery AJAX request
-			 * @see {@link http://developer.jquery.com/jquery.ajax/|JQuery AJAX developer}
+			 * @see {@link http://api.jquery.com/jquery.ajax/|JQuery AJAX API}
 			 */
 			executePostAjax: function(args) {
 				if (typeof args.data === 'undefined') {

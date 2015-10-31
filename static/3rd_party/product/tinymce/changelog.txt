@@ -46,7 +46,7 @@ Version 4.2.4 (2015-08-17)
 	Fixed bug where EditorUpload could sometimes throw an exception if the blob wasn't found.
 	Fixed xss issues with media plugin not properly filtering out some script attributes.
 Version 4.2.3 (2015-07-30)
-	Fixed bug where image selection wasn't possible on Edge due to incompatible setBaseAndExtend developer.
+	Fixed bug where image selection wasn't possible on Edge due to incompatible setBaseAndExtend API.
 	Fixed bug where image blobs urls where not properly destroyed by the imagetools plugin.
 	Fixed bug where keyboard shortcuts wasn't working correctly on IE 8.
 	Fixed skin issue where the borders of panels where not visible on IE 8.
@@ -65,7 +65,7 @@ Version 4.2.1 (2015-06-29)
 	Fixed bug where the rendering of the image while cropping would some times not be centered correctly.
 	Fixed bug where listbox items with submenus would me selected as active.
 	Fixed bug where context menu where throwing an error when rendering.
-	Fixed bug where resize both option wasn't working due to resent addClass developer change. Patch contributed by Jogai.
+	Fixed bug where resize both option wasn't working due to resent addClass API change. Patch contributed by Jogai.
 	Fixed bug where a hideAll call for container rendered inline toolbars would throw an error.
 	Fixed bug where onclick event handler on combobox could cause issues if element.id was a function by some polluting libraries.
 	Fixed bug where listboxes wouldn't get proper selected sub menu item when using link_list or image_list.
@@ -74,7 +74,7 @@ Version 4.2.1 (2015-06-29)
 Version 4.2.0 (2015-06-25)
 	Added new flat default skin to make the UI more modern.
 	Added new imagetools plugin, lets you crop/resize and apply filters to images.
-	Added new contextual toolbars support to the developer lets you add floating toolbars for specific CSS selectors.
+	Added new contextual toolbars support to the API lets you add floating toolbars for specific CSS selectors.
 	Added new promise feature fill as tinymce.util.Promise.
 	Added new built in image upload feature lets you upload any base64 encoded image within the editor as files.
 	Fixed bug where resize handles would appear in the right position in the wrong editor when switching between resizable content in different inline editors.
@@ -308,7 +308,7 @@ Version 4.0.27 (2014-05-27)
 	Fixed so the selected state is properly handled on nested menu items in listboxes patch contributed by Jelle Kralt.
 	Fixed so the invisiblity css value for TinyMCE gets set to inherit instead of visible to better support dialog scripts like reveal.
 	Fixed bug where Gecko would remove anchors when pasting since the their default built in logic removes empty nodes.
-	Fixed bug where it wasn't possible to paste on Chrome Andoid since it doesn't properly support the Clipboard developer yet.
+	Fixed bug where it wasn't possible to paste on Chrome Andoid since it doesn't properly support the Clipboard API yet.
 	Fixed bug where user defined type attribute value of text/javascript didn't get properly serialized.
 	Fixed bug where space in span elements would removed when the element was considered empty.
 	Fixed bug where the undo/redo button states didn't change if you removed all undo levels using undoManager.clear.
@@ -365,7 +365,7 @@ Version 4.0.22 (2014-04-16)
 	Fixed so non image data urls is blocked by default since they might contain scripts.
 	Fixed so it's possible to import styles from the current page stylesheets into an inline editor by using the importcss_file_filter.
 	Fixed bug where the spellchecker plugin wouldn't add undo levels for each suggestion replacement.
-	Reworked the default spellchecker RPC developer to match the new PHP Spellchecker package. Fallback documented in the TinyMCE docs.
+	Reworked the default spellchecker RPC API to match the new PHP Spellchecker package. Fallback documented in the TinyMCE docs.
 Version 4.0.21 (2014-04-01)
 	Added new getCssText method to formatter to get the preview css text value for a format to be used in UI.
 	Added new table_grid option that allows you to disable the table grid and use a dialog.
@@ -472,13 +472,13 @@ Version 4.0.14 (2014-01-30)
 Version 4.0.13 (2014-01-30)
 	Added language selection menu to spellchecker button similar to the 3.x functionality. Patch contributed by threebytesfull.
 	Added new style_formats_merge option that enables you to append to the default formats instead of replaceing them. Patch contributed by PacificMorrowind.
-	Fixed bug where the DOMUtils getPos developer function didn't properly handle the location of the root element. Patch contributed by Andrew Ozz.
+	Fixed bug where the DOMUtils getPos API function didn't properly handle the location of the root element. Patch contributed by Andrew Ozz.
 	Fixed bug where the spellchecker wouldn't properly place the spellchecker suggestions menu. Patch contributed by Andrew Ozz.
 	Fixed bug where the tabfocus plugin would prevent the user from suing Ctrl+Tab, Patch contributed by Andrew Ozz.
 	Fixed bug where table resize handles could sometimes be added to elements out side the editable inline element.
 	Fixed bug where the inline mode editor UI would render incorrectly when the stylesheets didn't finish loading on Chrome.
 	Fixed bug where IE 8 would insert the image outside the editor unless it was focused first.
-	Fixed bug where older IE versions would throw an exception on drag/drop since they don't support modern dataTransfer developer.
+	Fixed bug where older IE versions would throw an exception on drag/drop since they don't support modern dataTransfer API.
 	Fixed bug where the blockquote button text wasn't properly translated since it had the wrong English key.
 	Fixed bug where the importcss plugin didn't import a.class rules properly as selector formats.
 	Fixed bug where the combobox control couldn't be disabled or set to a specific character size initially.
@@ -526,7 +526,7 @@ Version 4.0.12 (2013-12-18)
 	Fixed bug where links would be inserted incorrectly when auto detecting absolute urls/emails links in inline mode.
 	Fixed bug where IE 11 would insert contents in the wrong order due to focus/blur async problems.
 	Fixed bug where pasting contents on IE sometimes would place the contents at the end of the editor.
-	Fixed so drag/drop on non IE browsers gets filtered by the paste plugin. IE doesn't have the necessary developers.
+	Fixed so drag/drop on non IE browsers gets filtered by the paste plugin. IE doesn't have the necessary APIs.
 	Fixed so the paste plugin better detects Word 2007 contents not marked with -mso junk.
 	Fixed so image button isn't set to an active state when selecting control/media placeholder items.
 Version 4.0.11 (2013-11-20)
@@ -574,7 +574,7 @@ Version 4.0.9 (2013-10-24)
 	Fixed bug where insert table grid widget would insert a table on item to large when using a RTL language pack.
 	Fixed bug where fullscreen mode wasn't rendering properly on IE 7.
 	Fixed bug where resize handlers wasn't moved correctly when scrolling inline editable elements.
-	Fixed bug where it wasn't possible to paste from Excel and possible other applications due to Clipboard developer bugs in browsers.
+	Fixed bug where it wasn't possible to paste from Excel and possible other applications due to Clipboard API bugs in browsers.
 	Fixed bug where Shift+Ctrl+V didn't produce a plain text paste on IE.
 	Fixed bug where IE would sometimes move the selection to the a previous location.
 	Fixed bug where the editor wasn't properly scrolled to the content insert location in inline mode.
@@ -620,7 +620,7 @@ Version 4.0.7 (2013-10-02)
 	Fixed bug where pre elements woudl cause searchreplace and spellchecker plugins to mark incorrect locations.
 	Fixed bug where embed elements wouldn't be properly resized if they where configured in using the video_template_callback.
 	Fixed bug where paste from word would remove all BR elements since it was missing in the default paste_word_valid_elements.
-	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard developer.
+	Fixed bug where paste filtering wouldn't work properly on old WebKit installations pre Clipboard API.
 	Fixed bug where linebreaks would be removed by paste plugin on IE since it didn't properly detect Word contents.
 	Fixed bug where paste plugin would convert some Word paragraphs that looked like lists into lists.
 	Fixed bug where editors wasn't properly initialized if the document.domain is set to the same as the current domain on IE.

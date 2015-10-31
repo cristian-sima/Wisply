@@ -1,0 +1,25 @@
+/* CSSTidy 1.3: Sun, 25 Oct 2015 07:59:14 -0700 */
+.institution-profile
+{
+  height:180px;
+}
+
+.institution-profile .inlogo
+{
+  max-height:100px;
+  max-width:100px;
+  text-align:center;
+}
+
+.institution-profile .insider
+{
+  margin-top:20px;
+  height:80px;
+  width:100%;
+  margin-bottom:30px;
+}
+
+.institution-logo-default
+{
+  font-size:8em;
+}

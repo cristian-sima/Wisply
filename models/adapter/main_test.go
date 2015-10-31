@@ -3,7 +3,7 @@ package adapter
 import (
 	"testing"
 
-	"local-projects/validity"
+	"github.com/cristian-sima/validity"
 
 	. "github.com/smartystreets/goconvey/convey"
 )

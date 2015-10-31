@@ -67,14 +67,14 @@ var PublicRepositoryModule = function() {
 						"type": "keyup",
 						"key": "Ctrl+left",
 						"callback": function() {
-							wisply.publicRepositoryModule.manager.showPrevious();
+							instance.showPrevious();
 						},
 						"description": "Receives the next page of resources",
 					}, {
 						"type": "keyup",
 						"key": "Ctrl+right",
 						"callback": function() {
-							wisply.publicRepositoryModule.manager.showNext();
+							instance.showNext();
 						},
 						"description": "Receives the previous page of resources",
 					}, {

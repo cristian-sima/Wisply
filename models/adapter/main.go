@@ -4,7 +4,7 @@ package adapter
 import (
 	"strconv"
 
-	validity "local-projects/validity"
+	validity "github.com/cristian-sima/validity"
 )
 
 // Validate represents an adapter for validity package

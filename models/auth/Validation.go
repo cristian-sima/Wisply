@@ -1,7 +1,7 @@
 package auth
 
 import (
-	validity "local-projects/validity"
+	validity "github.com/cristian-sima/validity"
 
 	wisply "github.com/cristian-sima/Wisply/models/adapter"
 )

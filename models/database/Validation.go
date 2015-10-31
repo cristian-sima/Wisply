@@ -2,7 +2,7 @@ package database
 
 import (
 	wisply "github.com/cristian-sima/Wisply/models/adapter"
-	validity "local-projects/validity"
+	validity "github.com/cristian-sima/validity"
 )
 
 var (

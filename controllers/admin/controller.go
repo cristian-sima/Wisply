@@ -5,7 +5,7 @@ package admin
 import general "github.com/cristian-sima/Wisply/controllers/general"
 
 // Controller must be inherited by all the pages that are for administrators
-// It ensures that an account is connected when accesing the page
+// It ensures that an account is connected when accesing the page.
 type Controller struct {
 	general.WisplyController
 }

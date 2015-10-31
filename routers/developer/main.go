@@ -3,7 +3,7 @@ package developer
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/cristian-sima/Wisply/controllers/api"
+	"github.com/cristian-sima/Wisply/controllers/developer"
 )
 
 // Load tells the framework to load the addresses for the router

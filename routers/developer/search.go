@@ -2,7 +2,7 @@ package developer
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/cristian-sima/Wisply/controllers/api"
+	"github.com/cristian-sima/Wisply/controllers/developer"
 )
 
 func getSearch() func(*beego.Namespace) {

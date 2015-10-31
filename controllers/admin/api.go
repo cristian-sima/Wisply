@@ -3,7 +3,7 @@ package admin
 import (
 	"strings"
 
-	"github.com/cristian-sima/Wisply/models/api"
+	"github.com/cristian-sima/Wisply/models/developer"
 )
 
 // Developers manages the operation for API

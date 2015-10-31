@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/cristian-sima/Wisply/models/api"
+	"github.com/cristian-sima/Wisply/models/developer"
 )
 
 const (

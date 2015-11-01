@@ -18,7 +18,7 @@ type Repository struct {
 
 // List shows all the repositories
 func (controller *Repository) List() {
-	list := controller.model.GetAllRepositories()
+	list := repository.GetAllRepositories()
 	controller.Data["repositories"] = list
 	controller.Data["host"] = controller.Ctx.Request.Host
 	controller.SetCustomTitle("Admin - Repositories")
@@ -34,7 +34,7 @@ func (controller *Repository) ShowTypes() {
 
 // Add shows the form to add a new repository
 func (controller *Repository) Add() {
-	controller.Data["institutions"] = controller.model.GetAllInstitutions()
+	controller.Data["institutions"] = repository.GetAllInstitutions()
 	selected, _ := strconv.Atoi(strings.TrimSpace(controller.GetString("institution")))
 	controller.Data["selectedInstitution"] = selected
 	controller.Data["category"] = strings.TrimSpace(controller.GetString("category"))

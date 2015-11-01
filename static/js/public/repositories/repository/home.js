@@ -1147,5 +1147,5 @@ var PublicRepositoryModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new PublicRepositoryModule();
-	wisply.loadModule("public-repository", module);
+	wisply.loadModule("public-repositories-repository", module);
 });

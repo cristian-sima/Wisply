@@ -17,7 +17,9 @@
           <div class="well">
             Wisply is proudly collecting data from these prestigious institutions
           </div>
-          {{ if .anything }}
+          {{ if eq (.institutions | len) 0 }}
+          There are no institution... :(
+          {{ else }}
           <div class="row text-center">
             {{range $index, $institution := .institutions}}
             {{$safe := $institution.Name|html}}
@@ -39,8 +41,6 @@
             </div>
             {{end }}
           </div>
-          {{ else }}
-          There are no institution... :(
           {{ end }}
         </div>
       </div>

@@ -119,10 +119,10 @@ server.repository.getBySpec = function (requestedSet) {
 };
 </script>
 <link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
-<script src="/static/js/public/repository.js"></script>
+<script src="/static/js/public/repositories/repository/home.js"></script>
 <script>
 $(document).ready(function(){
-    var module = wisply.getModule("public-repository"),
+    var module = wisply.getModule("public-repositories-repository"),
       manager = new module.Manager(server.repository);
       manager.init();
 });

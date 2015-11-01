@@ -21,7 +21,7 @@ func ResetAllRepositories() {
 }
 
 // GetAllInstitutions returns an array of Institution with all institutions
-func (model *Model) GetAllInstitutions() []Institution {
+func GetAllInstitutions() []Institution {
 	var list []Institution
 	sql := "SELECT `id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID` FROM `institution`"
 	rows, _ := database.Connection.Query(sql)
@@ -64,7 +64,7 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 }
 
 // GetAllRepositories returns an array of Repository with all repositories
-func (model *Model) GetAllRepositories() []Repository {
+func GetAllRepositories() []Repository {
 	var list []Repository
 	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM `repository`"
 	rows, _ := database.Connection.Query(sql)

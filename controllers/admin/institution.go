@@ -16,7 +16,7 @@ type Institution struct {
 // DisplayAll shows all the institutions
 func (controller *Institution) DisplayAll() {
 	var exists bool
-	list := controller.model.GetAllInstitutions()
+	list := repository.GetAllInstitutions()
 	exists = (len(list) != 0)
 	controller.Data["anything"] = exists
 	controller.Data["institutions"] = list

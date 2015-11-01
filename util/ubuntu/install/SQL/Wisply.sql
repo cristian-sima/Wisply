@@ -73,13 +73,13 @@ CREATE TABLE `account_token` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `api_table_setting`
+-- Table structure for table `download_table`
 --
 
-DROP TABLE IF EXISTS `api_table_setting`;
+DROP TABLE IF EXISTS `download_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_table_setting` (
+CREATE TABLE `download_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `description` varchar(1000) NOT NULL,

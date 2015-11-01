@@ -21,7 +21,7 @@ func (table *Table) GetDescription() template.HTML {
 
 // RemoveAllowedTable removes the table from the list of allowed tables
 func (table *Table) Delete() error {
-	sql := "DELETE FROM `api_table_setting` WHERE `id`=? "
+	sql := "DELETE FROM `download_table` WHERE `id`=? "
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(table.ID)
 	return err
@@ -31,7 +31,7 @@ func (table *Table) Delete() error {
 func NewTable(ID string) (*Table, error) {
 	table := &Table{}
 	fieldList := "`id`, `name`, `description`"
-	sql := "SELECT " + fieldList + " FROM `api_table_setting` WHERE id=? "
+	sql := "SELECT " + fieldList + " FROM `download_table` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return table, err
@@ -42,7 +42,7 @@ func NewTable(ID string) (*Table, error) {
 
 // ModifyDetails changes the details of the table
 func ModifyDetails(table *Table, newDescription string) error {
-	sql := "UPDATE `api_table_setting` SET `description`=? WHERE `id`=? "
+	sql := "UPDATE `download_table` SET `description`=? WHERE `id`=? "
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {
 		return err1

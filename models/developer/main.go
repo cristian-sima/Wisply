@@ -1,16 +1,23 @@
 // Package developer manages the operations for developers and research community
 package developer
 
-import "github.com/cristian-sima/Wisply/models/database"
+import (
+	"fmt"
 
-var rejectedTables = []string{"account", "account_token", "account_search", "api_table_setting"}
+	"github.com/cristian-sima/Wisply/models/database"
+)
+
+var rejectedTables = []string{"account", "account_token", "account_search", "download_table"}
 
 // GetAllTables returns the entire list of tables which are not restricted
 // from being downloaded
 func GetAllTables() []string {
 	var list []string
 	sql := "SELECT `table_name` FROM `information_schema`.`tables` WHERE `table_schema`='wisply'"
-	rows, _ := database.Connection.Query(sql)
+	rows, err := database.Connection.Query(sql)
+	if err != nil {
+		fmt.Println(err)
+	}
 	for rows.Next() {
 		table := ""
 		rows.Scan(&table)
@@ -43,7 +50,7 @@ func AreValidDetails(table Table) bool {
 // InsertNewTable adds the table name on the list of the tables
 // which can be downloaded
 func InsertNewTable(table Table) error {
-	sql := "INSERT INTO `api_table_setting` (`name`, `description`) VALUES (?, ?)"
+	sql := "INSERT INTO `download_table` (`name`, `description`) VALUES (?, ?)"
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(table.Name, table.Description)
 	return err
@@ -52,7 +59,7 @@ func InsertNewTable(table Table) error {
 // GetAllowedTables returns the list of allowed tables
 func GetAllowedTables() []Table {
 	var list []Table
-	sql := "SELECT `id`, `name`, `description` FROM `api_table_setting`"
+	sql := "SELECT `id`, `name`, `description` FROM `download_table`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		table := Table{}

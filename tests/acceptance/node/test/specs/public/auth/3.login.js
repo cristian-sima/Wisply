@@ -17,7 +17,6 @@ describe('Login', function() {
         .url("/")
         .windowHandleMaximize()
         .pause(1000)
-        .element("#navbar-main")
         .click("a=Login")
         .pause(500)
         .getTitle(function(err, title) {

@@ -1,7 +1,6 @@
 package public
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -32,7 +31,6 @@ func (controller *Auth) showLoginForm() {
 	controller.SetCustomTitle("Login to Wisply")
 	controller.showForm("login")
 
-	fmt.Println("Running in " + controller.GetApplicationMode())
 	controller.LoadCaptcha("login-form-page")
 }
 

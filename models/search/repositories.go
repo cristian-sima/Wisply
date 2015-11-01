@@ -53,7 +53,7 @@ func (search RepositoriesSearch) getFromDB() []repository.Repository {
 }
 
 func (search RepositoriesSearch) getURL(repositoryObjectID int) string {
-	path := "/repository/"
+	path := "/repositories/"
 	action := path + strconv.Itoa(repositoryObjectID)
 	return action
 }

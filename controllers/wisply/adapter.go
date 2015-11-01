@@ -38,6 +38,11 @@ func (controller *Controller) SetLayout(layout string) {
 	controller.Layout = templatesFolder + layout + "-layout.tpl"
 }
 
+// RemoveLayout removes the layout
+func (controller *Controller) RemoveLayout() {
+	controller.Layout = ""
+}
+
 // GetApplicationMode returns the mode in which the app is running
 // dev - for developing
 func (Adapter *Adapter) GetApplicationMode() string {

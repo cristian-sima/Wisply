@@ -1,10 +1,10 @@
 package api
 
-import "github.com/cristian-sima/Wisply/controllers/admin"
+import "github.com/cristian-sima/Wisply/controllers/developer"
 
 // Controller manages the operations for API
 type Controller struct {
-	admin.Controller
+	developer.Controller
 }
 
 // Prepare changes the path

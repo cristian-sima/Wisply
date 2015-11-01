@@ -7,7 +7,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/institutions">Institutions</a></li>
             <li><a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
-            <li><a href="/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
+            <li><a href="/repositories/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
             <li class="active">{{ .resource.Keys.GetTitle }}</li>
           </ul>
         </div>
@@ -31,7 +31,7 @@
                     <td> <span class="glyphicon glyphicon-education"></span> <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></td>
                   </tr>
                   <tr>
-                    <td> <span class="glyphicon glyphicon glyphicon-equalizer "></span> <a href="/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></td>
+                    <td> <span class="glyphicon glyphicon glyphicon-equalizer "></span> <a href="/repositories/{{ .repository.ID }}">{{ .repository.Name }}</a></td>
                   </tr>
                 </tbody>
               </table>

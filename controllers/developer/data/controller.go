@@ -1,10 +1,10 @@
 package data
 
-import "github.com/cristian-sima/Wisply/controllers/admin"
+import "github.com/cristian-sima/Wisply/controllers/developer"
 
 // Controller manages the operations for exporting data
 type Controller struct {
-	admin.Controller
+	developer.Controller
 }
 
 // Prepare changes the path

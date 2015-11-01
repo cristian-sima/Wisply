@@ -33,8 +33,8 @@ func (controller *Repository) Display() {
 	controller.LoadTemplate("home")
 }
 
-// ShowResource shows the page for the resource
-func (controller *Repository) ShowResource() {
+// DisplayResource shows the page for the resource
+func (controller *Repository) DisplayResource() {
 	resourceID := controller.Ctx.Input.Param(":resource")
 	repo := controller.GetRepository()
 	resource, errResource := wisply.GetRecordByID(resourceID)

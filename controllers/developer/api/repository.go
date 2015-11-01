@@ -13,6 +13,12 @@ type Repository struct {
 	Controller
 }
 
+// Prepare removes the layout
+func (controller *Repository) Prepare() {
+	controller.Controller.Prepare()
+	controller.RemoveLayout()
+}
+
 // GetResources returns the resources for the repository
 func (controller *Repository) GetResources() {
 

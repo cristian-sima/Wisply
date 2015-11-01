@@ -17,5 +17,5 @@ func (controller Controller) ShowHomePage() {
 	// Please use http://www.timestampgenerator.com/ for getting the timestamp
 	controller.IndicateLastModification(1441987477)
 	controller.Layout = "site/public-layout.tpl"
-	controller.TplNames = "site/api/api.tpl"
+	controller.TplNames = "site/developer/developer.tpl"
 }

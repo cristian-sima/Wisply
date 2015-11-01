@@ -1,5 +1,5 @@
 {{ define "admin-menu" }}
-<div>
+<div class="admin-menu">
   <ul class="nav">
     <li>
       <a href="/admin">
@@ -56,5 +56,12 @@
       </a>
     </li>
   </ul>
+</div>
+<div>
+<style scoped>
+.admin-menu {
+  font-size: 15px;
+}
+</style>
 </div>
 {{ end }}

@@ -70,7 +70,7 @@ var APITableListModule = function() {
 				 */
 				successCallback = function() {
 					box.modal("hide");
-					window.location.href = '/api/table/download/' + table.name;
+					window.location.href = '/developer/table/download/' + table.name;
 				};
 				/**
 				 * It is called when there has been problems
@@ -81,7 +81,7 @@ var APITableListModule = function() {
 					wisply.message.showError("There was a problem with your request :(");
 				};
 				request = {
-					"url": '/api/table/generate/' + table.name,
+					"url": '/developer/table/generate/' + table.name,
 					"success": successCallback,
 					"error": errorCallback
 				};
@@ -125,5 +125,5 @@ var APITableListModule = function() {
 jQuery(document).ready(function() {
 	"use strict";
 	var module = new APITableListModule();
-	wisply.loadModule("api-table-list", module);
+	wisply.loadModule("developer-table-list", module);
 });

@@ -149,10 +149,11 @@ describe('Login', function() {
     it('redirects to home page an account without privileges for a restricted area', function(done) {
         browser
           .url("/auth/login?sendMe=/admin")
+          .pause(1000)
           .setValue('#login-email', user.email)
           .setValue('#login-password', user.password)
           .submitForm("#login-form")
-          .pause(1000)
+          .pause(1500)
           .url(function(err, res){
               expect(res.value).toEqual("http://localhost:8081/");
           })

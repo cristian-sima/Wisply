@@ -39,8 +39,9 @@ describe('Help functionality', function() {
   });
   it("goes to the cookies", function (done) {
       browser
-      .element('ol li h5')
+      .pause(1000)
       .click('a=Cookies Policy')
+      .pause(1000)
       .getTitle(function(err, title) {
           expect(err).toBe(undefined);
           expect(title).toBe('Wisply Cookies Policy');

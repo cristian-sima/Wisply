@@ -2,7 +2,7 @@
 describe('API & Developers', function() {
       it('goes to API & Developers page', function(done){
         browser.
-          url('/api')
+          url('/developer')
           .pause(1000)
           .getTitle(function(err, title) {
               expect(err).toBe(undefined);
@@ -12,7 +12,7 @@ describe('API & Developers', function() {
       });
       it('goes to API page for tables', function(done){
         browser.
-            url('/api/table/list')
+            url('/developer/table/list')
             .pause(1000)
             .getTitle(function(err, title) {
                 expect(err).toBe(undefined);

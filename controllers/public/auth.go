@@ -18,7 +18,7 @@ type Auth struct {
 // it redirects to "/"
 func (controller *Auth) ShowLoginPage() {
 	if controller.AccountConnected {
-		controller.Redirect("/", 200)
+		controller.Redirect("/", 302)
 	} else {
 		controller.showLoginForm()
 	}

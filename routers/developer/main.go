@@ -13,7 +13,7 @@ func Load() {
 	repository := getRepository()
 
 	developer :=
-		beego.NewNamespace("/api",
+		beego.NewNamespace("/developer",
 			beego.NSRouter("", &developer.Static{}, "GET:ShowHomePage"),
 			beego.NSNamespace("/table/",
 				beego.NSRouter("list", &developer.Table{}, "GET:ShowList"),

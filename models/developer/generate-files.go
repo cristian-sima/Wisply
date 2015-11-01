@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var pathOfAPITables = "/cache/api/tables/"
+var pathOfDownloadTables = "/cache/developer/tables/"
 
 // GenerateTableFile creates the sql table
 // It is a factory of files
@@ -44,7 +44,7 @@ func (file *file) getFullPath() string {
 		}
 		return wisplyPath
 	}
-	pathToFolder := pathOfAPITables
+	pathToFolder := pathOfDownloadTables
 	rawPath := getWisplyPath() + pathToFolder + file.getFileName()
 	return strings.Replace(rawPath, "\\", "/", -1)
 }

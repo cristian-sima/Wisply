@@ -9,5 +9,6 @@ type Controller struct {
 
 // Prepare sets the path for the package
 func (controller *Controller) Prepare() {
+	controller.Controller.Prepare()
 	controller.SetTemplatePath("admin/accounts")
 }

@@ -10,7 +10,7 @@ import (
 
 // Program is the controller which manages the operations for the program page
 type Program struct {
-	controller
+	Controller
 }
 
 // Display shows the dashboard for a program

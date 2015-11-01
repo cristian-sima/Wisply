@@ -32,7 +32,7 @@
               {{ end }}
             </td>
             <td>
-              <a href="/admin/accounts/modify/{{$account.ID}}">Modify</a>
+              <a href="/admin/accounts/{{$account.ID}}/modify">Modify</a>
             </td>
             <td>
               <a class="deleteAccountButton" data-id="{{$account.ID}}" data-name="{{$account.Name}}" href="#">Delete</a>

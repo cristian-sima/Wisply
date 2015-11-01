@@ -7,11 +7,11 @@ type Home struct {
 	Controller
 }
 
-// DisplayDashboard shows the administrator dashboard
-func (controller *Home) DisplayDashboard() {
+// Display shows the administrator dashboard
+func (controller *Home) Display() {
+	controller.SetCustomTitle("Admin - Dashboard")
 	dashboard := admin.NewDashboard()
 	controller.Data["numberOfAccounts"] = dashboard.Accounts
 	controller.Data["numberOfRepositories"] = dashboard.Repositories
-	controller.TplNames = "site/admin/admin/dashboard.tpl"
-	controller.SetCustomTitle("Admin - Dashboard")
+	controller.LoadTemplate("home")
 }

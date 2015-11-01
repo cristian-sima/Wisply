@@ -68,8 +68,9 @@ func (account *Account) createNewToken() *Token {
 }
 
 // Delete removes the account from the database
-func (account *Account) Delete() {
+func (account *Account) Delete() error {
 	sql := "DELETE from `account` WHERE id=?"
-	query, _ := database.Connection.Prepare(sql)
+	query, err := database.Connection.Prepare(sql)
 	query.Exec(strconv.Itoa(account.ID))
+	return err
 }

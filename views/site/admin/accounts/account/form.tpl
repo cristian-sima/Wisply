@@ -2,8 +2,8 @@
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
-      <li><a href="/admin/accounts">Account</a></li>
-      <li class="active">Modify</li>
+      <li><a href="/admin/accounts">Accounts</a></li>
+      <li class="active">{{ .account.Name }}</li>
     </ul></div>
     <div class="panel-body">
       <form method="POST" class="form-horizontal" id="modify">
@@ -14,7 +14,7 @@
             <div class="col-lg-10">
               <select name="modify-administrator" id="modify-administrator" class="form-control">
                 <option value="true" {{ if .account.IsAdministrator }} selected {{ end }} >Administrator</option>
-                <option value="false" {{ if .account.IsUser }} selected {{ end}}>User</option>
+                <option value="false" {{ if not .account.IsAdministrator }} selected {{ end}}>User</option>
               </select>
             </div>
           </div>

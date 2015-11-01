@@ -10,9 +10,11 @@ import (
 func Get() func(*beego.Namespace) {
 	ns := beego.NSNamespace("/accounts",
 		beego.NSRouter("", &accountsController.Home{}, "*:Display"),
-		beego.NSNamespace("/:account/:id",
-			beego.NSRouter("", &accountController.Account{}, "GET:ShowModifyForm"),
-			beego.NSRouter("", &accountController.Account{}, "POST:Modify"),
+		beego.NSNamespace("/:account",
+			beego.NSNamespace("/modify",
+				beego.NSRouter("", &accountController.Account{}, "GET:ShowModifyForm"),
+				beego.NSRouter("", &accountController.Account{}, "POST:Modify"),
+			),
 			beego.NSRouter("/delete", &accountController.Account{}, "POST:Delete"),
 		),
 	)

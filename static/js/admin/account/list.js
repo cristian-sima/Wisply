@@ -127,7 +127,7 @@ var AdminAccountsModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/accounts/delete/' + account.id,
+					"url": '/admin/accounts/' + account.id + "/delete",
 					"success": successCallback,
 					"error": errorCallback
 				};

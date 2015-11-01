@@ -5,18 +5,19 @@ import (
 	model "github.com/cristian-sima/Wisply/models/education"
 )
 
-type controller struct {
+// Controller manages the operations for the controller
+type Controller struct {
 	education.Controller
 	program *model.Program
 }
 
 // Prepare loads the program of study from the id of the request
-func (controller *controller) Prepare() {
+func (controller *Controller) Prepare() {
 	controller.loadProgram()
 	controller.Controller.Prepare()
 }
 
-func (controller *controller) loadProgram() {
+func (controller *Controller) loadProgram() {
 	ID := controller.Ctx.Input.Param(":id")
 	program, err := model.NewProgram(ID)
 	if err != nil {

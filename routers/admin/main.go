@@ -20,7 +20,7 @@ func Load() {
 	repository := getRepository()
 
 	ns := beego.NewNamespace("/admin",
-		beego.NSRouter("", &admin.Home{}, "*:DisplayDashboard"),
+		beego.NSRouter("", &admin.Home{}, "*:Display"),
 		account,
 		curriculum,
 		developer,

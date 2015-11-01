@@ -23,7 +23,7 @@ func (controller *Controller) LoadTemplate(filename string) {
 	if controller.templatePath == "" {
 		panic("This controller did not overwrite the default path")
 	} else {
-		controller.TplNames = controller.templatePath + "/" + filename + ".tpl"
+		controller.TplNames = templatesFolder + controller.templatePath + "/" + filename + ".tpl"
 	}
 }
 
@@ -35,8 +35,7 @@ func (controller *Controller) SetTemplatePath(path string) {
 // SetLayout sets the layout for the controller
 // Please see beego for more information about layout
 func (controller *Controller) SetLayout(layout string) {
-	templatesLocation := "/site/"
-	controller.Layout = templatesLocation + layout + "-layout.tpl"
+	controller.Layout = templatesFolder + layout + "-layout.tpl"
 }
 
 // GetApplicationMode returns the mode in which the app is running

@@ -1,20 +1,15 @@
-package account
+package searches
 
-import "github.com/cristian-sima/Wisply/controllers/wisply"
+import "github.com/cristian-sima/Wisply/controllers/account"
 
 // Controller represents the basic Account controller
 type Controller struct {
-	wisply.Controller
+	account.Controller
 }
 
 // Prepare redirects to a login page in case the account is not connected,
 // otherwise it loads the page
 func (controller *Controller) Prepare() {
 	controller.Controller.Prepare()
-	if !controller.AccountConnected {
-		controller.Controller.RedirectToLoginPage()
-	} else {
-		controller.SetLayout("account")
-		controller.SetTemplatePath("account")
-	}
+	controller.SetTemplatePath("account/searches")
 }

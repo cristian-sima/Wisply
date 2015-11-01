@@ -4,14 +4,14 @@
  * @author Cristian Sima
  */
 /**
- * @namespace AccountSearchModule
+ * @namespace AccountSearchesListModule
  */
-var AccountSearchModule = function() {
+var AccountSearchesListModule = function() {
 	'use strict';
 	/**
 	 * The constructor does nothing
 	 * @class List
-	 * @memberof AccountSearchModule
+	 * @memberof AccountSearchesListModule
 	 * @classdesc It encapsulets the functions for the list with the searches
 	 */
 	var List = function List() {};
@@ -19,7 +19,7 @@ var AccountSearchModule = function() {
 	 * @memberof List
 	 */
 	List.prototype =
-		/** @lends AccountSearchModule.List */
+		/** @lends AccountSearchesListModule.List */
 		{
 			/**
 			 * It activates the listener for the delete button
@@ -105,7 +105,7 @@ var AccountSearchModule = function() {
 					wisply.message.showError("The request was not successful");
 				};
 				request = {
-					"url": '/account/search/clear',
+					"url": '/account/searches/clear',
 					"success": successCallback,
 					"error": errorCallback
 				};
@@ -118,6 +118,6 @@ var AccountSearchModule = function() {
 };
 $(document).ready(function() {
 	"use strict";
-	var module = new AccountSearchModule();
-	wisply.loadModule("account-search-list", module);
+	var module = new AccountSearchesListModule();
+	wisply.loadModule("account-searches-list", module);
 });

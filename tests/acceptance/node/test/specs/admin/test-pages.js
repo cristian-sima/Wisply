@@ -47,4 +47,76 @@ describe('Administration pages', function() {
         .call(done);
     });
   });
+  describe("institutions", function() {
+    it('goes to institutions page', function(done) {
+        browser
+        .url('/admin/institutions')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+    it('goes to institutions page', function(done) {
+        browser
+        .url('/admin/institutions/add')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+  });
+  describe("developer", function() {
+    it('goes to developer admin page', function(done) {
+        browser
+        .url('/admin/developer')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+    it('goes to page which makes the table public', function(done) {
+        browser
+        .url('/admin/developer/add')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+  });
+  describe("log", function() {
+    it('goes to log page', function(done) {
+        browser
+        .url('/admin/log')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+    it('goes to advance page for all', function(done) {
+        browser
+        .url('/admin/log/advance-options')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+  });
+  describe("curricula", function() {
+    it('goes to curricula page', function(done) {
+        browser
+        .url('/admin/curriculum')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+    it('goes to page which adds a new program of study', function(done) {
+        browser
+        .url('/admin/curriculum/add')
+        .isExisting('#full-logo').then(function(isExisting){
+          expect(isExisting).toBe(true);
+        })
+        .call(done);
+    });
+  });
 });

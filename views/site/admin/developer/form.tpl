@@ -2,7 +2,7 @@
 	<div class="panel-heading" style="padding-bottom:0px">
 		<ul class="breadcrumb">
 			<li><a href="/admin">Admin</a></li>
-			<li><a href="/admin/api">API</a></li>
+			<li><a href="/admin/developer">API</a></li>
 			<li class="active">{{.action}}</li>
 		</ul>
 	</div>
@@ -14,7 +14,7 @@
 			<div class="form-group">
 				<span class="col-lg-2 control-label"></span>
 				<div class="col-lg-10">
-				Table <a href="/api/table/list"><strong>{{ .currentTable.Name }} </strong></a>
+				Table <a href="/developer/table/list"><strong>{{ .currentTable.Name }} </strong></a>
 				</div>
 			</div>
 			{{ end }}
@@ -46,7 +46,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-10 col-lg-offset-2">
-						<input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" /> <a href="/admin/api" class="btn btn-default">Cancel</a> </div>
+						<input type="submit" id="institution-submit-button" class="btn btn-primary" value="Submit" /> <a href="/admin/developer" class="btn btn-default">Cancel</a> </div>
 					</div>
 				</fieldset>
 			</form>

@@ -27,7 +27,7 @@ exports.config = {
         //  './test/specs/public/auth/2.cookies.js',
         // './test/specs/public/auth/3.login.js',
         // './test/specs/public/account/account.js',
-        // './test/specs/public/api/table.js',
+        // './test/specs/public/developer/table.js',
         // './test/specs/public/keys/keys.js',
     ],
 

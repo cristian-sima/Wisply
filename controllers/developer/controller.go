@@ -13,7 +13,7 @@ type Controller struct {
 
 // ShowHomePage shows the static home page for API
 func (controller Controller) ShowHomePage() {
-	controller.SetCustomTitle("API & Developers")
+	controller.SetCustomTitle("Developers & Research")
 	// Please use http://www.timestampgenerator.com/ for getting the timestamp
 	controller.IndicateLastModification(1441987477)
 	controller.Layout = "site/public-layout.tpl"

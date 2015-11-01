@@ -9,7 +9,7 @@ type Static struct {
 func (controller *Static) ShowHomePage() {
 	controller.Layout = "site/public-layout.tpl"
 	controller.TplNames = "site/developer/developer.tpl"
-	controller.SetCustomTitle("API & Developers")
+	controller.SetCustomTitle("Developers & Research")
 	// Please use http://www.timestampgenerator.com/ for generating the timestamp
 	controller.IndicateLastModification(1441987477)
 }

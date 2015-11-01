@@ -7,14 +7,14 @@
   </div>
   <div class="panel-body">
     <div>
-      This panel can be used to allow or reject tables from being downloaded by the public. The public list is available <a target="_blank" href="http://localhost:8081/api/table/list">here</a>.
+      This panel can be used to allow or reject tables from being downloaded by the public. The public list is available <a target="_blank" href="http://localhost:8081/developer/table/list">here</a>.
       <br />
       The tables which are not listed here are by default <strong>rejected</strong>.
       <br />
       <br />
   </div>
   <div class="btn-group">
-    <a href="/admin/api/add" class="btn btn-primary">
+    <a href="/admin/developer/add" class="btn btn-primary">
       <span class="glyphicon glyphicon-plus"></span>
       Add table on API public download list
     </a>
@@ -40,7 +40,7 @@
           <tr>
             <td>{{ $table.ID }}</td>
             <td>{{ $table.Name }}</td>
-            <td><a href="/admin/api/modify/{{ $table.ID }}">Modify</a></td>
+            <td><a href="/admin/developer/modify/{{ $table.ID }}">Modify</a></td>
             <td>
               <a href="#" class="makeTablePrivate" data-id="{{ $table.ID }}" data-name="{{ $table.Name }}">Make private</a>
             </td>
@@ -52,7 +52,7 @@
     </div>
   </div>
 </div>
-<script src="/static/js/admin/api/list.js"></script>
+<script src="/static/js/admin/developer/list.js"></script>
 <script>
 $(document).ready(function(){
     var module = wisply.getModule("admin-api"),

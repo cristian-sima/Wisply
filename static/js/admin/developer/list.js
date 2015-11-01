@@ -115,7 +115,7 @@ var AdminAPIModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/api/delete',
+					"url": '/admin/developer/delete',
 					data: {
 						"table-id": table.id,
 					},

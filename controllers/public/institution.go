@@ -26,7 +26,7 @@ func (controller *Institution) ShowInstitution() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.SetCustomTitle(institution.Name)
 		controller.Data["institution"] = institution

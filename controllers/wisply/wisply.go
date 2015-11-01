@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/cristian-sima/Wisply/models/auth"
-	"github.com/cristian-sima/Wisply/models/curriculum"
+	"github.com/cristian-sima/Wisply/models/education"
 )
 
 // Controller inherits the MessageController
@@ -18,15 +18,15 @@ type Controller struct {
 	Account          *auth.Account
 }
 
+// Prepare checks the state of connection and inits the database
+func (controller *Controller) Prepare() {
+	controller.initState()
+}
+
 // GenerateXSRF generates and sends to template the XSRF code
 func (controller *Controller) GenerateXSRF() {
 	code := controller.XsrfFormHtml()
 	controller.Data["xsrf_input"] = template.HTML(code)
-}
-
-// Prepare checks the state of connection and inits the database
-func (controller *Controller) Prepare() {
-	controller.initState()
 }
 
 func (controller *Controller) initState() {
@@ -41,7 +41,7 @@ func (controller *Controller) initState() {
 }
 
 func (controller *Controller) loadPrograms() {
-	controller.Data["programs"] = curriculum.GetAllPrograms()
+	controller.Data["programs"] = education.GetAllPrograms()
 }
 
 func (controller *Controller) checkConnectionCookie() {

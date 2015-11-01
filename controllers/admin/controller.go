@@ -11,20 +11,20 @@ type Controller struct {
 // Prepare redirects to a login page in case the account is not connected,
 // else it loads the page
 func (controller *Controller) Prepare() {
-	controller.Controller.Prepare()
-	if !controller.AccountConnected || !controller.Account.IsAdministrator {
-		controller.Controller.RedirectToLoginPage()
+	controller.Prepare()
+	if controller.isAdministratorPage() {
+		controller.RedirectToLoginPage()
 	} else {
-		controller.initPage()
+		controller.initAdmin()
 	}
-	controller.loadLayout()
 }
 
-func (controller *Controller) loadLayout() {
-	controller.Layout = "site/admin-layout.tpl"
+func (controller *Controller) isAdministratorPage() bool {
+	return !controller.AccountConnected || !controller.Account.IsAdministrator
 }
 
-// initPage is called when an administrator is connected
-func (controller *Controller) initPage() {
+func (controller *Controller) initAdmin() {
 	controller.Data["isAdminPage"] = true
+	controller.SetLayout("admin")
+	controller.SetTemplatePath("admin")
 }

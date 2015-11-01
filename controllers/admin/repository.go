@@ -68,7 +68,7 @@ func (controller *Repository) Modify() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["repository"] = repository
 		controller.showModifyForm()
@@ -80,7 +80,7 @@ func (controller *Repository) ShowFilter() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.GenerateXSRF()
 		controller.Data["repository"] = repository
@@ -94,11 +94,11 @@ func (controller *Repository) ChangeFilter() {
 	filter := strings.TrimSpace(controller.GetString("repository-filter"))
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		err := repository.SetFilter(filter)
 		if err != nil {
-			controller.Abort("databaseError")
+			controller.Abort("show-database-error")
 		} else {
 			message := "The filter has been modified!"
 			goTo := "/admin/repositories/repository/" + strconv.Itoa(repository.ID)
@@ -122,7 +122,7 @@ func (controller *Repository) Update() {
 
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		problems, err := repository.Modify(repositoryDetails)
 		if err != nil {
@@ -142,7 +142,7 @@ func (controller *Repository) EmptyRepository() {
 	ID = controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		processes := harvest.GetProcessesByRepository(repository.ID, 0)
 		for _, process := range processes {
@@ -159,7 +159,7 @@ func (controller *Repository) Delete() {
 	ID = controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		processes := harvest.GetProcessesByRepository(repository.ID, 0)
 		for _, process := range processes {
@@ -167,7 +167,7 @@ func (controller *Repository) Delete() {
 		}
 		databaseError := repository.Delete()
 		if databaseError != nil {
-			controller.Abort("databaseError")
+			controller.Abort("show-database-error")
 		} else {
 			message := "The repository [" + repository.Name + "] has been deleted!"
 			goTo := "/admin/repositories/"
@@ -198,7 +198,7 @@ func (controller *Repository) ShowRepository() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["processes"] = harvest.GetProcessesByRepository(repository.ID, 5)
 		controller.Data["repository"] = repository
@@ -213,7 +213,7 @@ func (controller *Repository) ShowAdvanceOptions() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["repository"] = repository
 		controller.Data["institution"] = repository.GetInstitution()

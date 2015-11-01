@@ -22,7 +22,6 @@ func (controller *Institution) DisplayAll() {
 	controller.Data["institutions"] = list
 	controller.SetCustomTitle("Admin - Institutions")
 	controller.TplNames = "site/admin/institution/list.tpl"
-	controller.Layout = "site/admin-layout.tpl"
 }
 
 // Add shows the form to add an institution
@@ -62,7 +61,7 @@ func (controller *Institution) Modify() {
 	ID = controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["institution"] = institution
 		wikiReceive := false
@@ -97,7 +96,7 @@ func (controller *Institution) Update() {
 
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		problems, err := institution.Modify(institutionDetails)
 		if err != nil {
@@ -117,7 +116,7 @@ func (controller *Institution) Delete() {
 
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		repositories := institution.GetRepositories()
 
@@ -130,7 +129,7 @@ func (controller *Institution) Delete() {
 
 		databaseError := institution.Delete()
 		if databaseError != nil {
-			controller.Abort("databaseError")
+			controller.Abort("show-database-error")
 		} else {
 			message := "The institution [" + institution.Name + "] has been deleted. Well done!"
 			goTo := "/admin/institutions/"
@@ -144,7 +143,7 @@ func (controller *Repository) ShowInstitution() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["institution"] = institution
 		controller.Data["repositories"] = institution.GetRepositories()
@@ -158,7 +157,7 @@ func (controller *Repository) ShowAdvanceInstitutionOptions() {
 	ID := controller.Ctx.Input.Param(":id")
 	institution, err := repository.NewInstitution(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["institution"] = institution
 		controller.TplNames = "site/admin/institution/advance-options.tpl"

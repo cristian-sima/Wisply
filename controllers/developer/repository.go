@@ -24,7 +24,7 @@ func (controller *Repository) GetResources() {
 	orderBy := strings.TrimSpace(controller.GetString("orderBy"))
 
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		options, err := database.NewSQLOptions(database.Temp{
 			LimitMin: min,
@@ -37,7 +37,7 @@ func (controller *Repository) GetResources() {
 		})
 
 		if err != nil {
-			controller.Abort("databaseError")
+			controller.Abort("show-database-error")
 		} else {
 			records := wisply.GetRecords(repo.ID, options)
 			switch strings.TrimSpace(controller.GetString("format")) {

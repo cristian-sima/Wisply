@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/cristian-sima/Wisply/models/curriculum"
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/education"
 )
 
 // CurriculaSearch searches for curricula
@@ -15,11 +15,11 @@ type CurriculaSearch struct {
 
 // Perform gets the results
 func (search CurriculaSearch) Perform() {
-	allCurriculums := search.getFromDB()
-	for _, curriculum := range allCurriculums {
+	allPrograms := search.getFromDB()
+	for _, program := range allPrograms {
 		result := &Result{
-			Title:       curriculum.GetName(),
-			URL:         search.getURL(curriculum.GetID()),
+			Title:       program.GetName(),
+			URL:         search.getURL(program.GetID()),
 			Description: "",
 			Icon:        "/static/img/public/search/curriculum.png",
 			Category:    "Curriculum",
@@ -30,8 +30,8 @@ func (search CurriculaSearch) Perform() {
 }
 
 // gets the curricula
-func (search CurriculaSearch) getFromDB() []*curriculum.Program {
-	var list []*curriculum.Program
+func (search CurriculaSearch) getFromDB() []*education.Program {
+	var list []*education.Program
 
 	limitClause := search.options.GetLimit()
 	fieldsList := "`id`"
@@ -46,7 +46,7 @@ func (search CurriculaSearch) getFromDB() []*curriculum.Program {
 	for rows.Next() {
 		var ID string
 		rows.Scan(&ID)
-		item, _ := curriculum.NewProgram(ID)
+		item, _ := education.NewProgram(ID)
 		list = append(list, item)
 	}
 	return list

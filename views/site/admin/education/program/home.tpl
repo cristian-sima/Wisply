@@ -10,6 +10,10 @@
     <span class="h4">{{ .program.GetName }}</span>
     <hr />
     <div>
+    <a href="/admin/curriculum/{{ .program.GetID }}/add-knowledge-area" class="btn btn-primary sm">Add Knowledge Area</a>
+    </div>
+    <hr />
+    <div>
       <a class="btn btn-primary" href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options">Advance options</a>
     </div>
   </div>

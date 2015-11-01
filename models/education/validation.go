@@ -1,4 +1,4 @@
-package curriculum
+package education
 
 import (
 	wisply "github.com/cristian-sima/Wisply/models/adapter"

@@ -19,24 +19,23 @@
           </tr>
         </thead>
         <tbody>
-          {{range $index, $element := .accounts}}
-          {{$safe := $element.Email|html}}
+          {{range $index, $account := .accounts}}
           <tr>
-            <td class="hidden-xs">{{ $element.ID |html }}</td>
-            <td>{{ $element.Name |html }}</td>
-            <td><a href="mailto:{{ $safe }}">{{ $element.Email |html }}</a></td>
+            <td class="hidden-xs">{{ $account.ID |html }}</td>
+            <td>{{ $account.Name |html }}</td>
+            <td><a href="mailto:{{ $account.Email }}">{{ $account.Email }}</a></td>
             <td>
-              {{ if $element.IsAdministrator }}
+              {{ if $account.IsAdministrator }}
               <span class="label label-info">Administrator</span>
               {{ else }}
               <span class="label label-default">User</span>
               {{ end }}
             </td>
             <td>
-              <a href="/admin/accounts/modify/{{$element.ID}}">Modify</a>
+              <a href="/admin/accounts/modify/{{$account.ID}}">Modify</a>
             </td>
             <td>
-              <a class="deleteAccountButton" data-id="{{$element.ID}}" data-name="{{$safe}}" href="#">Delete</a>
+              <a class="deleteAccountButton" data-id="{{$account.ID}}" data-name="{{$account.Name}}" href="#">Delete</a>
             </td>
           </tr>
           {{end }}

@@ -1,6 +1,6 @@
 package public
 
-import "github.com/cristian-sima/Wisply/models/curriculum"
+import "github.com/cristian-sima/Wisply/models/education"
 
 // Curriculum manages the operations for curriculum
 type Curriculum struct {
@@ -19,11 +19,11 @@ func (controller *Curriculum) ShowProgram() {
 	controller.TplNames = "site/public/curriculum/program/home.tpl"
 }
 
-func (controller *Curriculum) loadProgramToTemplate() *curriculum.Program {
+func (controller *Curriculum) loadProgramToTemplate() *education.Program {
 	ID := controller.Ctx.Input.Param(":id")
-	program, err := curriculum.NewProgram(ID)
+	program, err := education.NewProgram(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 		return program
 	}
 	controller.Data["program"] = program

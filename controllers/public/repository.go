@@ -38,7 +38,7 @@ func (controller *Repository) ShowResource() {
 	fmt.Println(resource.Keys)
 
 	if errRepository != nil || errResource != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["repository"] = repo
 		controller.Data["institution"] = repo.GetInstitution()
@@ -52,7 +52,7 @@ func (controller *Repository) GetResourceContent() {
 	resourceID := controller.Ctx.Input.Param(":resource")
 	resource, errResource := wisply.GetRecordByID(resourceID)
 	if errResource != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		externalURL := resource.Keys.GetURL()
 		//
@@ -85,7 +85,7 @@ func (controller *Repository) ShowRepository() {
 	ID := controller.Ctx.Input.Param(":repository")
 	repo, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	} else {
 		controller.Data["repository"] = repo
 		controller.SetCustomTitle(repo.Name)

@@ -13,8 +13,8 @@
             <label for="modify-administrator" class="col-lg-2 control-label">Type</label>
             <div class="col-lg-10">
               <select name="modify-administrator" id="modify-administrator" class="form-control">
-                <option value="true" {{ if .isAdministrator }} selected {{ end }} >Administrator</option>
-                <option value="false" {{ if .isUser }} selected {{ end}}>User</option>
+                <option value="true" {{ if .account.IsAdministrator }} selected {{ end }} >Administrator</option>
+                <option value="false" {{ if .account.IsUser }} selected {{ end}}>User</option>
               </select>
             </div>
           </div>

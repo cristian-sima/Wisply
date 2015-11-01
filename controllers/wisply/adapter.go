@@ -13,6 +13,30 @@ import (
 // It is the most basic type of Adapter
 type Adapter struct {
 	beego.Controller
+	templatePath string
+}
+
+// LoadTemplate loads a filenmae for that template
+// The filename should be in the same directory specified by the templatePath
+// The templatePath can be changed by using SetTemplatePath
+func (controller *Controller) LoadTemplate(filename string) {
+	if controller.templatePath == "" {
+		panic("This controller did not overwrite the default path")
+	} else {
+		controller.TplNames = controller.templatePath + "/" + filename + ".tpl"
+	}
+}
+
+// SetTemplatePath changes the default path for template
+func (controller *Controller) SetTemplatePath(path string) {
+	controller.templatePath = path
+}
+
+// SetLayout sets the layout for the controller
+// Please see beego for more information about layout
+func (controller *Controller) SetLayout(layout string) {
+	templatesLocation := "/site/"
+	controller.Layout = templatesLocation + layout + "-layout.tpl"
 }
 
 // GetApplicationMode returns the mode in which the app is running

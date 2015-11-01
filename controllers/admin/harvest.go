@@ -91,7 +91,7 @@ func (controller *Harvest) ShowPanel() {
 	ID := controller.Ctx.Input.Param(":id")
 	repository, err := repository.NewRepository(ID)
 	if err != nil {
-		controller.Abort("databaseError")
+		controller.Abort("show-database-error")
 	}
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host

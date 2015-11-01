@@ -53,10 +53,11 @@ func deleteOldTokens() {
 	query.Exec(strconv.Itoa(diff))
 }
 
-// GetAllAccounts It returns an array of Account with all the accounts
-func (model *Model) GetAllAccounts() []Account {
+// GetAll returns an array with all the accounts
+func GetAll() []Account {
 	var list []Account
-	sql := "SELECT id, name, password, email, administrator FROM account"
+	fieldList := "id, name, password, email, administrator"
+	sql := "SELECT " + fieldList + " FROM account"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		account := Account{}

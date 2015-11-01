@@ -4,13 +4,15 @@ package admin
 import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/admin"
+	"github.com/cristian-sima/Wisply/routers/admin/accounts"
+	"github.com/cristian-sima/Wisply/routers/admin/education"
 )
 
 // Load tells the framework to load the addresses for the router
 func Load() {
 
-	account := getAccount()
-	curriculum := getCurriculum()
+	account := accounts.Get()
+	curriculum := curriculum.Get()
 	developer := getDeveloper()
 	institution := getInstitution()
 	harvest := getHarvest()

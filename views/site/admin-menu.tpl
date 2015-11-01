@@ -51,7 +51,7 @@
       <a href="/admin/curriculum" >
         <span class="glyphicon glyphicon-tasks"></span>
         <span class="hidden-sm hidden-xs">
-          Curricula
+          Education
         </span>
       </a>
     </li>

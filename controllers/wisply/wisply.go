@@ -104,8 +104,7 @@ func (controller *Controller) SetCustomTitle(title string) {
 
 // ShowBlankPage displays a blank page
 func (controller *Controller) ShowBlankPage() {
-	controller.Layout = "site/blank-layout.tpl"
-	controller.TplNames = "site/blank.tpl"
+	controller.TplNames = "errors/blank.tpl"
 }
 
 // RedirectToLoginPage redirects the account to the login page

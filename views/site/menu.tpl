@@ -34,7 +34,7 @@
           <ul class="dropdown-menu">
             {{range $index, $program := .programs}}
             <li>
-              <a href="/education/program/{{$program.GetID}}">
+              <a href="/education/programs/{{$program.GetID}}">
                 {{ $program.GetName }}
               </a>
             </li>

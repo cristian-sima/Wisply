@@ -5,8 +5,8 @@ type Program struct {
 	Controller
 }
 
-// Display shows the dashboard for a program
+// Display shows the public page for a program of study
 func (controller *Program) Display() {
 	controller.SetCustomTitle(controller.GetProgram().GetName())
-	controller.TplNames = "site/public/curriculum/program/home.tpl"
+	controller.LoadTemplate("home")
 }

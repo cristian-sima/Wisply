@@ -5,7 +5,8 @@
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li class="active">{{ .program.GetName }} Curriculum</li>
+            <li><a href="/education">Programs of study</a></li>
+            <li class="active">{{ .program.GetName }}</li>
           </ul>
         </div>
         <div class="panel-body">

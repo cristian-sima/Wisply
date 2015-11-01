@@ -11,11 +11,11 @@ type Controller struct {
 	program *model.Program
 }
 
-// Prepare loads the account
+// Prepare loads the program
 func (controller *Controller) Prepare() {
 	controller.Controller.Prepare()
-	controller.SetTemplatePath("admin/accounts/account")
-	controller.loadAccount()
+	controller.SetTemplatePath("public/education/program")
+	controller.loadProgram()
 }
 
 // GetProgram returns the reference to the program
@@ -23,7 +23,7 @@ func (controller *Controller) GetProgram() *model.Program {
 	return controller.program
 }
 
-func (controller *Controller) loadAccount() {
+func (controller *Controller) loadProgram() {
 	ID := controller.Ctx.Input.Param(":program")
 	program, err := model.NewProgram(ID)
 	if err != nil {

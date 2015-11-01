@@ -1,4 +1,4 @@
-package developer
+package api
 
 import (
 	"strings"
@@ -43,13 +43,13 @@ func (controller *Repository) GetResources() {
 			switch strings.TrimSpace(controller.GetString("format")) {
 			case "html":
 				controller.Data["records"] = records
-				controller.TplNames = "site/developer/repository/resources/html.tpl"
+				controller.TplNames = "site/developer/api/repository/resources/html.tpl"
 				break
 			case "json":
 				controller.Ctx.Output.Json(records, false, false)
 				break
 			default:
-				controller.TplNames = "site/developer/problem.tpl"
+				controller.TplNames = "site/developer/api/problem.tpl"
 				break
 			}
 		}

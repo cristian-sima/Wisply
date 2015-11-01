@@ -1,4 +1,4 @@
-package developer
+package api
 
 import "github.com/cristian-sima/Wisply/models/search"
 

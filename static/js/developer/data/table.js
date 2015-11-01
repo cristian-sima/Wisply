@@ -1,17 +1,17 @@
 /* global jQuery,$, wisply */
 /**
- * @file Encapsulates the functionality for managing the APITableList
+ * @file Encapsulates the functionality for managing the DeveloperDataTable
  * @author Cristian Sima
  */
 /**
- * @namespace APITableList
+ * @namespace DeveloperDataTable
  */
-var APITableListModule = function() {
+var DeveloperDataTable = function() {
 	'use strict';
 	/**
 	 * The constructor does nothing
 	 * @class
-	 * @memberof APITableListModule
+	 * @memberof DeveloperDataTableModule
 	 * @classdesc It represents a Wisply table
 	 * @param {number} id   The id of the table
 	 * @param {string} name The name of the table
@@ -23,19 +23,19 @@ var APITableListModule = function() {
 	/**
 	 * The constructor activates the listeners
 	 * @class Manager
-	 * @memberof APITableListModule
-	 * @classdesc It encapsulets the functions for APITableListModule.
+	 * @memberof DeveloperDataTableModule
+	 * @classdesc It encapsulets the functions for DeveloperDataTableModule.
 	 */
 	var Manager = function Manager() {};
 	/**
 	 * @memberof Manager
 	 */
 	Manager.prototype =
-		/** @lends APITableListModule.Manager */
+		/** @lends DeveloperDataTableModule.Manager */
 		{
 			/**
 			 * It activates the listener for all delete buttons
-			 * @fires APITableListManager#confirmDelete
+			 * @fires DeveloperDataTableManager#confirmDelete
 			 */
 			init: function() {
 				var instance = this;
@@ -57,7 +57,7 @@ var APITableListModule = function() {
 			},
 			/**
 			 * It tells the server to download the table and shows a waiting message
-			 * @param  {APITableListModule.Table} table The table to be downloaded
+			 * @param  {DeveloperDataTableModule.Table} table The table to be downloaded
 			 */
 			downloadTable: function(table) {
 				var request,
@@ -70,7 +70,7 @@ var APITableListModule = function() {
 				 */
 				successCallback = function() {
 					box.modal("hide");
-					window.location.href = '/developer/table/download/' + table.name;
+					window.location.href = '/developer/data/table/download/' + table.name;
 				};
 				/**
 				 * It is called when there has been problems
@@ -81,7 +81,7 @@ var APITableListModule = function() {
 					wisply.message.showError("There was a problem with your request :(");
 				};
 				request = {
-					"url": '/developer/table/generate/' + table.name,
+					"url": '/developer/data/table/generate/' + table.name,
 					"success": successCallback,
 					"error": errorCallback
 				};
@@ -124,6 +124,6 @@ var APITableListModule = function() {
 };
 jQuery(document).ready(function() {
 	"use strict";
-	var module = new APITableListModule();
-	wisply.loadModule("developer-table-list", module);
+	var module = new DeveloperDataTable();
+	wisply.loadModule("developer-data-table", module);
 });

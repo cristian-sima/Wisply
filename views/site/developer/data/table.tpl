@@ -6,7 +6,7 @@
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
             <li><a href="/developer">Developers & Research</a></li>
-            <li class="active">List of tables</li>
+            <li class="active">Download tables</li>
           </ul>
         </div>
         <div class="panel-body">
@@ -84,10 +84,10 @@
 }
 </style>
 </div>
-<script src="/static/js/developer/table/list.js"></script>
+<script src="/static/js/developer/data/table.js"></script>
 <script>
 $(document).ready(function(){
-    var module = wisply.getModule("developer-table-list"),
+    var module = wisply.getModule("developer-data-table"),
       manager = new module.Manager();
       manager.init();
 });

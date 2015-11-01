@@ -53,7 +53,7 @@
             </div>
             <div class="panel-body">
               <br />
-              In case you want to use the data, you can download the entire tables which Wisply is using. <a href="/developer/table/list" class="btn btn-primary btn-xs">See the list of tables</a>
+              In case you want to use the data, you can download the entire tables which Wisply is using. <a href="/developer/data/table" class="btn btn-primary btn-xs">See the list of tables</a>
               <br />
             </div>
           </div>
@@ -74,7 +74,7 @@
                     <h4>List the resources from a repository</h4>
                     Type <span class="label label-info">GET</span>
                     <br />
-                    <pre>developer/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&amp;format={<strong>format</strong>}</pre>
+                    <pre>developer/api/repository/resources/{<strong>repositoryID</strong>}/get/{<strong>startResource</strong>}/{<strong>resourceNumber</strong>}?collection={<strong>collectionID</strong>}&amp;format={<strong>format</strong>}</pre>
                     Response format: <span class="label label-success">JSON</span> or  <span class="label label-success">HTML</span>
                     <br />
                     Where:
@@ -93,7 +93,7 @@
                     <h4>Search for items</h4>
                     Type <span class="label label-info">GET</span>
                     <br />
-                    <pre>developer/search/anything/{<strong>query</strong>}</pre>
+                    <pre>developer/api/search/anything/{<strong>query</strong>}</pre>
                     Response format: <span class="label label-success">JSON</span>
                     <br />
                     <blockquote>

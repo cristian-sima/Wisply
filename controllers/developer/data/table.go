@@ -1,4 +1,4 @@
-package developer
+package data
 
 import (
 	"io"
@@ -6,10 +6,6 @@ import (
 	"time"
 
 	"github.com/cristian-sima/Wisply/models/developer"
-)
-
-const (
-	numberOfValidHoursForFile = 3600 * 24
 )
 
 // Table holds all the methods for downloading the Wisply tables
@@ -20,22 +16,20 @@ type Table struct {
 // ShowList displays the list of available tables to be downloaded
 func (controller *Table) ShowList() {
 	controller.Data["tables"] = developer.GetAllowedTables()
-	controller.Layout = "site/public-layout.tpl"
-	controller.TplNames = "site/developer/table/list.tpl"
 	// Please use http://www.timestampgenerator.com/
 	controller.SetCustomTitle("Developers & Research")
 	controller.IndicateLastModification(1445250987)
+	controller.LoadTemplate("table")
 }
 
-// GenerateTable generates the table if there is no table or it is too old
-func (controller *Table) GenerateTable() {
+// Generate generates the table if there is no table or it is too old
+func (controller *Table) Generate() {
 	// The "format" variable may be received in future like a parameter
 	// (in case there is a need to add a new format version)
 	// In this case, there is no need to modify other code from here
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	pathToFolder := "cache/developer/tables/"
 	fullPath := pathToFolder + "/" + filename
 	file, err := controller.getTable(fullPath)
 	if err != nil {
@@ -50,16 +44,15 @@ func (controller *Table) GenerateTable() {
 	controller.ShowBlankPage()
 }
 
-// DownloadTable downloads a table
-func (controller *Table) DownloadTable() {
+// Download downloads a table
+func (controller *Table) Download() {
 	// The "format" variable may be received in future like a parameter
 	// (in case there is a need to add a new format version)
 	// In this case, there is no need to modify other code from here
 	format := "csv"
 	tableName := controller.Ctx.Input.Param(":name")
 	filename := tableName + "." + format
-	folderPath := "cache/developer/tables/"
-	fullPath := folderPath + "/" + filename
+	fullPath := pathToFolder + "/" + filename
 	if developer.IsRestrictedTable(tableName) {
 		controller.DisplaySimpleError(messages["tableNotAllowed"])
 	} else {
@@ -75,7 +68,7 @@ func (controller *Table) DownloadTable() {
 			tableFilename := name + "." + format
 
 			controller.setHeadersDownload(tableFilename)
-			controller.readFile(file, folderPath)
+			controller.readFile(file, pathToFolder)
 			controller.closeFile(file)
 
 		} else {

@@ -4,14 +4,18 @@ import (
 	"strconv"
 	"strings"
 
-	auth "github.com/cristian-sima/Wisply/models/auth"
+	"github.com/cristian-sima/Wisply/models/auth"
 )
 
-// Auth inherits the Controller
-// It manages the operations with the authentication
+// Auth manages the operations with the authentication
 type Auth struct {
 	Controller
-	Model auth.Model
+}
+
+// Prepare sets the template path
+func (controller *Auth) Prepare() {
+	controller.Controller.Prepare()
+	controller.SetTemplatePath("public/auth")
 }
 
 // ShowLoginPage shows the login form in case user is not connected or otherwise
@@ -30,7 +34,6 @@ func (controller *Auth) showLoginForm() {
 	controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
 	controller.SetCustomTitle("Login to Wisply")
 	controller.showForm("login")
-
 	controller.LoadCaptcha("login-form-page")
 }
 
@@ -38,7 +41,6 @@ func (controller *Auth) showLoginForm() {
 func (controller *Auth) ShowRegisterForm() {
 	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
-
 	controller.LoadCaptcha("register-form-page")
 }
 
@@ -46,7 +48,7 @@ func (controller *Auth) ShowRegisterForm() {
 // It can be "login" or "register"
 func (controller *Auth) showForm(name string) {
 	controller.GenerateXSRF()
-	controller.TplNames = "site/public/auth/" + name + ".tpl"
+	controller.LoadTemplate(name)
 }
 
 // CreateNewAccount checks if the password and the confirmation are the same
@@ -54,10 +56,8 @@ func (controller *Auth) showForm(name string) {
 // The parameters should be: register-name, register-password,
 // register-email and register-password-confirm
 func (controller *Auth) CreateNewAccount() {
-
 	page := "register-form-page"
 	controller.RegisterCaptchaAction(page)
-
 	if !controller.IsCaptchaValid(page) {
 		controller.DisplaySimpleError("Please enter a valid code!")
 	} else {

@@ -1,4 +1,4 @@
-package curriculum
+package education
 
 import (
 	"github.com/astaxie/beego"

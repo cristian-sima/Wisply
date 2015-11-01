@@ -12,7 +12,7 @@ import (
 func Load() {
 
 	account := accounts.Get()
-	curriculum := curriculum.Get()
+	curriculum := education.Get()
 	developer := getDeveloper()
 	institution := getInstitution()
 	harvest := getHarvest()

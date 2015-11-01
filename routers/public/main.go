@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/public"
 	"github.com/cristian-sima/Wisply/controllers/wisply"
+	"github.com/cristian-sima/Wisply/routers/public/education"
 )
 
 // Load tells the framework to load the addresses for the router
@@ -16,7 +17,7 @@ func Load() {
 func loadNS() {
 
 	auth := getAuth()
-	curriculum := getCurriculum()
+	curriculum := education.Get()
 	institution := getInstitution()
 	repository := getRepository()
 

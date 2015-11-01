@@ -11,9 +11,6 @@ type Controller struct {
 // else it loads the page
 func (controller *Controller) Prepare() {
 	controller.Controller.Prepare()
-	controller.loadLayout()
-}
-
-func (controller *Controller) loadLayout() {
-	controller.Layout = "site/public-layout.tpl"
+	controller.SetLayout("public")
+	controller.SetTemplatePath("public")
 }

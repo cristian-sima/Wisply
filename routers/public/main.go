@@ -1,5 +1,4 @@
-// Package public contains all the pages which can be accessed by anyone
-// without a connection
+// Package public contains all the pages which can be accessed by users which are not connected
 package public
 
 import (

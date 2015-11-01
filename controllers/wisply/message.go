@@ -22,7 +22,7 @@ func (controller *Message) DisplaySimpleError(msg string) {
 // (ussually after the validation of fields)
 func (controller *Message) DisplayError(err adapter.WisplyError) {
 	content := err.GetMessage()
-	if len(err.Data.Errors) != 0 {
+	if err.Data != nil {
 		language := beego.AppConfig.String("language")
 		controller.Data["validationFailed"] = true
 		controller.Data["validationErrors"] = err.Data.TranslateTo(language)

@@ -142,5 +142,5 @@ var AdminAccountsModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new AdminAccountsModule();
-	wisply.loadModule("admin-accounts", module);
+	wisply.loadModule("admin-accounts-list", module);
 });

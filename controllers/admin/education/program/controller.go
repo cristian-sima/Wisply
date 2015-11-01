@@ -1,4 +1,4 @@
-package curriculum
+package program
 
 import (
 	education "github.com/cristian-sima/Wisply/controllers/admin/education"
@@ -13,12 +13,13 @@ type Controller struct {
 
 // Prepare loads the program of study from the id of the request
 func (controller *Controller) Prepare() {
-	controller.loadProgram()
 	controller.Controller.Prepare()
+	controller.SetTemplatePath("admin/education/programs")
+	controller.loadProgram()
 }
 
 func (controller *Controller) loadProgram() {
-	ID := controller.Ctx.Input.Param(":id")
+	ID := controller.Ctx.Input.Param(":program")
 	program, err := model.NewProgram(ID)
 	if err != nil {
 		controller.Abort("show-database-error")

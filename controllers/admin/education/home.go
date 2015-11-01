@@ -8,5 +8,5 @@ type Home struct {
 // Display shows the home page for the education
 func (controller *Home) Display() {
 	controller.SetCustomTitle("Admin - Education")
-	controller.LoadTemplate("education")
+	controller.LoadTemplate("home")
 }

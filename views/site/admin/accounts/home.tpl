@@ -44,10 +44,10 @@
     </div>
   </div>
 </div>
-<script src="/static/js/admin/account/list.js"></script>
+<script src="/static/js/admin/accounts/list.js"></script>
 <script>
 $(document).ready(function(){
-    var module = wisply.getModule("admin-accounts"),
+    var module = wisply.getModule("admin-accounts-list"),
       list = new module.List();
       list.init();
 });

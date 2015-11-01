@@ -2,10 +2,10 @@
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
-      <li><a href="/admin/curriculum">Curriculum</a></li>
+      <li><a href="/admin/education">Education</a></li>
       {{ if eq .action "Modify" }}
-      <li><a href="/admin/curriculum/programs/{{ .program.GetID }}">{{ .program.GetName }}</a></li>
-      <li><a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options">Advance options</a></li>
+      <li><a href="/admin/education/programs/{{ .program.GetID }}">{{ .program.GetName }}</a></li>
+      <li><a href="/admin/education/programs/{{ .program.GetID }}/advance-options">Advance options</a></li>
       {{ end }}
       <li class="active">{{ .action }}</li>
     </ul>
@@ -23,9 +23,9 @@
         <div class="form-group">
           <div class="col-lg-10 col-lg-offset-2">
             {{ if eq .action "Add"}}
-            <input type="submit" class="btn btn-primary" value="Add" /> <a href="/admin/curriculum" class="btn btn-default">Back to list</a>
+            <input type="submit" class="btn btn-primary" value="Add" /> <a href="/admin/education" class="btn btn-default">Back to list</a>
             {{ else }}
-            <input type="submit" class="btn btn-primary" value="Modify" /> <a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options" class="btn btn-default">Cancel</a>
+            <input type="submit" class="btn btn-primary" value="Modify" /> <a href="/admin/education/programs/{{ .program.GetID }}/advance-options" class="btn btn-default">Cancel</a>
             {{ end }}
           </div>
         </div>

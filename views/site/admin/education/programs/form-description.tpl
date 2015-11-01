@@ -2,9 +2,9 @@
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
-      <li><a href="/admin/curriculum">Curriculum</a></li>
-      <li><a href="/admin/curriculum/programs/{{ .program.GetID }}">{{ .program.GetName }}</a></li>
-      <li><a href="/admin/curriculum/programs/{{ .program.GetID }}/advance-options">Advance options</a></li>
+      <li><a href="/admin/education">Education</a></li>
+      <li><a href="/admin/education/programs/{{ .program.GetID }}">{{ .program.GetName }}</a></li>
+      <li><a href="/admin/education/programs/{{ .program.GetID }}/advance-options">Advance options</a></li>
       <li class="active">Modify static description</li>
     </ul>
   </div>
@@ -14,7 +14,7 @@
       <div class="form-group">
         <span class="col-lg-2 control-label"></span>
         <div class="col-lg-10">
-          Program <a target="_blank" href="/curriculum/{{ .program.GetID }}"><strong>{{ .program.GetName }} </strong></a>
+          Program <a target="_blank" href="/education/{{ .program.GetID }}"><strong>{{ .program.GetName }} </strong></a>
         </div>
       </div>
       <fieldset>

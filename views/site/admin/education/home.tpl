@@ -2,12 +2,12 @@
   <div class="panel-heading" style="padding-bottom:0px">
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
-      <li class="active">Curricula panel</li>
+      <li class="active">Education</li>
     </ul>
   </div>
   <div class="panel-body">
     <div class="btn-group-sm">
-      <a href="/admin/curriculum/add" class="btn btn-primary">
+      <a href="/admin/education/programs/add" class="btn btn-primary">
         <span class="glyphicon glyphicon-plus"></span> Add program of study</a>
       </div>
       <br />
@@ -18,7 +18,7 @@
         <div class="row text-center">
           {{range $index, $program := .programs}}
           <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
-            <a href="/admin/curriculum/programs/{{ $program.GetID }}">
+            <a href="/admin/education/programs/{{ $program.GetID }}">
               <div style="height:100px;" class="thumbnail">
                 <div class="caption">
                   <h3>

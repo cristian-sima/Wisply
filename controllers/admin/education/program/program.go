@@ -1,4 +1,4 @@
-package curriculum
+package program
 
 import (
 	"strconv"
@@ -16,20 +16,20 @@ type Program struct {
 // Display shows the dashboard for a program
 func (controller *Program) Display() {
 	controller.SetCustomTitle("Admin - " + controller.program.GetName())
-	controller.LoadTemplate("home.tpl")
+	controller.LoadTemplate("home")
 }
 
 // ShowAdvanceOptions shows the page with the advance options for the program
 func (controller *Program) ShowAdvanceOptions() {
 	controller.GenerateXSRF()
-	controller.TplNames = "site/admin/curriculum/program/advance-options.tpl"
+	controller.LoadTemplate("advance-options")
 }
 
 // ShowModifyForm displays the form to modify the static description
 func (controller *Program) ShowModifyForm() {
 	controller.GenerateXSRF()
 	controller.Data["description"] = controller.program.GetDescription()
-	controller.TplNames = "site/admin/curriculum/program/form-description.tpl"
+	controller.LoadTemplate("form-description")
 	controller.showForm("Modify")
 }
 
@@ -41,13 +41,13 @@ func (controller *Program) UpdateDescription() {
 		controller.DisplaySimpleError(err.Error())
 	} else {
 		message := "The description has been modified."
-		goTo := "/admin/curriculum/programs/" + strconv.Itoa(controller.program.GetID()) + "/advance-options"
+		goTo := "/admin/education/programs/" + strconv.Itoa(controller.program.GetID()) + "/advance-options"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
 
-// ShowAddProgramForm shows the page with the form to add a program
-func (controller *Program) ShowAddProgramForm() {
+// ShowAddForm shows the page with the form to add a program
+func (controller *Program) ShowAddForm() {
 	controller.showForm("Add")
 }
 
@@ -60,7 +60,7 @@ func (controller *Program) Update() {
 		controller.DisplaySimpleError(err.Error())
 	} else {
 		message := "The program has been updated!"
-		goTo := "/admin/curriculum/programs/" + strconv.Itoa(controller.program.GetID()) + "/advance-options"
+		goTo := "/admin/education/programs/" + strconv.Itoa(controller.program.GetID()) + "/advance-options"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
@@ -73,14 +73,14 @@ func (controller *Program) CreateProgram() {
 		controller.DisplaySimpleError(err.Error())
 	} else {
 		message := "The program has been created!"
-		goTo := "/admin/curriculum/"
+		goTo := "/admin/education/"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
 
-// DeleteProgram deletes the entire program and data related to it
+// Delete deletes the entire program and data related to it
 // It requires the admin password
-func (controller *Program) DeleteProgram() {
+func (controller *Program) Delete() {
 	password := strings.TrimSpace(controller.GetString("password"))
 	isPasswordValid := auth.VerifyAccount(controller.Account, password)
 	if isPasswordValid {
@@ -89,16 +89,16 @@ func (controller *Program) DeleteProgram() {
 			controller.DisplaySimpleError(err.Error())
 		} else {
 			message := "Wisply deleted all the information related to [" + controller.program.GetName() + "] !"
-			goTo := "/admin/curriculum/"
+			goTo := "/admin/education/"
 			controller.DisplaySuccessMessage(message, goTo)
 		}
 	} else {
-		controller.Redirect("/admin/curriculum", 404)
+		controller.Redirect("/admin/education", 404)
 	}
 }
 
 func (controller *Program) showForm(action string) {
 	controller.GenerateXSRF()
 	controller.Data["action"] = action
-	controller.TplNames = "site/admin/curriculum/form.tpl"
+	controller.LoadTemplate("form")
 }

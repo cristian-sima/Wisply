@@ -120,7 +120,7 @@ var AdminAdanceOptionsProgramModule = function() {
 				 */
 				successCallback = function() {
 					//wisply.message.showSuccess("The program has been removed! Refreshing page...");
-					window.location = "/admin/curriculum";
+					window.location = "/admin/education";
 				};
 				/**
 				 * The callback called when there was a problem. It shows a message
@@ -129,7 +129,7 @@ var AdminAdanceOptionsProgramModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					url: '/admin/curriculum/programs/' + program.id + "/delete",
+					url: '/admin/education/programs/' + program.id + "/delete",
 					success: successCallback,
 					error: errorCallback,
 					data: {
@@ -147,5 +147,5 @@ var AdminAdanceOptionsProgramModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new AdminAdanceOptionsProgramModule();
-	wisply.loadModule("admin-advance-options-program", module);
+	wisply.loadModule("admin-education-program-advance-options", module);
 });

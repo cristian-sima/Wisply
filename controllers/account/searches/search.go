@@ -9,7 +9,7 @@ type List struct {
 func (controller *List) Display() {
 	controller.Data["searches"] = controller.Account.GetSearches().GetAll()
 	controller.SetCustomTitle("Account - Activity")
-	controller.LoadTemplate("list")
+	controller.LoadTemplate("home")
 }
 
 // Clear clears the entire history

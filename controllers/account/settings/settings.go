@@ -1,4 +1,4 @@
-package account
+package settings
 
 import (
 	"strings"
@@ -11,9 +11,10 @@ type Settings struct {
 	Controller
 }
 
-// DisplayPage shows the settings page
-func (controller *Settings) DisplayPage() {
-	controller.TplNames = "site/account/settings/home.tpl"
+// Display shows the settings page
+func (controller *Settings) Display() {
+	controller.SetCustomTitle("Account - Settings")
+	controller.LoadTemplate("home")
 }
 
 // DeleteAccount checks if the supplied password is correct and then
@@ -27,5 +28,5 @@ func (controller *Settings) DeleteAccount() {
 	} else {
 		controller.Abort("404")
 	}
-	controller.TplNames = "site/blank.tpl"
+	controller.TplNames = "site/errrors/blank.tpl"
 }

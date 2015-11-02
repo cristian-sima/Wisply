@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: wisply/search.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: wisply/search.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global $, wisply, Handlebars, Bloodhound */
+var searchModule = {};
+/**
+ * @file Encapsulates the functionality for a search
+ * @author Cristian Sima
+ */
+/**
+ * Encapsulates the functionality for search
+ * @namespace SearchModule
+ */
+var SearchModule = function() {
+	'use strict';
+
+	/**
+	 * In case the length of the string is greater than the numberOfAllowedCharacters
+	 * it cuts the string and appends "..."
+	 * @param  {string} theString                 The string to be modified
+	 * @param  {number} numberOfAllowedCharacters The number of characters to display
+	 * @return {string} The modified string
+	 */
+	function cutString(theString, numberOfAllowedCharacters) {
+		if (theString.length > numberOfAllowedCharacters) {
+			var shortString = theString.substr(0, numberOfAllowedCharacters);
+			theString = shortString + "...";
+		}
+		return theString;
+	}
+	// register a new function for the JavaScript template library
+	// it is used to cut a string which is too long
+	Handlebars.registerHelper('cutString', function(theString, numberOfAllowedCharacters) {
+		theString = cutString(theString, numberOfAllowedCharacters);
+		return new Handlebars.SafeString(theString);
+	});
+	/**
+	 * It creates the search engine and activates the listeners
+	 * @memberof SearchModule
+	 * @class Field
+	 * @param [object] o Contains the settings for the search field. The settings are: &lt;br />
+	 * selector  - the HTML selector for the element
+	 * URL - The URL address for searches. The request will be o.URL/{{query}
+	 * saveSearches - A boolean which indicates if the searches are stored in the cookies
+	 * @classdesc Represents a search fields which implements the typeahead input
+	 * @see https://twitter.github.io/typeahead.js/
+	 */
+	var Field = function Field(o) {
+		this.selector = o.selector;
+		this.URL = o.URL;
+		this.saveSearches = o.saveSearches;
+		this.cookies = new Cookies(this);
+		this._init();
+	};
+	Field.prototype =
+		/** @lends SearchModule.Field */
+		{
+			/**
+			 * Creates the engines, loads the object and activates the listeners.
+			 * It is a private method, called by constructor
+			 */
+			_init: function() {
+				var instance = this;
+				/**
+				 * It creates the engine which manages the searches
+				 * @return {object} The engine
+				 */
+				function createObject() {
+					var settings, suggestionsEngine, searchesEngine;
+					/**
+					 * It activates the listeners for the typeahead engine
+					 */
+					function activateListeners() {
+						// I used `event`, even if I do not use it in order to keep
+						// the code cosistent
+						/* jshint unused:false */
+						instance.object.bind('typeahead:select', function(event, suggestion) {
+							var that = this,
+								instanceCopy = instance,
+								suggestionCopy = suggestion;
+							/**
+							 * It is fired when a result has been selected and it contains a
+							 * category. It check if the account is connected, if so it saves
+							 * the query on the server.
+							 */
+							function resultSelected() {
+								/**
+								 * It saves a query on the server and then executes its action
+								 * @param  {object} suggestion The query/suggestion object
+								 */
+								function saveQuery(suggestion) {
+									var requestObject = {
+										url: "/developer/api/search/save/" + suggestion.Title,
+										success: function() {
+											window.location = suggestion.URL;
+										},
+									};
+									wisply.executePostAjax(requestObject);
+								}
+								if (instanceCopy.saveSearches) {
+									instanceCopy.cookies.saveSearchQuery(suggestion.Title);
+								}
+								if (wisply.connection) {
+									saveQuery(suggestion);
+								} else {
+									window.location = suggestion.URL;
+								}
+							}
+							if (suggestion.Category) {
+								resultSelected();
+							} else {
+								$(this).typeahead('close');
+								setTimeout(function() {
+									$(that).typeahead("val", "");
+									$(that).typeahead("val", suggestionCopy.textValue);
+									$(that).typeahead('open');
+								}, 100);
+							}
+						});
+						instance.object.bind('typeahead:render', function() {
+							 wisply.activateTooltip();
+						 });
+						instance.object.bind('typeahead:asyncrequest', function() {
+							 $(instance.selector + '-spinner').show();
+						 });
+						 instance.object.bind('typeahead:autocompleted :asynccancel typeahead:asyncreceive', function() {
+							 $(instance.selector + '-spinner').hide();
+						 });
+						instance.object.bind("typeahead:active", function() {
+							var defaultSearchWidth = 400,
+								width = parseInt($(window).width(), 10),
+								searchWidth = defaultSearchWidth;
+							if (width &lt; searchWidth) {
+								searchWidth = width * 9.95 / 10;
+								$(instance.selector + '-spinner').css({
+									"right": "-110px",
+								});
+							}
+							$(".tt-dataset").css({
+								"width": searchWidth - 30,
+							});
+							setTimeout(function() {
+								$(instance.selector + '-spinner').hide();
+							}, 100);
+						});
+						instance.object.bind("typeahead:idle", function() {
+							var smallSearch = $("#search-small-input"),
+								button = $("#show-small-search-button");
+							$("#search-small").hide();
+							$("#full-logo").show();
+							button.html("&lt;span class='glyphicon glyphicon-search'>&lt;/span>");
+							wisply.isSmallSearchDisplayed = !wisply.isSmallSearchDisplayed;
+							$(instance.selector + '-spinner').hide();
+						});
+					}
+					/**
+					 * It return the engine which provides the suggestions from the server
+					 * @return {object} The engine which provides the results
+					 */
+					function getSuggestionsEngine() {
+						var bloodhound, engine, emptyTemplate, footer, suggestion;
+						/**
+						 * It returns the bloodhound for the engine
+						 * @return {object} The bloodhound
+						 * @see https://github.com/twitter/typeahead.js/blob/master/doc/bloodhound.md
+						 */
+						function getBloodhound() {
+							var object = new Bloodhound({
+								datumTokenizer: function(d) {
+									return Bloodhound.tokenizers.whitespace(d.Title);
+								},
+								queryTokenizer: Bloodhound.tokenizers.whitespace,
+								identify: function(o) {
+									return o.ID;
+								},
+								remote: {
+									cacheKey: 'ID',
+									url: instance.URL + '%QUERY',
+									wildcard: '%QUERY',
+									// transform: function(results) {
+									// 	var result, i, list = [];
+									// 	for(i=0; i &lt; results.length; i++) {
+									// 		result = results[i];
+									// 		console.log(result);
+									// 		if(!result.IsVisible) {
+									// 			result.Visibility = "&lt;span class='glyphicon glyphicon-lock'>&lt;/span>";
+									// 		}
+									// 		list.unshift(result);
+									// 	}
+									// 	return list;
+									// }
+								}
+							});
+							return object;
+						}
+						suggestion = [
+							"&lt;div title='{{ Title }}' style='width:100%'>&lt;div class='row'>",
+							"&lt;div class='col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center' style='min-width:40px;'>",
+							"&lt;div style='width:40px' class='text-center'>&lt;img class='search-logo thumbnail' style='margin-bottom:0px' src='{{Icon}}' />&lt;/div>",
+							"&lt;/div>",
+							"&lt;div class='col-lg-10 col-md-10 col-sm-10 col-xs-10 search-result'>",
+							"&lt;span class='search-title'>{{ cutString Title 40 }}&lt;/span>&lt;br />",
+							"&lt;span class='text-muted bold search-category'>&lt;small> {{#unless IsVisible}} ",
+							"&lt;span data-toggle='tooltip' data-placement='left' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'>&lt;/span>",
+							"{{/unless}} {{ Category }}&lt;/small>&lt;/span>&lt;br />&lt;span class='text-muted search-description'>{{ cutString Description 90 }}&lt;/span>&lt;/div>",
+						"&lt;/div>&lt;/div>",
+					].join("\n");
+						footer = [
+							"&lt;div class='row'>&lt;div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>",
+							'&lt;div class="search-footer">',
+							"&lt;div>&lt;span class='text-primary'>&lt;span class='glyphicon glyphicon-search'>&lt;/span>&lt;/span> &amp;nbsp;&amp;nbsp;Find more about&lt;strong> {{cutString query 30 }}",
+							"&lt;/strong>&lt;/div>&lt;/div>",
+							"&lt;/div>&lt;/div>"
+						].join("\n");
+						emptyTemplate = [
+							'&lt;div class="search-no-results">',
+								'&lt;span class="glyphicon glyphicon-inbox">&lt;/span> No results available.',
+							'&lt;/div>'
+						].join('\n');
+						bloodhound = getBloodhound();
+						engine = {
+							name: 'Title',
+							display: "Title",
+							valueKey: "Title",
+							source: function(q, sync, async) {
+								if (q !== "") {
+									bloodhound.search(q, sync, async);
+								}
+							},
+							limit: 7,
+							templates: {
+								// footer: Handlebars.compile(footer),
+								empty: emptyTemplate,
+								suggestion: Handlebars.compile(suggestion),
+							}
+						};
+						return engine;
+					}
+					/**
+					 * It is the engine which provides the list for the last searches
+					 * It is activated when the input is empty
+					 * @return {object} The engine for previous searches
+					 */
+					function getSearchesEngine() {
+						var engine, source;
+						source = function() {
+							var instanceCopy = instance;
+							// keep the code cosistent even if we do not use the event
+							/* jshint unused:false */
+							return (function cookieEngine(q, sync) {
+								if (q === '') {
+									var searches = instanceCopy.cookies.getLastSearchQueries();
+									sync(searches);
+									$(instance.selector + '-spinner').hide();
+								}
+							});
+						}();
+						engine = {
+							name: 'textValue',
+							display: "textValue",
+							valueKey: "textValue",
+							templates: {
+								header: "&lt;div class='search-header'>Previous queries&lt;/div>",
+								suggestion: Handlebars.compile("&lt;div>{{cutString textValue 50}}&lt;/div>"),
+							},
+							source: source,
+						};
+						return engine;
+					}
+					/**
+					 * Returns the settings for typeahead object
+					 * @return {object} The settings
+					 */
+					settings = {
+						hint: true,
+						highlight: false,
+						minLength: 0,
+					};
+					suggestionsEngine = getSuggestionsEngine();
+					searchesEngine = getSearchesEngine();
+					instance.object = $(instance.selector).typeahead(settings, suggestionsEngine, searchesEngine);
+					activateListeners();
+				}
+				createObject();
+				$(".tt-hint").attr('aria-label', 'Search Hint');
+			}
+		};
+	/**
+	 * Does nothing
+	 * @memberof SearchModule
+	 * @class Cookies
+	 * @param [SearchModule.Field] field The search field object
+	 * @classdesc It manages the operations with cookies
+	 */
+	var Cookies = function Cookies(field) {
+		this.field = field;
+		this.cookieName = 'last-searches';
+		this.maxNumberOfQueries = 5;
+	};
+	Cookies.prototype =
+		/** @lends SearchModule.Cookies */
+		{
+			/**
+			 * It saves the query in the cookies. The query is saved if it is not the
+			 * same as the last one one. If the number of queries exeeds the
+			 * allowed one, the last one is removed
+			 * @param  {string} newValue The value of the query
+			 */
+			saveSearchQuery: function(newValue) {
+				var list,
+					instance = this;
+				/**
+				 * It changes the value of the cookie
+				 * @param  {array} list The array with queries
+				 */
+				function saveCookie(list) {
+					$.cookie(instance.cookieName, JSON.stringify(list), {
+						path: '/'
+					});
+				}
+				/**
+				 * It checks if the value is not empty and if the last value on the
+				 * list is not the same as this
+				 * @param  {string}  value The value to be added
+				 * @param  {array}  list The current array
+				 * @return {Boolean} True if it is valid, false otherwise
+				 */
+				function isGoodValue(value, list) {
+					return (value &amp;&amp; value !== "") &amp;&amp; ((!list[0]) || (list[0] &amp;&amp; value !== list[0].textValue));
+				}
+				list = this.getLastSearchQueries();
+				if (isGoodValue(newValue, list)) {
+					list.unshift({
+						textValue: newValue,
+					});
+					if (list.length > this.maxNumberOfQueries) {
+						list.pop();
+					}
+					saveCookie(list);
+				}
+			},
+			/**
+			 * It returns the list of saved search queries from cookies
+			 * @return {array} The list of saved search queries
+			 */
+			getLastSearchQueries: function() {
+				var string = $.cookie(this.cookieName),
+					list = [];
+				if (string &amp;&amp; string !== "") {
+					list = JSON.parse(string);
+				}
+				return list;
+			}
+		};
+	return {
+		Field: Field,
+	};
+};
+$(document).ready(function() {
+	"use strict";
+	var module = new SearchModule();
+	wisply.loadModule("search", module);
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AccountSearchesListModule.List.html">List</a></li><li><a href="AccountSettingsModule.Page.html">Page</a></li><li><a href="AdminAccounts.Account.html">Account</a></li><li><a href="AdminAccounts.List.html">List</a></li><li><a href="AdminAdanceOptionsProgramModule.Manager.html">Manager</a></li><li><a href="AdminAdanceOptionsProgramModule.Program.html">Program</a></li><li><a href="AdminAPI.GUI.html">GUI</a></li><li><a href="AdminAPIModule.List.html">List</a></li><li><a href="AdminAPIModule.Table.html">Table</a></li><li><a href="CaptchaModule.Captcha.html">Captcha</a></li><li><a href="ConnectionModule.Connection.html">Connection</a></li><li><a href="DeveloperDataTableModule.Manager.html">Manager</a></li><li><a href="DeveloperDataTableModule.Table.html">Table</a></li><li><a href="FunctionalityInstitutionModule.Manager.html">Manager</a></li><li><a href="HarvestListModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestListModule.GUI.html">GUI</a></li><li><a href="HarvestModule.HarvestConnection.html">HarvestConnection</a></li><li><a href="HarvestModule.History.html">History</a></li><li><a href="HarvestModule.StageManager.html">StageManager</a></li><li><a href="HarvestProcessModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcessModule.Indicator.html">Indicator</a></li><li><a href="HarvestProcessModule.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcessModule.WisplyCounter.html">WisplyCounter</a></li><li><a href="InstitutionAdvanceOptionsModule.GUI.html">GUI</a></li><li><a href="InstitutionAdvanceOptionsModule.Institution.html">Institution</a></li><li><a href="InstitutionAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LogAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LoginModule.Form.html">Form</a></li><li><a href="OperationsModule.Manager.html">Manager</a></li><li><a href="ProcessesModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.BottomGUI.html">BottomGUI</a></li><li><a href="PublicRepositoryModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.SideGUI.html">SideGUI</a></li><li><a href="PublicRepositoryModule.TopGUI.html">TopGUI</a></li><li><a href="PublicResourceModule.DIV.html">DIV</a></li><li><a href="PublicResourceModule.Page.html">Page</a></li><li><a href="RegisterModule.Form.html">Form</a></li><li><a href="RepositoryModule.GUI.html">GUI</a></li><li><a href="RepositoryModule.Manager.html">Manager</a></li><li><a href="RepositoryModule.Repository.html">Repository</a></li><li><a href="SearchModule.Cookies.html">Cookies</a></li><li><a href="SearchModule.Field.html">Field</a></li><li><a href="ServerModule.Manager.html">Manager</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="WebsocketsModule.Connection.html">Connection</a></li><li><a href="WebsocketsModule.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="AccountSearchesListModule.html">AccountSearchesListModule</a></li><li><a href="AccountSettingsModule.html">AccountSettingsModule</a></li><li><a href="AdminAccounts.html">AdminAccounts</a></li><li><a href="AdminAdanceOptionsProgramModule.html">AdminAdanceOptionsProgramModule</a></li><li><a href="AdminAPIModule.html">AdminAPIModule</a></li><li><a href="CaptchaModule.html">CaptchaModule</a></li><li><a href="ConnectionModule.html">ConnectionModule</a></li><li><a href="DeveloperDataTable.html">DeveloperDataTable</a></li><li><a href="FunctionalityInstitutionModule.html">FunctionalityInstitutionModule</a></li><li><a href="HarvestListModule%250AIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListModule
+It holds the functionality to see a live list of repositories</a></li><li><a href="HarvestModule.html">HarvestModule</a></li><li><a href="HarvestProcessModule.html">HarvestProcessModule</a></li><li><a href="InstitutionAdvanceOptionsModule.html">InstitutionAdvanceOptionsModule</a></li><li><a href="LogAdvanceOptionsModule.html">LogAdvanceOptionsModule</a></li><li><a href="LoginModule.html">LoginModule</a></li><li><a href="OperationsModule.html">OperationsModule</a></li><li><a href="ProcessesModule.html">ProcessesModule</a></li><li><a href="PublicRepositoryModule.html">PublicRepositoryModule</a></li><li><a href="PublicResourceModule.html">PublicResourceModule</a></li><li><a href="RegisterModule.html">RegisterModule</a></li><li><a href="RepositoryModule.html">RepositoryModule</a></li><li><a href="SearchModule.html">SearchModule</a></li><li><a href="ServerModule%250AThe%2520server%2520module%2520keep%2520the%2520data%2520from%2520server.html">ServerModule
+The server module keep the data from server</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="WebsocketsModule.html">WebsocketsModule</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Nov 02 2015 00:17:47 GMT-0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

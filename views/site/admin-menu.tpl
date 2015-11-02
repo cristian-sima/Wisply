@@ -16,10 +16,10 @@
       </a>
     </li>
     <li>
-      <a href="/admin/developer" >
+      <a href="/admin/developers" >
         <span class="glyphicon glyphicon-save"></span>
         <span class="hidden-sm hidden-xs">
-          API Settings
+          Developers
         </span>
       </a>
     </li>

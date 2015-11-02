@@ -44,7 +44,11 @@ func IsTableAllowedToDownload(name string) bool {
 // AreValidDetails checks if the table is allowed and
 // the description is valid
 func AreValidDetails(table Table) bool {
-	return IsTableAllowedToDownload(table.Name) && isValidDescription(table.Description)
+	b1 := IsTableAllowedToDownload(table.Name)
+	b2 := isValidDescription(table.Description)
+	fmt.Println(b1)
+	fmt.Println(b2)
+	return b1 && b2
 }
 
 // InsertNewTable adds the table name on the list of the tables

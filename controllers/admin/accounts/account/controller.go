@@ -32,5 +32,4 @@ func (controller *Controller) loadAccount() {
 	controller.Data["account"] = account
 	controller.account = account
 	controller.SetCustomTitle("Admin - " + account.Name)
-	controller.account = account
 }

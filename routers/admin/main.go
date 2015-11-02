@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/routers/admin/accounts"
+	"github.com/cristian-sima/Wisply/routers/admin/developers"
 	"github.com/cristian-sima/Wisply/routers/admin/education"
 )
 
@@ -13,7 +14,7 @@ func Load() {
 
 	account := accounts.Get()
 	curriculum := education.Get()
-	developer := getDeveloper()
+	developer := developers.Get()
 	institution := getInstitution()
 	harvest := getHarvest()
 	log := getLog()

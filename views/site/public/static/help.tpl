@@ -58,7 +58,7 @@
               <h2>Answers</h2>
               <article id="help-answers-1" class="well">
                 <h3>I need an email to log in. Why don't you use an username?</h3>
-                We had to decide which method is better. We have chosen the combination of a real name and an email for various reasons. Firstly, the real name idenfity a person in the virtual space better than a combination of letters and digits. A username can be forgetten while an email is frequently used, so it may be more covinient for you to use it.
+                We had to decide which method is better. We have chosen the combination of a real name and an email for various reasons. Firstly, the real name identify a person in the virtual space better than a combination of letters and digits. A username can be forgotten while an email is frequently used, so it may be more convenient for you to use it.
               </article>
               <article id="help-answers-2" class="well">
                 <h3>Can I obtain the data that Wisply is using?</h3>

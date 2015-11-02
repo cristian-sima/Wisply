@@ -103,7 +103,7 @@
               </a>
             </h2>
             <p>Our Site may use "cookies" to enhance User experience. User's web browser places cookies on their hard drive for record-keeping purposes and sometimes to track information about them. User may choose to set their web browser to refuse cookies, or to alert you when cookies are being sent. If they do so, note that some parts of the Site may not function properly.</p>
-            <p>We conside "cookies" an important subject. Therefore, for more information please read our <a href="/cookies">Cookie policy</a></p>
+            <p>We consider "cookies" an important subject. Therefore, for more information please read our <a href="/cookies">Cookie policy</a></p>
           </article>
           <article>
             <h2 id="how-we-use-collected-information">

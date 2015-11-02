@@ -28,14 +28,14 @@
           </ul>
           Please immediately <a href="/contact"> contact us </a> with the following information:
           <ol>
-            <li>Identification of the itemby title,description and its URL;</li>
+            <li>Identification of the item by title,description and its URL;</li>
             <li>The nature of the complaint; </li>
             <li>Any supporting or substantiating evidence you have.</li>
           </ol>
-          Wisply will at its discretion remove or block future access to resource. For the period of investigation, no further action will be taken by the University of Southampton in this regard but we will however advise you if the itemis removed.
+          Wisply will at its discretion remove or block future access to resource. For the period of investigation, no further action will be taken by the University of Southampton in this regard but we will however advise you if the item is removed.
           <br />
           <br />
-           Please also note that your complaint will be kept on record. Any personal information you provide in your complaint shall be processed in accordance with the Data Protection Act 1998 and subordinate legislation. 
+           Please also note that your complaint will be kept on record. Any personal information you provide in your complaint shall be processed in accordance with the Data Protection Act 1998 and subordinate legislation.
         </article>
       </div>
     </div>

@@ -39,7 +39,7 @@
                 <span class="force-black-color">What are cookies?</span>
               </a>
             </h2>
-            Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognise your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.
+            Cookies are small text files which a website may put on your computer or mobile device when you first visit a site or page. The cookie will help the website, or another website, to recognize your device the next time you visit. We use the term “cookies” in this policy to refer to all files that collect information in this way.
             <br />
             There are many functions cookies serve. For example, they can help us to remember your account and preferences, analyse how well Wisply is performing, or even allow us to recommend resources we believe will be most relevant to you.
             <br />

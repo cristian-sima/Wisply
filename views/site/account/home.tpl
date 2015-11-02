@@ -5,7 +5,7 @@
     </ul>
   </div>
   <div class="panel-body">
-    The dashboard is not yet implemented. <Br />
+
     We are working on it
   </div>
 </div>

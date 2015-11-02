@@ -5,7 +5,7 @@ describe('Institutions', function() {
       .windowHandleMaximize()
       .getTitle(function(err, title) {
           expect(err).toBe(undefined);
-          expect(title).toBe('Institutions');
+          expect(title).toBe('Wisply - Institutions');
       })
       .call(done);
     });

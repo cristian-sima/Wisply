@@ -7,26 +7,7 @@ accountsPage = {
 
 describe('Administration pages', function() {
   admin.init(browser);
-  describe("institutions", function() {
-    it('lists the institutions', function(done) {
-        browser
-        .url('/admin/institutions')
-        .getTitle(function(err, title) {
-            expect(err).toBe(undefined);
-            expect(title).toBe("Admin - Institutions");
-        })
-        .call(done);
-    });
-    it('goes to the page for inserting an institution', function(done) {
-        browser
-        .url('/admin/institutions/add')
-        .getTitle(function(err, title) {
-            expect(err).toBe(undefined);
-            expect(title).toBe("Add Institution");
-        })
-        .call(done);
-    });
-  });
+
   describe("Repository", function() {
     it('goes to the page which lists the repositories', function(done) {
         browser
@@ -42,12 +23,12 @@ describe('Administration pages', function() {
         .url('/admin/repositories/add')
         .getTitle(function(err, title) {
             expect(err).toBe(undefined);
-            expect(title).toBe("Add Repository");
+            expect(title).toBe("Admin - Add a new repository");
         })
         .call(done);
     });
   });
-  describe("institutions", function() {
+  describe("Institutions", function() {
     it('goes to institutions page', function(done) {
         browser
         .url('/admin/institutions')
@@ -68,7 +49,7 @@ describe('Administration pages', function() {
   describe("developer", function() {
     it('goes to developer admin page', function(done) {
         browser
-        .url('/admin/developer')
+        .url('/admin/developers')
         .isExisting('#full-logo').then(function(isExisting){
           expect(isExisting).toBe(true);
         })
@@ -76,7 +57,7 @@ describe('Administration pages', function() {
     });
     it('goes to page which makes the table public', function(done) {
         browser
-        .url('/admin/developer/add')
+        .url('/admin/developers/add')
         .isExisting('#full-logo').then(function(isExisting){
           expect(isExisting).toBe(true);
         })
@@ -101,10 +82,10 @@ describe('Administration pages', function() {
         .call(done);
     });
   });
-  describe("curricula", function() {
-    it('goes to curricula page', function(done) {
+  describe("education", function() {
+    it('goes to education page', function(done) {
         browser
-        .url('/admin/curriculum')
+        .url('/admin/education')
         .isExisting('#full-logo').then(function(isExisting){
           expect(isExisting).toBe(true);
         })
@@ -112,7 +93,7 @@ describe('Administration pages', function() {
     });
     it('goes to page which adds a new program of study', function(done) {
         browser
-        .url('/admin/curriculum/add')
+        .url('/admin/education/programs/add')
         .isExisting('#full-logo').then(function(isExisting){
           expect(isExisting).toBe(true);
         })

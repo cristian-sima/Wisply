@@ -12,7 +12,7 @@
           <div>
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-6">
-                <h1>API &amp; Developers</h1>
+                <h1>Developers &amp; Research</h1>
                 <img class="img-responsive" src="/static/img/developer/cloud.png" alt="API &amp; Developers" />
               </div>
               <div class="col-lg-6 col-md-6 col-sm-6">

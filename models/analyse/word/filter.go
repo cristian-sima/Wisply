@@ -37,8 +37,7 @@ func (filter *filter) process(list []string) {
 		}
 	}
 	item := OccurenceList{
-		originalText: (*filter.original).GetOriginalText(),
-		data:         allowedOccurences,
+		data: allowedOccurences,
 	}
 	filter.data = &item
 }

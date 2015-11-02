@@ -20,6 +20,14 @@ func (controller *Digester) Display() {
 
 // Work performs the digests and shows the results
 func (controller *Digester) Work() {
+	if !controller.IsCaptchaValid("tools") {
+		controller.DisplaySimpleError("Please enter a valid code!")
+	} else {
+		controller.work()
+	}
+}
+
+func (controller *Digester) work() {
 	controller.GenerateXSRF()
 	text := strings.TrimSpace(controller.GetString("digester-text"))
 	if len(text) > maxLenText {

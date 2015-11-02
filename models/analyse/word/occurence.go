@@ -31,8 +31,7 @@ func (occurence Occurence) GetCounter() int {
 
 // OccurenceList transforms a string to a list of occurences
 type OccurenceList struct {
-	originalText string
-	data         []*Occurence
+	data []*Occurence
 }
 
 // GetData returns the processed data
@@ -55,11 +54,6 @@ func (occurences *OccurenceList) GetJSON() string {
 	return string(text)
 }
 
-// GetOriginalText returns the original text of the occurence
-func (occurences OccurenceList) GetOriginalText() string {
-	return occurences.originalText
-}
-
 // Describe shows a short description of the list
 func (occurences OccurenceList) Describe() {
 	fmt.Println("-----")
@@ -80,8 +74,14 @@ func (occurences *OccurenceList) GetNumberOfWords() int {
 	return len(occurences.data)
 }
 
-func (occurences *OccurenceList) process() {
+// AddText adds a text
+func (occurences *OccurenceList) AddText(originalText string) {
+	words := strings.Split(originalText, " ")
+	occurences.AddArray(words)
+}
 
+// AddArray inserts an array of words
+func (occurences *OccurenceList) AddArray(words []string) {
 	var processWord = func(toProcess string) string {
 		// in case the last character is '.' we remove it
 		sz := len(toProcess)
@@ -94,7 +94,7 @@ func (occurences *OccurenceList) process() {
 					toProcess = toProcess[:sz-1]
 				}
 				if firstChar == rejectedChar {
-					toProcess = toProcess[1:]
+					toProcess = toProcess[0:]
 				}
 			}
 
@@ -102,8 +102,6 @@ func (occurences *OccurenceList) process() {
 		return strings.TrimSpace(strings.ToLower(toProcess))
 	}
 
-	words := strings.Split(occurences.originalText, " ")
-	occurences.data = []*Occurence{}
 	for _, word := range words {
 		var exists = false
 		for _, occurence := range occurences.data {
@@ -136,9 +134,8 @@ func (occurences *OccurenceList) SortByCounter(order string) {
 
 // NewOccurencesList creates a new list of occurences for words
 func NewOccurencesList(text string) OccurenceList {
-	list := OccurenceList{
-		originalText: text,
-	}
-	list.process()
+	list := OccurenceList{}
+	list.data = []*Occurence{}
+	list.AddText(text)
 	return list
 }

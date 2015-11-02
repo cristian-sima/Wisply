@@ -24,7 +24,8 @@
                 <div class="col-lg-10">
                   <textarea class="form-control" name="digester-text" id="digester-text" placeholder="Text" title="Up to ">{{ .originalText }}</textarea>
                   <br />
-                  The text must not exceed 50000 characters (otherwise it is trimmed)
+                  The text must not exceed 50000 characters (otherwise it is trimmed) <br />
+                  The tool will remove the articles, pronouns, conjuctions, and prepositions. Also, the some redundant words (such as "yes", "is") will be removed
                 </div>
               </div>
               <div class="form-group">
@@ -35,6 +36,9 @@
             </fieldset>
           </form>
           {{ if .processed }}
+          {{ if eq (.processed.GetData | len ) 0 }}
+          No data provided
+          {{ else }}
           <h3>Results:</h3>
           <div class="well">
             <ul class="nav nav-tabs">
@@ -45,9 +49,9 @@
               <div class="tab-pane fade active in" id="visual">
                 <h4>Word occurence</h4>
                 <p>
-                    {{range $index, $occurence := .processed.GetData }}
-                      <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="occurence label label-info">{{ $occurence.GetWord }}&nbsp; <span class="badge"> {{ $occurence.GetCounter }}</span></span>
-                    {{ end }}
+                  {{range $index, $occurence := .processed.GetData }}
+                  <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="occurence label label-info">{{ $occurence.GetWord }}&nbsp; <span class="badge"> {{ $occurence.GetCounter }}</span></span>
+                  {{ end }}
                 </p>
               </div>
               <div class="tab-pane fade" id="json">
@@ -58,6 +62,7 @@
               </div>
             </div>
           </div>
+          {{ end }}
           {{ end }}
         </article>
       </div>

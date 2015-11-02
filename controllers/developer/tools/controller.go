@@ -11,4 +11,5 @@ type Controller struct {
 func (controller *Controller) Prepare() {
 	controller.Controller.Prepare()
 	controller.SetTemplatePath("developer/tools")
+	controller.RegisterCaptchaAction("tools")
 }

@@ -39,12 +39,13 @@ describe('Help functionality', function() {
   });
   it("it goes to take down policy page and then back to help", function (done) {
       browser
+      .pause(500)
       .url("/take-down-policy")
       .pause(1000)
-      .url(function(err, res) {
-              expect(res.value).toBe("Take down policy");
+      .getTitle(function(err, title) {
+              expect(title).toBe("Take down policy");
       })
-      .click('a=Help')
+      .url('/help')
       .call(done);
   });
   it("goes to the cookies", function (done) {

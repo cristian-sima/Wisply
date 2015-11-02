@@ -19,15 +19,27 @@
           <article>
             <h2>FAQ</h2>
             <ol>
-              <li><a href="#accessibility-answers-1">Can I navigate on the website, using just the keyboard?</a>
+              <li>
+                <a class="scroll" href="#accessibility-answers-1">I want to change the fonts and colours for a page. Can I do this?</a>
               </li>
-              <li><a href="#accessibility-answers-2">Do you provide shortcuts?</a>
+              <li>
+                <a class="scroll" href="#accessibility-answers-2">Can I navigate on the website, using just the keyboard?</a>
+              </li>
+              <li>
+                <a class="scroll" href="#accessibility-answers-3">Do you provide shortcuts?</a>
               </li>
             </ol>
           </article>
           <section id="accessibility-answers">
             <h2>Answers</h2>
             <article id="accessibility-answers-1" class="well">
+              <h3>I want to change the fonts and colours for a page. Can I do this?</h3>
+              Yes, you can.
+              <br />
+              <br />
+              Go on the page which you would like to customize. Type <kbd>ALT</kbd> + <kbd>A</kbd> and wait one second. This combination will load an accessibility bar which you can use to change the page.
+            </article>
+            <article id="accessibility-answers-2" class="well">
               <h3>Can I navigate on the website, using just the keyboard?</h3>
               Yes, you can. In order to navigate using the keyboard, you can use these combinations of keys:
               <ul class="light-keys">
@@ -63,7 +75,7 @@
                 </li>
               </ul>
             </article>
-            <article id="accessibility-answers-2" class="well">
+            <article id="accessibility-answers-3" class="well">
               <h3>Do you provide shortcuts?</h3>
               Yes, we do. <br />This is a list of useful shortcuts:
               <ul>

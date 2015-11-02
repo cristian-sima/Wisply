@@ -3,6 +3,9 @@
 		<ul class="breadcrumb">
 			<li><a href="/admin">Admin</a></li>
 			<li><a href="/admin/institutions">Institutions</a></li>
+			{{ if eq .action "Modify"}}
+				<li><a href="/admin/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
+			{{ end }}
 			<li class="active">{{.action}}</li>
 		</ul>
 	</div>
@@ -128,11 +131,11 @@
 
 	<script src="/static/js/wisply/typer.js"></script>
 	<script src="/static/js/wisply/wikier.js"></script>
-	<script src="/static/js/admin/institution/functionality.js"></script>
+	<script src="/static/js/admin/institutions/institution/form.js"></script>
 
 	<script>
 	$(document).ready(function(){
-		var module = wisply.getModule("functionality-institutions"),
+		var module = wisply.getModule("admin-institutions-institution-form"),
 			manager = new module.Manager();
 			manager.init();
 	});

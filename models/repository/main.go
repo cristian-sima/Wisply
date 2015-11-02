@@ -34,7 +34,7 @@ func GetAllInstitutions() []Institution {
 }
 
 // InsertNewInstitution tries to create a new institution
-func (model *Model) InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.WisplyError, error) {
+func InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.WisplyError, error) {
 
 	problem := adapter.WisplyError{}
 

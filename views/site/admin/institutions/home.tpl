@@ -23,7 +23,9 @@
           <div id="websocket-connection"></div>
         </div>
       </div>
-      {{ if .anything }}
+      {{ if eq (.institutions | len) 0 }}
+      There are no institution... :(
+      {{ else }}
       <div class="table-responsive">
         <table class="table table-striped table-hover " id="institution-list">
           <thead>
@@ -37,7 +39,7 @@
             {{range $index, $element := .institutions}}
             {{$safe := $element.Name|html}}
             <tr>
-              <td><a href="/admin/institutions/institution/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
+              <td><a href="/admin/institutions/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
               <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
               <td>
                 {{ if eq $element.WikiID "NULL" }}
@@ -51,8 +53,6 @@
           </tbody>
         </table>
       </div>
-      {{ else }}
-      There are no institution... :(
       {{ end }}
     </section>
   </div>

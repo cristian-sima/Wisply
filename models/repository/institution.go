@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/adapter"
@@ -22,32 +23,16 @@ type Institution struct {
 // Delete removes the institution from database
 func (institution *Institution) Delete() error {
 
-	err := institution.deleteRepositories()
-
+	// delete institution
+	sql := "DELETE FROM `institution` WHERE id=?"
+	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return err
 	}
-
-	// delete institution
-	sql := "DELETE from `institution` WHERE id=?"
-	query, err := database.Connection.Prepare(sql)
+	fmt.Println(institution)
 	query.Exec(institution.ID)
 
 	return err
-}
-
-func (institution *Institution) deleteRepositories() error {
-	// delete repostiories
-	repositories := institution.GetRepositories()
-
-	for _, repository := range repositories {
-
-		err := repository.Delete()
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // Modify changes the details of the institution

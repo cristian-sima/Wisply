@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/institutions">Institutions</a></li>
-      <li><a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
+      <li><a href="/admin/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
       <li class="active">Advance options</li>
     </ul></div>
     <div class="panel-body">
@@ -13,7 +13,7 @@
             <h2>Modify</h2>
             <div class="well">
               You can use this option to modify the details of the institution. <br/>
-              <a href="/admin/institutions/modify/{{ .institution.ID }}" class="btn btn-primary">Modify institution</a>
+              <a href="/admin/institutions/{{ .institution.ID }}/modify" class="btn btn-primary">Modify institution</a>
             </div>
           </div>
           <div>
@@ -34,17 +34,17 @@
                   </ul>
                 </li>
               </ul>
-              <a data-id="" data-name="" href="#" class="btn btn-danger deleteInstitutionButton">Delete entire information regarding institution from Wisply</a>
+              <a data-id="{{ .institution.ID }}" data-name="{{ .institution.Name }}" href="#" class="btn btn-danger deleteInstitutionButton">Delete entire information regarding institution from Wisply</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <script src="/static/js/admin/institution/advance-options.js"></script>
+  <script src="/static/js/admin/institutions/institution/advance-options.js"></script>
   <script>
   $(document).ready(function(){
-    var module = wisply.getModule("institution-advance-options"),
+    var module = wisply.getModule("admin-institutions-institution-advance-options"),
     manager = new module.Manager();
     manager.init();
   });

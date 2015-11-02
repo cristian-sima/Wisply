@@ -78,7 +78,8 @@ var InstitutionAdvanceOptionsModule = function () {
       var buttons,
       cancelButton,
       msg,
-      mainButton;
+      mainButton,
+      instance = this;
 
       cancelButton = {
         label: "No, thanks",
@@ -91,7 +92,7 @@ var InstitutionAdvanceOptionsModule = function () {
         label: "Delete",
         className: "btn-danger",
         callback: function () {
-          wisply.institutionsManager.delete(institution);
+          instance.delete(institution);
         }
       };
       buttons = {
@@ -120,7 +121,7 @@ var InstitutionAdvanceOptionsModule = function () {
       */
       successCallback =  function () {
         wisply.message.showSuccess("The institution has been removed! Refreshing page...");
-        wisply.reloadPage(2000);
+        window.location = "/admin/institutions";
       };
 
       /**
@@ -131,7 +132,7 @@ var InstitutionAdvanceOptionsModule = function () {
       };
 
       request = {
-        "url": '/admin/institutions/delete/' + institution.id,
+        "url": '/admin/institutions/' + institution.id + "/delete",
         "success": successCallback,
         "error": errorCallback
       };
@@ -178,5 +179,5 @@ var InstitutionAdvanceOptionsModule = function () {
 $(document).ready(function() {
   "use strict";
   var module = new InstitutionAdvanceOptionsModule();
-  wisply.loadModule("institution-advance-options", module);
+  wisply.loadModule("admin-institutions-institution-advance-options", module);
 });

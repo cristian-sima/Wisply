@@ -7,6 +7,7 @@ import (
 	"github.com/cristian-sima/Wisply/routers/admin/accounts"
 	"github.com/cristian-sima/Wisply/routers/admin/developers"
 	"github.com/cristian-sima/Wisply/routers/admin/education"
+	"github.com/cristian-sima/Wisply/routers/admin/institutions"
 	"github.com/cristian-sima/Wisply/routers/admin/log"
 )
 
@@ -16,7 +17,7 @@ func Load() {
 	account := accounts.Get()
 	curriculum := education.Get()
 	developer := developers.Get()
-	institution := getInstitution()
+	institutions := institutions.Get()
 	harvest := getHarvest()
 	log := log.Get()
 	repository := getRepository()
@@ -26,7 +27,7 @@ func Load() {
 		account,
 		curriculum,
 		developer,
-		institution,
+		institutions,
 		harvest,
 		log,
 		repository,

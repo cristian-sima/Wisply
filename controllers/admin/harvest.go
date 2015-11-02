@@ -149,7 +149,6 @@ func (controller *Harvest) decideManyRepositories(message *ws.Message, connectio
 }
 
 func run() {
-	fmt.Println("Running the controller!! ...")
 	for {
 		select {
 		case message := <-conduit:

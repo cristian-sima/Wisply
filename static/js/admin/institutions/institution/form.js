@@ -252,5 +252,5 @@ var FunctionalityInstitutionModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new FunctionalityInstitutionModule();
-	wisply.loadModule("functionality-institutions", module);
+	wisply.loadModule("admin-institutions-institution-form", module);
 });

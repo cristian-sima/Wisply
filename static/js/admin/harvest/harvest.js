@@ -292,7 +292,7 @@ var HarvestModule = function() {
 						var toReturn = "";
 						toReturn += "<strong>" + message.Name + "</strong>";
 						if (message.Name === "repository-status-changed") {
-							toReturn += " " + wisply.getModule("repository").GUI.getStatusColor(message.Value.trim());
+							toReturn += " " + wisply.getModule("admin-repositories-list").GUI.getStatusColor(message.Value.trim());
 						}
 						return toReturn;
 					}

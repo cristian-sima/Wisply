@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
-      <li><a href="/admin/repositories/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
+      <li><a href="/admin/repositories/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
       <li class="active">Advance options</li>
     </ul></div>
     <div class="panel-body">
@@ -13,7 +13,7 @@
             <h2>Modify</h2>
             <div class="well">
               You can use this option to modify the details of the repository. <br/>
-              <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options/modify" class="btn btn-primary">Modify repository</a>
+              <a href="/admin/repositories/{{ .repository.ID }}/advance-options/modify" class="btn btn-primary">Modify repository</a>
             </div>
           </div>
           <div>
@@ -21,7 +21,7 @@
             <div class="well">
               You can filter what input you harvest or process.
                <br/>
-              <a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options/modify/filter" class="btn btn-primary">Modify filter</a>
+              <a href="/admin/repositories/{{ .repository.ID }}/advance-options/modify/filter" class="btn btn-primary">Modify filter</a>
             </div>
           </div>
           <div>
@@ -50,10 +50,10 @@
     }
     </style>
   </div>
-  <script src="/static/js/admin/repository/list.js"></script>
+  <script src="/static/js/admin/repositories/repository/list.js"></script>
   <script>
   $(document).ready(function(){
-    var module = wisply.getModule("repository"),
+    var module = wisply.getModule("admin-repositories-list"),
       manager = new module.Manager();
       manager.init();
   });

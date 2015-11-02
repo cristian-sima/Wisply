@@ -24,7 +24,9 @@
           <div id="websocket-connection"></div>
         </div>
       </div>
-      {{ if ne (len .repositories) 0 }}
+      {{ if eq (len .repositories) 0 }}
+      Wisply does not have repositories.
+      {{ else }}
       <div class="table-responsive">
         <table class="table table-striped table-hover " id="repositories-list">
           <thead>
@@ -41,7 +43,7 @@
             {{ $institution := $element.GetInstitution }}
             {{$safe := $element.Name|html}}
             <tr>
-              <td><a href="/admin/repositories/repository/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
+              <td><a href="/admin/repositories/{{ $element.ID }}">{{ $element.Name |html }}</a></td>
               <td> <div  id="rep-status-{{ $element.ID }}">
                 {{/* The status can be one of these: unverified, verification-failed, ok, problems, verifying, updating', initializing, verified */}}
                 {{ if eq  $element.Status "unverified" }}
@@ -92,7 +94,7 @@
               {{ end }}
             </td>
             <td><a href="{{ $element.URL }}" target="_blank">{{ $element.URL |html }}</a></td>
-            <td><a href="/admin/institutions/institution/{{ $institution.ID }}">{{ $institution.Name }}</a></td>
+            <td><a href="/admin/institutions/{{ $institution.ID }}">{{ $institution.Name }}</a></td>
           </tr>
           {{end }}
         </tbody>
@@ -107,14 +109,12 @@
             <div class="modal-body" id="harvest-history-element">
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    {{ else }}
-    There are no repositories... :(
     {{ end }}
   </section>
 </div>
@@ -124,7 +124,7 @@ var server = {};
 server.host = {{ .host }};
 </script>
 <script src="/static/js/ws/websockets.js"></script>
-<script src="/static/js/admin/repository/list.js"></script>
+<script src="/static/js/admin/repositories/repository/list.js"></script>
 <script src="/static/js/admin/harvest/harvest.js"></script>
 <script src="/static/js/admin/harvest/list.js"></script>
 <script>
@@ -132,6 +132,7 @@ $(document).ready(function(){
   var modules = {
     harvest : wisply.getModule("harvest"),
 	   list : wisply.getModule("harvest-list"),
+	   repositories : wisply.getModule("admin-repositories-list"),
   }
   var decisionManager = new modules.list.DecisionManager(),
     stages = modules.list.Stages,
@@ -140,5 +141,7 @@ $(document).ready(function(){
 
 	  wisply.manager = harvestManager;
 	  harvestManager.start();
+
+    (new modules.repositories.Manager()).init();
 });
 </script>

@@ -3,8 +3,8 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
-      <li><a href="/admin/repositories/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
-      <li><a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a></li>
+      <li><a href="/admin/repositories/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
+      <li><a href="/admin/repositories/{{ .repository.ID }}/advance-options">Advance options</a></li>
       <li class="active">Modify filter</li>
     </ul>
   </div>
@@ -41,7 +41,7 @@
     <fieldset>
       <div class="form-group text-center">
         <div class="col-lg-10 col-lg-offset-2">
-          <input type="submit" class="btn btn-primary" value="Change" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Change" /> <a class="btn btn-primary" href="/admin/repositories/{{ .repository.ID }}/advance-options">Cancel</a>
         </div>
       </div>
     </fieldset>

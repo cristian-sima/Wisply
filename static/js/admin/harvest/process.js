@@ -31,7 +31,7 @@ var HarvestProcessModule = function() {
 				this._send(msg);
 			};
 			// load Repository
-			var module = wisply.getModule("repository");
+			var module = wisply.getModule("admin-repositories-list");
 			repository = new module.Repository(server.repository);
 			// load Repository
 			this.manager.repository = repository;
@@ -518,7 +518,7 @@ var HarvestProcessModule = function() {
 				var status = this.manager.repository.status,
 					html = "Status: ",
 					span = "",
-					module = wisply.getModule("repository");
+					module = wisply.getModule("admin-repositories-list");
 				span = module.GUI.getStatusColor(status);
 				html += span;
 				$("#repository-status").html(html);

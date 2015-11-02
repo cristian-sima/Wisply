@@ -76,7 +76,7 @@
             <br />
           </div>
           <div>{{ .repository.Category }} repository.</div>
-          <div>Is part of <a href="/admin/institutions/institution/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
+          <div>Is part of <a href="/admin/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></div>
         </div>
       </div>
       <br /><br />
@@ -144,7 +144,7 @@
       {{ end }}
       <hr />
       <div>
-        <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a>
+        <a class="btn btn-primary" href="/admin/repositories/{{ .repository.ID }}/advance-options">Advance options</a>
       </div>
     </div>
   </div>
@@ -155,10 +155,10 @@
     }
     </style>
   </div>
-  <script src="/static/js/admin/repository/list.js"></script>
+  <script src="/static/js/admin/repositories/repository/list.js"></script>
   <script>
   $(document).ready(function(){
-    var module = wisply.getModule("repository"),
+    var module = wisply.getModule("admin-repositories-list"),
       manager = new module.Manager();
       manager.init();
     $(".repository-status").each(function(){

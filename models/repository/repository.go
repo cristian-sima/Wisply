@@ -36,12 +36,11 @@ func (repository *Repository) SetLastProcess(processID int) error {
 
 // Delete removes the repository from database
 func (repository *Repository) Delete() error {
-
-	// delete all things
-
-	// delete repository
 	sql := "DELETE from `repository` WHERE id=?"
 	query, err := database.Connection.Prepare(sql)
+	if err != nil {
+		return err
+	}
 	query.Exec(strconv.Itoa(repository.ID))
 	return err
 }

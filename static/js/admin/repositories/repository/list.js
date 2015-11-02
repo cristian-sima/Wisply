@@ -145,7 +145,8 @@ var RepositoryModule = function () {
       var buttons,
       cancelButton,
       msg,
-      mainButton;
+      mainButton,
+      instance = this;
 
       cancelButton = {
         label: "Cancel",
@@ -158,7 +159,7 @@ var RepositoryModule = function () {
         label: "Clear metadata",
         className: "btn-danger",
         callback: function () {
-          wisply.repositoriesManager.empty(repository);
+          instance.empty(repository);
           wisply.message.tellToWait("Removing metadata...");
         }
       };
@@ -199,7 +200,7 @@ var RepositoryModule = function () {
       };
 
       request = {
-        "url": '/admin/repositories/repository/' + repository.id + "/delete",
+        "url": '/admin/repositories/' + repository.id + "/delete",
         "success": successCallback,
         "error": errorCallback
       };
@@ -230,7 +231,7 @@ var RepositoryModule = function () {
       };
 
       request = {
-        "url": '/admin/repositories/repository/' + repository.id + "/empty",
+        "url": '/admin/repositories/' + repository.id + "/clear",
         "success": successCallback,
         "error": errorCallback
       };
@@ -301,5 +302,5 @@ var RepositoryModule = function () {
 $(document).ready(function() {
   "use strict";
   var module = new RepositoryModule();
-  wisply.loadModule("repository", module);
+  wisply.loadModule("admin-repositories-list", module);
 });

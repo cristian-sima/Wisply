@@ -4,8 +4,8 @@
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/repositories">Repositories</a></li>
       {{ if eq .action "Modify" }}
-      <li><a href="/admin/repositories/repository/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
-      <li><a href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Advance options</a></li>
+      <li><a href="/admin/repositories/{{ .repository.ID }}">{{ .repository.Name }}</a></li>
+      <li><a href="/admin/repositories/{{ .repository.ID }}/advance-options">Advance options</a></li>
       {{ else }}
       <li><a href="/admin/repositories/add?institution={{.selectedInstitution}}">Choose Type</a></li>
       {{ end }}
@@ -76,7 +76,7 @@
           {{ if eq .action "Add"}}
           <input type="submit" class="btn btn-primary" value="Submit" /> <a href="/admin/repositories" class="btn btn-default">Back to list</a>
           {{ else }}
-          <input type="submit" class="btn btn-primary" value="Submit" /> <a class="btn btn-primary" href="/admin/repositories/repository/{{ .repository.ID }}/advance-options">Cancel</a>
+          <input type="submit" class="btn btn-primary" value="Submit" /> <a class="btn btn-primary" href="/admin/repositories/{{ .repository.ID }}/advance-options">Cancel</a>
           {{ end }}
         </div>
       </div>

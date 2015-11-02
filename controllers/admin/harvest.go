@@ -36,7 +36,6 @@ func init() {
 // Harvest manages the operations for repository
 type Harvest struct {
 	Controller
-	Model repository.Model
 }
 
 // RecoverProcess tries to recover a process
@@ -217,7 +216,7 @@ func (controller *Harvest) log(message string) {
 // SendAllRepositoriesStatus gets all repositories' status
 // It only sends messages to a connection
 func (controller *Harvest) SendAllRepositoriesStatus(connection *ws.Connection) {
-	list := controller.Model.GetAllStatus()
+	list := repository.GetAllStatus()
 	hub.SendMessage(&ws.Message{
 		Name:  "repositories-status-list",
 		Value: &list,

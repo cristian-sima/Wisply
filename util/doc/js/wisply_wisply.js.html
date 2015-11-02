@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: wisply/wisply.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: wisply/wisply.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global $, bootbox, base64_decode, searchModule */
+/**
+ * It contains a reference to the Wisply.App object
+ * @global
+ * @see Wisply.App
+ */
+var wisply;
+/**
+ * @file Encapsulates the functionality for all pages.
+ * @author Cristian Sima
+ */
+/**
+ * Encapsulates the functionality for all pages.
+ * @namespace Wisply
+ */
+var Wisply = function() {
+	'use strict';
+	/**
+	 * The constructor calls the init method
+	 * @class ShortcutManager
+	 * @memberof Wisply
+	 * @classdesc It manages the operations with the key shortcuts
+	 */
+	function ShortcutManager() {
+		this.memory = [];
+		this.defaultShortcuts = [{
+			"type": "keydown",
+			"key": "Alt+a",
+			"callback": function() {
+				/**
+				 * It loads the accessibility javascript file and shows the bar
+				 */
+				function createScript() {
+					var jf = document.createElement('script');
+					jf.src = 'https://core.atbar.org/atbar/en/latest/atbar.min.js';
+					jf.type = 'text/javascript';
+					jf.id = 'ToolBar';
+					document.getElementsByTagName('head')[0].appendChild(jf);
+				}
+				/**
+				 * It moves the Wisply navigation bar 41px down. (it prevents overlaping with the bar). Also, it sets a listener for closing button, such that the bar goes back to original position
+				 */
+				function moveWisply() {
+					$(".navbar-fixed-top").css({
+						"top": "41px"
+					});
+					setTimeout(function() {
+						$("#at-btn-atkit-unload").click(function() {
+							setTimeout(function() {
+								$(".navbar-fixed-top").css({
+									"top": "0px"
+								});
+							}, 100);
+						});
+					}, 200);
+				}
+				/**
+				 * It loads the bar and moves wisply
+				 */
+				function showAccessibilityBar() {
+					createScript();
+					moveWisply();
+				}
+				showAccessibilityBar();
+			},
+			description: "Show the accessibility bar",
+		}, {
+			"type": "keydown",
+			"key": "Alt+w",
+			"callback": function() {
+				wisply.goTo("/");
+			},
+			description: "Load the home page",
+		}, {
+			"type": "keydown",
+			"key": "Alt+c",
+			"callback": function() {
+				wisply.goTo("/contact");
+			},
+			description: "Load the contact page",
+		}, {
+			"type": "keydown",
+			"key": "Alt+k",
+			"callback": function() {
+				var description = wisply.shortcutManager.getDescription();
+				wisply.message.show("Key shortcuts available on this page", description);
+				wisply.activateTooltip();
+			},
+			description: "Show the list of key shortcuts",
+		}, {
+			"type": "keydown",
+			"key": "Ctrl+space",
+			"callback": function(event) {
+				event.preventDefault();
+				wisply.search.object.focus();
+			},
+			description: "Activates the searching",
+		}, ];
+	}
+	ShortcutManager.prototype =
+		/**
+		 * @lends Wisply.ShortcutManager
+		 */
+		{
+			/**
+			 * Called when the object is create. It activates the default shortcuts
+			 */
+			init: function() {
+				this.activate(this.defaultShortcuts);
+			},
+			/**
+			 * It activates the shortcuts received as parameters
+			 * @param  {array} shortcuts An array with the shortcuts to active. A shortcut has a event type, the shortcut combination of keys and the callback
+			 */
+			activate: function(shortcuts) {
+				/**
+				 * It binds an shortcut using the JQUERY function.
+				 * @param [object] shortcut The shortcut to be binded. It should have type, key and callback
+				 */
+				function bind(shortcut) {
+					$(document).bind(shortcut.type, shortcut.key, shortcut.callback);
+				}
+				var shortcut, i;
+				for (i = 0; i &lt; shortcuts.length; i++) {
+					shortcut = shortcuts[i];
+					bind(shortcut);
+					this.memory.push(shortcut);
+				}
+			},
+			/**
+			 * It returns an HTML description of all the current shortcuts
+			 * @return {string} The HTML description of all the shortcuts
+			 */
+			getDescription: function() {
+				/**
+				 * It returns the HTML description of the keys
+				 * @param  {string} keys The string which holds the keys such that: key1+key2
+				 * @return {string} The HTML description of the keys
+				 */
+				function getKeysHTML(keys) {
+					/**
+					 * It changes for some keys the word to an icon (e.g. arrows)
+					 * @param  {string} key The key as a string
+					 * @return {string} The HTML of the key
+					 */
+					function getKey(key) {
+						var htmlKey = "",
+							defaultKeys = {
+								"UP": "&lt;span class='glyphicon glyphicon-arrow-up'>&lt;/span>",
+								"DOWN": "&lt;span class='glyphicon glyphicon-arrow-down'>&lt;/span>",
+								"LEFT": "&lt;span class='glyphicon glyphicon-arrow-left'>&lt;/span>",
+								"RIGHT": "&lt;span class='glyphicon glyphicon-arrow-right'>&lt;/span>",
+							};
+						if (defaultKeys[key]) {
+							htmlKey = defaultKeys[key];
+						} else {
+							htmlKey = key;
+						}
+						return htmlKey;
+					}
+					var keysHTML = [],
+						index,
+						elements = keys.toUpperCase().split("+");
+					for (index = 0; index &lt; elements.length; index++) {
+						keysHTML.push("&lt;kbd>" + getKey(elements[index]) + "&lt;/kbd>");
+					}
+					return keysHTML.join(" &lt;span class='text-muted'>+&lt;/span> ");
+				}
+				/**
+				 * It returns an HTML description of the shortcut
+				 * @param  {object} shortcut The shortcut object
+				 * @return {string} A description of the shortcut
+				 */
+				function describeShortcut(shortcut) {
+					/**
+					 * If the showWarning is true, it returns a warning icon which informs that the shortcut is overwritting the default functionality of the browser
+					 * @param  {bool} showWarning If to show or not the warning
+					 * @return {string} The warning icon or empty string
+					 */
+					function getWarning(showWarning) {
+						var text = "";
+						if (showWarning) {
+							text = "&lt;span class='hidden-xs text-warning glyphicon glyphicon-warning-sign' data-placement='top'  data-toggle='tooltip' data-original-title='This key overwrites the default functionality of your browser'>&lt;/span>&amp;nbsp;&amp;nbsp;";
+						}
+						return text;
+					}
+					var html = "&lt;tr>&lt;td>";
+					html += getKeysHTML(shortcut.key);
+					html += "&lt;/td>&lt;td>";
+					html += "&amp;nbsp;&amp;nbsp;" + shortcut.description + "&amp;nbsp;&amp;nbsp;" + getWarning(shortcut.overwrites);
+					html += "&lt;/td>&lt;/tr>";
+					return html;
+				}
+				/**
+				 * It returns the HTML code which describes the shortcuts
+				 * @param  {array} shortcuts The shortcuts
+				 * @return {string} HTML code which describes the shortcuts
+				 */
+				function describeShortcuts(shortcuts) {
+					var shortcut,
+						text = "";
+					for (i = 0; i &lt; shortcuts.length; i++) {
+						shortcut = shortcuts[i];
+						text += describeShortcut(shortcut);
+					}
+					return text;
+				}
+				var i,
+					html = "";
+				html = "&lt;table class='table table-hover'>&lt;tbody>";
+				html += describeShortcuts(this.memory);
+				html += "&lt;/tbody>&lt;/table>";
+				return html;
+			}
+		};
+	/**
+	 * It creates the object
+	 * @class Message
+	 * @memberof Wisply
+	 * @classdesc It uses manages the operating regarding JavaScript messages
+	 */
+	function Message() {
+		this.currentMessage = undefined;
+	}
+	/**
+	 * @memberof Message
+	 */
+	Message.prototype =
+		/**
+		 * @lends Wisply.Message
+		 */
+		{
+			/**
+			 * It shows a succesful message
+			 * @param  {string} message The content of the message to be displayed
+			 */
+			showSuccess: function(message) {
+				this.show("&lt;div class='text-success'>Success&lt;/div>", message);
+			},
+			/**
+			 * It shows an error message
+			 * @param  {string} message The content of the message to be displayed
+			 */
+			showError: function(message) {
+				this.show("&lt;div class='text-warning'>Sorry&lt;/div>", message);
+			},
+			/**
+			 * It shows a message
+			 * @param  {string} title   The title of the message
+			 * @param  {string} content The content of the message
+			 */
+			show: function(title, content) {
+				this.dialog({
+					title: title,
+					message: content,
+					onEscape: function() {},
+				});
+			},
+			/**
+			 * It represents an adapter for the bootbox alert function. It shows an error message
+			 * @param  {object} args The arguments for the dialog
+			 * @see {@link http://bootboxjs.com/|Bootbox official website}
+			 */
+			alert: function(args) {
+				this.dialog(args);
+			},
+			/**
+			 * It represents an adapter for the bootbox alert function. It shows a dialog message
+			 * @param  {object} args The arguments for the dialog
+			 * @return {object} The bootbox element which holds the message
+			 * @see {@link http://bootboxjs.com/|Bootbox official website}
+			 */
+			dialog: function(args) {
+				this._clear();
+				return bootbox.dialog(args);
+			},
+			/**
+			 * It shows a waiting message
+			 * @param  {string} title The title of the message
+			 * @return {object} The bootbox element which holds the message
+			 * @see {@link http://bootboxjs.com/|Bootbox official website}
+			 */
+			tellToWait: function(title) {
+				var msg;
+				msg = "&lt;div class='text-center text-muted'> It may take up to a minute. Enjoy a coffee (be aware of sugar) :) &lt;br />" + wisply.getLoadingImage("big") + "&lt;/div>";
+				this.currentMessage = this.dialog({
+					title: title,
+					message: msg,
+				});
+				return this.currentMessage;
+			},
+			/**
+			 * In case there is any window open, it hides it.
+			 * It is a private method
+			 */
+			_clear: function() {
+				if (this.currentMessage) {
+					this.currentMessage.modal('hide');
+				}
+			}
+		};
+	/**
+	 * The constructor creates a message and a shortcut objects
+	 * @property {Message}  message                    The reference to the message object
+	 * @property {ShortcutManager}  shortcutManager    The reference to the shortcut manager
+	 * @class App
+	 * @memberof Wisply
+	 * @classdesc It represents the main object of the website. It stores references to other objects and it provides the main functions
+	 */
+	var App = function App() {
+		/**
+		 * @access public
+		 */
+		this.message = new Message();
+		/**
+		 * @access public
+		 */
+		this.shortcutManager = new ShortcutManager();
+		this.isSmallSearchDisplayed = false;
+		this.modules = {};
+	};
+	App.prototype =
+		/**
+		 * @lends Wisply.App
+		 */
+		{
+			/**
+			 * It initiates the shorcuts' manager
+			 */
+			init: function() {
+				var instance = this;
+
+				function initSearch() {
+					function showSmallSearch(element) {
+						var smallSearch = $("#search-small-input"),
+							button = $(element);
+						$("#full-logo").hide();
+						$("#search-small").show();
+						button.html("");
+						smallSearch.focus();
+					}
+					$("#show-small-search-button").click(function() {
+						if (!instance.isSmallSearchDisplayed) {
+							showSmallSearch(this);
+						}
+						instance.isSmallSearchDisplayed = !instance.isSmallSearchDisplayed;
+					});
+				}
+				this.shortcutManager.init();
+				this.solveHashProblem();
+				initSearch();
+				this.activateTooltip();
+			},
+			/**
+			 * It adds a new module to the array of modules. In case the module is
+			 * already loaded, it displays a warning
+			 * @param  {string} name    The name of the module
+			 * @param  {object} content The module object
+			 * @return {object} It returns the reference to the module
+			 */
+			loadModule: function(name, content) {
+				if (this.modules[name]) {
+					console.warn("The module [" + name + "] has been loaded once");
+				} else {
+					if (!content) {
+						console.warn("The object for the module [" + name + "] is undefined.");
+					} else {
+						this.modules[name] = content;
+					}
+				}
+				return this.modules[name];
+			},
+			/**
+			 * It returns the module specified by name. In case the module does not
+			 * exists, it throws an Exception
+			 * @param  {string} name The name of the module
+			 * @return {object} The module
+			 */
+			getModule: function(name) {
+				var module = this.modules[name];
+				if (!module) {
+					throw ("Wisply did not has the module [" + name + "]");
+				}
+				return module;
+			},
+			/**
+			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content
+			 */
+			solveHashProblem: function() {
+				/**
+				 * It scrolls up 80 px and thus it prevents overlaping the elements
+				 * This is caused of the fixed navigation
+				 */
+				function preventNavOverlap() {
+					setTimeout(function() {
+						scrollBy(0, -80);
+					}, 10);
+				}
+				var hashTagActive = "";
+				$(".scroll").click(function(event) {
+					/**
+					 * It returns the navigation place for the hash
+					 */
+					function getDestinationPlace(thisObject) {
+						var dest = 0;
+						if ($(thisObject.hash).offset().top > $(document).height() - $(window).height()) {
+							dest = $(document).height() - $(window).height();
+						} else {
+							dest = $(thisObject.hash).offset().top;
+						}
+						return dest;
+					}
+					/**
+					 * It changes the hash
+					 * @param  {event} object The event which has been generated
+					 */
+					function changeHash(object) {
+						event.preventDefault();
+						var dest = getDestinationPlace(object);
+						$('html,body').animate({
+							scrollTop: dest - 80
+						}, 500, 'swing');
+						hashTagActive = object.hash;
+						window.location.hash = object.hash;
+					}
+					if (hashTagActive != this.hash) { //this will prevent if the user click several times the same link to freeze the scroll.
+						changeHash(this);
+					} else {
+						preventNavOverlap();
+					}
+				});
+				if (window.location.hash) {
+					preventNavOverlap();
+				}
+				$(window).on('hashchange', function() {
+					preventNavOverlap();
+				});
+			},
+			/**
+			 * It preloads the loading image in the background and stores it in the browser cache
+			 */
+			preloadLoadingImage: function() {
+				var img = new Image();
+				img.src = "/static/img/wisply/load/medium.gif";
+			},
+			/**
+			 * It executes a JQuery post request, adding to it the xsrf token value
+			 * @param  {object} args Same arguments for as for a JQuery AJAX request
+			 * @see {@link http://api.jquery.com/jquery.ajax/|JQuery AJAX API}
+			 */
+			executePostAjax: function(args) {
+				if (typeof args.data === 'undefined') {
+					args.data = {};
+				}
+				args.dataType = "text";
+				args.method = args.type = "POST";
+				args.data._xsrf = this.getXSRF();
+				$.ajax(args);
+			},
+			/**
+			 * It activates the bootstrap tooltips
+			 */
+			activateTooltip: function() {
+				$('[data-toggle="tooltip"]').tooltip();
+			},
+			getXSRF: function() {
+				var xsrf = $.cookie("_xsrf"),
+					xsrflist = xsrf.split("|"),
+					value = base64_decode(xsrflist[0]);
+				return value;
+			},
+			/**
+			 * It refreshes the page
+			 * @param  {number} delayTime The amount of time in ms to delay the refresh
+			 */
+			reloadPage: function(delayTime) {
+				if (typeof size === 'undefined') {} else {
+					if (delayTime === "now") {
+						delayTime = 0;
+					}
+				}
+				setTimeout(function() {
+					location.reload();
+				}, delayTime);
+			},
+			/**
+			 * It transforms a HTML object in the loading icon for Wisply
+			 * @param  {string} idElement The id of the element
+			 * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+			 */
+			showLoading: function(idElement, size) {
+				var element = $(idElement),
+					HTML = this.getLoadingImage(size);
+				element.html(HTML);
+			},
+			/**
+			 * It gets the HTML of the loading image
+			 * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+			 * @return {string} The HTML for Wisply loading image
+			 */
+			getLoadingImage: function(size) {
+				/**
+				 * It returns the dimension in pixels acording to string type
+				 * @param  {string} size The demension of the image. It can be small (for 20px), medium (for 55px) and large (for 110px)
+				 * @return {number}      The dimension in pixels
+				 */
+				function getDimension(size) {
+					var sizes = {
+						"small": 20,
+						"medium": 55,
+						"big": 110,
+					};
+					return sizes[size];
+				}
+				/**
+				 * It returns the HTML code for the loading element
+				 * @param  {string} size      The size of the loading icon. It can be small (for 20px), medium (for 55px) and large (for 110px)
+				 * @param  {number} dimension The size of the image in px
+				 * @return {string}           The HTML code for loading element
+				 */
+				function getHTML(size, dimension) {
+					return "&lt;img alt='...' src='/static/img/wisply/load/" + size + ".gif" + "' style='height: " + dimension + "px; width: " + dimension + "px' />";
+				}
+				var dimension;
+				if (typeof size === 'undefined') {
+					size = "small";
+				}
+				dimension = getDimension(size);
+				return getHTML(size, dimension);
+			},
+			/**
+			 * It redirects the account to a certain page
+			 * @param  {string} address The address of the page
+			 */
+			goTo: function(address) {
+				document.location = address;
+			},
+			/**
+			 * It adds a connection to Wisply
+			 * @param {Connection} connection The Connection object
+			 */
+			addConnection: function(connection) {
+				this.connection = connection;
+			}
+		};
+	return {
+		App: App,
+	};
+};
+$(document).ready(function() {
+	"use strict";
+	var module = new Wisply();
+	wisply = new module.App();
+	wisply.init();
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AccountSearchesListModule.List.html">List</a></li><li><a href="AccountSettingsModule.Page.html">Page</a></li><li><a href="AdminAccounts.Account.html">Account</a></li><li><a href="AdminAccounts.List.html">List</a></li><li><a href="AdminAdanceOptionsProgramModule.Manager.html">Manager</a></li><li><a href="AdminAdanceOptionsProgramModule.Program.html">Program</a></li><li><a href="AdminAPI.GUI.html">GUI</a></li><li><a href="AdminAPIModule.List.html">List</a></li><li><a href="AdminAPIModule.Table.html">Table</a></li><li><a href="CaptchaModule.Captcha.html">Captcha</a></li><li><a href="ConnectionModule.Connection.html">Connection</a></li><li><a href="DeveloperDataTableModule.Manager.html">Manager</a></li><li><a href="DeveloperDataTableModule.Table.html">Table</a></li><li><a href="FunctionalityInstitutionModule.Manager.html">Manager</a></li><li><a href="HarvestListModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestListModule.GUI.html">GUI</a></li><li><a href="HarvestModule.HarvestConnection.html">HarvestConnection</a></li><li><a href="HarvestModule.History.html">History</a></li><li><a href="HarvestModule.StageManager.html">StageManager</a></li><li><a href="HarvestProcessModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcessModule.Indicator.html">Indicator</a></li><li><a href="HarvestProcessModule.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcessModule.WisplyCounter.html">WisplyCounter</a></li><li><a href="InstitutionAdvanceOptionsModule.GUI.html">GUI</a></li><li><a href="InstitutionAdvanceOptionsModule.Institution.html">Institution</a></li><li><a href="InstitutionAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LogAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LoginModule.Form.html">Form</a></li><li><a href="OperationsModule.Manager.html">Manager</a></li><li><a href="ProcessesModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.BottomGUI.html">BottomGUI</a></li><li><a href="PublicRepositoryModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.SideGUI.html">SideGUI</a></li><li><a href="PublicRepositoryModule.TopGUI.html">TopGUI</a></li><li><a href="PublicResourceModule.DIV.html">DIV</a></li><li><a href="PublicResourceModule.Page.html">Page</a></li><li><a href="RegisterModule.Form.html">Form</a></li><li><a href="RepositoryModule.GUI.html">GUI</a></li><li><a href="RepositoryModule.Manager.html">Manager</a></li><li><a href="RepositoryModule.Repository.html">Repository</a></li><li><a href="SearchModule.Cookies.html">Cookies</a></li><li><a href="SearchModule.Field.html">Field</a></li><li><a href="ServerModule.Manager.html">Manager</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="WebsocketsModule.Connection.html">Connection</a></li><li><a href="WebsocketsModule.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="AccountSearchesListModule.html">AccountSearchesListModule</a></li><li><a href="AccountSettingsModule.html">AccountSettingsModule</a></li><li><a href="AdminAccounts.html">AdminAccounts</a></li><li><a href="AdminAdanceOptionsProgramModule.html">AdminAdanceOptionsProgramModule</a></li><li><a href="AdminAPIModule.html">AdminAPIModule</a></li><li><a href="CaptchaModule.html">CaptchaModule</a></li><li><a href="ConnectionModule.html">ConnectionModule</a></li><li><a href="DeveloperDataTable.html">DeveloperDataTable</a></li><li><a href="FunctionalityInstitutionModule.html">FunctionalityInstitutionModule</a></li><li><a href="HarvestListModule%250AIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListModule
+It holds the functionality to see a live list of repositories</a></li><li><a href="HarvestModule.html">HarvestModule</a></li><li><a href="HarvestProcessModule.html">HarvestProcessModule</a></li><li><a href="InstitutionAdvanceOptionsModule.html">InstitutionAdvanceOptionsModule</a></li><li><a href="LogAdvanceOptionsModule.html">LogAdvanceOptionsModule</a></li><li><a href="LoginModule.html">LoginModule</a></li><li><a href="OperationsModule.html">OperationsModule</a></li><li><a href="ProcessesModule.html">ProcessesModule</a></li><li><a href="PublicRepositoryModule.html">PublicRepositoryModule</a></li><li><a href="PublicResourceModule.html">PublicResourceModule</a></li><li><a href="RegisterModule.html">RegisterModule</a></li><li><a href="RepositoryModule.html">RepositoryModule</a></li><li><a href="SearchModule.html">SearchModule</a></li><li><a href="ServerModule%250AThe%2520server%2520module%2520keep%2520the%2520data%2520from%2520server.html">ServerModule
+The server module keep the data from server</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="WebsocketsModule.html">WebsocketsModule</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Nov 02 2015 15:43:34 GMT-0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

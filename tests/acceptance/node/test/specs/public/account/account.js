@@ -34,7 +34,7 @@ describe('Account', function() {
     });
     it('goes to account searches page', function(done){
       browser.
-          url('/account/search')
+          url('/account/searches')
           .pause(1000)
           .getTitle(function(err, title) {
               expect(err).toBe(undefined);

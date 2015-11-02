@@ -10,7 +10,7 @@
         </div>
         <article class="panel-body">
           <h1>Contact</h1>
-          Do you want to contact personally the developer? Great, its your choise: <br /><br />
+          Do you want to contact personally the developer? Great, its your choice: <br /><br />
           <div>
             <div class="row text-center">
               <div class="text-center col-xs-3 col-md-3">

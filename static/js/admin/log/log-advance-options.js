@@ -46,7 +46,8 @@ var LogAdvanceOptionsModule = function() {
 				var buttons,
 					cancelButton,
 					msg,
-					mainButton;
+					mainButton,
+					instance = this;
 				cancelButton = {
 					label: "Cancel",
 					className: "btn-success",
@@ -58,7 +59,7 @@ var LogAdvanceOptionsModule = function() {
 					label: "Delete entire log",
 					className: "btn-danger",
 					callback: function() {
-						wisply.logManager.delete();
+						instance.delete();
 					}
 				};
 				buttons = {
@@ -110,5 +111,5 @@ var LogAdvanceOptionsModule = function() {
 jQuery(document).ready(function() {
 	"use strict";
 	var module = new LogAdvanceOptionsModule();
-	wisply.loadModule("log-advance-options", module);
+	wisply.loadModule("admin-log-advance-options", module);
 });

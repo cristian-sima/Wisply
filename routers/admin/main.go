@@ -5,26 +5,30 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/admin"
 	"github.com/cristian-sima/Wisply/routers/admin/accounts"
+	"github.com/cristian-sima/Wisply/routers/admin/developers"
 	"github.com/cristian-sima/Wisply/routers/admin/education"
+	"github.com/cristian-sima/Wisply/routers/admin/institutions"
+	"github.com/cristian-sima/Wisply/routers/admin/log"
+	"github.com/cristian-sima/Wisply/routers/admin/repositories"
 )
 
 // Load tells the framework to load the addresses for the router
 func Load() {
 
 	account := accounts.Get()
-	curriculum := curriculum.Get()
-	developer := getDeveloper()
-	institution := getInstitution()
+	curriculum := education.Get()
+	developer := developers.Get()
+	institutions := institutions.Get()
 	harvest := getHarvest()
-	log := getLog()
-	repository := getRepository()
+	log := log.Get()
+	repository := repositories.Get()
 
 	ns := beego.NewNamespace("/admin",
 		beego.NSRouter("", &admin.Home{}, "*:Display"),
 		account,
 		curriculum,
 		developer,
-		institution,
+		institutions,
 		harvest,
 		log,
 		repository,

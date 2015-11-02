@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: public/repositories/repository/home.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: public/repositories/repository/home.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global $, wisply, server */
+/**
+ * @file Encapsulates the functionality for displaying the contents of a repository for the public
+ * @author Cristian Sima
+ */
+/**
+ * @namespace PublicRepositoryModule
+ */
+var PublicRepositoryModule = function() {
+	'use strict';
+	// credits http://stackoverflow.com/a/881147/2415167
+	String.prototype.count = function(s1) {
+		return (this.length - this.replace(new RegExp(s1, "g"), '').length) / s1.length;
+	};
+	// credits http://stackoverflow.com/a/646643/2415167
+	if (typeof String.prototype.startsWith != 'function') {
+		String.prototype.startsWith = function(str) {
+			return this.indexOf(str) === 0;
+		};
+	}
+	/**
+	 * The constructor sets the default values
+	 * @memberof PublicRepositoryModule
+	 * @class Manager
+	 * @classdesc It encapsulets the functionality for the public repository
+	 * @param {object} currentRepository Represents the current repository
+	 */
+	var Manager = function Manager(currentRepository) {
+		this.repository = currentRepository;
+		this.min = 0;
+		this.resourcesPerPage = 15;
+		// They are used to extract the verbs and parameters from the hash
+		this.delimitator = {
+			verb: "*",
+			parameter: "-",
+			insideVerb: "|",
+		};
+		this.resourceFocused = -1;
+		this.topGUI = new TopGUI(this);
+		this.sideGUI = new SideGUI(this);
+		this.bottomGUI = new BottomGUI(this);
+	};
+	Manager.prototype =
+		/** @lends PublicRepositoryModule.Manager */
+		{
+			/**
+			 * It activates the listeners and adds the shortcuts
+			 */
+			init: function() {
+				var instance = this;
+				/**
+				 * It removes the old listener for change hash and sets one which calls hashChanged method
+				 */
+				function initHash() {
+					// distroy the main hashchange
+					$(window).unbind("hashchange");
+					// add a listener for this manager
+					$(window).on('hashchange', function() {
+						instance.hashChanged();
+					});
+				}
+				/**
+				 * It adds the keys' shortcuts
+				 */
+				function initKeys() {
+					var shortcuts = [{
+						"type": "keyup",
+						"key": "Ctrl+left",
+						"callback": function() {
+							instance.showPrevious();
+						},
+						"description": "Receives the next page of resources",
+					}, {
+						"type": "keyup",
+						"key": "Ctrl+right",
+						"callback": function() {
+							instance.showNext();
+						},
+						"description": "Receives the previous page of resources",
+					}, {
+						"type": "keyup",
+						"key": "Down",
+						"callback": function() {
+							instance.focus(instance.resourceFocused + 1);
+						},
+						"description": function() {
+							return "Focuses the first resource or focuses the next resource.";
+						}(),
+						"overwrites": true,
+					}, {
+						"type": "keyup",
+						"key": "Up",
+						"callback": function() {
+							instance.focus(instance.resourceFocused - 1);
+						},
+						"description": function() {
+							return "Focuses the previous resource.";
+						}(),
+						"overwrites": true,
+					}];
+					wisply.shortcutManager.activate(shortcuts);
+				}
+
+				function initButtons() {
+					$(".next").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showNext();
+						}
+					});
+					$(".previous").click(function(event) {
+						event.preventDefault();
+						if (!$(this).hasClass("disabled")) {
+							instance.showPrevious();
+						}
+					});
+				}
+				initHash();
+				initKeys();
+				initButtons();
+				this.initGUI();
+				this.updateGUI();
+				this.hashChanged();
+			},
+			/**
+			 * It calls the GUIs' init method
+			 */
+			initGUI: function() {
+				this.topGUI.init();
+				this.sideGUI.init();
+				this.bottomGUI.init();
+			},
+			/**
+			 * It focuses the index resource
+			 * @param  {number} index The index is from 0 to n-1 resourcesPerPage
+			 */
+			focus: function(index) {
+				if (index + 1 >= this.resourcesPerPage) {
+					index = this.resourcesPerPage - 1;
+				}
+				if (index > -1) {
+					this.resourceFocused = index;
+					$("#listOfRecords").find("a").eq(index).focus();
+				}
+			},
+			/**
+			 * It resets the focus item. Private method
+			 */
+			_resetFocus: function() {
+				this.resourceFocused = -1;
+			},
+			/**
+			 * It loads the resources from server according to the current settings
+			 */
+			getResources: function() {
+				var instance = this;
+				/**
+				 * Returns the ID of the current collection or an empty string if there are no collections
+				 * @return {number} The ID of current collection
+				 */
+				function getCollection() {
+					if (instance.collection) {
+						return instance.collection.Spec;
+					}
+					return "";
+				}
+				this.showLoading();
+				$.ajax({
+					url: "/developer/api/repository/resources/" + this.repository.id + "/get/" + this.min + "/" + this.resourcesPerPage,
+					data: {
+						"collection": getCollection(),
+						"format": "html",
+					},
+					success: function(html) {
+						instance.fired_NewResources(html);
+					}
+				});
+			},
+			/**
+			 * It shows the top div, the buttons and sets the wisply loading logo
+			 */
+			showLoading: function() {
+				$("#repository-top, .next, .previous, #repository-bottom, #repository-side").hide();
+				$("#repository-resources").html('&lt;div class="text-center">&lt;br />&lt;br />&lt;br />' + wisply.getLoadingImage("medium") + '&lt;/div>');
+			},
+			/**
+			 * Is is called when resources has came from the server. It shows them, activate the listeners and update the GUI
+			 * @param  {string} html The HTML from server
+			 */
+			fired_NewResources: function(html) {
+				this.changeResources(html);
+				this.updateGUI();
+				this._resetFocus();
+			},
+			/**
+			 * It shows the next resources
+			 * @param  {event} event The event which has been generated when the button has been clicked
+			 */
+			showNext: function() {
+				var instance = this;
+				if (instance.min + instance.resourcesPerPage &lt; parseInt(instance.getCurrentTotalNumber(), 10)) {
+					var newMin;
+					newMin = parseInt(this.min, 10) + this.resourcesPerPage;
+					this.changeStart(newMin);
+				}
+			},
+			/**
+			 * It shows the last page for the repository
+			 */
+			showLastPage: function() {
+				var total = this.getCurrentTotalNumber(),
+					resourcesPerPage = this.resourcesPerPage,
+					numberOfPages = Math.round(total / resourcesPerPage),
+					newStart = (numberOfPages - 1) * resourcesPerPage;
+				this.changeStart(newStart);
+			},
+			/**
+			 * It gets the previous resources
+			 */
+			showPrevious: function() {
+				var instance = this;
+				if (instance.min >= instance.resourcesPerPage) {
+					var newMin;
+					newMin = parseInt(this.min, 10) - this.resourcesPerPage;
+					this.changeStart(newMin);
+				}
+			},
+			/**
+			 * It changes the min value (The value from which the resources are displayed). It is a private method
+			 * @param  {string} newValue The new value
+			 */
+			_changeStart: function(newValue) {
+				var value = 0;
+				if ((!isInt(newValue)) || !newValue || newValue === "" || parseInt(newValue, 10) &lt; 0) {
+					value = 0;
+				} else {
+					value = newValue;
+				}
+				this.min = parseInt(value, 10);
+			},
+			/**
+			 * It changes the min value (The value from which the resources are displayed). It goes up and updates the hash.
+			 * @param  {string} newValue The new value
+			 */
+			changeStart: function(newValue) {
+				this._changeStart(newValue);
+				this.goUp();
+				this.updateHash();
+			},
+			/**
+			 * It updates the hash of the page
+			 */
+			updateHash: function() {
+				var instance = this;
+				/**
+				 * It returns the string for the "list" verb
+				 * @return {string} The string for the "list" verb
+				 */
+				function getList() {
+					return "list" + instance.delimitator.insideVerb + instance.min + instance.delimitator.parameter + instance.resourcesPerPage;
+				}
+				/**
+				 * It returns the description of the verb collection
+				 * @return {string} The description of the verb collection
+				 */
+				function getCollection() {
+					if (instance.collection) {
+						return "collection" + instance.delimitator.insideVerb + instance.collection.ID;
+					}
+					return "";
+				}
+				/**
+				 * It returns a string which holds all the verbs
+				 * @return {string} All the verbs as a string
+				 */
+				function getVerbs() {
+					var verbs = [];
+					verbs.push(getList());
+					verbs.push(getCollection());
+					return verbs.join(instance.delimitator.verb);
+				}
+				window.location.hash = getVerbs();
+			},
+			/**
+			 * The current total number is the total number of the resources inside a collection, or the total number of resources from the repository in case there is no repository selected
+			 * @return {number} The current total number
+			 */
+			getCurrentTotalNumber: function() {
+				if (this.collection) {
+					return this.collection.NumberOfResources;
+				}
+				return this.repository.totalResources;
+			},
+			/**
+			 * It is called when the hash of the page has been changed. It gets all the verbs from the hash and updates the page
+			 */
+			hashChanged: function() {
+				var h = window.location.hash,
+					hash = h.substr(h.indexOf('#') + 1),
+					instance = this;
+				/**
+				 * It extracts the verbs from a string and stores them inside this.verbs variable
+				 * @param  {string} URL The entire string
+				 */
+				function extractVerbs(URL) {
+					var ret = [],
+						verbs = URL.split(instance.delimitator.verb);
+					var i, verb, extracted;
+					for (i = 0; i &lt; verbs.length; i++) {
+						verb = verbs[i];
+						extracted = extractElements(verb);
+						ret.push(extracted);
+					}
+					return ret;
+				}
+				/**
+				 * It extracts the elements of a verb and its name and returns them
+				 * @param  {string} URLString The string which contains the verb
+				 * @return {object} An object which holds the name of the verb and its paramters
+				 */
+				function extractElements(URLString) {
+					var elements = {},
+						el;
+					el = URLString.split(instance.delimitator.insideVerb);
+					elements.verb = el[0];
+					if (el[1]) {
+						elements.parameters = el[1].split(instance.delimitator.parameter);
+					}
+					return elements;
+				}
+				this.verbs = extractVerbs(hash);
+				this.updateVerbs();
+				this.getResources();
+			},
+			/**
+			 * It gets the object of the collection, it sets it, goes up and updates the hash
+			 * @param  {number} id The ID of the collection
+			 */
+			setCollection: function(id) {
+				var collection = this.repository.getCollection(id);
+				this.collection = collection;
+				this.min = 0;
+				this.goUp();
+				this.updateHash();
+			},
+			/**
+			 * It removes the collection and sets the min to 0
+			 */
+			removeCollection: function() {
+				var instance = this;
+				instance.min = 0;
+				instance.collection = undefined;
+				instance.updateHash();
+			},
+			/**
+			 * It returns a verb from the list of verbs
+			 * @param  {string} name The name of the verb
+			 */
+			getVerb: function(name) {
+				var verb,
+					instance = this,
+					verbs = instance.verbs;
+				for (verb in verbs) {
+					if (verbs.hasOwnProperty(verb)) {
+						if (verbs[verb].verb === name) {
+							return verbs[verb];
+						}
+					}
+				}
+			},
+			/**
+			 * It updates the "list" verb
+			 */
+			updateVerbs: function() {
+				var instance = this;
+				/**
+				 * It gets the min and resourcesPerPage from the verb and passes them to the manager
+				 */
+				function updateList() {
+					var verb = instance.getVerb("list");
+					if (verb) {
+						instance._changeStart(verb.parameters[0]);
+						instance._changeResourcesPerPage(verb.parameters[1]);
+					}
+				}
+				/**
+				 * It changes the collection from the verb to the manager
+				 */
+				function updateCollection() {
+					var verb = instance.getVerb("collection");
+					if (verb) {
+						var collection = instance.repository.getCollection(verb.parameters[0]);
+						instance.collection = collection;
+					}
+				}
+				updateList();
+				updateCollection();
+			},
+			/**
+			 * It can be used to change the number of resources displayed per page. It updates the hash
+			 * @param  {number} newValue The new value
+			 */
+			changeResourcesPerPage: function(newValue) {
+				this._changeResourcesPerPage(newValue);
+				this.updateHash();
+			},
+			/**
+			 * It changes the number of resources displayed per page. It is a private method
+			 * @param  {number} newValue The new value
+			 */
+			_changeResourcesPerPage: function(newValue) {
+				this.resourcesPerPage = parseInt(newValue, 10);
+			},
+			/**
+			 * It updates the next and previous buttons
+			 */
+			updateGUI: function() {
+				this.topGUI.update();
+				this.sideGUI.update();
+				this.bottomGUI.update();
+			},
+			/**
+			 * It takes the user up to the list of resources
+			 */
+			goUp: function() {
+				var listPosition = parseInt($("#repository-before-resources").offset().top, 10) - 160;
+				$('html, body').animate({
+					scrollTop: listPosition,
+				}, 100);
+			},
+			/**
+			 * It changes the content of the DIV which holds the list of resources
+			 * @param  {string} html The new HTML code for the DIV
+			 */
+			changeResources: function(html) {
+				$("#repository-resources").html(html);
+			},
+		};
+	/**
+	 * Contains the functionality for top GUI
+	 * @memberof PublicRepositoryModule
+	 * @class TopGUI
+	 * @classdesc It encapsulets the functionality for top GUI
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
+	 */
+	var TopGUI = function TopGUI(manager) {
+		this.element = $("#repository-top");
+		this.manager = manager;
+	};
+	TopGUI.prototype =
+		/** @lends PublicRepositoryModule.TopGUI */
+		{
+			/**
+			 * Does nothing. It is here for cosistency (the other GUI has an init method)
+			 */
+			init: function() {},
+			/**
+			 * It updates the Top GUI elements
+			 */
+			update: function() {
+				var gui = this,
+					manager = gui.manager;
+				/**
+				 * If there are no more resources, it disables the previous button. Otherwise, it enables it
+				 */
+				function updatePreviousButton() {
+					if (manager.getCurrentTotalNumber() === 0 || manager.min &lt; manager.resourcesPerPage) {
+						$(".previous").addClass("disabled");
+						$(".previous").hide();
+					} else {
+						$(".previous").removeClass("disabled");
+						$(".previous").show();
+					}
+				}
+				/**
+				 * If there are no more resources, it disables the next button. Otherwise, it enables it
+				 */
+				function updateNextButton() {
+					if (manager.getCurrentTotalNumber() === 0 || (manager.min + manager.resourcesPerPage >= parseInt(manager.getCurrentTotalNumber(), 10))) {
+						$(".next").addClass("disabled");
+						$(".next").hide();
+					} else {
+						$(".next").removeClass("disabled");
+						$(".next").show();
+					}
+				}
+				/**
+				 * It updates the next and previous button
+				 */
+				function updateButtons() {
+					updatePreviousButton();
+					updateNextButton();
+				}
+				/**
+				 * It shows the buttons
+				 */
+				function showElements() {
+					$("#repository-top, #repository-bottom, #repository-side").show();
+				}
+				/**
+				 * It updates the description of the top DIV.
+				 */
+				function updateTop() {
+					/**
+					 * It returns the description for the list of repositories
+					 * @return {string} The description for the list of repositories
+					 */
+					function getListDescription() {
+						/**
+						 * It returns the description of the list when there are repositories
+						 * @return {string} The HTML description of the list
+						 */
+						function getListText() {
+							/**
+							 * It shows when the start is zero
+							 * @return {string} The description when start is zero
+							 */
+							function getStartZero() {
+								function describeCollection() {
+									var text, total = manager.getCurrentTotalNumber();
+									if (total &lt; manager.resourcesPerPage) {
+										if (total === 1) {
+											text = "This collection contains only one resource";
+										} else {
+											text = "Showing all " + total + " resources";
+										}
+									} else {
+										text = "Showing first " + manager.resourcesPerPage + " resources of a total number of " + manager.getCurrentTotalNumber();
+									}
+									return text;
+								}
+								var text = "";
+								if (manager.collection) {
+									text = describeCollection();
+								} else {
+									text = "Last resources on " + manager.repository.name + ":";
+								}
+								return text;
+							}
+							/**
+							 * It shows when the start is not zero
+							 * @return {string} The description when start is not zero
+							 */
+							function getStartNotZero() {
+								var text = "";
+								if (start + manager.resourcesPerPage >= manager.getCurrentTotalNumber()) {
+									difference = manager.getCurrentTotalNumber() - start;
+									text = "Showing last " + difference + " resources of total " + manager.getCurrentTotalNumber() + "";
+								} else {
+									text = "Showing " + manager.resourcesPerPage + " resources from " + start + " to " + end + " of a total number of " + manager.getCurrentTotalNumber() + "";
+								}
+								return text;
+							}
+							var text = "",
+								start = manager.min,
+								difference,
+								end = manager.min + manager.resourcesPerPage;
+							if ((start === 0)) {
+								text += getStartZero();
+							} else {
+								text += getStartNotZero();
+							}
+							return text;
+						}
+						var listText = "",
+							html = "";
+						if (manager.getCurrentTotalNumber() === 0) {
+							listText += "There are no resources.";
+						} else {
+							listText += getListText();
+						}
+						html += "&lt;span class='text-muted'>";
+						html += listText;
+						html += "&lt;/span>";
+						return html;
+					}
+					/**
+					 * It returns the description for collections
+					 * @return {string} The description for collections
+					 */
+					function getCollection() {
+						/**
+						 * It transforsm the parents of the current category into labels
+						 * @return {string} HTML code containing the labels for the category's parents
+						 */
+						function getLabels() {
+							/**
+							 * It returns the HTML label for a given collection. In case the collection's name is longer than 20 characters, it cuts it to 20, appends "..." and shows a tooltip
+							 * @param  {object} collection The collection which will be transformed into a tooltip
+							 * @return {string} The HTML label for the collection
+							 */
+							function getLabel(collection) {
+								var text = "",
+									tooltip = "",
+									name = collection.Path,
+									maxCharacters = 20;
+								if (elements.length != 1) {
+									if (name.length > maxCharacters) {
+										name = name.substring(0, maxCharacters) + "...";
+										tooltip = 'data-toggle="tooltip" data-original-title="' + collection.Path + '"';
+									}
+								}
+								text = '&lt;span ' + tooltip + ' data-id="' + collection.ID + '" class="hover label label-info set-collection">' + name + '&lt;/span> ';
+								return text;
+							}
+							/**
+							 * It returns the HTML for remove collection button
+							 */
+							function getLast() {
+								var text = "";
+								text = '&lt;a data-toggle="tooltip" id="remove-collection" href="#" data-original-title="Remove collection">&lt;span class="text-danger glyphicon glyphicon-remove">&lt;/span>&lt;/a>';
+								return text;
+							}
+							var labelText = "",
+								currentSpec, parentSpec = "",
+								i, parent, elements, currentSet = manager.collection.Spec,
+								set;
+							elements = currentSet.split(":");
+							for (i = 0; i &lt; elements.length; i++) {
+								set = elements[i];
+								currentSpec = parentSpec + set;
+								parent = manager.repository.getBySpec(currentSpec);
+								labelText += getLabel(parent);
+								parentSpec = currentSpec + ":";
+								if (i &lt; elements.length - 1) {
+									labelText += "&lt;span class='text-muted glyphicon glyphicon-menu-right'>&lt;/span> ";
+								}
+							}
+							labelText += getLast();
+							return labelText;
+						}
+						var text = "";
+						if (manager.collection) {
+							text += getLabels();
+						} else {
+							text = "&lt;br />";
+						}
+						return text;
+					}
+					var html = "";
+					html += "&lt;div>";
+					html += "&lt;div id='collection'>" + getCollection() + "&lt;/div>";
+					html += "&lt;div>" + getListDescription() + "&lt;/div>";
+					html += "&lt;br />&lt;/div>";
+					$("#repository-top").html(html);
+					manager.sideGUI.activateCollection();
+				}
+				/**
+				 * It sets a listener for the remove collection button
+				 */
+				function initCollection() {
+					$("#remove-collection").click(function(event) {
+						event.preventDefault();
+						manager.removeCollection();
+					});
+				}
+				updateTop();
+				updateButtons();
+				showElements();
+				wisply.activateTooltip();
+				initCollection();
+			}
+		};
+	/**
+	 * Contains the functionality for side GUI
+	 * @memberof PublicRepositoryModule
+	 * @class SideGUI
+	 * @classdesc It encapsulets the functionality for side GUI
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
+	 */
+	var SideGUI = function SideGUI(manager) {
+		this.element = $("#repository-side");
+		this.manager = manager;
+		this.showAll = false;
+		this.hideEmptyCollections = true;
+	};
+	SideGUI.prototype =
+		/** @lends PublicRepositoryModule.SideGUI */
+		{
+			/**
+			 * Does thing. It is present for consistency
+			 */
+			init: function() {},
+			/**
+			 * It updates the GUI
+			 */
+			update: function() {
+				var instance = this,
+					div = "";
+				/**
+				 * Returns the HTML code for the current collections
+				 * @return {string} HTML code
+				 */
+				function getCollectionsHTML() {
+					/**
+					 * It returns the collections to be processed. In case there is a current collection, it retunrs the first children of it. Otherwise, if there is no collection selected, it returns all of them. Also, it trims the empty ones (if the hideEmptyCollections is true)
+					 * @return {array} Collections to be processed
+					 */
+					function getCollectionsToProcess() {
+						/**
+						 * Returns the level of a collection. The level is the number of ":" plus one inside the Spec
+						 * @param  {object} collection The collection
+						 * @return {string} The level of collection
+						 */
+						function getLevel(collection) {
+							return parseInt(collection.Spec.count(":"), 10) + 1;
+						}
+						/**
+						 * It checks if the child is a direct children of a parent collection. It is a direct children if the child level plus one equals the parent and the child's Spec starts with parent's one
+						 * @param  {object}  parent The parent collection
+						 * @param  {object}  child  The child collection
+						 * @return {Boolean} True fi the child is a direct children of the parent
+						 */
+						function isDirectChildrenOf(parent, child) {
+							return child.Spec.startsWith(parent.Spec) &amp;&amp; (getLevel(parent) + 1) === getLevel(child);
+						}
+						/**
+						 * It returns a list of collections which are not empty. An empty collection has no resources
+						 * @param  {array} collections The collection to be processed
+						 * @return {array} The collections array, without the empty collections
+						 */
+						function removeEmpty(collections) {
+							var i, toReturn = [];
+							for (i = 0; i &lt; collections.length; i++) {
+								if (parseInt(collections[i].NumberOfResources, 10) !== 0) {
+									toReturn.push(collections[i]);
+								}
+							}
+							return toReturn;
+						}
+						/**
+						 * It returns the array of collections which are direct children of a parent collection
+						 * @param  {array} collections       All the collections
+						 * @param  {object} currentCollection The parent collection
+						 * @return {array}
+						 */
+						function getNextLevel(collections, currentCollection) {
+							var toProcess = [],
+								i,
+								checkCollection;
+							for (i = 0; i &lt; collections.length; i++) {
+								checkCollection = collections[i];
+								if (isDirectChildrenOf(currentCollection, checkCollection)) {
+									toProcess.push(checkCollection);
+								}
+							}
+							return toProcess;
+						}
+						/**
+						 * It sorts an array of collection by Name ASC
+						 * @param  {collections} collections The array of collections to be sorted
+						 * @return {array} The sorted array
+						 */
+						function sortCollections(collections) {
+							var algorithm = function(a, b) {
+								if (a.Name &lt; b.Name) {
+									return -1;
+								}
+								if (a.Name > b.Name) {
+									return 1;
+								}
+								return 0;
+							};
+							return collections.sort(algorithm);
+						}
+						function decideWhichCollections() {
+							var allCollections = instance.manager.repository.collections,
+								toProcess,
+								currentCollection = instance.manager.collection;
+							if (!currentCollection || instance.showAll) {
+								toProcess = allCollections;
+							} else {
+								toProcess = getNextLevel(allCollections, currentCollection);
+							}
+							return toProcess;
+						}
+						var	toProcess;
+
+						toProcess = decideWhichCollections();
+
+						// remove empty
+						if (instance.hideEmptyCollections) {
+							toProcess = removeEmpty(toProcess);
+						}
+						return sortCollections(toProcess);
+					}
+					/**
+					 * It retunrs the HTML code for am array of collections
+					 * @param  {array} collections The array of collections
+					 * @return {string} The HTML code for the array
+					 */
+					function getCollections(collections) {
+						/**
+						 * It returns the HTML code for the collection
+						 * @param  {object} collection The collection to be processed
+						 * @return {string}
+						 */
+						function getCollection(collection) {
+							var collectionHTML = "";
+							/**
+							 * It returns the HTML description of the collection
+							 * @param  {string} description The value of description
+							 * @return {string} The HTML description of the collection
+							 */
+							function getDescription(description) {
+								return '&lt;p class="list-group-item-text">' + description + '&lt;/p>';
+							}
+							/**
+							 * It returns the div which holds the number of resources
+							 * @param  {object} collection The collection
+							 * @return {string} The HTML code for the DIV which holds the number of resources
+							 */
+							function getRightDiv(collection) {
+								return '&lt;div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">&lt;span class="text-right badge"> ' + collection.NumberOfResources + "&lt;/span>&lt;/div>";
+							}
+							/**
+							 * It returns the div which holds the name of collection
+							 * @param  {object} collection The collection
+							 * @return {string} The HTML code for the DIV which holds the name of collection
+							 */
+							function getLeftDiv(collection) {
+								return '&lt;div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">&lt;span class="h6">' + collection.Path + '&lt;/span>&lt;/div>';
+							}
+							collectionHTML += '&lt;a data-id="' + collection.ID + '" class="hover list-group-item set-collection">';
+							collectionHTML += '&lt;div class="row list-group-item-heading">';
+							collectionHTML += getLeftDiv(collection);
+							collectionHTML += getRightDiv(collection);
+							collectionHTML += getDescription(collection.Description);
+							collectionHTML += '&lt;/div>';
+							collectionHTML += '&lt;/a>';
+							return collectionHTML;
+						}
+						var html = "",
+							i;
+						for (i = 0; i &lt; collections.length; i++) {
+							html += getCollection(collections[i]);
+						}
+						if (html === "") {
+							html = "&lt;div class='text-center text-muted'>No collection available.&lt;/div>";
+						}
+						return html;
+					}
+					var collectionsToProcess;
+					collectionsToProcess = getCollectionsToProcess();
+					return getCollections(collectionsToProcess);
+				}
+				/**
+				 * It returns the HTML for the top DIV. This DIV may contain options regarding the collections
+				 * @return {string} The HTML code for the top DIV
+				 */
+				function getTopDiv() {
+					/**
+					 * It returns the HTML code for the "show all" button
+					 * @return {string} HTML code for the "show all"
+					 */
+					function getLeft() {
+						var htmlLeft = "";
+						if (instance.manager.collection) {
+							var text = "";
+							if (!instance.showAll) {
+								text = "&lt;span class='glyphicon glyphicon-collapse-down'>&lt;/span> Show all";
+							} else {
+								text = "&lt;span class='glyphicon glyphicon-collapse-up'>&lt;/span> Hide all";
+							}
+							htmlLeft = "&lt;span href='' class='hover link show-all-collections text-muted'>" + text + "&lt;/span>";
+						}
+						return htmlLeft;
+					}
+					/**
+					 * It returns the HTML code for the "Disply empty" button
+					 * @return {string} The HTML code for the "Disply empty"
+					 */
+					function getRight() {
+						var text = "",
+							htmlRight = "";
+						if (instance.hideEmptyCollections) {
+							text = "&lt;span data-toggle='tooltip' title='Show the empty categories'>&lt;span class='glyphicon glyphicon-chevron-down'>&lt;/span> Display empty&lt;/span>";
+						} else {
+							text = "&lt;span class='glyphicon glyphicon-chevron-up'>&lt;/span> Hide empty";
+						}
+						htmlRight = "&lt;span href='' class='hover link hide-empty-collections text-muted'>" + text + "&lt;/span>";
+						return htmlRight;
+					}
+					var div = "";
+					div += "&lt;div class='row'>";
+					div += "&lt;div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 text-left'>" + getLeft() + "&lt;/div>";
+					div += "&lt;div class='col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right'>" + getRight() + "&lt;/div>";
+					div += "&lt;/div>";
+					return div;
+				}
+				/**
+				 * It returns the HTML code for the entire sideGUI
+				 * @return {string} HTML code for the entire sideGUI
+				 */
+				function getHTML() {
+					var div = "";
+					div += getTopDiv();
+					div += getCollectionsHTML();
+					return div;
+				}
+				/**
+				 * It activates all the listeners for the sideGUI
+				 */
+				function activate() {
+					/**
+					 * It activates the listeners for "Show all" and "Hide empty" buttons
+					 */
+					function activateTop() {
+						var hideEmpty = $(".hide-empty-collections");
+						$(".show-all-collections").click(function(event) {
+							event.preventDefault();
+							instance.toggleAllCollections();
+						});
+						hideEmpty.click(function(event) {
+							event.preventDefault();
+							instance.toggleEmptyCollections();
+						});
+						wisply.activateTooltip();
+					}
+					activateTop();
+					instance.activateCollection();
+				}
+				div = getHTML();
+				this.element.html(div);
+				activate();
+			},
+			/**
+			 * It sets a listener for each collection button
+			 */
+			activateCollection: function() {
+				var instance = this;
+				$(".set-collection").click(function(event) {
+					event.preventDefault();
+					var id = $(this).data("id");
+					instance.manager.setCollection(id);
+				});
+			},
+			/**
+			 * It shows/hides all the collections
+			 */
+			toggleAllCollections: function() {
+				this.showAll = !this.showAll;
+				this.update();
+			},
+			/**
+			 * It shows/hides the empty collections
+			 */
+			toggleEmptyCollections: function() {
+				this.hideEmptyCollections = !this.hideEmptyCollections;
+				this.update();
+			}
+		};
+	/**
+	 * Contains the functionality for bottom GUI
+	 * @memberof PublicRepositoryModule
+	 * @class BottomGUI
+	 * @classdesc It encapsulets the functionality for bottom GUI
+	 * @param {PublicRepositoryModule.Manager} manager Is a reference to the manager
+	 */
+	var BottomGUI = function BottomGUI(manager) {
+		this.element = $("#repository-bottom");
+		this.manager = manager;
+		this.showMoreOptions = false;
+	};
+	BottomGUI.prototype =
+		/** @lends PublicRepositoryModule.BottomGUI */
+		{
+			/**
+			 * It activates the listeners for the bottom GUI
+			 */
+			init: function() {
+				var instance = this;
+				/**
+				 * It sets a listener for the more option button
+				 */
+				function initShowMore() {
+					$(".show-more-options").click(function() {
+						instance.toggleShowMoreOptions();
+					});
+				}
+				/**
+				 * It sets a listener for the resource per page select
+				 */
+				function initResourcesPerPage() {
+					$(".change-resources-per-page").on('change', function() {
+						instance.manager.changeResourcesPerPage(this.value);
+					});
+				}
+				/**
+				 * It activates the listeners for last and first buttons
+				 */
+				function initButtons() {
+					$(".show-first-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.changeStart(0);
+					});
+					$(".show-last-resources").click(function(event) {
+						event.preventDefault();
+						instance.manager.showLastPage();
+					});
+				}
+				initShowMore();
+				initResourcesPerPage();
+				initButtons();
+			},
+			/**
+			 * It updates the bottom GUI
+			 */
+			update: function() {
+				var instance = this;
+				/**
+				 * It returns the HTML code for the "show more options" button
+				 * @return {string} The HTML code for the "show more options" button
+				 */
+				function getMoreOptions() {
+					var advanceHTML = "",
+						text = "";
+					if (instance.showMoreOptions) {
+						text = "&lt;span class='glyphicon glyphicon-chevron-up'>&lt;/span>  Hide options";
+					} else {
+						text = "&lt;span class='glyphicon glyphicon-chevron-down'>&lt;/span> Show more options";
+					}
+					advanceHTML = "&lt;span class='show-more-options hover text-muted'>" + text + "&lt;/span>";
+					return advanceHTML;
+				}
+				/**
+				 * It returns the HTML for the options
+				 * @return {string} The HTML for the options
+				 */
+				function getOptions() {
+					/**
+					 * It returns the HTML for resources per page option
+					 * @return {string} The HTML for resources per page option
+					 */
+					function getResourcesPerPage() {
+						/**
+						 * It returns the HTML for the select object
+						 * @param  {number} currentNumber The current number of resources
+						 * @return {string} The HTML for the select object
+						 */
+						function getSelectHTML(currentNumber) {
+							var selectHTML = "",
+								options = [5, 15, 25, 50, 100],
+								i, number, selected;
+							selectHTML += "&lt;select class='change-resources-per-page'>";
+							for (i = 0; i &lt; options.length; i++) {
+								number = options[i];
+								if (parseInt(number, 10) === parseInt(currentNumber, 10)) {
+									selected = "selected";
+								} else {
+									selected = "";
+								}
+								selectHTML += "&lt;option " + selected + ">" + number + "&lt;/option>";
+							}
+							selectHTML += "&lt;/select>";
+							return selectHTML;
+						}
+						var perPageHTML = "",
+							number = instance.manager.resourcesPerPage;
+						perPageHTML += "Display " + getSelectHTML(number) + " resources per page.";
+						return perPageHTML;
+					}
+					/**
+					 * Returns the HTMl code for the buttons
+					 * @return {string} The HTML code for the buttons
+					 */
+					function getButtons() {
+						/**
+						 * It returns the HTML code for the first page button
+						 * @return {string} The HTML code for the first page button
+						 */
+						function getFirst() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (total &lt; resourcesPerPage || (start === 0)) {
+								text = "";
+							} else {
+								text = '&lt;li class="previous">&lt;a href="#" class="show-first-resources">← First page&lt;/a>&lt;/li>';
+							}
+							return text;
+						}
+						/**
+						 * It returns the code for the last page button
+						 * @return {string} The HTML code for the last page button
+						 */
+						function getLast() {
+							var text = "",
+								total = instance.manager.getCurrentTotalNumber(),
+								start = instance.manager.min,
+								resourcesPerPage = instance.manager.resourcesPerPage;
+							if (start + resourcesPerPage >= total) {
+								text = "";
+							} else {
+								text = '&lt;li class="next">&lt;a href="#" class="show-last-resources">Last page →&lt;/a>&lt;/li>';
+							}
+							return text;
+						}
+						var buttonsHTML = "";
+						buttonsHTML += "&lt;ul class='pager'>";
+						buttonsHTML += getFirst();
+						buttonsHTML += getLast();
+						buttonsHTML += "&lt;/ul>";
+						return buttonsHTML;
+					}
+					var text = "",
+						visibility;
+					visibility = (!instance.showMoreOptions ? "style='display:none'" : "");
+					text += "&lt;div " + visibility + " class='well' >";
+					text += getResourcesPerPage();
+					text += "&lt;hr />";
+					text += getButtons();
+					text += "&lt;/div>";
+					return text;
+				}
+				if(instance.manager.getCurrentTotalNumber() !== 0) {
+					var bottomGUIHTML = "&lt;hr />";
+					bottomGUIHTML += getMoreOptions();
+					bottomGUIHTML += getOptions();
+					this.element.html(bottomGUIHTML);
+					this.init();
+				} else {
+					this.element.html("");
+				}
+			},
+			/**
+			 * It shows/hides the div which contains more options
+			 */
+			toggleShowMoreOptions: function() {
+				this.showMoreOptions = !this.showMoreOptions;
+				this.update();
+			}
+		};
+	/**
+	 * It checks if a string is int
+	 * @param  {string}  value The value of the string
+	 * @return {Boolean} True if the string is an int, false otherwise
+	 */
+	function isInt(value) {
+		return !isNaN(value) &amp;&amp; parseInt(Number(value)) == value &amp;&amp; !isNaN(parseInt(value, 10));
+	}
+	return {
+		Manager: Manager
+	};
+};
+$(document).ready(function() {
+	"use strict";
+	var module = new PublicRepositoryModule();
+	wisply.loadModule("public-repositories-repository", module);
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AccountSearchesListModule.List.html">List</a></li><li><a href="AccountSettingsModule.Page.html">Page</a></li><li><a href="AdminAccounts.Account.html">Account</a></li><li><a href="AdminAccounts.List.html">List</a></li><li><a href="AdminAdanceOptionsProgramModule.Manager.html">Manager</a></li><li><a href="AdminAdanceOptionsProgramModule.Program.html">Program</a></li><li><a href="AdminAPI.GUI.html">GUI</a></li><li><a href="AdminAPIModule.List.html">List</a></li><li><a href="AdminAPIModule.Table.html">Table</a></li><li><a href="CaptchaModule.Captcha.html">Captcha</a></li><li><a href="ConnectionModule.Connection.html">Connection</a></li><li><a href="DeveloperDataTableModule.Manager.html">Manager</a></li><li><a href="DeveloperDataTableModule.Table.html">Table</a></li><li><a href="FunctionalityInstitutionModule.Manager.html">Manager</a></li><li><a href="HarvestListModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestListModule.GUI.html">GUI</a></li><li><a href="HarvestModule.HarvestConnection.html">HarvestConnection</a></li><li><a href="HarvestModule.History.html">History</a></li><li><a href="HarvestModule.StageManager.html">StageManager</a></li><li><a href="HarvestProcessModule.DecisionManager.html">DecisionManager</a></li><li><a href="HarvestProcessModule.Indicator.html">Indicator</a></li><li><a href="HarvestProcessModule.StageGUI.html">StageGUI</a></li><li><a href="HarvestProcessModule.WisplyCounter.html">WisplyCounter</a></li><li><a href="InstitutionAdvanceOptionsModule.GUI.html">GUI</a></li><li><a href="InstitutionAdvanceOptionsModule.Institution.html">Institution</a></li><li><a href="InstitutionAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LogAdvanceOptionsModule.Manager.html">Manager</a></li><li><a href="LoginModule.Form.html">Form</a></li><li><a href="OperationsModule.Manager.html">Manager</a></li><li><a href="ProcessesModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.BottomGUI.html">BottomGUI</a></li><li><a href="PublicRepositoryModule.Manager.html">Manager</a></li><li><a href="PublicRepositoryModule.SideGUI.html">SideGUI</a></li><li><a href="PublicRepositoryModule.TopGUI.html">TopGUI</a></li><li><a href="PublicResourceModule.DIV.html">DIV</a></li><li><a href="PublicResourceModule.Page.html">Page</a></li><li><a href="RegisterModule.Form.html">Form</a></li><li><a href="RepositoryModule.GUI.html">GUI</a></li><li><a href="RepositoryModule.Manager.html">Manager</a></li><li><a href="RepositoryModule.Repository.html">Repository</a></li><li><a href="SearchModule.Cookies.html">Cookies</a></li><li><a href="SearchModule.Field.html">Field</a></li><li><a href="ServerModule.Manager.html">Manager</a></li><li><a href="TyperModule.Typer.html">Typer</a></li><li><a href="WebsocketsModule.Connection.html">Connection</a></li><li><a href="WebsocketsModule.Gui.html">Gui</a></li><li><a href="WikierModule.Wikier.html">Wikier</a></li><li><a href="Wisply.App.html">App</a></li><li><a href="Wisply.Message.html">Message</a></li><li><a href="Wisply.ShortcutManager.html">ShortcutManager</a></li></ul><h3>Events</h3><ul><li><a href="Connection.html#event:FireLogoutUser">FireLogoutUser</a></li></ul><h3>Namespaces</h3><ul><li><a href="AccountSearchesListModule.html">AccountSearchesListModule</a></li><li><a href="AccountSettingsModule.html">AccountSettingsModule</a></li><li><a href="AdminAccounts.html">AdminAccounts</a></li><li><a href="AdminAdanceOptionsProgramModule.html">AdminAdanceOptionsProgramModule</a></li><li><a href="AdminAPIModule.html">AdminAPIModule</a></li><li><a href="CaptchaModule.html">CaptchaModule</a></li><li><a href="ConnectionModule.html">ConnectionModule</a></li><li><a href="DeveloperDataTable.html">DeveloperDataTable</a></li><li><a href="FunctionalityInstitutionModule.html">FunctionalityInstitutionModule</a></li><li><a href="HarvestListModule%250AIt%2520holds%2520the%2520functionality%2520to%2520see%2520a%2520live%2520list%2520of%2520repositories.html">HarvestListModule
+It holds the functionality to see a live list of repositories</a></li><li><a href="HarvestModule.html">HarvestModule</a></li><li><a href="HarvestProcessModule.html">HarvestProcessModule</a></li><li><a href="InstitutionAdvanceOptionsModule.html">InstitutionAdvanceOptionsModule</a></li><li><a href="LogAdvanceOptionsModule.html">LogAdvanceOptionsModule</a></li><li><a href="LoginModule.html">LoginModule</a></li><li><a href="OperationsModule.html">OperationsModule</a></li><li><a href="ProcessesModule.html">ProcessesModule</a></li><li><a href="PublicRepositoryModule.html">PublicRepositoryModule</a></li><li><a href="PublicResourceModule.html">PublicResourceModule</a></li><li><a href="RegisterModule.html">RegisterModule</a></li><li><a href="RepositoryModule.html">RepositoryModule</a></li><li><a href="SearchModule.html">SearchModule</a></li><li><a href="ServerModule%250AThe%2520server%2520module%2520keep%2520the%2520data%2520from%2520server.html">ServerModule
+The server module keep the data from server</a></li><li><a href="TyperModule.html">TyperModule</a></li><li><a href="WebsocketsModule.html">WebsocketsModule</a></li><li><a href="WikierModule.html">WikierModule</a></li><li><a href="Wisply.html">Wisply</a></li></ul><h3>Global</h3><ul><li><a href="global.html#analyse">analyse</a></li><li><a href="global.html#changeURL">changeURL</a></li><li><a href="global.html#disableModifyURL">disableModifyURL</a></li><li><a href="global.html#enableModifyURL">enableModifyURL</a></li><li><a href="global.html#end">end</a></li><li><a href="global.html#getCounter">getCounter</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initExistingProcess">initExistingProcess</a></li><li><a href="global.html#initNewProcess">initNewProcess</a></li><li><a href="global.html#paint">paint</a></li><li><a href="global.html#perform">perform</a></li><li><a href="global.html#setCurrentCounter">setCurrentCounter</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#wisply">wisply</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Nov 02 2015 15:43:34 GMT-0000 (GMT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

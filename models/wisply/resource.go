@@ -24,5 +24,5 @@ func (record *Record) GetTimestamp() string {
 
 // GetWisplyURL returns the local address of the resource within Wisply
 func (record *Record) GetWisplyURL() string {
-	return "/repository/" + strconv.Itoa(record.Repository) + "/resource/" + strconv.Itoa(record.ID)
+	return "/repositories/" + strconv.Itoa(record.Repository) + "/resources/" + strconv.Itoa(record.ID)
 }

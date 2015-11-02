@@ -81,7 +81,7 @@ server.process = {{ .currentProcesses }};
 
 </script>
 <script src="/static/js/ws/websockets.js"></script>
-<script src="/static/js/admin/repository/list.js"></script>
+<script src="/static/js/admin/repositories/repository/list.js"></script>
 <script src="/static/js/admin/harvest/harvest.js"></script>
 <script src="/static/js/admin/harvest/process.js"></script>
 <script src="/static/3rd_party/others/js/countUp.min.js"></script>
@@ -91,7 +91,7 @@ $(document).ready(function(){
     harvest : wisply.getModule("harvest"),
     process : wisply.getModule("harvest-process"),
   }
-  
+
   var decision = new modules.process.DecisionManager(),
   stages = modules.process.Stages,
   stage = new modules.harvest.StageManager(stages);

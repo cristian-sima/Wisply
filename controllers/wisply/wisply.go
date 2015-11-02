@@ -104,6 +104,7 @@ func (controller *Controller) SetCustomTitle(title string) {
 
 // ShowBlankPage displays a blank page
 func (controller *Controller) ShowBlankPage() {
+	controller.RemoveLayout()
 	controller.TplNames = "errors/blank.tpl"
 }
 

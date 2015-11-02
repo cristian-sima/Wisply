@@ -6,23 +6,42 @@ package captcha
 import "github.com/dchest/captcha"
 
 const (
-	pathToImage          string = "/captcha/"
-	allowedTimeForAction int64  = 60 * 30 // 30 minutes
+	pathToImage string = "/captcha/"
 )
 
+type configuration struct {
+	count int
+	time  int64
+}
+
 var (
-	maxNumberOfTimes = map[string]int{
-		"default": 10,
+	configurations = map[string]configuration{
+		"default": configuration{
+			count: 3,
+			time:  (60 * 30),
+		},
+		"tools": configuration{
+			count: 100,
+			time:  (60 * 60 * 24), // 1 day
+		},
 	}
 	currentListOfActions List
 )
 
-func getAllowedNumber(page string) int {
-	number, exists := maxNumberOfTimes[page]
+func getAllowedTime(page string) int64 {
+	info, exists := configurations[page]
 	if !exists {
-		return maxNumberOfTimes["default"]
+		return configurations["default"].time
 	}
-	return number
+	return info.time
+}
+
+func getAllowedNumber(page string) int {
+	info, exists := configurations[page]
+	if !exists {
+		return configurations["default"].count
+	}
+	return info.count
 }
 
 // New creates a new capcha and returns the ID

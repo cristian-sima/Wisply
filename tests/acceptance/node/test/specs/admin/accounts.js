@@ -28,7 +28,7 @@ describe('Admin - Accounts', function() {
       .selectByValue('#modify-administrator', 'true')
       .submitForm("#modify")
       .getText(".alert-success").then(function(text){
-          expect(text).toContain("The account has been modified!");
+          expect(text).toContain("The account has been modified.");
       })
       .pause(500)
       .click("a=Go back")

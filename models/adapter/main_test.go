@@ -34,7 +34,7 @@ func TestWisplyError(t *testing.T) {
 			"email": []string{"String", "email"},
 		}
 		result := Validate(data, rules)
-		error.Data = result.Errors
+		error.Data = result
 		msg := error.GetMessage()
 		Convey("The error should detect problems with one field", func() {
 			So(msg, ShouldEqual, "Your request was not successful. There were problems with one field:")
@@ -53,7 +53,7 @@ func TestWisplyError(t *testing.T) {
 			"password": []string{"String", "between_inclusive:6,60"},
 		}
 		result := Validate(data, rules)
-		error.Data = result.Errors
+		error.Data = result
 		msg := error.GetMessage()
 		Convey("The error should detect multiple problems", func() {
 			So(msg, ShouldEqual, "Your request was not successful. There were problems with 3 fields:")

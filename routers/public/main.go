@@ -5,6 +5,9 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/cristian-sima/Wisply/controllers/public"
 	"github.com/cristian-sima/Wisply/controllers/wisply"
+	"github.com/cristian-sima/Wisply/routers/public/education"
+	"github.com/cristian-sima/Wisply/routers/public/institutions"
+	"github.com/cristian-sima/Wisply/routers/public/repositories"
 )
 
 // Load tells the framework to load the addresses for the router
@@ -16,14 +19,14 @@ func Load() {
 func loadNS() {
 
 	auth := getAuth()
-	curriculum := getCurriculum()
-	institution := getInstitution()
-	repository := getRepository()
+	education := education.Get()
+	institutions := institutions.Get()
+	repositories := repositories.Get()
 
 	beego.AddNamespace(auth)
-	beego.AddNamespace(curriculum)
-	beego.AddNamespace(institution)
-	beego.AddNamespace(repository)
+	beego.AddNamespace(education)
+	beego.AddNamespace(institutions)
+	beego.AddNamespace(repositories)
 }
 
 func loadRoot() {

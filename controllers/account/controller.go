@@ -1,8 +1,6 @@
 package account
 
-import (
-	"github.com/cristian-sima/Wisply/controllers/wisply"
-)
+import "github.com/cristian-sima/Wisply/controllers/wisply"
 
 // Controller represents the basic Account controller
 type Controller struct {
@@ -10,15 +8,13 @@ type Controller struct {
 }
 
 // Prepare redirects to a login page in case the account is not connected,
-// else it loads the page
+// otherwise it loads the page
 func (controller *Controller) Prepare() {
 	controller.Controller.Prepare()
 	if !controller.AccountConnected {
 		controller.Controller.RedirectToLoginPage()
+	} else {
+		controller.SetLayout("account")
+		controller.SetTemplatePath("account")
 	}
-	controller.loadLayout()
-}
-
-func (controller *Controller) loadLayout() {
-	controller.Layout = "site/account-layout.tpl"
 }

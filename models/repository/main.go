@@ -9,10 +9,6 @@ import (
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
-// Model contains the main operations for repositories
-type Model struct {
-}
-
 // ResetAllRepositories sets the default values for the repositories
 func ResetAllRepositories() {
 	sql := "UPDATE `repository` SET `lastProcess`=0, `status`='unverified'"
@@ -21,7 +17,7 @@ func ResetAllRepositories() {
 }
 
 // GetAllInstitutions returns an array of Institution with all institutions
-func (model *Model) GetAllInstitutions() []Institution {
+func GetAllInstitutions() []Institution {
 	var list []Institution
 	sql := "SELECT `id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID` FROM `institution`"
 	rows, _ := database.Connection.Query(sql)
@@ -34,7 +30,7 @@ func (model *Model) GetAllInstitutions() []Institution {
 }
 
 // InsertNewInstitution tries to create a new institution
-func (model *Model) InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.WisplyError, error) {
+func InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.WisplyError, error) {
 
 	problem := adapter.WisplyError{}
 
@@ -64,7 +60,7 @@ func (model *Model) InsertNewInstitution(institutionDetails map[string]interface
 }
 
 // GetAllRepositories returns an array of Repository with all repositories
-func (model *Model) GetAllRepositories() []Repository {
+func GetAllRepositories() []Repository {
 	var list []Repository
 	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM `repository`"
 	rows, _ := database.Connection.Query(sql)
@@ -77,7 +73,7 @@ func (model *Model) GetAllRepositories() []Repository {
 }
 
 // GetAllStatus returns an array of Repository with all repositories
-func (model *Model) GetAllStatus() []Repository {
+func GetAllStatus() []Repository {
 	var list []Repository
 
 	sql := "SELECT id, status FROM repository"
@@ -130,7 +126,7 @@ func NewRepository(ID string) (*Repository, error) {
 }
 
 // InsertNewRepository tries to create a new repository
-func (model *Model) InsertNewRepository(repositoryDetails map[string]interface{}) (adapter.WisplyError, error) {
+func InsertNewRepository(repositoryDetails map[string]interface{}) (adapter.WisplyError, error) {
 
 	problem := adapter.WisplyError{}
 

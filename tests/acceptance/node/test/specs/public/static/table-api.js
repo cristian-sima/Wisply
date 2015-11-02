@@ -10,9 +10,9 @@ describe('Developers & Research', function() {
           })
           .call(done);
       });
-      it('goes to API page for tables', function(done){
+      it('goes to data page for tables', function(done){
         browser.
-            url('/developer/table/list')
+            url('/developer/data/table')
             .pause(1000)
             .getTitle(function(err, title) {
                 expect(err).toBe(undefined);

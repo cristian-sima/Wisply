@@ -9,6 +9,6 @@ type Controller struct {
 
 // Prepare changes the path
 func (controller *Controller) Prepare() {
-	controller.Prepare()
-	controller.SetTemplatePath("education")
+	controller.Controller.Prepare()
+	controller.SetTemplatePath("admin/education")
 }

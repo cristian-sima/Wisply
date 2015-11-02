@@ -6,6 +6,7 @@ import (
 	"github.com/cristian-sima/Wisply/controllers/developer"
 	"github.com/cristian-sima/Wisply/routers/developer/api"
 	"github.com/cristian-sima/Wisply/routers/developer/data"
+	"github.com/cristian-sima/Wisply/routers/developer/tools"
 )
 
 // Load tells the framework to load the addresses for the router
@@ -16,6 +17,7 @@ func Load() {
 			beego.NSRouter("", &developer.Home{}, "GET:Display"),
 			data.Get(),
 			api.Get(),
+			tools.Get(),
 		)
 
 	beego.AddNamespace(developer)

@@ -1,6 +1,7 @@
 package word
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -10,22 +11,22 @@ import (
 
 // Occurence maps the number of times a word appears in a text
 type Occurence struct {
-	word    string
-	counter int
+	Word    string `json:"Word"`
+	Counter int    `json:"Counter"`
 }
 
 func (occurence *Occurence) increaseCounter() {
-	occurence.counter++
+	occurence.Counter++
 }
 
 // GetWord returns the word
 func (occurence Occurence) GetWord() string {
-	return occurence.word
+	return occurence.Word
 }
 
 // GetCounter returns the number of times
 func (occurence Occurence) GetCounter() int {
-	return occurence.counter
+	return occurence.Counter
 }
 
 // OccurenceList transforms a string to a list of occurences
@@ -46,6 +47,12 @@ func (occurences *OccurenceList) GetCounter() int {
 		counter += occurence.GetCounter()
 	}
 	return counter
+}
+
+// GetJSON transforms the list into a json
+func (occurences *OccurenceList) GetJSON() string {
+	text, _ := json.MarshalIndent(occurences.data, "", "    ")
+	return string(text)
 }
 
 // GetOriginalText returns the original text of the occurence
@@ -78,8 +85,19 @@ func (occurences *OccurenceList) process() {
 	var processWord = func(toProcess string) string {
 		// in case the last character is '.' we remove it
 		sz := len(toProcess)
-		if sz > 0 && toProcess[sz-1] == '.' {
-			toProcess = toProcess[:sz-1]
+		if sz > 0 {
+			lastChar := string(toProcess[sz-1])
+			firstChar := string(toProcess[0])
+			rejectedChars := []string{".", ",", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!"}
+			for _, rejectedChar := range rejectedChars {
+				if lastChar == rejectedChar {
+					toProcess = toProcess[:sz-1]
+				}
+				if firstChar == rejectedChar {
+					toProcess = toProcess[1:]
+				}
+			}
+
 		}
 		return strings.TrimSpace(strings.ToLower(toProcess))
 	}
@@ -89,7 +107,7 @@ func (occurences *OccurenceList) process() {
 	for _, word := range words {
 		var exists = false
 		for _, occurence := range occurences.data {
-			if occurence.word == processWord(word) {
+			if occurence.GetWord() == processWord(word) {
 				exists = true
 				occurence.increaseCounter()
 			}
@@ -97,8 +115,8 @@ func (occurences *OccurenceList) process() {
 		wordToStore := processWord(word)
 		if !exists && len(wordToStore) != 0 {
 			item := Occurence{
-				word:    wordToStore,
-				counter: 1,
+				Word:    wordToStore,
+				Counter: 1,
 			}
 			occurences.data = append(occurences.data, &item)
 		}

@@ -35,10 +35,10 @@
                   </h2>
                   Wisply is making available all possible data in <a class="scroll" href="#open-data">open data</a> format.
                 </blockquote>
-                <!-- <blockquote>
+                <blockquote>
                   <h2><span class="text-muted"><span class="glyphicon glyphicon-dashboard"></span></span> Research tools</h2>
-                  We provide a <a href="#tools">list of tools</a> which Wisply is using and you may find useful for your research.
-                </blockquote> -->
+                  We provide a <a class="scroll" href="#tools">list of tools</a> which Wisply is using and you may find useful for your research.
+                </blockquote>
               </div>
             </div>
           </div>
@@ -115,6 +115,27 @@
                   </div>
                 </li>
               </ul>
+            </div>
+          </div>
+        </section>
+        <section id="tools">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Tools</h3>
+            </div>
+            <div class="panel-body">
+              <br >
+              <ol>
+                <li class="h4"><h4>Digester</h4>
+                  <div class="well h5">
+                    <span class="text-muted glyphicon glyphicon glyphicon-tasks"></span> Digester is a simple tool which takes a text and produces a list of occurences for its words.
+                    <br />
+                    <br />
+                    <a class="btn btn-primary" href="/developer/tools/digester">Access tool</a>
+                  </div>
+                </li>
+              </ol>
+              <br />
             </div>
           </div>
         </section>

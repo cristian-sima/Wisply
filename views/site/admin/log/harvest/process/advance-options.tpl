@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/log">Event log</a></li>
-      <li><a href="/admin/log/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
+      <li><a href="/admin/log/harvest/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
       <li class="active">Advance options</li>
     </ul>
   </div>
@@ -21,10 +21,10 @@
     </div>
   </div>
 </div>
-<script src="/static/js/admin/log/process.js"></script>
+<script src="/static/js/admin/log/harvest/process/process.js"></script>
 <script>
 $(document).ready(function(){
-  var module = wisply.getModule("processes"),
+  var module = wisply.getModule("admin-log-harvest-process"),
     manager = new module.Manager();
     manager.init();
 });

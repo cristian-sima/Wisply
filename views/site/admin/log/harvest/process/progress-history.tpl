@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/log">Event log</a></li>
-      <li><a href="/admin/log/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
+      <li><a href="/admin/log/harvest/process/{{ .process.Action.ID }}">Process #{{ .process.Action.ID }}</a></li>
       <li class="active">History</li>
     </ul>
   </div>
@@ -62,7 +62,7 @@
               <td>
                 <strong>
                   {{ if .process.Action.IsRunning }}
-                  <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                  <a href="/admin/log/harvest/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
                   {{ else }}
                   <span class="glyphicon glyphicon-time"></span> {{ .process.GetDuration }}
                   {{ end }}
@@ -83,8 +83,8 @@
     </div>
     {{ end }}
     <div class="no-print">
-      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}">See overview</a>
-      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary" href="/admin/log/harvest/process/{{ .process.Action.ID }}">See overview</a>
+      <a class="btn btn-primary" href="/admin/log/harvest/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
       <a class="btn btn-primary printPage" ><span class="glyphicon glyphicon-print"></span> Print</a>
     </div>
     <br />
@@ -102,15 +102,15 @@
     {{ $tasks := $operation.GetTasks }}
     <div class="well text-left">
       {{ if $operation.Action.IsRunning }}
-      <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> is <span class="label label-warning">working</span> ...
+      <span class="glyphicon glyphicon-calendar"></span> <strong>Now</strong>: The operation <a href="/admin/log/harvest/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> is <span class="label label-warning">working</span> ...
       {{ else }}
-      <span class="glyphicon glyphicon-calendar"></span>  {{ $operation.GetEndDate }}: The operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> has <span class="label label-success">finished</span> in
+      <span class="glyphicon glyphicon-calendar"></span>  {{ $operation.GetEndDate }}: The operation <a href="/admin/log/harvest/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">{{ $operation.Action.Content }}</a> has <span class="label label-success">finished</span> in
       <span class="glyphicon glyphicon-time"></span> {{ $operation.GetDuration }}.
       {{ end }}
     </div>
     <div class="print-div">
       <div class="panel panel-{{ $operation.GetResult }}">
-        <div class="panel-heading"><a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">#{{ $operation.ID }} </a> Operation {{ $operation.Action.Content }}
+        <div class="panel-heading"><a href="/admin/log/harvest/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}">#{{ $operation.ID }} </a> Operation {{ $operation.Action.Content }}
         </div>
         <div class="panel-body">
           <br />
@@ -167,7 +167,7 @@
       </div>
     </div>
     <div class="well text-left">
-      <strong><span class="glyphicon glyphicon-calendar"></span> {{ $operation.GetStartDate }}</strong>: The  operation <a href="/admin/log/process/{{ $p.Action.ID }}/operation/{{$operation.ID }}">{{$operation.Action.Content}}</a> has <span class="label label-default">started</span>
+      <strong><span class="glyphicon glyphicon-calendar"></span> {{ $operation.GetStartDate }}</strong>: The  operation <a href="/admin/log/harvest/process/{{ $p.Action.ID }}/operation/{{$operation.ID }}">{{$operation.Action.Content}}</a> has <span class="label label-default">started</span>
     </div>
     {{ end }}
     <div class="well text-left">
@@ -203,13 +203,13 @@ $(document).ready(function(){
   });
 });
 </script>
-<script src="/static/js/admin/log/process.js"></script>
-<script src="/static/js/admin/log/operation.js"></script>
+<script src="/static/js/admin/log/harvest/process/process.js"></script>
+<script src="/static/js/admin/log/harvest/process/operation.js"></script>
 <script>
 $(document).ready(function(){
   var modules = {
-    operations : wisply.getModule("operations"),
-    process: wisply.getModule("processes"),
+    operations : wisply.getModule("admin-log-harvest-operation"),
+    process: wisply.getModule("admin-log-harvest-process"),
   };
   (new modules.operations.Manager()).init();
   (new modules.process.Manager()).init();

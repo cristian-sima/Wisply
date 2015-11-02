@@ -36,12 +36,12 @@
                     <tbody>
                       {{range $index, $element := .processes}}
                       <tr class="{{ $element.GetResult }}">
-                        <td class="col-md-1"><a title="See process" href="/admin/log/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
-                        <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
+                        <td class="col-md-1"><a title="See process" href="/admin/log/harvest/process/{{ $element.Action.ID }}">{{ $element.Action.ID }}</a></td>
+                        <td class="col-md-0.5"><a data-toggle="tooltip" title="See progress history" href="/admin/log/harvest/process/{{ $element.Action.ID }}/history#history"><span class="glyphicon glyphicon-list-alt"></span></a></td>
                         <!-- start state -->
                         <td class="col-md-1">
                           {{ if $element.IsSuspended }}
-                          <a href="/admin/log/process/{{ $element.Action.ID }}"><span class="label label-warning">Suspended</span></a>
+                          <a href="/admin/log/harvest/process/{{ $element.Action.ID }}"><span class="label label-warning">Suspended</span></a>
                           {{ else }}
                           {{ if $element.Action.IsRunning }}
                           <span class="label label-info">Working</span>

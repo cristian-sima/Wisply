@@ -42,5 +42,5 @@ var OperationsModule = function() {
 $(document).ready(function() {
 	"use strict";
 	var module = new OperationsModule();
-	wisply.loadModule("operations", module);
+	wisply.loadModule("admin-log-harvest-operation", module);
 });

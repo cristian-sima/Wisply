@@ -57,7 +57,8 @@ var ProcessesModule = function() {
 				var buttons,
 					cancelButton,
 					msg,
-					mainButton;
+					mainButton,
+					instance = this;
 				cancelButton = {
 					label: "No thanks",
 					className: "btn-success",
@@ -69,7 +70,7 @@ var ProcessesModule = function() {
 					label: "Delete process",
 					className: "btn-danger",
 					callback: function() {
-						wisply.processManager.delete(ID);
+						instance.delete(ID);
 					}
 				};
 				buttons = {
@@ -108,7 +109,7 @@ var ProcessesModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/log/process/delete/' + ID,
+					"url": '/admin/log/harvest/process/' + ID + "/delete",
 					"success": successCallback,
 					"error": errorCallback
 				};
@@ -122,5 +123,5 @@ var ProcessesModule = function() {
 jQuery(document).ready(function() {
 	"use strict";
 	var module = new ProcessesModule();
-	wisply.loadModule("processes", module);
+	wisply.loadModule("admin-log-harvest-process", module);
 });

@@ -63,7 +63,7 @@
               <td>
                 <strong>
                   {{ if .process.Action.IsRunning }}
-                  <a href="/admin/log/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
+                  <a href="/admin/log/harvest/process/{{.process.Action.ID}}/operation/{{.operation.ID}}">{{ .operation.Content }}</a>
                   {{ else }}
                   <span class="glyphicon glyphicon-time"></span> {{ .process.GetDuration }}
                   {{ end }}
@@ -84,8 +84,8 @@
     </div>
     {{ end }}
     <div class="no-print">
-      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/history#history">Show history</a>
-      <a class="btn btn-primary" href="/admin/log/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
+      <a class="btn btn-primary" href="/admin/log/harvest/process/{{ .process.Action.ID }}/history#history">Show history</a>
+      <a class="btn btn-primary" href="/admin/log/harvest/process/{{ .process.Action.ID }}/advance-options">Advance options</a>
       <a class="btn btn-primary printPage" ><span class="glyphicon glyphicon-print"></span> Print</a>
     </div>
     <br />
@@ -112,7 +112,7 @@
             {{ $p := .process}}
             {{range $index, $operation := .operations}}
             <tr class="{{ $operation.GetResult }}">
-              <td class="col-md-1"><a class="btn btn-primary btn-xs" href="/admin/log/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}"><span class="no-print">See</span> #{{ $operation.ID }}</a></td>
+              <td class="col-md-1"><a class="btn btn-primary btn-xs" href="/admin/log/harvest/process/{{ $p.Action.ID }}/operation/{{ $operation.ID }}"><span class="no-print">See</span> #{{ $operation.ID }}</a></td>
               <td class="col-md-3">{{ $operation.Action.Content }}</td>
               <!-- start state -->
               <td class="col-md-1">
@@ -168,10 +168,10 @@ $(document).ready(function(){
   });
 });
 </script>
-<script src="/static/js/admin/log/process.js"></script>
+<script src="/static/js/admin/log/harvest/process/process.js"></script>
 <script>
 $(document).ready(function(){
-  var module = wisply.getModule("processes"),
+  var module = wisply.getModule("admin-log-harvest-process"),
     manager = new module.Manager();
     manager.init();
 });

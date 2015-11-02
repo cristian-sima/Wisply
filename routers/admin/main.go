@@ -7,6 +7,7 @@ import (
 	"github.com/cristian-sima/Wisply/routers/admin/accounts"
 	"github.com/cristian-sima/Wisply/routers/admin/developers"
 	"github.com/cristian-sima/Wisply/routers/admin/education"
+	"github.com/cristian-sima/Wisply/routers/admin/log"
 )
 
 // Load tells the framework to load the addresses for the router
@@ -17,7 +18,7 @@ func Load() {
 	developer := developers.Get()
 	institution := getInstitution()
 	harvest := getHarvest()
-	log := getLog()
+	log := log.Get()
 	repository := getRepository()
 
 	ns := beego.NewNamespace("/admin",

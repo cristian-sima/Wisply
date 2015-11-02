@@ -37,6 +37,16 @@ describe('Help functionality', function() {
       })
       .call(done);
   });
+  it("it goes to take down policy page and then back to help", function (done) {
+      browser
+      .url("/take-down-policy")
+      .pause(1000)
+      .url(function(err, res) {
+              expect(res.value).toBe("Take down policy");
+      })
+      .click('a=Help')
+      .call(done);
+  });
   it("goes to the cookies", function (done) {
       browser
       .pause(1000)
@@ -86,7 +96,7 @@ describe('Help functionality', function() {
       .pause(500)
       .call(done);
   });
-  it("it goes to help and home", function (done) {
+  it("it goes to help and then to home", function (done) {
       browser
       .click('a=Help')
       .pause(1000)

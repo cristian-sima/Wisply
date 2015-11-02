@@ -85,5 +85,5 @@ func (controller *Static) ShowCookiesPolicy() {
 
 // ShowSample shows the page used by developers
 func (controller *Static) ShowSample() {
-	controller.LoadTemplate("site/public/static/sample.tpl")
+	controller.LoadTemplate("sample")
 }

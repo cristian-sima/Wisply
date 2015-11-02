@@ -72,7 +72,7 @@ func (controller *Repository) GetResourceContent() {
 	// //value = strings.Replace(value, "src=\"/images", "src=\"http://www.edshare.soton.ac.uk/images", -1)
 	//
 	// controller.Data["value"] = template.HTML([]byte(value))
-	// controller.TplNames = "site/public/repository/content.tpl"
+	// controller.LoadTemplate("content")
 }
 
 // ShowRepository shows the details regarding a repository

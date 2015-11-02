@@ -82,6 +82,15 @@ describe('Static pages', function() {
               })
               .call(done);
       });
+      it('loads thank you page', function(done) {
+          browser
+              .url('/thank-you')
+              .getTitle(function(err, title) {
+                  expect(err).toBe(undefined);
+                  expect(title).toBe('Thank you');
+              })
+              .call(done);
+      });
     });
   });
   // Auth

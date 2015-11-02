@@ -17,6 +17,7 @@ type Repository struct {
 func (controller *Repository) Prepare() {
 	controller.Controller.Prepare()
 	controller.RemoveLayout()
+	controller.SetTemplatePath("developer/api/repository/resource")
 }
 
 // GetResources returns the resources for the repository
@@ -49,13 +50,13 @@ func (controller *Repository) GetResources() {
 			switch strings.TrimSpace(controller.GetString("format")) {
 			case "html":
 				controller.Data["records"] = records
-				controller.TplNames = "site/developer/api/repository/resources/html.tpl"
+				controller.LoadTemplate("html")
 				break
 			case "json":
 				controller.Ctx.Output.Json(records, false, false)
 				break
 			default:
-				controller.TplNames = "site/developer/api/problem.tpl"
+				controller.ShowBlankPage()
 				break
 			}
 		}

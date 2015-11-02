@@ -38,6 +38,12 @@ type Harvest struct {
 	Controller
 }
 
+// Prepare changes the path of templates
+func (controller *Harvest) Prepare() {
+	controller.Controller.Prepare()
+	controller.SetTemplatePath("admin/harvest")
+}
+
 // RecoverProcess tries to recover a process
 func (controller *Harvest) RecoverProcess() {
 	ID := controller.Ctx.Input.Param(":id")
@@ -53,7 +59,7 @@ func (controller *Harvest) RecoverProcess() {
 	CurrentSessions[repID] = process
 	go harvestProcess.Recover()
 
-	controller.TplNames = "site/admin/harvest/init.tpl"
+	controller.LoadTemplate("init")
 }
 
 // ForceFinishProcess terminates a process in an error state
@@ -63,7 +69,7 @@ func (controller *Harvest) ForceFinishProcess() {
 	intID, _ := strconv.Atoi(ID)
 	harvestProcess := harvest.NewProcessByID(intID)
 	harvestProcess.ForceFinish()
-	controller.TplNames = "site/admin/harvest/init.tpl"
+	controller.LoadTemplate("init")
 }
 
 // GetConduit returns the channel for sending and receiving messages
@@ -76,7 +82,7 @@ func (controller *Harvest) GetConduit() chan harvest.ProcessMessager {
 
 // InitWebsocketConnection initiats the websocket connection
 func (controller *Harvest) InitWebsocketConnection() {
-	controller.TplNames = "site/admin/harvest/init.tpl"
+	controller.LoadTemplate("init")
 	response := controller.Ctx.ResponseWriter
 	request := controller.Ctx.Request
 	connection := hub.CreateConnection(response, request, controller)
@@ -94,7 +100,7 @@ func (controller *Harvest) ShowPanel() {
 	}
 	controller.Data["repository"] = repository
 	controller.Data["host"] = controller.Ctx.Request.Host
-	controller.TplNames = "site/admin/harvest/init.tpl"
+	controller.LoadTemplate("init")
 }
 
 // DecideAction decides a certain action for the incoming message

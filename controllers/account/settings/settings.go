@@ -28,5 +28,5 @@ func (controller *Settings) DeleteAccount() {
 	} else {
 		controller.Abort("404")
 	}
-	controller.TplNames = "site/errrors/blank.tpl"
+	controller.ShowBlankPage()
 }

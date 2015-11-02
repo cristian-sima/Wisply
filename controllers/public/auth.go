@@ -28,27 +28,11 @@ func (controller *Auth) ShowLoginPage() {
 	}
 }
 
-// ShowLoginForm shows the login form
-func (controller *Auth) showLoginForm() {
-	rawSendMe := controller.GetString("sendMe")
-	controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
-	controller.SetCustomTitle("Login to Wisply")
-	controller.showForm("login")
-	controller.LoadCaptcha("login-form-page")
-}
-
 // ShowRegisterForm shows the form to register a new account
 func (controller *Auth) ShowRegisterForm() {
 	controller.SetCustomTitle("Create a new account")
 	controller.showForm("register")
 	controller.LoadCaptcha("register-form-page")
-}
-
-// showForm shows a form indicated by the parameter name.
-// It can be "login" or "register"
-func (controller *Auth) showForm(name string) {
-	controller.GenerateXSRF()
-	controller.LoadTemplate(name)
 }
 
 // CreateNewAccount checks if the password and the confirmation are the same
@@ -58,11 +42,48 @@ func (controller *Auth) showForm(name string) {
 func (controller *Auth) CreateNewAccount() {
 	page := "register-form-page"
 	controller.RegisterCaptchaAction(page)
+
 	if !controller.IsCaptchaValid(page) {
 		controller.DisplaySimpleError("Please enter a valid code!")
 	} else {
 		controller.createNewAccount()
 	}
+}
+
+// LoginAccount checks if the details provided are good and it logins the account
+func (controller *Auth) LoginAccount() {
+	page := "login-form-page"
+
+	controller.RegisterCaptchaAction(page)
+
+	if !controller.IsCaptchaValid(page) {
+		controller.DisplaySimpleError("Please enter a valid code!")
+	} else {
+		controller.loginAccount()
+	}
+}
+
+// Logout It logs out the account
+func (controller *Auth) Logout() {
+	controller.distroySession()
+	controller.DeleteConnectionCookie()
+	controller.Redirect("/", 200)
+}
+
+// showLoginForm shows the login form
+func (controller *Auth) showLoginForm() {
+	rawSendMe := controller.GetString("sendMe")
+	controller.Data["sendMe"] = strings.TrimSpace(rawSendMe)
+	controller.SetCustomTitle("Login to Wisply")
+	controller.showForm("login")
+	controller.LoadCaptcha("login-form-page")
+}
+
+// showForm shows a form indicated by the parameter name.
+// It can be "login" or "register"
+func (controller *Auth) showForm(name string) {
+	controller.GenerateXSRF()
+	controller.LoadTemplate(name)
 }
 
 func (controller *Auth) createNewAccount() {
@@ -91,19 +112,6 @@ func (controller *Auth) processRegisterRequest(userDetails map[string]interface{
 		message := "Your account is ready!"
 		goTo := "/auth/login/"
 		controller.DisplaySuccessMessage(message, goTo)
-	}
-}
-
-// LoginAccount checks if the details provided are good and it logins the account
-func (controller *Auth) LoginAccount() {
-
-	page := "login-form-page"
-	controller.RegisterCaptchaAction(page)
-
-	if !controller.IsCaptchaValid(page) {
-		controller.DisplaySimpleError("Please enter a valid code!")
-	} else {
-		controller.loginAccount()
 	}
 }
 
@@ -176,13 +184,6 @@ func (controller *Auth) isSafeRedirection(urlToTest string) bool {
 	var isSafe bool
 	isSafe = strings.HasPrefix(urlToTest, "/")
 	return isSafe
-}
-
-// Logout It logs out the account
-func (controller *Auth) Logout() {
-	controller.distroySession()
-	controller.DeleteConnectionCookie()
-	controller.Redirect("/", 200)
 }
 
 func (controller *Auth) distroySession() {

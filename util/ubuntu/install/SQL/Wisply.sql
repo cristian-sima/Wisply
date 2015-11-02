@@ -31,7 +31,7 @@ CREATE TABLE `account` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `account_token` (
   UNIQUE KEY `id` (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_token_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=278 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=309 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -443,4 +443,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-02 14:36:16
+-- Dump completed on 2015-11-02 15:43:27

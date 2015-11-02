@@ -1,6 +1,10 @@
 package captcha
 
-import "time"
+import (
+	"fmt"
+	"strconv"
+	"time"
+)
 
 type action struct {
 	page      string
@@ -10,10 +14,15 @@ type action struct {
 }
 
 func (action action) isExpired() bool {
-	return action.timestamp+allowedTimeForAction < getCurrentTimestamp()
+	for _, currentAction := range currentListOfActions.actions {
+		fmt.Println(currentAction.page + " " + strconv.Itoa(currentAction.count))
+	}
+	allowedTime := getAllowedTime(action.page)
+	return action.timestamp+allowedTime < getCurrentTimestamp()
 }
 
 func (action action) requireCaptcha() bool {
+	fmt.Println("allowed times: " + strconv.Itoa(getAllowedNumber(action.page)))
 	return action.count > getAllowedNumber(action.page)
 }
 
@@ -25,17 +34,15 @@ type List struct {
 func (list *List) addAction(page, ip string) {
 	var (
 		exists = false
-		i      int
 	)
-	for _, action := range list.actions {
+	for index, action := range list.actions {
 		if action.ip == ip && action.page == page {
 			action.count++
 			exists = true
 		}
 		if action.isExpired() {
-			list.actions = append(list.actions[:i], list.actions[i+1:]...)
+			list.actions = append(list.actions[:index], list.actions[index+1:]...)
 		}
-		i++
 	}
 	if !exists {
 		item := &action{

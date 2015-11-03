@@ -17,7 +17,7 @@ func getProgram() func(*beego.Namespace) {
 					beego.NSRouter("", &program.Program{}, "POST:Update"),
 				),
 				beego.NSNamespace("/modify-static-description",
-					beego.NSRouter("", &program.Program{}, "GET:ShowModifyForm"),
+					beego.NSRouter("", &program.Program{}, "GET:ShowModifyDescription"),
 					beego.NSRouter("", &program.Program{}, "POST:UpdateDescription"),
 				),
 			),

@@ -84,7 +84,7 @@ var PublicResourceModule = function() {
 						"format": "html",
 					},
 					success: function(html) {
-						var seeMore = "<br /><a href='/repository/" + instance.page.repository.id + "#list|10-15*'> See more resources from EdShare </a>";
+						var seeMore = "<br /><a href='/repositories/" + instance.page.repository.id + "#list|10-15*'> See more resources from EdShare </a>";
 						instance._setContent(html + seeMore);
 					}
 				});

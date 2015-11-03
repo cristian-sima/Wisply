@@ -88,7 +88,7 @@ func (occurences *OccurenceList) AddArray(words []string) {
 		if sz > 0 {
 			lastChar := string(toProcess[sz-1])
 			firstChar := string(toProcess[0])
-			rejectedChars := []string{".", ",", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!"}
+			rejectedChars := []string{".", ",", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!", "\""}
 			for _, rejectedChar := range rejectedChars {
 				if lastChar == rejectedChar {
 					toProcess = toProcess[:sz-1]

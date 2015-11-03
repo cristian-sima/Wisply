@@ -35,7 +35,7 @@
               <a href="/admin/accounts/{{$account.ID}}/modify">Modify</a>
             </td>
             <td>
-              <a class="deleteAccountButton" data-id="{{$account.ID}}" data-name="{{$account.Name}}" href="#">Delete</a>
+              <a class="deleteAccountButton btn btn-danger btn-xs" data-id="{{$account.ID}}" data-name="{{$account.Name}}" href="#">Delete</a>
             </td>
           </tr>
           {{end }}

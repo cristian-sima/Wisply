@@ -42,7 +42,7 @@
             <td>{{ $table.Name }}</td>
             <td><a href="/admin/developers/table/{{ $table.ID }}/modify">Modify</a></td>
             <td>
-              <a href="#" class="makeTablePrivate" data-id="{{ $table.ID }}" data-name="{{ $table.Name }}">Make private</a>
+              <a href="#" class="makeTablePrivate btn btn-danger btn-xs" data-id="{{ $table.ID }}" data-name="{{ $table.Name }}">Make private</a>
             </td>
           </tr>
           {{end }}

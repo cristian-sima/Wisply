@@ -65,7 +65,7 @@ func (search CollectionsSearch) getNonEmptyFromDB() []wisply.Collection {
 }
 
 func (search CollectionsSearch) getURL(collection wisply.Collection) string {
-	path := "/repository/" + strconv.Itoa(collection.Repository) + "#list|0-15*collection|" + strconv.Itoa(collection.ID)
+	path := "/repositories/" + strconv.Itoa(collection.Repository) + "#list|0-15*collection|" + strconv.Itoa(collection.ID)
 	return path
 }
 

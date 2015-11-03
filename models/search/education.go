@@ -53,7 +53,7 @@ func (search CurriculaSearch) getFromDB() []*education.Program {
 }
 
 func (search CurriculaSearch) getURL(curriculumID int) string {
-	path := "/curriculum/"
+	path := "/education/programs/"
 	action := path + strconv.Itoa(curriculumID)
 	return action
 }

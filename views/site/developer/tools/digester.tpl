@@ -25,7 +25,7 @@
                   <textarea class="form-control" name="digester-text" id="digester-text" placeholder="Text" title="Up to ">{{ .originalText }}</textarea>
                   <br />
                   The text must not exceed 50000 characters (otherwise it is trimmed) <br />
-                  The tool will remove the articles, pronouns, conjuctions, and prepositions. Also, the some redundant words (such as "yes", "is") will be removed
+                  The tool will remove the articles, pronouns, conjuctions, and prepositions. Also, some redundant words (such as "yes", "is") will be removed
                 </div>
               </div>
               <div class="form-group">

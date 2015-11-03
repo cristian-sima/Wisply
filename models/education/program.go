@@ -2,6 +2,7 @@ package education
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"strconv"
 
@@ -78,6 +79,25 @@ func (program Program) Modify(details map[string]interface{}) error {
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(details["name"].(string), program.id)
 	return err
+}
+
+// GetDefinitions returns the formal definitions for the program
+func (program Program) GetDefinitions() []Definition {
+	var list []Definition
+	fieldList := "`id`, `content`, `source`, `program`"
+	orderClause := "ORDER BY `content` ASC"
+	whereClause := "WHERE `program` = ?"
+	sql := "SELECT " + fieldList + " FROM `program_of_study_definition` " + whereClause + " " + orderClause
+	rows, err := database.Connection.Query(sql, strconv.Itoa(program.GetID()))
+	if err != nil {
+		fmt.Println(err)
+	}
+	for rows.Next() {
+		item := Definition{}
+		rows.Scan(&item.id, &item.content, &item.source, &item.program)
+		list = append(list, item)
+	}
+	return list
 }
 
 // NewProgram creates a new program by ID

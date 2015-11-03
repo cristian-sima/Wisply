@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +69,7 @@ CREATE TABLE `account_token` (
   UNIQUE KEY `id` (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_token_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=309 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,10 +256,11 @@ CREATE TABLE `program_of_study_definition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `program` int(11) NOT NULL,
   `content` varchar(1000) NOT NULL,
+  `source` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `program` (`program`),
   CONSTRAINT `program_of_study_definition_ibfk_1` FOREIGN KEY (`program`) REFERENCES `program_of_study` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -443,4 +444,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-02 16:57:19
+-- Dump completed on 2015-11-03  0:09:37

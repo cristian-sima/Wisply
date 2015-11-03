@@ -15,8 +15,10 @@ type Program struct {
 
 // Display shows the dashboard for a program
 func (controller *Program) Display() {
-	controller.SetCustomTitle("Admin - " + controller.program.GetName())
+	program := controller.program
+	controller.SetCustomTitle("Admin - " + program.GetName())
 	controller.LoadTemplate("home")
+	controller.Data["definitions"] = program.GetDefinitions()
 }
 
 // ShowAdvanceOptions shows the page with the advance options for the program

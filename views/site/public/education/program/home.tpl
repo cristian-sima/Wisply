@@ -16,6 +16,20 @@
           <br />
           <br />
           {{ .program.GetHTMLDescription }}
+          <br />
+          <div>
+          {{ if ne ( .program.GetDefinitions | len ) 0 }}
+          <h2>Formal definitions of {{ .program.GetName }}</h2>
+          <div>
+            {{ range $index, $definition := .program.GetDefinitions }}
+            <blockquote>
+              <p>{{ $definition.GetContent }}</p>
+              <small>Source <cite title="Source Title">{{ $definition.GetSource }}</cite></small>
+            </blockquote>
+            {{ end }}
+            </div>
+            {{ end }}
+          </div>
         </div>
       </div>
     </div>

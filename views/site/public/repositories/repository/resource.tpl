@@ -51,56 +51,56 @@
                   Wisply does not have access to the content of this resource.
                   <br />
                   This may happen because this resource can not be previewed in the browser or that the author of the resource has maked it as private. <br />
-                    <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>                </div>
-              </div>
-            </div>
-            {{ else }}
-            <div class="well well-sm">
-              <a class="download-file" href="http://www.edshare.soton.ac.uk/id/document/289262" >
-                <span><span class="glyphicon glyphicon-download"></span> Download</a> &bull;</span>
-              <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>
-            </div>
-            <div class="row text-center">
-              <div class="col-md-12 text-center">
-                <div id="resource-content text-center" >
-                  <img class="text-center img-responsive" src="http://www.edshare.soton.ac.uk/15322/6/page.jpg" />
+                  <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>                </div>
                 </div>
               </div>
-            </div>
-            {{ end }}
-          </div>
-          <br />
-          <div class="panel panel-default">
-            <div class="panel-heading">{{ .repository.Name }} resources</div>
-            <div class="panel-body" id="div-same-collection">
+              {{ else }}
+              <div class="well well-sm">
+                <a class="download-file" href="http://www.edshare.soton.ac.uk/id/document/289262" >
+                  <!-- <span><span class="glyphicon glyphicon-download"></span> Download</a> &bull;</span> -->
+                  <a href="{{ .resource.Keys.GetURL }}"><span class="glyphicon glyphicon-blackboard"></span> See it on {{ .repository.Name }}</a>
+                </div>
+                <div class="row text-center">
+                  <div class="col-md-12 text-center">
+                    <div id="resource-content text-center" >
+                      <!--<img class="text-center img-responsive" src="http://www.edshare.soton.ac.uk/15322/6/page.jpg" />-->
+                    </div>
+                  </div>
+                </div>
+                {{ end }}
+              </div>
+              <br />
+              <div class="panel panel-default">
+                <div class="panel-heading">{{ .repository.Name }} resources</div>
+                <div class="panel-body" id="div-same-collection">
 
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div>
+    <style scoped>
+    </style>
   </div>
-</div>
-<div>
-<style scoped>
-</style>
-</div>
-<script src="/static/js/public/resource.js"></script>
-<script>
-$(document).ready(function() {
-  "use strict";
-  var data = {
-    repository : {
-      name : "{{ .repository.Name }}",
-      id: {{ .repository.ID }},
+  <script src="/static/js/public/resource.js"></script>
+  <script>
+  $(document).ready(function() {
+    "use strict";
+    var data = {
+      repository : {
+        name : "{{ .repository.Name }}",
+        id: {{ .repository.ID }},
+      },
+      resource : {
+        id: "{{ .resource.ID }}",
+        identifier: "{{ .resource.Identifier }}",
+      },
     },
-    resource : {
-      id: "{{ .resource.ID }}",
-      identifier: "{{ .resource.Identifier }}",
-    },
-  },
-  module = wisply.getModule("public-resource");
+    module = wisply.getModule("public-resource");
 
-  module.init(data);
-});
-</script>
+    module.init(data);
+  });
+  </script>

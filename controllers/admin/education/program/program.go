@@ -19,6 +19,7 @@ func (controller *Program) Display() {
 	controller.SetCustomTitle("Admin - " + program.GetName())
 	controller.LoadTemplate("home")
 	controller.Data["definitions"] = program.GetDefinitions()
+	controller.Data["KAs"] = program.GetKAs()
 }
 
 // ShowAdvanceOptions shows the page with the advance options for the program

@@ -38,23 +38,33 @@ var AdminEducationProgramHome = function() {
 						id;
 					object = $(this);
 					id = object.data("id");
-					instance.confirmDelete(id);
+					instance.confirmDelete(id, "definition");
+				});
+				$(".deleteKAButton").click(function(event) {
+					event.preventDefault();
+					var object,
+						id;
+					object = $(this);
+					id = object.data("id");
+					instance.confirmDelete(id, "ka");
 				});
 			},
 			/**
 			 * It shows the confirmation dialog
 			 * @param  {number} id  The ID of the definition
+			 * @param  {string} type  The type of item
 			 */
-			confirmDelete: function(id) {
-				var msg = this.getDialogMessage(id);
+			confirmDelete: function(id, type) {
+				var msg = this.getDialogMessage(id, type);
 				wisply.message.dialog(msg);
 			},
 			/**
 			 * It returns the arguements for the confimation dialog
 			 * @param  {number} id The ID of the definition
+			 * @param  {string} type  The type of item
 			 * @return {object}         The arguements of the confimation message
 			 */
-			getDialogMessage: function(id) {
+			getDialogMessage: function(id, type) {
 				/**
 				 * It returns the buttons for the dialog
 				 * @return {object} The buttons for the dialog
@@ -73,7 +83,7 @@ var AdminEducationProgramHome = function() {
 						label: "Delete",
 						className: "btn-danger",
 						callback: function() {
-							instance.delete(id);
+							instance.delete(id, type);
 						}
 					};
 					return {
@@ -86,7 +96,7 @@ var AdminEducationProgramHome = function() {
 					buttons = getButtons();
 				msg = {
 					title: "We need your confirmation",
-					message: "The definition will be removed.<br /><br /> Are you sure?",
+					message: "The <strong>" + ((type === "ka")?"knowledge area":type) + "</strong> will be removed.<br /><br /> Are you sure?",
 					onEscape: true,
 					buttons: buttons
 				};
@@ -94,9 +104,10 @@ var AdminEducationProgramHome = function() {
 			},
 			/**
 			 * It delets a definition
+			 * @param  {string} type  The type of item
 			 * @param  {number} id The ID of the definition
 			 */
-			delete: function(id) {
+			delete: function(id, type) {
 				var request,
 					successCallback,
 					errorCallback,
@@ -116,7 +127,7 @@ var AdminEducationProgramHome = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/education/programs/' + instance.program.id + "/definition/" + id + "/delete",
+					"url": '/admin/education/programs/' + instance.program.id + "/"+ type + "/" + id + "/delete",
 					"success": successCallback,
 					"error": errorCallback
 				};

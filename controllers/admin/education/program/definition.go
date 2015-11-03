@@ -91,7 +91,7 @@ func (controller *Definition) CreateDefinition() {
 		controller.DisplaySimpleError(err.Error())
 	} else {
 		message := "The definition has been inserted."
-		goTo := "/admin/education/"
+		goTo := "/admin/education/programs/" + strconv.Itoa(controller.program.GetID())
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }

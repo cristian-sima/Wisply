@@ -100,6 +100,25 @@ func (program Program) GetDefinitions() []Definition {
 	return list
 }
 
+// GetKAs returns the knowledge areas for the program
+func (program Program) GetKAs() []KA {
+	var list []KA
+	fieldList := "`id`, `content`, `source`, `code`, `title`, `program`"
+	orderClause := "ORDER BY `content` ASC"
+	whereClause := "WHERE `program` = ?"
+	sql := "SELECT " + fieldList + " FROM `program_of_study_ka` " + whereClause + " " + orderClause
+	rows, err := database.Connection.Query(sql, strconv.Itoa(program.GetID()))
+	if err != nil {
+		fmt.Println(err)
+	}
+	for rows.Next() {
+		item := KA{}
+		rows.Scan(&item.id, &item.content, &item.source, &item.code, &item.title, &item.program)
+		list = append(list, item)
+	}
+	return list
+}
+
 // NewProgram creates a new program by ID
 func NewProgram(ID string) (*Program, error) {
 	program := &Program{}

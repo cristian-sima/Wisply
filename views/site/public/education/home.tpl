@@ -5,7 +5,6 @@
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li class="active">Education</li>
             <li class="active">Programs of study</li>
           </ul>
         </div>

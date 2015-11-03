@@ -77,3 +77,22 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	_, err := query.Exec(name, description, logoURL, wikiURL, wikiID, id)
 	return err
 }
+
+// GetPrograms returns the knowledge areas for the program
+func (institution Institution) GetPrograms() []Program {
+	var list []Program
+	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `program`"
+	orderClause := "ORDER BY `year` DESC"
+	whereClause := "WHERE `institution` = ?"
+	sql := "SELECT " + fieldList + " FROM `institution_program` " + whereClause + " " + orderClause
+	rows, err := database.Connection.Query(sql, strconv.Itoa(institution.ID))
+	if err != nil {
+		fmt.Println(err)
+	}
+	for rows.Next() {
+		item := Program{}
+		rows.Scan(&item.id, &item.institution, &item.title, &item.code, &item.year, &item.ucasCode, &item.level, &item.program)
+		list = append(list, item)
+	}
+	return list
+}

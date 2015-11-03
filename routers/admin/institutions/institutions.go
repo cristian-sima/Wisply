@@ -24,6 +24,22 @@ func Get() func(*beego.Namespace) {
 			beego.NSNamespace("/delete",
 				beego.NSRouter("", &institution.Institution{}, "POST:Delete"),
 			),
+			// ka
+			beego.NSNamespace("/program",
+				beego.NSNamespace("/add",
+					beego.NSRouter("", &institution.Program{}, "GET:ShowInsertForm"),
+					beego.NSRouter("", &institution.Program{}, "POST:CreateProgram"),
+				),
+				beego.NSNamespace("/:program",
+					beego.NSNamespace("/modify",
+						beego.NSRouter("", &institution.Program{}, "GET:ShowModifyForm"),
+						beego.NSRouter("", &institution.Program{}, "POST:Modify"),
+					),
+					beego.NSNamespace("/delete",
+						beego.NSRouter("", &institution.Program{}, "POST:Delete"),
+					),
+				),
+			),
 		),
 	)
 	return ns

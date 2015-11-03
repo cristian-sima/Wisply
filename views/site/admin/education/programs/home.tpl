@@ -84,7 +84,6 @@
   </div>
 </div>
 <script src="/static/js/admin/education/program/home.js"></script>
-<script src="/static/js/wisply/server.js"></script>
 <script>
 
 var program = {

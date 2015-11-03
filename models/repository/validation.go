@@ -7,13 +7,17 @@ import (
 
 var (
 	rules = map[string][]string{
-		"name":        {"String", "between_inclusive:3,500"},
-		"url":         {"String", "url", "between_inclusive:3,2083"},
-		"description": {"String", "max:1000"},
-		"id":          {"Int"},
-		"institution": {"Int"},
-		"wikiID":      {"String", "Regexp:^(NULL)$|^((\\d)+)$"},
-		"category":    {"String", "Regexp:^(EPrints)$"},
+		"name":              {"String", "between_inclusive:3,500"},
+		"url":               {"String", "url", "between_inclusive:3,2083"},
+		"description":       {"String", "max:1000"},
+		"id":                {"Int"},
+		"institution":       {"Int"},
+		"wikiID":            {"String", "Regexp:^(NULL)$|^((\\d)+)$"},
+		"category":          {"String", "Regexp:^(EPrints)$"},
+		"program-title":     {"String", "between_inclusive:3,200"},
+		"program-code":      {"String", "between_inclusive:3,10"},
+		"program-ucas-code": {"String", "between_inclusive:0,20"},
+		"program-level":     {"String", "Regexp:^(undergraduate)|(postgraduate)$"},
 	}
 )
 
@@ -54,11 +58,12 @@ func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationR
 	return adapter.Validate(details, rules)
 }
 
-func hasValidModificationDetails(details map[string]interface{}) *validity.ValidationResults {
+func hasValidProgramModifyDetails(details map[string]interface{}) *validity.ValidationResults {
 	rules := validity.ValidationRules{
-		"name":        rules["name"],
-		"description": rules["description"],
-		"url":         rules["url"],
+		"program-title":     rules["program-title"],
+		"program-code":      rules["program-code"],
+		"program-ucas-code": rules["program-ucas-code"],
+		"program-level":     rules["program-level"],
 	}
 	return adapter.Validate(details, rules)
 }

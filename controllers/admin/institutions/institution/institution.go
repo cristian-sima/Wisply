@@ -15,6 +15,7 @@ type Institution struct {
 func (controller *Institution) Display() {
 	institution := controller.GetInstitution()
 	controller.Data["repositories"] = institution.GetRepositories()
+	controller.Data["institutionPrograms"] = institution.GetPrograms()
 	controller.LoadTemplate("home")
 }
 

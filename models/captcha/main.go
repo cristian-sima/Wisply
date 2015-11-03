@@ -21,7 +21,7 @@ var (
 			time:  (60 * 30),
 		},
 		"tools": configuration{
-			count: 100,
+			count: 700,
 			time:  (60 * 60 * 24), // 1 day
 		},
 	}

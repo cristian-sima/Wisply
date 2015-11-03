@@ -15,8 +15,11 @@ type Program struct {
 
 // Display shows the dashboard for a program
 func (controller *Program) Display() {
-	controller.SetCustomTitle("Admin - " + controller.program.GetName())
+	program := controller.program
+	controller.SetCustomTitle("Admin - " + program.GetName())
 	controller.LoadTemplate("home")
+	controller.Data["definitions"] = program.GetDefinitions()
+	controller.Data["KAs"] = program.GetKAs()
 }
 
 // ShowAdvanceOptions shows the page with the advance options for the program
@@ -25,12 +28,17 @@ func (controller *Program) ShowAdvanceOptions() {
 	controller.LoadTemplate("advance-options")
 }
 
-// ShowModifyForm displays the form to modify the static description
+// ShowModifyForm displays the form to modify the program details
 func (controller *Program) ShowModifyForm() {
+	controller.GenerateXSRF()
+	controller.showForm("Modify")
+}
+
+// ShowModifyDescription displays the form to modify the static description
+func (controller *Program) ShowModifyDescription() {
 	controller.GenerateXSRF()
 	controller.Data["description"] = controller.program.GetDescription()
 	controller.LoadTemplate("form-description")
-	controller.showForm("Modify")
 }
 
 // UpdateDescription modifies the static description

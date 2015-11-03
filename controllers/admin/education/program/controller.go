@@ -18,6 +18,11 @@ func (controller *Controller) Prepare() {
 	controller.loadProgram()
 }
 
+// GetProgram returns the program of the controller
+func (controller *Controller) GetProgram() *model.Program {
+	return controller.program
+}
+
 func (controller *Controller) loadProgram() {
 	ID := controller.Ctx.Input.Param(":program")
 	program, err := model.NewProgram(ID)

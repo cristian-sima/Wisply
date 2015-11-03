@@ -17,7 +17,7 @@
             </div>
           </div>
           <div>
-            <h2>Details</h2>
+            <h2>Modify details</h2>
             <div class="well">
               You can use this option to modify the program. <br/>
               <a href="/admin/education/programs/{{ .program.GetID }}/advance-options/modify" class="btn btn-primary">Modify program</a>

@@ -16,6 +16,45 @@
           <br />
           <br />
           {{ .program.GetHTMLDescription }}
+          <br />
+          <div>
+            {{ if ne ( .program.GetDefinitions | len ) 0 }}
+            <h2>Formal definitions of {{ .program.GetName }}</h2>
+            <div>
+              {{ range $index, $definition := .program.GetDefinitions }}
+              <blockquote>
+                <p>{{ $definition.GetContent }}</p>
+                <small>Source <cite title="Source Title">{{ $definition.GetSource }}</cite></small>
+              </blockquote>
+              {{ end }}
+            </div>
+            {{ end }}
+          </div>
+          <div>
+            {{ if ne ( .program.GetKAs | len ) 0 }}
+            <h2>Knowledge areas for {{ .program.GetName }}</h2>
+            <div>
+              {{ range $index, $ka := .program.GetKAs }}
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <br />
+                  <div class="row">
+                    <div class="col-md-12">
+                      <img align="left" style="margin:10px" class="thumbnail" src="/static/img/education/cs/ka/{{ $ka.GetCode }}.png" class="img-responsive"/>
+
+                      <span class="h5"><strong>&nbsp;{{ $ka.GetTitle }}</strong></span>
+                      <br />
+                      {{ $ka.GetContent }}
+                      <br />
+                      <p class="text-muted text-right">{{ $ka.GetSource }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {{ end }}
+            </div>
+            {{ end }}
+          </div>
         </div>
       </div>
     </div>

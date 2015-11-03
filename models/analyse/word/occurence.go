@@ -29,18 +29,18 @@ func (occurence Occurence) GetCounter() int {
 	return occurence.Counter
 }
 
-// OccurenceList transforms a string to a list of occurences
-type OccurenceList struct {
+// Digester transforms a string to a list of occurences
+type Digester struct {
 	data []*Occurence
 }
 
 // GetData returns the processed data
-func (occurences OccurenceList) GetData() []*Occurence {
+func (occurences Digester) GetData() []*Occurence {
 	return occurences.data
 }
 
 // GetCounter returns the sum of all the words counters
-func (occurences *OccurenceList) GetCounter() int {
+func (occurences *Digester) GetCounter() int {
 	var counter int
 	for _, occurence := range occurences.data {
 		counter += occurence.GetCounter()
@@ -49,13 +49,13 @@ func (occurences *OccurenceList) GetCounter() int {
 }
 
 // GetJSON transforms the list into a json
-func (occurences *OccurenceList) GetJSON() string {
+func (occurences *Digester) GetJSON() string {
 	text, _ := json.MarshalIndent(occurences.data, "", "    ")
 	return string(text)
 }
 
 // Describe shows a short description of the list
-func (occurences OccurenceList) Describe() {
+func (occurences Digester) Describe() {
 	fmt.Println("-----")
 	fmt.Println("Words: ")
 
@@ -70,18 +70,18 @@ func (occurences OccurenceList) Describe() {
 }
 
 // GetNumberOfWords returns the number of words
-func (occurences *OccurenceList) GetNumberOfWords() int {
+func (occurences *Digester) GetNumberOfWords() int {
 	return len(occurences.data)
 }
 
-// AddText adds a text
-func (occurences *OccurenceList) AddText(originalText string) {
+// AnalyseText adds a text
+func (occurences *Digester) AnalyseText(originalText string) {
 	words := strings.Split(originalText, " ")
-	occurences.AddArray(words)
+	occurences.AnalyseWords(words)
 }
 
-// AddArray inserts an array of words
-func (occurences *OccurenceList) AddArray(words []string) {
+// AnalyseWords inserts an array of words
+func (occurences *Digester) AnalyseWords(words []string) {
 	var processWord = func(toProcess string) string {
 		// in case the last character is '.' we remove it
 		sz := len(toProcess)
@@ -122,7 +122,7 @@ func (occurences *OccurenceList) AddArray(words []string) {
 }
 
 // SortByCounter sorts the list by the counter of the word
-func (occurences *OccurenceList) SortByCounter(order string) {
+func (occurences *Digester) SortByCounter(order string) {
 	data := occurences.GetData()
 	slice.Sort(data, func(i, j int) bool {
 		if order == "ASC" {
@@ -132,10 +132,10 @@ func (occurences *OccurenceList) SortByCounter(order string) {
 	})
 }
 
-// NewOccurencesList creates a new list of occurences for words
-func NewOccurencesList(text string) OccurenceList {
-	list := OccurenceList{}
+// NewDigester creates a new list of occurences for words
+func NewDigester(text string) Digester {
+	list := Digester{}
 	list.data = []*Occurence{}
-	list.AddText(text)
+	list.AnalyseText(text)
 	return list
 }

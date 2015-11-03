@@ -12,6 +12,10 @@ func Get() func(*beego.Namespace) {
 			beego.NSRouter("", &tools.Digester{}, "GET:Display"),
 			beego.NSRouter("", &tools.Digester{}, "POST:Work"),
 		),
+		beego.NSNamespace("/web-digester",
+			beego.NSRouter("", &tools.WebDigester{}, "GET:Display"),
+			beego.NSRouter("", &tools.WebDigester{}, "POST:Work"),
+		),
 	)
 	return ns
 }

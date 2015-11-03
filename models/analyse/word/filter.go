@@ -10,15 +10,15 @@ type Occurencer interface {
 }
 
 type filter struct {
-	original *OccurenceList
-	data     *OccurenceList
+	original *Digester
+	data     *Digester
 }
 
-func (filter *filter) GetOriginal() *OccurenceList {
+func (filter *filter) GetOriginal() *Digester {
 	return filter.original
 }
 
-func (filter *filter) GetData() *OccurenceList {
+func (filter *filter) GetData() *Digester {
 	return filter.data
 }
 
@@ -36,7 +36,7 @@ func (filter *filter) process(list []string) {
 			allowedOccurences = append(allowedOccurences, originalOccurence)
 		}
 	}
-	item := OccurenceList{
+	item := Digester{
 		data: allowedOccurences,
 	}
 	filter.data = &item
@@ -52,7 +52,7 @@ func (filter *PrepositionFilter) process() {
 }
 
 // NewPrepositionsFilter creates a filter which removes all the prepositions
-func NewPrepositionsFilter(list *OccurenceList) *PrepositionFilter {
+func NewPrepositionsFilter(list *Digester) *PrepositionFilter {
 	filter := PrepositionFilter{
 		filter: newFilter(list),
 	}
@@ -70,7 +70,7 @@ func (filter *ConjunctionsFilter) process() {
 }
 
 // NewConjunctionsFilter creates a filter which removes all the conjuections
-func NewConjunctionsFilter(list *OccurenceList) *ConjunctionsFilter {
+func NewConjunctionsFilter(list *Digester) *ConjunctionsFilter {
 	filter := ConjunctionsFilter{
 		filter: newFilter(list),
 	}
@@ -88,7 +88,7 @@ func (filter *PronounsFilter) process() {
 }
 
 // NewPronounsFilter creates a filter which removes all the pronouns
-func NewPronounsFilter(list *OccurenceList) *PronounsFilter {
+func NewPronounsFilter(list *Digester) *PronounsFilter {
 	filter := PronounsFilter{
 		filter: newFilter(list),
 	}
@@ -107,7 +107,7 @@ func (filter *ArticleFilter) process() {
 
 // NewArticleFilter creates a new article filter.
 // This filter removes all the occures which are articles
-func NewArticleFilter(list *OccurenceList) *ArticleFilter {
+func NewArticleFilter(list *Digester) *ArticleFilter {
 	filter := ArticleFilter{
 		filter: newFilter(list),
 	}
@@ -133,7 +133,7 @@ func (grammar *GrammarFilter) process() {
 
 // NewGrammarFilter creates a filter which removes: articles, conjuctions, prepositions,
 // redundant words and pronouns
-func NewGrammarFilter(list *OccurenceList) *GrammarFilter {
+func NewGrammarFilter(list *Digester) *GrammarFilter {
 	filter := GrammarFilter{
 		filter: newFilter(list),
 	}
@@ -141,7 +141,7 @@ func NewGrammarFilter(list *OccurenceList) *GrammarFilter {
 	return &filter
 }
 
-func newFilter(list *OccurenceList) filter {
+func newFilter(list *Digester) filter {
 	return filter{
 		original: list,
 	}

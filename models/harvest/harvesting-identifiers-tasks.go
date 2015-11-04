@@ -111,7 +111,7 @@ func newInsertIdentifiersTask(operationHarvest Operationer, repository *reposito
 		return database.NewSQLBuffer(tableName, columns)
 	}
 	var createSetsBuffer = func() *database.SQLBuffer {
-		columns := "`identifier`, `setSpec`, `repository`"
+		columns := "`identifier`, `set_spec`, `repository`"
 		tableName := "identifier_set"
 		return database.NewSQLBuffer(tableName, columns)
 	}

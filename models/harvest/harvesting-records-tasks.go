@@ -226,7 +226,7 @@ func (task *UpdateNumberOfRecordsTask) update() error {
 
 	space := " "
 
-	selectWhereClause := "WHERE `identifier_set`.`setSpec` = `repository_collection`.`spec`"
+	selectWhereClause := "WHERE `identifier_set`.`set_spec` = `repository_collection`.`spec`"
 	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set`" + space + selectWhereClause
 	setClause := "SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
 

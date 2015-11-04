@@ -27,7 +27,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		sql := "SELECT " + fieldList + " FROM `repository_resource` AS record WHERE record.`repository`=? ORDER BY record.id DESC " + options.GetLimit()
 		rows, err = database.Connection.Query(sql, repositoryID)
 	} else {
-		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`setSpec` = ?  ORDER BY identifier DESC " + options.GetLimit()
+		sql := "SELECT DISTINCT `identifier_set`.`identifier`, 0, 0, 0, 0 FROM `identifier_set` WHERE `identifier_set`.`set_spec` = ?  ORDER BY identifier DESC " + options.GetLimit()
 		rows, err = database.Connection.Query(sql, options.Where["collection"])
 	}
 

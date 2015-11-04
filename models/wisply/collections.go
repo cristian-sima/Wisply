@@ -15,8 +15,8 @@ func (collections *collections) Get(repositoryID int) []*Collection {
 		list []*Collection
 		name string
 	)
-	fieldSet := "`id`, `spec`, `name`, `description`, `numberOfRecords`"
-	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
+	fieldSet := "`id`, `spec`, `name`, `description`, `number_of_records`"
+	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `number_of_records` DESC"
 	rows, _ := database.Connection.Query(sql, repositoryID)
 	for rows.Next() {
 		collection := &Collection{

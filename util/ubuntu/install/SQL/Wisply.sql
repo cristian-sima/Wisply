@@ -370,7 +370,7 @@ CREATE TABLE `repository_collection` (
   `path` varchar(500) NOT NULL,
   `description` text NOT NULL,
   `repository` int(11) NOT NULL,
-  `numberOfRecords` int(11) NOT NULL,
+  `number_of_records` int(11) NOT NULL,
   `name` varchar(300) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
@@ -513,4 +513,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:33:22
+-- Dump completed on 2015-11-04 20:38:02

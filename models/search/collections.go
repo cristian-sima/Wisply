@@ -45,10 +45,10 @@ func (search CollectionsSearch) Perform() {
 // gets the repositoryObjects
 func (search CollectionsSearch) getNonEmptyFromDB() []wisply.Collection {
 	var list []wisply.Collection
-	fieldsList := "`id`, `name`, `description`, `spec`, `path`, `numberOfRecords`, `repository`"
+	fieldsList := "`id`, `name`, `description`, `spec`, `path`, `number_of_records`, `repository`"
 	limitClause := search.options.GetLimit()
-	whereClause := "WHERE (`name` LIKE ? OR `description` LIKE ?) AND (`numberOfRecords` != 0) "
-	orderByClause := "ORDER BY `numberOfRecords` DESC"
+	whereClause := "WHERE (`name` LIKE ? OR `description` LIKE ?) AND (`number_of_Records` != 0) "
+	orderByClause := "ORDER BY `number_of_records` DESC"
 	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository_collection` " + whereClause + space + orderByClause + space + limitClause
 	rows, err := database.Connection.Query(sql, search.likeQuery(), search.likeQuery())
 	if err != nil {

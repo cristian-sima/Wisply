@@ -228,7 +228,7 @@ func (task *UpdateNumberOfRecordsTask) update() error {
 
 	selectWhereClause := "WHERE `identifier_set`.`set_spec` = `repository_collection`.`spec`"
 	numberOfRecords := "SELECT COUNT(*) FROM `identifier_set`" + space + selectWhereClause
-	setClause := "SET `repository_collection`.`numberOfRecords` = (" + numberOfRecords + ")"
+	setClause := "SET `repository_collection`.`number_of_records` = (" + numberOfRecords + ")"
 
 	whereClause := "WHERE `repository_collection`.`repository` = ?"
 	sql := "UPDATE `repository_collection` " + setClause + space + whereClause

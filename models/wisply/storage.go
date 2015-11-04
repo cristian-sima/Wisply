@@ -16,8 +16,8 @@ func (storage *Storage) GetCollections() []*Collection {
 
 	var list []*Collection
 
-	fieldSet := "`id`, `spec`, `name`, `path`, `description`, `numberOfRecords`"
-	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `numberOfRecords` DESC"
+	fieldSet := "`id`, `spec`, `name`, `path`, `description`, `number_of_records`"
+	sql := "SELECT " + fieldSet + " FROM `repository_collection` WHERE `repository` = ? ORDER BY `number_of_records` DESC"
 	rows, _ := database.Connection.Query(sql, storage.Remote.ID)
 	for rows.Next() {
 		collection := &Collection{

@@ -46,7 +46,7 @@ func (controller *Module) CreateModule() {
 	data["module-title"] = strings.TrimSpace(controller.GetString("module-title"))
 	data["module-content"] = strings.TrimSpace(controller.GetString("module-content"))
 	data["module-code"] = strings.TrimSpace(controller.GetString("module-code"))
-	data["module-CATS"] = strings.TrimSpace(controller.GetString("module-CATS"))
+	data["module-credits"] = strings.TrimSpace(controller.GetString("module-credits"))
 	data["module-year"] = strings.TrimSpace(controller.GetString("module-year"))
 	data["module-program"] = program.GetID()
 
@@ -75,7 +75,7 @@ func (controller *Module) Modify() {
 	data["module-title"] = strings.TrimSpace(controller.GetString("module-title"))
 	data["module-content"] = strings.TrimSpace(controller.GetString("module-content"))
 	data["module-code"] = strings.TrimSpace(controller.GetString("module-code"))
-	data["module-CATS"] = strings.TrimSpace(controller.GetString("module-CATS"))
+	data["module-credits"] = strings.TrimSpace(controller.GetString("module-credits"))
 	data["module-year"] = strings.TrimSpace(controller.GetString("module-year"))
 	data["module-program"] = program.GetID()
 

@@ -15,7 +15,7 @@ type Module struct {
 	content string
 	code    string
 	module  string
-	cats    string
+	credits float64
 	program int
 	year    string
 }
@@ -40,9 +40,25 @@ func (module Module) GetCode() string {
 	return module.code
 }
 
-// GetCATS returns the CATS for the module
-func (module Module) GetCATS() string {
-	return module.cats
+// GetCredits returns the academic credits
+func (module Module) GetCredits(category string) float64 {
+	// It is raporting to credits
+	points := 0.0
+	switch category {
+	case "CATS":
+		points = module.credits
+		break
+	case "ECTS":
+		points = module.credits / 2
+		break
+	case "US":
+		points = module.credits / 4
+		break
+	default:
+		points = module.credits
+		break
+	}
+	return points
 }
 
 // GetYear returns the year of the module
@@ -70,7 +86,7 @@ func (module Module) Modify(details map[string]interface{}) (adapter.WisplyError
 		problems.Data = result
 		return problems, errors.New("Problem with the fields")
 	}
-	setClause := "SET `title`=?, `content`=?, `code`=?, `program`=?, `CATS`=?, `year`=?"
+	setClause := "SET `title`=?, `content`=?, `code`=?, `program`=?, `credits`=?, `year`=?"
 	whereClause := "WHERE `id`= ?"
 	sql := "UPDATE `institution_module` " + setClause + " " + whereClause
 	query, err := database.Connection.Prepare(sql)
@@ -81,22 +97,22 @@ func (module Module) Modify(details map[string]interface{}) (adapter.WisplyError
 	content := details["module-content"].(string)
 	code := details["module-code"].(string)
 	program := details["module-program"].(int)
-	CATS := details["module-CATS"].(string)
+	credits := details["module-credits"].(string)
 	year := details["module-year"].(string)
-	query.Exec(title, content, code, program, CATS, year, module.id)
+	query.Exec(title, content, code, program, credits, year, module.id)
 	return problems, err
 }
 
 // NewModule creates a new module
 func NewModule(ID string) (*Module, error) {
 	module := &Module{}
-	fieldList := "`id`, `title`, `content`, `code`, `program`, `CATS`, `year`"
+	fieldList := "`id`, `title`, `content`, `code`, `program`, `credits`, `year`"
 	sql := "SELECT " + fieldList + " FROM `institution_module` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return module, err
 	}
-	query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.program, &module.cats, &module.year)
+	query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.program, &module.credits, &module.year)
 	return module, nil
 }
 
@@ -108,7 +124,7 @@ func CreateModule(details map[string]interface{}) (adapter.WisplyError, error) {
 		problems.Data = result
 		return problems, errors.New("Invalid details for the module")
 	}
-	fieldList := "`title`, `content`, `code`, `program`, `CATS`, `year`"
+	fieldList := "`title`, `content`, `code`, `program`, `credits`, `year`"
 	questions := "?, ?, ?, ?, ?, ?"
 	sql := "INSERT INTO `institution_module` (" + fieldList + ") VALUES (" + questions + ")"
 	query, err := database.Connection.Prepare(sql)
@@ -120,9 +136,9 @@ func CreateModule(details map[string]interface{}) (adapter.WisplyError, error) {
 	content := details["module-content"].(string)
 	code := details["module-code"].(string)
 	program := details["module-program"].(int)
-	CATS := details["module-CATS"].(string)
+	credits := details["module-credits"].(string)
 	year := details["module-year"].(string)
-	_, err = query.Exec(title, content, code, program, CATS, year)
+	_, err = query.Exec(title, content, code, program, credits, year)
 
 	fmt.Println(err)
 	return problems, err

@@ -112,8 +112,8 @@ func (program Program) Modify(details map[string]interface{}) (adapter.WisplyErr
 // GetModules returns the modules of the program
 func (program Program) GetModules() []Module {
 	var list []Module
-	fieldList := "`id`, `title`, `content`, `code`, `program`, `CATS`"
-	orderClause := "ORDER BY `title` ASC"
+	fieldList := "`id`, `title`, `content`, `code`, `program`, `credits`, `year`"
+	orderClause := "ORDER BY `year` ASC, `title` ASC"
 	whereClause := "WHERE `program` = ?"
 	sql := "SELECT " + fieldList + " FROM `institution_module` " + whereClause + " " + orderClause
 	rows, err := database.Connection.Query(sql, strconv.Itoa(program.GetID()))
@@ -122,7 +122,7 @@ func (program Program) GetModules() []Module {
 	}
 	for rows.Next() {
 		item := Module{}
-		rows.Scan(&item.id, &item.title, &item.content, &item.code, &item.program, &item.cats)
+		rows.Scan(&item.id, &item.title, &item.content, &item.code, &item.program, &item.credits, &item.year)
 		list = append(list, item)
 	}
 	return list

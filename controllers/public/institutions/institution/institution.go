@@ -10,5 +10,6 @@ func (controller *Institution) Display() {
 	institution := controller.GetInstitution()
 	controller.SetCustomTitle(institution.Name)
 	controller.Data["repositories"] = institution.GetRepositories()
+	controller.Data["institutionPrograms"] = institution.GetPrograms()
 	controller.LoadTemplate("home")
 }

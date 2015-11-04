@@ -41,6 +41,7 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4" >
               <!-- Repositories -->
+              <h2>Repositories</h2>
               <div class="list-group" id="repositories">
                 {{range $index, $repository := .repositories}}
                 <a href="/repositories/{{ $repository.ID }}" class="list-group-item">
@@ -50,6 +51,42 @@
                 {{ end }}
               </div>
             </div>
+          </div>
+          <hr />
+          <div>
+            {{ if eq (not .institutionPrograms) true }}
+            <div class="text-muted">
+              :( there are no programs of study
+            </div>
+            {{ else }}
+            <h2>Programs of study</h2>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover " id="programs-list">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Level</th>
+                    <th>Category</th>
+                    <th>Year</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{ $institution := .institution }}
+                  {{range $index, $program := .institutionPrograms}}
+                  {{ $mainProgram := $program.GetProgram }}
+                  <tr>
+                    <td>{{ $program.GetCode }}</td>
+                    <td><a href="/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></td>
+                    <td>{{ $program.GetLevel }}</td>
+                    <td><a href="/education/programs/{{ $mainProgram.GetID }}">{{ $mainProgram.GetName }}</a></td>
+                    <td>{{ $program.GetYear }}</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+            {{ end }}
           </div>
         </div>
       </div>

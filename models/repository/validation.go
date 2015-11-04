@@ -18,7 +18,7 @@ var (
 		"program-code":      {"String", "between_inclusive:3,10"},
 		"program-ucas-code": {"String", "between_inclusive:0,20"},
 		"program-level":     {"String", "Regexp:^(undergraduate)|(postgraduate)$"},
-		"module-CATS":       {"String", "between_inclusive:0,5"},
+		"module-credits":       {"String", "between_inclusive:0,5"},
 		"module-year":       {"String", "between_inclusive:1,2"},
 	}
 )
@@ -64,7 +64,7 @@ func hasValidModuleModifyDetails(details map[string]interface{}) *validity.Valid
 	rules := validity.ValidationRules{
 		"module-title": rules["program-title"],
 		"module-code":  rules["program-code"],
-		"module-CATS":  rules["module-CATS"],
+		"module-credits":  rules["module-credits"],
 		"module-year":  rules["module-year"],
 	}
 	return adapter.Validate(details, rules)

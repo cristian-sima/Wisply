@@ -10,7 +10,21 @@ import (
 func Get() *beego.Namespace {
 	ns := beego.NewNamespace("/institutions",
 		beego.NSRouter("", &institutions.Home{}, "*:Display"),
-		beego.NSRouter("/:institution", &institution.Institution{}, "GET:Display"),
+		beego.NSNamespace("/:institution",
+			beego.NSRouter("", &institution.Institution{}, "GET:Display"),
+			// program
+			beego.NSNamespace("/program",
+				beego.NSNamespace("/:program",
+					beego.NSRouter("", &institution.Program{}, "GET:Display"),
+					// module
+					beego.NSNamespace("/module",
+						beego.NSNamespace("/:module",
+							beego.NSRouter("", &institution.Module{}, "GET:Display"),
+						),
+					),
+				),
+			),
+		),
 	)
 	return ns
 }

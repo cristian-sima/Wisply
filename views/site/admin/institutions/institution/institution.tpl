@@ -72,7 +72,6 @@
       </div>
       {{ else }}
       <h4>Programs of study ({{ .institutionPrograms | len }})</h4>
-
       <div class="table-responsive">
         <table class="table table-striped table-hover " id="programs-list">
           <thead>

@@ -31,9 +31,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="module-CATS" class="col-lg-2 control-label">CATS</label>
+          <label for="module-credits" class="col-lg-2 control-label">CATS Credits</label>
           <div class="col-lg-10">
-            <input type="text" value="{{ .module.GetCATS }}" class="form-control" name="module-CATS" id="module-CATS" placeholder="CATS" required pattern=".{0,5}" title="The CATS field has up to 5 characters">
+            {{ $credits := .module.GetCredits "CATS" }}
+            <input type="text" value="{{ $credits }}" class="form-control" name="module-credits" id="module-credits" placeholder="credits" required pattern=".{0,5}" title="The credits field has up to 5 characters">
           </div>
         </div>
         <div class="form-group">

@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <h1>Developers &amp; Research</h1>
-                <img class="img-responsive" src="/static/img/developer/cloud.png" alt="API &amp; Developers" />
+                <img class="img-responsive" src="/static/img/developer/cloud.png" alt="Developers &amp; Research" />
               </div>
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <blockquote>

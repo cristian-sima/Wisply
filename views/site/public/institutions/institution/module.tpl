@@ -7,7 +7,6 @@
             <li><a href="/">Home</a></li>
             <li><a href="/institutions">Institutions</a></li>
             <li><a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
-            <li><a href="/institutions/{{ .institution.ID }}/program/{{ .program.GetID }}">{{ .program.GetTitle }}</a></li>
             <li class="active">{{ .module.GetTitle }}</li>
           </ul>
         </div>

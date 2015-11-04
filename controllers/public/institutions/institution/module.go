@@ -4,13 +4,13 @@ import "github.com/cristian-sima/Wisply/models/repository"
 
 // Module manages the operations with an module
 type Module struct {
-	Program
+	Controller
 	module repository.Module
 }
 
 // Prepare loads the module
 func (controller *Module) Prepare() {
-	controller.Program.Prepare()
+	controller.Controller.Prepare()
 	controller.loadModule()
 }
 

@@ -16,12 +16,12 @@ func Get() *beego.Namespace {
 			beego.NSNamespace("/program",
 				beego.NSNamespace("/:program",
 					beego.NSRouter("", &institution.Program{}, "GET:Display"),
-					// module
-					beego.NSNamespace("/module",
-						beego.NSNamespace("/:module",
-							beego.NSRouter("", &institution.Module{}, "GET:Display"),
-						),
-					),
+				),
+			),
+			// module
+			beego.NSNamespace("/module",
+				beego.NSNamespace("/:module",
+					beego.NSRouter("", &institution.Module{}, "GET:Display"),
 				),
 			),
 		),

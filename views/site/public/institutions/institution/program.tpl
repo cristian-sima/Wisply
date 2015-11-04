@@ -33,10 +33,9 @@
               </thead>
               <tbody>
                 {{ $institution   := .institution }}
-                {{ $program       := .program }}
                 {{range $index, $module := .modules}}
                 <tr>
-                  <td><a href="{{ $program.GetID }}/module/{{ $module.GetID }}">{{ $module.GetTitle }}</a></td>
+                  <td><a href="/institutions/{{ $institution.ID}}/module/{{ $module.GetID }}">{{ $module.GetTitle }}</a></td>
                   <td>{{ $module.GetCode }}</td>
                   <td>{{ $module.GetYear }}</td>
                   {{ end }}

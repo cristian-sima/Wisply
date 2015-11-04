@@ -17,7 +17,7 @@ type configuration struct {
 var (
 	configurations = map[string]configuration{
 		"default": configuration{
-			count: 3,
+			count: 5,
 			time:  (60 * 30),
 		},
 		"tools": configuration{

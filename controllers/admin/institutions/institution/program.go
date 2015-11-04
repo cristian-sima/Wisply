@@ -109,7 +109,7 @@ func (controller *Program) CreateProgram() {
 	data["program-ucas-code"] = strings.TrimSpace(controller.GetString("program-ucas-code"))
 	data["program-level"] = strings.TrimSpace(controller.GetString("program-level"))
 	data["program-content"] = strings.TrimSpace(controller.GetString("program-content"))
-	data["program-program"] = strings.TrimSpace(controller.GetString("program-program"))
+	data["program-subject"] = strings.TrimSpace(controller.GetString("program-subject"))
 	data["program-institution"] = institution.ID
 
 	problems, err := repository.CreateProgram(data)
@@ -138,7 +138,7 @@ func (controller *Program) Modify() {
 	data["program-ucas-code"] = strings.TrimSpace(controller.GetString("program-ucas-code"))
 	data["program-level"] = strings.TrimSpace(controller.GetString("program-level"))
 	data["program-content"] = strings.TrimSpace(controller.GetString("program-content"))
-	data["program-program"] = strings.TrimSpace(controller.GetString("program-program"))
+	data["program-subject"] = strings.TrimSpace(controller.GetString("program-subject"))
 	data["program-institution"] = institution.ID
 
 	problems, err := program.Modify(data)

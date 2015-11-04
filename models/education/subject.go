@@ -144,7 +144,7 @@ func CreateSubject(name string) error {
 	return err
 }
 
-// GetAllSubjects returns a list with all the subjects of study
+// GetAllSubjects returns a list with all the Subjects
 func GetAllSubjects() []Subject {
 	var list []Subject
 	fieldList := "`id`, `name`"

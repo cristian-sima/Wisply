@@ -8,7 +8,7 @@ import (
 	"github.com/cristian-sima/Wisply/models/education"
 )
 
-// SubjectSearch searches for curricula
+// SubjectSearch searches for Subjects
 type SubjectSearch struct {
 	*search
 }
@@ -29,7 +29,7 @@ func (search SubjectSearch) Perform() {
 	}
 }
 
-// gets the curricula
+// it gets the subjects from database
 func (search SubjectSearch) getFromDB() []*education.Subject {
 	var list []*education.Subject
 
@@ -58,7 +58,7 @@ func (search SubjectSearch) getURL(curriculumID int) string {
 	return action
 }
 
-// NewSubjectsSearch creates a search object for curricula
+// NewSubjectsSearch creates a search object for subjects
 func NewSubjectsSearch(search *search) SubjectSearch {
 	return SubjectSearch{
 		search: search,

@@ -78,7 +78,7 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	return err
 }
 
-// GetEducationSubjects returns the distinct subjects of study
+// GetEducationSubjects returns the distinct Subjects
 func (institution Institution) GetEducationSubjects() []*education.Subject {
 	list := []*education.Subject{}
 	fieldList := "`subject`"

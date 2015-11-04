@@ -7,7 +7,7 @@ type Home struct {
 	Controller
 }
 
-// Display shows all the curricula
+// Display shows all the institutions
 func (controller *Home) Display() {
 	controller.SetCustomTitle("Wisply - Institutions")
 	controller.Data["institutions"] = repository.GetAllInstitutions()

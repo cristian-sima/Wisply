@@ -29,7 +29,7 @@
         </li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            Curricula <span class="caret"></span>
+            Subjects <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
             {{range $index, $subject := .subjects }}
@@ -56,7 +56,7 @@
           <ul class="dropdown-menu multi-level">
             <li>
               <a href="/education" >
-                Curricula
+                Subjects
               </a>
             </li>
             <li class="divider"></li>

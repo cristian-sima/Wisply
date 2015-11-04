@@ -117,7 +117,7 @@ func (program Program) Modify(details map[string]interface{}) (adapter.WisplyErr
 		problems.Data = result
 		return problems, errors.New("Problem with the fields")
 	}
-	setClause := "SET `title`=?, `code`=?, `year`=?, `ucas_code`=?, `level`=?, `content`=?, `program`=? "
+	setClause := "SET `title`=?, `code`=?, `year`=?, `ucas_code`=?, `level`=?, `content`=?, `subject`=? "
 	whereClause := "WHERE `id`= ?"
 	sql := "UPDATE `institution_program` " + setClause + " " + whereClause
 	query, err := database.Connection.Prepare(sql)
@@ -130,8 +130,8 @@ func (program Program) Modify(details map[string]interface{}) (adapter.WisplyErr
 	ucasCode := details["program-ucas-code"].(string)
 	level := details["program-level"].(string)
 	content := details["program-content"].(string)
-	programOfStudy := details["program-program"].(string)
-	query.Exec(title, code, year, ucasCode, level, content, programOfStudy, program.id)
+	subject := details["program-subject"].(string)
+	query.Exec(title, code, year, ucasCode, level, content, subject, program.id)
 	return problems, err
 }
 
@@ -176,7 +176,7 @@ func CreateProgram(details map[string]interface{}) (adapter.WisplyError, error) 
 		problems.Data = result
 		return problems, errors.New("Invalid details for the program")
 	}
-	fieldList := "`institution`, `title`, `code`, `year`, `ucas_code`, `level`, `content`, `program`"
+	fieldList := "`institution`, `title`, `code`, `year`, `ucas_code`, `level`, `content`, `subject`"
 	questions := "?, ?, ?, ?, ?, ?, ?, ?"
 	sql := "INSERT INTO `institution_program` (" + fieldList + ") VALUES (" + questions + ")"
 	query, err := database.Connection.Prepare(sql)
@@ -191,9 +191,8 @@ func CreateProgram(details map[string]interface{}) (adapter.WisplyError, error) 
 	ucasCode := details["program-ucas-code"].(string)
 	level := details["program-level"].(string)
 	content := details["program-content"].(string)
-	programOfStudy := details["program-program"].(string)
-	_, err = query.Exec(institution, title, code, year, ucasCode, level, content, programOfStudy)
+	subject := details["program-subject"].(string)
+	_, err = query.Exec(institution, title, code, year, ucasCode, level, content, subject)
 
-	fmt.Println(err)
 	return problems, err
 }

@@ -3,7 +3,7 @@
     <ul class="breadcrumb">
       <li><a href="/admin">Admin</a></li>
       <li><a href="/admin/education">Education</a></li>
-      <li><a href="/admin/education/programs/{{ .program.GetID }}">{{ .program.GetName }}</a></li>
+      <li><a href="/admin/education/subjects/{{ .subject.GetID }}">{{ .subject.GetName }}</a></li>
       <li class="active">{{ .action }}</li>
     </ul>
   </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="form-group">
           <div class="col-lg-10 col-lg-offset-2">
-            <input type="submit" class="btn btn-primary" value="{{ .action }}" /> <a href="/admin/education/programs/{{ .program.GetID }}" class="btn btn-default">Cancel</a>
+            <input type="submit" class="btn btn-primary" value="{{ .action }}" /> <a href="/admin/education/subjects/{{ .subject.GetID }}" class="btn btn-default">Cancel</a>
           </div>
         </div>
       </fieldset>

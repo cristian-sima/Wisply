@@ -5,7 +5,7 @@
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li><a href="/education">Subjects of study</a></li>
+            <li><a href="/education">Subjects</a></li>
             <li class="active">{{ .subject.GetName }}</li>
           </ul>
         </div>

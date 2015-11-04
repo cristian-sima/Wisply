@@ -5,18 +5,18 @@
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li class="active">Programs of study</li>
+            <li class="active">Subjects</li>
           </ul>
         </div>
         <section class="panel-body">
-            <h1>Programs of study</h1>
+            <h1>Subjects</h1>
             <br />
             <div>
               <div class="row text-center">
                 {{range $index, $program := .subjects }}
                 <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
                   <a href="/education/subjects/{{ $program.GetID }}">
-                    <article style="height:150px;" class="thumbnail">
+                    <article style="height:175px;" class="thumbnail">
                       <span class="glyphicon glyphicon-bookmark big-icon"></span>
                       <div class="caption">
                         <h2>

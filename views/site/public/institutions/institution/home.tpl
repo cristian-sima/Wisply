@@ -52,7 +52,7 @@
               </div>
               <h2>Areas</h2>
               <ul class="nav nav-pills">
-                {{range $index, $program := .institution.GetEducationPrograms }}
+                {{range $index, $program := .institution.GetEducationSubjects }}
                 <li class="active"><a href="/education/programs/{{ $program.GetID }}">{{ $program.GetName }} </a></li>
                 {{ end  }}
               </ul>
@@ -80,12 +80,12 @@
                 <tbody>
                   {{ $institution := .institution }}
                   {{range $index, $program := .institutionPrograms}}
-                  {{ $mainProgram := $program.GetProgram }}
+                  {{ $subject := $program.GetSubject }}
                   <tr>
                     <td>{{ $program.GetCode }}</td>
                     <td><a href="/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></td>
                     <td>{{ $program.GetLevel }}</td>
-                    <td><a href="/education/programs/{{ $mainProgram.GetID }}">{{ $mainProgram.GetName }}</a></td>
+                    <td><a href="/education/programs/{{ $subject.GetID }}">{{ $subject.GetName }}</a></td>
                     <td>{{ $program.GetYear }}</td>
                   </tr>
                   {{ end }}

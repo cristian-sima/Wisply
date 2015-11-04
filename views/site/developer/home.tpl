@@ -99,7 +99,7 @@
                       <blockquote>
                         This request gets (in this order): <br />
                         <ul>
-                          <li>curricula</li>
+                          <li>subject</li>
                           <li>institutions</li>
                           <li>repositories</li>
                           <li>collections</li>

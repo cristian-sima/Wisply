@@ -5,8 +5,8 @@ type Home struct {
 	Controller
 }
 
-// ShowCurricula shows all the curricula
+// Display displays all the subjects
 func (controller *Home) Display() {
-	controller.SetCustomTitle("Wisply - Curricula")
+	controller.SetCustomTitle("Wisply - Subject")
 	controller.LoadTemplate("home")
 }

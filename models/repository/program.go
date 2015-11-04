@@ -138,7 +138,7 @@ func (program Program) Modify(details map[string]interface{}) (adapter.WisplyErr
 // GetModules returns the modules of the program
 func (program Program) GetModules() []Module {
 	var list []Module
-	fieldList := "module.`id`, module.`title`, module.`content`, module.`code`, module.`credits`, module.`year`"
+	fieldList := "module.`id`, module.`title`, module.`content`, module.`code`, module.`credits`, module.`year`, module.`institution`"
 	orderClause := "ORDER BY module.`year` ASC, module.`title` ASC"
 	whereClause := "WHERE `program` = ?"
 	join := "INNER JOIN `institution_program_session` AS session ON session.module = module.id"
@@ -149,15 +149,15 @@ func (program Program) GetModules() []Module {
 	}
 	for rows.Next() {
 		item := Module{}
-		rows.Scan(&item.id, &item.title, &item.content, &item.code, &item.credits, &item.year)
+		rows.Scan(&item.id, &item.title, &item.content, &item.code, &item.credits, &item.year, &item.institution)
 		list = append(list, item)
 	}
 	return list
 }
 
 // NewProgram creates a new program
-func NewProgram(ID string) (*Program, error) {
-	program := &Program{}
+func NewProgram(ID string) (Program, error) {
+	program := Program{}
 	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `content`, `program`"
 	sql := "SELECT " + fieldList + " FROM `institution_program` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)

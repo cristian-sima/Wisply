@@ -50,6 +50,12 @@
                 </a>
                 {{ end }}
               </div>
+              <h2>Areas</h2>
+              <ul class="nav nav-pills">
+                {{range $index, $program := .institution.GetEducationPrograms }}
+                <li class="active"><a href="/education/programs/{{ $program.GetID }}">{{ $program.GetName }} </a></li>
+                {{ end  }}
+              </ul>
             </div>
           </div>
           <hr />

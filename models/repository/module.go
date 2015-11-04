@@ -11,13 +11,14 @@ import (
 
 // Module represents a module within a program of study
 type Module struct {
-	id      int
-	title   string
-	content string
-	code    string
-	module  string
-	credits float64
-	year    string
+	id          int
+	title       string
+	content     string
+	code        string
+	module      string
+	credits     float64
+	year        string
+	institution int
 }
 
 // GetID returns the ID of the module
@@ -61,17 +62,22 @@ func (module Module) GetCredits(category string) float64 {
 	return points
 }
 
+// GetInstitution returns the ID of the institution
+func (module Module) GetInstitution() int {
+	return module.institution
+}
+
 // GetYear returns the year of the module
 func (module Module) GetYear() string {
 	return module.year
 }
 
 // GetPrograms returns the list of programs which include this module
-func (module Module) GetPrograms() []*Program {
-	var list []*Program
-	fieldList := "`id``"
+func (module Module) GetPrograms() []Program {
+	var list []Program
+	fieldList := "`program`"
 	whereClause := "WHERE `module` = ?"
-	sql := "SELECT " + fieldList + " FROM `institution_session` " + whereClause + " "
+	sql := "SELECT " + fieldList + " FROM `institution_program_session` " + whereClause + " "
 	rows, err := database.Connection.Query(sql, strconv.Itoa(module.GetID()))
 	if err != nil {
 		fmt.Println(err)
@@ -122,15 +128,15 @@ func (module Module) Modify(details map[string]interface{}) (adapter.WisplyError
 }
 
 // NewModule creates a new module
-func NewModule(ID string) (*Module, error) {
-	module := &Module{}
-	fieldList := "`id`, `title`, `content`, `code`, `credits`, `year`"
+func NewModule(ID string) (Module, error) {
+	module := Module{}
+	fieldList := "`id`, `title`, `content`, `code`, `credits`, `year`, `institution`"
 	sql := "SELECT " + fieldList + " FROM `institution_module` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return module, err
 	}
-	query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.credits, &module.year)
+	query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.credits, &module.year, &module.institution)
 	return module, nil
 }
 

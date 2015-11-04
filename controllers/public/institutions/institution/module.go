@@ -5,7 +5,7 @@ import "github.com/cristian-sima/Wisply/models/repository"
 // Module manages the operations with an module
 type Module struct {
 	Program
-	module *repository.Module
+	module repository.Module
 }
 
 // Prepare loads the module
@@ -15,7 +15,7 @@ func (controller *Module) Prepare() {
 }
 
 // GetModule returns the reference to the module
-func (controller *Module) GetModule() *repository.Module {
+func (controller *Module) GetModule() repository.Module {
 	return controller.module
 }
 

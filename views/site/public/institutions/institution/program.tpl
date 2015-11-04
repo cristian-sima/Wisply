@@ -12,6 +12,7 @@
         </div>
         <div class="panel-body">
           <h1>{{ .program.GetTitle }}</h1>
+          <span class="text-muted">Program</span> &bull; <a href="/institutions/{{ .institution.ID }}">{{ .institution.Name}}</a>
           <div class="well">{{ .program.GetContent }}</div>
           <br />
           <br />

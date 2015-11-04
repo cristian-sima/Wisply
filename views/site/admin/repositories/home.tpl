@@ -10,8 +10,10 @@
     <section>
       <h4>Options</h4>
       <div class="btn-group-sm">
-        <a href="/admin/repositories/add" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add repository</a>
-        <span id="harvest-history-button" class="btn btn-info hover">Live actions</span>
+        <a href="/admin/repositories/add" class="btn btn-success btn-sm">
+          <span class="glyphicon glyphicon-plus"></span> Add repository
+        </a>
+        <span id="harvest-history-button" class="btn btn-info hover btn-sm">See live actions</span>
       </div>
     </section>
     <br />

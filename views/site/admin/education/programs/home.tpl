@@ -14,8 +14,8 @@
     </ul>
     <div id="myTabContent" class="tab-content">
       <div class="tab-pane fade active in" id="KAs">
-        <a href="/admin/education/programs/{{ .program.GetID }}/ka/add" class="btn btn-sm btn-primary sm">
-        Add Knowledge area</a>
+        <a href="/admin/education/programs/{{ .program.GetID }}/ka/add" class="btn btn-sm btn-success">
+        <span class="glyphicon glyphicon-plus" ></span> Add Knowledge area</a>
         <br />
         <br />
         {{ if eq (.KAs | len) 0 }}
@@ -45,7 +45,10 @@
         {{ end }}
       </div>
       <div class="tab-pane fade" id="definitions">
-        <a href="/admin/education/programs/{{ .program.GetID }}/definition/add" class="btn btn-sm btn-primary sm"><span class="glyphicon glyphicon-plus"></span> Add formal definition</a>
+        <a href="/admin/education/programs/{{ .program.GetID }}/definition/add" class="btn btn-sm btn-success">
+          <span class="glyphicon glyphicon-plus"></span>
+          Add formal definition
+        </a>
         <br />
         <br />
         {{ if eq (.definitions | len) 0 }}
@@ -84,7 +87,6 @@
   </div>
 </div>
 <script src="/static/js/admin/education/program/home.js"></script>
-<script src="/static/js/wisply/server.js"></script>
 <script>
 
 var program = {

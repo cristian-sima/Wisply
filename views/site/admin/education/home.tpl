@@ -7,7 +7,7 @@
   </div>
   <div class="panel-body">
     <div class="btn-group-sm">
-      <a href="/admin/education/programs/add" class="btn btn-primary">
+      <a href="/admin/education/programs/add" class="btn btn-success btn-sm">
         <span class="glyphicon glyphicon-plus"></span> Add program of study</a>
       </div>
       <br />

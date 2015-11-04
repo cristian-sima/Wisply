@@ -9,7 +9,7 @@
             <li><a href="/institutions/{{ .institution.ID }}">{{ .institution.Name }}</a></li>
             <li class="active">{{ .repository.Name }}
               {{ if .currentAccount.IsAdministrator  }}
-              <a href="/admin/repositories/repository/{{ .repository.ID }}"><span class="label label-default">Admin this</span></a>
+              <a href="/admin/repositories/{{ .repository.ID }}"><span class="label label-default">Admin this</span></a>
               {{ end }}
             </li>
           </ul>

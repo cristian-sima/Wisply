@@ -5,7 +5,7 @@
         <aside class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li class="active">API &amp; Developers</li>
+            <li class="active">Developers &amp; Research</li>
           </ul>
         </aside>
         <section class="panel-body">
@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <h1>Developers &amp; Research</h1>
-                <img class="img-responsive" src="/static/img/developer/cloud.png" alt="API &amp; Developers" />
+                <img class="img-responsive" src="/static/img/developer/cloud.png" alt="Developers &amp; Research" />
               </div>
               <div class="col-lg-6 col-md-6 col-sm-6">
                 <blockquote>

@@ -35,6 +35,8 @@ func (request *Request) SearchAnything() {
 	request.addEnquire(NewInstitutionsSearch(search))
 	request.addEnquire(NewRepositoriesSearch(search))
 	request.addEnquire(NewCollectionsSearch(search))
+	request.addEnquire(NewProgramsSearch(search))
+	request.addEnquire(NewModulesSearch(search))
 
 	request.addEnquire(NewResourcesSearch(search))
 
@@ -46,15 +48,12 @@ func (request *Request) addEnquire(enquire Searcher) {
 }
 
 func (request *Request) enquireData() {
-	// TODO go channel
+	start := time.Now()
 	for _, enquire := range request.enquiries {
-		start := time.Now()
-
 		enquire.Perform()
-
-		elapsed := time.Since(start)
-		log.Printf("Search has taken %s", elapsed)
 	}
+	elapsed := time.Since(start)
+	log.Printf("All searches have taken %s", elapsed)
 }
 
 func isValidQuery(query string) bool {

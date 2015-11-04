@@ -50,7 +50,6 @@ func (search CollectionsSearch) getNonEmptyFromDB() []wisply.Collection {
 	whereClause := "WHERE (`name` LIKE ? OR `description` LIKE ?) AND (`numberOfRecords` != 0) "
 	orderByClause := "ORDER BY `numberOfRecords` DESC"
 	sql := "SELECT DISTINCT " + fieldsList + " FROM `repository_collection` " + whereClause + space + orderByClause + space + limitClause
-	fmt.Println(sql)
 	rows, err := database.Connection.Query(sql, search.likeQuery(), search.likeQuery())
 	if err != nil {
 		fmt.Println(sql)

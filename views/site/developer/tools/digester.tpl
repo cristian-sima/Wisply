@@ -5,7 +5,7 @@
         <div class="panel-heading" style="padding-bottom:0px">
           <ul class="breadcrumb">
             <li><a href="/">Home</a></li>
-            <li><a href="/developer">API &amp; Developers</a></li>
+            <li><a href="/developer">Developers &amp; Research</a></li>
             <li><a href="/developer/#tools">Tools</a></li>
             <li class="active">Digester</li>
           </ul>
@@ -16,13 +16,13 @@
             <br />
             <br />
           </div>
-          <form method="POST" class="form-horizontal" id="digester">
+          <form method="POST" action="#results" class="form-horizontal" id="digester">
             {{ .xsrf_input }}
             <fieldset>
               <div class="form-group">
                 <label for="digester-text" class="col-lg-2 control-label">Text</label>
-                <div class="col-lg-10">
-                  <textarea class="form-control" name="digester-text" id="digester-text" placeholder="Text" title="Up to ">{{ .originalText }}</textarea>
+                <div class="col-lg-10 well">
+                  <textarea rows="10" class="form-control" name="digester-text" id="digester-text" placeholder="Please paste your text here..." title="Up to ">{{ .originalText }}</textarea>
                   <br />
                   The text must not exceed 50000 characters (otherwise it is trimmed) <br />
                   The tool will remove the articles, pronouns, conjuctions, and prepositions. Also, some redundant words (such as "yes", "is") will be removed
@@ -39,7 +39,8 @@
           {{ if eq (.processed.GetData | len ) 0 }}
           No data provided
           {{ else }}
-          <h3>Results:</h3>
+          <a class="scroll" href="#digester">Original Text</a>
+          <h3 id="results">Results:</h3>
           <div class="well">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#visual" data-toggle="tab">Visual</a></li>

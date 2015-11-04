@@ -48,7 +48,7 @@ func (repository *Repository) Delete() error {
 // Modify changes the details of the repository
 func (repository *Repository) Modify(repositoryDetails map[string]interface{}) (adapter.WisplyError, error) {
 	var problem = adapter.WisplyError{}
-	result := hasValidModificationDetails(repositoryDetails)
+	result := hasValidProgramModifyDetails(repositoryDetails)
 	if !result.IsValid {
 		problem.Data = result
 		return problem, errors.New("It does not have valid details")

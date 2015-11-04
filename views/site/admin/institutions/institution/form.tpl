@@ -126,9 +126,7 @@
 	</script>
 
 	<link href="/static/css/public/institution.css" type="text/css" rel="stylesheet" property='stylesheet' />
-
 	<script src="/static/3rd_party/others/js/jquery.elastic.source.js"></script>
-
 	<script src="/static/js/wisply/typer.js"></script>
 	<script src="/static/js/wisply/wikier.js"></script>
 	<script src="/static/js/admin/institutions/institution/form.js"></script>

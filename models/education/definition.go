@@ -11,7 +11,7 @@ type Definition struct {
 	id      int
 	content string
 	source  string
-	program int
+	subject int
 }
 
 // GetID returns the ID of the definition
@@ -29,14 +29,14 @@ func (definition Definition) GetSource() string {
 	return definition.source
 }
 
-// GetProgramID returns the ID of the program
-func (definition Definition) GetProgramID() int {
-	return definition.program
+// GetSubjectID returns the ID of the subject
+func (definition Definition) GetSubjectID() int {
+	return definition.subject
 }
 
 // Delete removes the definition of study and any information about it
 func (definition Definition) Delete() error {
-	sql := "DELETE FROM `program_of_study_definition` WHERE id = ? "
+	sql := "DELETE FROM `subject_area_definition` WHERE id = ? "
 	stmt, err := database.Connection.Prepare(sql)
 	stmt.Exec(definition.id)
 	return err
@@ -50,7 +50,7 @@ func (definition Definition) Modify(details map[string]interface{}) error {
 	}
 	setClause := "SET `content`=?, `source`=? "
 	whereClause := "WHERE `id`= ?"
-	sql := "UPDATE `program_of_study_definition` " + setClause + " " + whereClause
+	sql := "UPDATE `subject_area_definition` " + setClause + " " + whereClause
 	query, err := database.Connection.Prepare(sql)
 	content := details["definition-content"].(string)
 	source := details["definition-source"].(string)
@@ -61,13 +61,13 @@ func (definition Definition) Modify(details map[string]interface{}) error {
 // NewDefinition creates a new definition by ID
 func NewDefinition(ID string) (*Definition, error) {
 	definition := &Definition{}
-	fieldList := "`id`, `content`, `source`, `program`"
-	sql := "SELECT " + fieldList + " FROM `program_of_study_definition` WHERE id=? "
+	fieldList := "`id`, `content`, `source`, `subject`"
+	sql := "SELECT " + fieldList + " FROM `subject_area_definition` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return definition, err
 	}
-	query.QueryRow(ID).Scan(&definition.id, &definition.content, &definition.source, &definition.program)
+	query.QueryRow(ID).Scan(&definition.id, &definition.content, &definition.source, &definition.subject)
 	return definition, nil
 }
 
@@ -77,14 +77,14 @@ func CreateDefinition(details map[string]interface{}) error {
 	if !result.IsValid {
 		return errors.New("Invalid name for the definition")
 	}
-	sql := "INSERT INTO `program_of_study_definition` (`content`,`source`,`program`) VALUES (?,?,?)"
+	sql := "INSERT INTO `subject_area_definition` (`content`,`source`,`subject`) VALUES (?,?,?)"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return err
 	}
 	content := details["definition-content"].(string)
 	source := details["definition-source"].(string)
-	program := details["definition-program"].(int)
-	_, err = query.Exec(content, source, program)
+	subject := details["definition-subject"].(int)
+	_, err = query.Exec(content, source, subject)
 	return err
 }

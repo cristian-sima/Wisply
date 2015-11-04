@@ -32,10 +32,10 @@
             Curricula <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            {{range $index, $program := .programs}}
+            {{range $index, $subject := .subjects }}
             <li>
-              <a href="/education/programs/{{$program.GetID}}">
-                {{ $program.GetName }}
+              <a href="/education/subjects/{{$subject.GetID}}">
+                {{ $subject.GetName }}
               </a>
             </li>
             {{ end }}

@@ -36,7 +36,7 @@
           <label for="program-program" class="col-lg-2 control-label">Category</label>
           <div class="col-lg-10">
             <select class="form-control" id="program-program" name="program-program">
-              {{ range $index, $program := .programs }}
+              {{ range $index, $program := .subjects }}
               <option value="{{ $program.GetID }}">{{ $program.GetName }}</option>
               {{ end }}
             </select>

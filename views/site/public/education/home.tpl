@@ -13,9 +13,9 @@
             <br />
             <div>
               <div class="row text-center">
-                {{range $index, $program := .programs}}
+                {{range $index, $program := .subjects }}
                 <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
-                  <a href="/education/programs/{{ $program.GetID }}">
+                  <a href="/education/subjects/{{ $program.GetID }}">
                     <article style="height:150px;" class="thumbnail">
                       <span class="glyphicon glyphicon-bookmark big-icon"></span>
                       <div class="caption">

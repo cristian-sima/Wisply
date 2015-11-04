@@ -7,10 +7,10 @@ import (
 
 // Get returns the routers for the education
 func Get() func(*beego.Namespace) {
-	program := getProgram()
+	subject := getSubject()
 	ns := beego.NSNamespace("/education",
 		beego.NSRouter("", &education.Home{}, "*:Display"),
-		program,
+		subject,
 	)
 	return ns
 }

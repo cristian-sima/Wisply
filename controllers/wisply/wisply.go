@@ -41,7 +41,7 @@ func (controller *Controller) initState() {
 }
 
 func (controller *Controller) loadPrograms() {
-	controller.Data["programs"] = education.GetAllPrograms()
+	controller.Data["subjects"] = education.GetAllSubjects()
 }
 
 func (controller *Controller) checkConnectionCookie() {

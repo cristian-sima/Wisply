@@ -78,18 +78,17 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	return err
 }
 
-// GetEducationPrograms returns the education programs for this institution
-func (institution Institution) GetEducationPrograms() []*education.Program {
-	list := []*education.Program{}
-	fieldList := "`program`"
+// GetEducationSubjects returns the distinct subjects of study
+func (institution Institution) GetEducationSubjects() []*education.Subject {
+	list := []*education.Subject{}
+	fieldList := "`subject`"
 	whereClause := "WHERE `institution` = ?"
 	sql := "SELECT DISTINCT " + fieldList + " FROM `institution_program` " + whereClause
 	rows, _ := database.Connection.Query(sql, strconv.Itoa(institution.ID))
 	for rows.Next() {
 		ID := ""
 		rows.Scan(&ID)
-		item, _ := education.NewProgram(ID)
-		fmt.Println(item)
+		item, _ := education.NewSubject(ID)
 		list = append(list, item)
 	}
 	return list
@@ -98,7 +97,7 @@ func (institution Institution) GetEducationPrograms() []*education.Program {
 // GetPrograms returns programs of study for the institution
 func (institution Institution) GetPrograms() []Program {
 	var list []Program
-	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `program`"
+	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `subject`"
 	orderClause := "ORDER BY `year` DESC"
 	whereClause := "WHERE `institution` = ?"
 	sql := "SELECT " + fieldList + " FROM `institution_program` " + whereClause + " " + orderClause
@@ -108,7 +107,7 @@ func (institution Institution) GetPrograms() []Program {
 	}
 	for rows.Next() {
 		item := Program{}
-		rows.Scan(&item.id, &item.institution, &item.title, &item.code, &item.year, &item.ucasCode, &item.level, &item.program)
+		rows.Scan(&item.id, &item.institution, &item.title, &item.code, &item.year, &item.ucasCode, &item.level, &item.subject)
 		list = append(list, item)
 	}
 	return list

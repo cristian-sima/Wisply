@@ -20,7 +20,7 @@ type Program struct {
 	ucasCode    string
 	level       string
 	content     string
-	program     int
+	subject     int
 }
 
 // GetID returns the ID of the program
@@ -28,13 +28,13 @@ func (program Program) GetID() int {
 	return program.id
 }
 
-// GetProgram returns the id of the program of study
-func (program Program) GetProgram() *education.Program {
-	p, err := education.NewProgram(strconv.Itoa(program.program))
+// GetSubject returns the subject area of the program of study
+func (program Program) GetSubject() *education.Subject {
+	subject, err := education.NewSubject(strconv.Itoa(program.subject))
 	if err != nil {
 		fmt.Println(err)
 	}
-	return p
+	return subject
 }
 
 // GetContent returns the content of the program
@@ -158,13 +158,13 @@ func (program Program) GetModules() []Module {
 // NewProgram creates a new program
 func NewProgram(ID string) (Program, error) {
 	program := Program{}
-	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `content`, `program`"
+	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `content`, `subject`"
 	sql := "SELECT " + fieldList + " FROM `institution_program` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return program, err
 	}
-	query.QueryRow(ID).Scan(&program.id, &program.institution, &program.title, &program.code, &program.year, &program.ucasCode, &program.level, &program.content, &program.program)
+	query.QueryRow(ID).Scan(&program.id, &program.institution, &program.title, &program.code, &program.year, &program.ucasCode, &program.level, &program.content, &program.subject)
 	return program, nil
 }
 

@@ -7,22 +7,22 @@
   </div>
   <div class="panel-body">
     <div class="btn-group-sm">
-      <a href="/admin/education/programs/add" class="btn btn-success btn-sm">
-        <span class="glyphicon glyphicon-plus"></span> Add program of study</a>
+      <a href="/admin/education/subjects/add" class="btn btn-success btn-sm">
+        <span class="glyphicon glyphicon-plus"></span> Add subject of study</a>
       </div>
       <br />
-      {{ if eq (len .programs) 0 }}
-      There is no program of study.
+      {{ if eq (len .subjects) 0 }}
+      There is no subject of study.
       {{ else }}
       <div>
         <div class="row text-center">
-          {{range $index, $program := .programs}}
+          {{range $index, $subject := .subjects }}
           <div class="text-central col-xs-12 col-sm-6 col-md-3 col-ls-2" >
-            <a href="/admin/education/programs/{{ $program.GetID }}">
+            <a href="/admin/education/subjects/{{ $subject.GetID }}">
               <div style="height:100px;" class="thumbnail">
                 <div class="caption">
                   <h3>
-                    {{ ($program.GetName) | html }}
+                    {{ ($subject.GetName) | html }}
                   </h3>
                 </div>
               </div>

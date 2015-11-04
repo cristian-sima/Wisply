@@ -13,7 +13,7 @@ type KA struct {
 	code    string
 	source  string
 	title   string
-	program int
+	subject int
 }
 
 // GetID returns the ID of the ka
@@ -41,14 +41,14 @@ func (ka KA) GetCode() string {
 	return ka.code
 }
 
-// GetProgramID returns the ID of the program
-func (ka KA) GetProgramID() int {
-	return ka.program
+// GetSubjectID returns the ID of the subject
+func (ka KA) GetSubjectID() int {
+	return ka.subject
 }
 
 // Delete removes the ka of study and any information about it
 func (ka KA) Delete() error {
-	sql := "DELETE FROM `program_of_study_ka` WHERE id = ? "
+	sql := "DELETE FROM `subject_area_ka` WHERE id = ? "
 	stmt, err := database.Connection.Prepare(sql)
 	stmt.Exec(ka.id)
 	return err
@@ -62,7 +62,7 @@ func (ka KA) Modify(details map[string]interface{}) error {
 	}
 	setClause := "SET `content`=?, `source`=?, `code`=?, `title`=? "
 	whereClause := "WHERE `id`= ?"
-	sql := "UPDATE `program_of_study_ka` " + setClause + " " + whereClause
+	sql := "UPDATE `subject_area_ka` " + setClause + " " + whereClause
 	query, err := database.Connection.Prepare(sql)
 	content := details["ka-content"].(string)
 	source := details["ka-source"].(string)
@@ -75,13 +75,13 @@ func (ka KA) Modify(details map[string]interface{}) error {
 // NewKA creates a new ka by ID
 func NewKA(ID string) (*KA, error) {
 	ka := &KA{}
-	fieldList := "`id`, `content`, `source`, `code`, `title`, `program`"
-	sql := "SELECT " + fieldList + " FROM `program_of_study_ka` WHERE id=? "
+	fieldList := "`id`, `content`, `source`, `code`, `title`, `subject`"
+	sql := "SELECT " + fieldList + " FROM `subject_area_ka` WHERE id=? "
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return ka, err
 	}
-	query.QueryRow(ID).Scan(&ka.id, &ka.content, &ka.source, &ka.code, &ka.title, &ka.program)
+	query.QueryRow(ID).Scan(&ka.id, &ka.content, &ka.source, &ka.code, &ka.title, &ka.subject)
 	return ka, nil
 }
 
@@ -91,16 +91,16 @@ func CreateKA(details map[string]interface{}) error {
 	if !result.IsValid {
 		return errors.New("Invalid name for the ka")
 	}
-	sql := "INSERT INTO `program_of_study_ka` (`content`, `source`, `code`, `title`, `program`) VALUES (?, ?, ?, ?, ?)"
+	sql := "INSERT INTO `subject_area_ka` (`content`, `source`, `code`, `title`, `subject`) VALUES (?, ?, ?, ?, ?)"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return err
 	}
 	content := details["ka-content"].(string)
 	source := details["ka-source"].(string)
-	program := details["ka-program"].(int)
+	subject := details["ka-subject"].(int)
 	code := details["ka-code"].(string)
 	title := details["ka-title"].(string)
-	_, err = query.Exec(content, source, code, title, program)
+	_, err = query.Exec(content, source, code, title, subject)
 	return err
 }

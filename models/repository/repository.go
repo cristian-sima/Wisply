@@ -28,7 +28,7 @@ func (repository *Repository) HasBeenProcessed() bool {
 
 // SetLastProcess changes the ID of last harvesting process
 func (repository *Repository) SetLastProcess(processID int) error {
-	sql := "UPDATE `repository` SET lastProcess=? WHERE id=?"
+	sql := "UPDATE `repository` SET last_process=? WHERE id=?"
 	query, _ := database.Connection.Prepare(sql)
 	_, err := query.Exec(processID, repository.ID)
 	return err

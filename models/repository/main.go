@@ -11,7 +11,7 @@ import (
 
 // ResetAllRepositories sets the default values for the repositories
 func ResetAllRepositories() {
-	sql := "UPDATE `repository` SET `lastProcess`=0, `status`='unverified'"
+	sql := "UPDATE `repository` SET `last_process`=0, `status`='unverified'"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec()
 }
@@ -62,7 +62,7 @@ func InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.Wi
 // GetAllRepositories returns an array of Repository with all repositories
 func GetAllRepositories() []Repository {
 	var list []Repository
-	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM `repository`"
+	sql := "SELECT `id`, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `last_process` FROM `repository`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		repository := Repository{}
@@ -116,7 +116,7 @@ func NewRepository(ID string) (*Repository, error) {
 	if !isValid.IsValid {
 		return repository, errors.New("Validation invalid")
 	}
-	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `lastProcess` FROM repository WHERE id = ?"
+	sql := "SELECT id, `name`, `url`, `description`, `status`, `institution`, `category`, `public_url`, `last_process` FROM repository WHERE id = ?"
 	query, err := database.Connection.Prepare(sql)
 	if err != nil {
 		return repository, errors.New("No repository like that")

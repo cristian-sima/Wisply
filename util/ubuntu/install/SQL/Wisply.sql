@@ -349,7 +349,7 @@ CREATE TABLE `repository` (
   `category` varchar(100) NOT NULL,
   `public_url` varchar(2083) NOT NULL,
   `filter` varchar(500) NOT NULL,
-  `lastProcess` int(11) NOT NULL,
+  `last_process` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `institution` (`institution`),
@@ -513,4 +513,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:08:31
+-- Dump completed on 2015-11-04 20:15:00

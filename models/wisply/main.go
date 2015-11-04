@@ -130,7 +130,7 @@ func ClearRepository(repositoryID int) {
 }
 
 func updateRepository(repositoryID int) {
-	setClause := "SET `lastProcess`=0, `status`='unverified'"
+	setClause := "SET `last_process`=0, `status`='unverified'"
 	sql := "UPDATE `repository` " + setClause + " WHERE `id`=?"
 	query, _ := database.Connection.Prepare(sql)
 	query.Exec(repositoryID)

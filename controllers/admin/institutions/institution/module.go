@@ -9,13 +9,13 @@ import (
 
 // Module manages the operations with an module
 type Module struct {
-	Program
+	Controller
 	module *repository.Module
 }
 
 // Prepare loads the module
 func (controller *Module) Prepare() {
-	controller.Program.Prepare()
+	controller.Controller.Prepare()
 	controller.loadModule()
 }
 
@@ -41,21 +41,20 @@ func (controller *Module) ShowInsertForm() {
 
 // CreateModule inserts an module in the database
 func (controller *Module) CreateModule() {
-	program := controller.GetProgram()
 	data := make(map[string]interface{})
 	data["module-title"] = strings.TrimSpace(controller.GetString("module-title"))
 	data["module-content"] = strings.TrimSpace(controller.GetString("module-content"))
 	data["module-code"] = strings.TrimSpace(controller.GetString("module-code"))
 	data["module-credits"] = strings.TrimSpace(controller.GetString("module-credits"))
 	data["module-year"] = strings.TrimSpace(controller.GetString("module-year"))
-	data["module-program"] = program.GetID()
+	data["module-institution"] = controller.GetInstitution().ID
 
 	problems, err := repository.CreateModule(data)
 	if err != nil {
 		controller.DisplayError(problems)
 	} else {
 		message := "The module has been inserted."
-		goTo := "/admin/institutions/" + strconv.Itoa(controller.GetInstitution().ID) + "/program/" + strconv.Itoa(controller.GetProgram().GetID())
+		goTo := "/admin/institutions/" + strconv.Itoa(controller.GetInstitution().ID) + "#modules"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
@@ -69,7 +68,6 @@ func (controller *Module) ShowModifyForm() {
 func (controller *Module) Modify() {
 	institution := controller.GetInstitution()
 	module := controller.GetModule()
-	program := controller.GetProgram()
 	data := make(map[string]interface{})
 
 	data["module-title"] = strings.TrimSpace(controller.GetString("module-title"))
@@ -77,14 +75,13 @@ func (controller *Module) Modify() {
 	data["module-code"] = strings.TrimSpace(controller.GetString("module-code"))
 	data["module-credits"] = strings.TrimSpace(controller.GetString("module-credits"))
 	data["module-year"] = strings.TrimSpace(controller.GetString("module-year"))
-	data["module-program"] = program.GetID()
 
 	problems, err := module.Modify(data)
 	if err != nil {
 		controller.DisplayError(problems)
 	} else {
 		message := "The module has been modified."
-		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID) + "/program/" + strconv.Itoa(program.GetID())
+		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID) + "#modules"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 
@@ -98,7 +95,7 @@ func (controller *Module) Delete() {
 		controller.Abort("show-database-error")
 	} else {
 		message := "The module [" + module.GetCode() + "] has been deleted."
-		goTo := "/admin/modules/" + strconv.Itoa(module.GetID())
+		goTo := "/admin/modules/" + strconv.Itoa(module.GetID()) + "#modules"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }

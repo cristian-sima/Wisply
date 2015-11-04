@@ -17,7 +17,7 @@
     </li>
     <li>
       <a href="/admin/developers" >
-        <span class="glyphicon glyphicon-save"></span>
+        <span class="glyphicon glyphicon-dashboard"></span>
         <span class="hidden-sm hidden-xs">
           Developers
         </span>

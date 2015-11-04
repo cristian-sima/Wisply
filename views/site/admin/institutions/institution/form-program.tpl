@@ -69,7 +69,7 @@
         </div>
         <div class="form-group">
           <div class="col-lg-10 col-lg-offset-2">
-            <input type="submit" class="btn btn-primary" value="{{ .action }}" /> <a href="/admin/institutions/{{ .institution.ID }}" class="btn btn-default">Cancel</a>
+            <input type="submit" class="btn btn-primary" value="{{ .action }}" /> <a href="/admin/institutions/{{ .institution.ID }}#programs" class="btn btn-default">Cancel</a>
           </div>
         </div>
       </fieldset>

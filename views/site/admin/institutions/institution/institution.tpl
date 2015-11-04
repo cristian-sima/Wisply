@@ -66,12 +66,15 @@
           </div>
         </div>
       </div>
+      <h4 id="programs">Programs of study ({{ .institutionPrograms | len }})</h4>
+      <a href="/admin/institutions/{{ .institution.ID }}/program/add" class="btn btn-sm btn-success sm">
+        <span class="glyphicon glyphicon-plus"></span> Add program
+      </a>
       {{ if eq (not .institutionPrograms) true }}
       <div class="text-muted">
         :( there are no programs of study
       </div>
       {{ else }}
-      <h4>Programs of study ({{ .institutionPrograms | len }})</h4>
       <div class="table-responsive">
         <table class="table table-striped table-hover " id="programs-list">
           <thead>
@@ -103,6 +106,41 @@
         </table>
       </div>
       {{ end }}
+      <h4 id="modules">Modules ({{ .institutionModules | len }})</h4>
+      {{ if eq (not .institutionModules) true }}
+      <div class="text-muted">
+        :( there are no programs modules
+      </div>
+      {{ else }}
+      <a href="/admin/institutions/{{ .institution.ID }}/module/add" class="btn btn-sm btn-success sm">
+        <span class="glyphicon glyphicon-plus"></span> Insert new module
+      </a>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover " id="modules-list">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Title</th>
+              <th>Content</th>
+              <th>Credits (CATS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ $institution   := .institution }}
+            {{range $index, $module := .institutionModules}}
+            <tr>
+              <td>{{ $module.GetCode }}</td>
+              <td>{{ $module.GetTitle }}</td>
+              <td>{{ $module.GetContent }}</td>
+              <td>{{ $module.GetCredits "CATS" }}</td>
+              <td><a href="/admin/institutions/{{ $institution.ID }}/module/{{ $module.GetID }}/modify">Edit</td>
+                <td><a href="#" data-id="{{ $module.GetID }}" class="deleteModuleButton btn btn-danger btn-xs" >Delete</a></td>
+              </tr>
+              {{ end }}
+            </tbody>
+          </table>
+        </div>
+        {{ end }}
       <hr />
       <div>
         <a class="btn btn-primary" href="/admin/institutions/{{ .institution.ID }}/advance-options">Advance options</a>

@@ -95,3 +95,21 @@ func (institution Institution) GetPrograms() []Program {
 	}
 	return list
 }
+
+// GetModules returns the list of the modules for the institution
+func (institution Institution) GetModules() []Module {
+	list := []Module{}
+
+	fieldList := "`id`, `title`, `content`, `code`, `credits`, `year`"
+	sql := "SELECT " + fieldList + " FROM `institution_module` WHERE institution=? "
+	rows, err := database.Connection.Query(sql, strconv.Itoa(institution.ID))
+	if err != nil {
+		fmt.Println(err)
+	}
+	for rows.Next() {
+		module := Module{}
+		rows.Scan(&module.id, &module.title, &module.content, &module.code, &module.credits, &module.year)
+		list = append(list, module)
+	}
+	return list
+}

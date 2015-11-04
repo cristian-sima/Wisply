@@ -16,6 +16,7 @@ func (controller *Institution) Display() {
 	institution := controller.GetInstitution()
 	controller.Data["repositories"] = institution.GetRepositories()
 	controller.Data["institutionPrograms"] = institution.GetPrograms()
+	controller.Data["institutionModules"] = institution.GetModules()
 	controller.LoadTemplate("institution")
 }
 

@@ -65,7 +65,7 @@ func (controller *Program) CreateProgram() {
 		controller.DisplayError(problems)
 	} else {
 		message := "The program has been inserted."
-		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID)
+		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID) + "#programs"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }
@@ -94,7 +94,7 @@ func (controller *Program) Modify() {
 		controller.DisplayError(problems)
 	} else {
 		message := "The program has been modified!"
-		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID)
+		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID) + "#programs"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 
@@ -108,7 +108,7 @@ func (controller *Program) Delete() {
 		controller.Abort("show-database-error")
 	} else {
 		message := "The program [" + program.GetCode() + "] has been deleted."
-		goTo := "/admin/institutions/" + strconv.Itoa(program.GetID())
+		goTo := "/admin/institutions/" + strconv.Itoa(program.GetID()) + "#programs"
 		controller.DisplaySuccessMessage(message, goTo)
 	}
 }

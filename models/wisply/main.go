@@ -20,7 +20,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		rows *sql.Rows
 		err  error
 	)
-	fieldList := "record.`identifier`, record.`id`, record.`datestamp`, record.`repository`, record.`isVisible`"
+	fieldList := "record.`identifier`, record.`id`, record.`datestamp`, record.`repository`, record.`is_visible`"
 
 	// If no collection has been chosen
 	if options.Where["collection"] == "" {
@@ -47,7 +47,7 @@ func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 		record.IsVisible = database.GetBoolFromInt(isVisibleInt)
 
 		if record.ID == 0 {
-			sql := "SELECT `id`, `datestamp`, `repository`, `isVisible` FROM `repository_resource` WHERE identifier = ?"
+			sql := "SELECT `id`, `datestamp`, `repository`, `is_visible` FROM `repository_resource` WHERE identifier = ?"
 			query, err := database.Connection.Prepare(sql)
 
 			if err != nil {
@@ -90,7 +90,7 @@ func getRecord(byFild, value string) (Record, error) {
 	var isVisibleInt int
 	record := Record{}
 
-	sql := "SELECT `id`, `datestamp`, `identifier`, `repository`, `isVisible` FROM `repository_resource` WHERE " + byFild + " = ?"
+	sql := "SELECT `id`, `datestamp`, `identifier`, `repository`, `is_visible` FROM `repository_resource` WHERE " + byFild + " = ?"
 	query, err := database.Connection.Prepare(sql)
 
 	if err != nil {

@@ -452,7 +452,7 @@ CREATE TABLE `repository_resource` (
   `repository` int(11) NOT NULL,
   `identifier` varchar(30) NOT NULL,
   `datestamp` varchar(30) NOT NULL,
-  `isVisible` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'This field states if the repository can be accessed by Wisply or not. 1 if the resource can seen, 0 otherwise',
+  `is_visible` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'This field states if the repository can be accessed by Wisply or not. 1 if the resource can seen, 0 otherwise',
   PRIMARY KEY (`id`),
   KEY `repository` (`repository`),
   KEY `repository_2` (`repository`),
@@ -513,4 +513,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:21:37
+-- Dump completed on 2015-11-04 20:27:02

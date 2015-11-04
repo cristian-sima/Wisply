@@ -97,7 +97,7 @@ var SearchModule = function() {
 								if (instanceCopy.saveSearches) {
 									instanceCopy.cookies.saveSearchQuery(suggestion.Title);
 								}
-								if (wisply.connection) {
+								if (wisply.hasModule("connection")) {
 									saveQuery(suggestion);
 								} else {
 									window.location = suggestion.URL;

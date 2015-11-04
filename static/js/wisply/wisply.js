@@ -377,11 +377,21 @@ var Wisply = function() {
 			 * @return {object} The module
 			 */
 			getModule: function(name) {
-				var module = this.modules[name];
-				if (!module) {
+				if (!this.hasModule(name)) {
 					throw ("Wisply did not has the module [" + name + "]");
 				}
-				return module;
+				return this.modules[name];
+			},
+			/**
+			 * It checks if a module is loaded
+			 * @param  {string} name The name of the module
+			 * @return {bool} True if the module is loaded, false otherwise
+			 */
+			hasModule: function(name) {
+				if(this.modules[name]) {
+					return true;
+				}
+				return false;
 			},
 			/**
 			 * The menu is fixed and thus when the user jumps to #something it does the menu overlapping the content

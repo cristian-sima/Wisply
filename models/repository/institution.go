@@ -29,8 +29,7 @@ func (institution *Institution) Delete() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(institution)
-	query.Exec(institution.ID)
+	_, err = query.Exec(institution.ID)
 
 	return err
 }
@@ -78,7 +77,7 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	return err
 }
 
-// GetPrograms returns the knowledge areas for the program
+// GetPrograms returns programs of study for the institution
 func (institution Institution) GetPrograms() []Program {
 	var list []Program
 	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `program`"

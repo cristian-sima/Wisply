@@ -14,8 +14,8 @@
       <br />
   </div>
   <div class="btn-group">
-    <a href="/admin/developers/add" class="btn btn-primary">
-      <span class="glyphicon glyphicon-plus"></span>
+    <a href="/admin/developers/add" class=" btn-sm btn btn-primary">
+      <span class="glyphicon glyphicon-plus" ></span>
       Add table on API public download list
     </a>
   </div>

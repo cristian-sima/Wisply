@@ -36,9 +36,9 @@ func (controller *Program) loadProgram() {
 
 // Display shows the administrative page for an program
 func (controller *Program) Display() {
-	// program := controller.GetProgram()
-	// controller.Data["repositories"] = program.GetModules()
-	controller.LoadTemplate("home")
+	program := controller.GetProgram()
+	controller.Data["modules"] = program.GetModules()
+	controller.LoadTemplate("program")
 }
 
 // ShowInsertForm shows the form to add an program

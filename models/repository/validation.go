@@ -18,6 +18,8 @@ var (
 		"program-code":      {"String", "between_inclusive:3,10"},
 		"program-ucas-code": {"String", "between_inclusive:0,20"},
 		"program-level":     {"String", "Regexp:^(undergraduate)|(postgraduate)$"},
+		"module-CATS":       {"String", "between_inclusive:0,5"},
+		"module-year":       {"String", "between_inclusive:1,2"},
 	}
 )
 
@@ -54,6 +56,16 @@ func hasValidInsertDetails(details map[string]interface{}) *validity.ValidationR
 		"institution": rules["institution"],
 		"category":    rules["category"],
 		"public-url":  rules["url"],
+	}
+	return adapter.Validate(details, rules)
+}
+
+func hasValidModuleModifyDetails(details map[string]interface{}) *validity.ValidationResults {
+	rules := validity.ValidationRules{
+		"module-title": rules["program-title"],
+		"module-code":  rules["program-code"],
+		"module-CATS":  rules["module-CATS"],
+		"module-year":  rules["module-year"],
 	}
 	return adapter.Validate(details, rules)
 }

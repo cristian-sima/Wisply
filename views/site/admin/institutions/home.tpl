@@ -10,7 +10,7 @@
     <section>
       <h4>Options</h4>
       <div class="btn-group">
-        <a href="/admin/institutions/add" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add institution</a>
+        <a href="/admin/institutions/add" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span> Add institution</a>
       </div>
     </section>
     <br />

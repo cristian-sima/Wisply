@@ -29,7 +29,7 @@
               <span class="text-muted">Institution</span>
             </div>
             <div>
-              {{ .institution.Description}} <a href="/admin/institutions/modify/{{ .institution.ID}}">Modify</a>
+              {{ .institution.Description}} <a href="/admin/institutions/{{ .institution.ID}}/modify">Modify</a>
             </div>
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4" >
@@ -92,7 +92,7 @@
             {{ $mainProgram := $program.GetProgram }}
             <tr>
               <td>{{ $program.GetCode }}</td>
-              <td>{{ $program.GetTitle }}</td>
+              <td><a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></td>
               <td>{{ $program.GetLevel }}</td>
               <td><a href="/education/programs/{{ $mainProgram.GetID }}">{{ $mainProgram.GetName }}</a></td>
               <td>{{ $program.GetYear }}</td>

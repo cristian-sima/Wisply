@@ -79,7 +79,7 @@ func (program *Program) Delete() error {
 	if err != nil {
 		return err
 	}
-	query.Exec(program.id)
+	_, err = query.Exec(program.id)
 	return err
 }
 
@@ -107,6 +107,25 @@ func (program Program) Modify(details map[string]interface{}) (adapter.WisplyErr
 	programOfStudy := details["program-program"].(string)
 	query.Exec(title, code, year, ucasCode, level, content, programOfStudy, program.id)
 	return problems, err
+}
+
+// GetModules returns the modules of the program
+func (program Program) GetModules() []Module {
+	var list []Module
+	fieldList := "`id`, `title`, `content`, `code`, `program`, `CATS`"
+	orderClause := "ORDER BY `title` ASC"
+	whereClause := "WHERE `program` = ?"
+	sql := "SELECT " + fieldList + " FROM `institution_module` " + whereClause + " " + orderClause
+	rows, err := database.Connection.Query(sql, strconv.Itoa(program.GetID()))
+	if err != nil {
+		fmt.Println(err)
+	}
+	for rows.Next() {
+		item := Module{}
+		rows.Scan(&item.id, &item.title, &item.content, &item.code, &item.program, &item.cats)
+		list = append(list, item)
+	}
+	return list
 }
 
 // NewProgram creates a new program

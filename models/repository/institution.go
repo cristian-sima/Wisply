@@ -69,7 +69,7 @@ func (institution *Institution) updateInstitutionInDatabase(institutionDetails m
 	wikiURL := institutionDetails["wikiURL"].(string)
 	wikiID := institutionDetails["wikiID"].(string)
 
-	setClause := "SET name=?, description=?, logoURL=?, wikiURL=?, wikiID=?"
+	setClause := "SET name=?, description=?, logo_URL=?, wikiURL=?, wikiID=?"
 	sql := "UPDATE `institution` " + setClause + " WHERE id=?"
 	institution.Name = name
 	institution.Description = description

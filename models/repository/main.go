@@ -19,7 +19,7 @@ func ResetAllRepositories() {
 // GetAllInstitutions returns an array of Institution with all institutions
 func GetAllInstitutions() []Institution {
 	var list []Institution
-	sql := "SELECT `id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID` FROM `institution`"
+	sql := "SELECT `id`, `name`, `url`, `description`, `logo_URL`, `wikiURL`, `wikiID` FROM `institution`"
 	rows, _ := database.Connection.Query(sql)
 	for rows.Next() {
 		institution := Institution{}
@@ -47,7 +47,7 @@ func InsertNewInstitution(institutionDetails map[string]interface{}) (adapter.Wi
 	wikiURL := institutionDetails["wikiURL"].(string)
 	wikiID := institutionDetails["wikiID"].(string)
 
-	sql := "INSERT INTO `institution` (`name`, `description`, `url`, `logoURL`, `wikiURL`, `wikiID`) VALUES (?, ?, ?, ?, ?, ?)"
+	sql := "INSERT INTO `institution` (`name`, `description`, `url`, `logo_URL`, `wikiURL`, `wikiID`) VALUES (?, ?, ?, ?, ?, ?)"
 	query, err := database.Connection.Prepare(sql)
 	query.Exec(name, description, url, logoURL, wikiURL, wikiID)
 
@@ -95,7 +95,7 @@ func NewInstitution(ID string) (*Institution, error) {
 		return institution, errors.New("Validation invalid")
 	}
 
-	fieldsList := "`id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID`"
+	fieldsList := "`id`, `name`, `url`, `description`, `logo_URL`, `wikiURL`, `wikiID`"
 	sql := "SELECT " + fieldsList + " FROM institution WHERE id = ?"
 	query, err := database.Connection.Prepare(sql)
 

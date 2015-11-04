@@ -34,7 +34,7 @@ func (search InstitutionSearch) getFromDB() []repository.Institution {
 	var list []repository.Institution
 
 	limitClause := search.options.GetLimit()
-	fieldsList := "`id`, `name`, `url`, `description`, `logoURL`, `wikiURL`, `wikiID`"
+	fieldsList := "`id`, `name`, `url`, `description`, `logo_URL`, `wikiURL`, `wikiID`"
 	whereClause := "WHERE `name` LIKE ? OR `url` LIKE ?"
 	sql := "SELECT DISTINCT " + fieldsList + " FROM `institution` " + whereClause + space + limitClause
 

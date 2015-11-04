@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=291 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `institution` (
   `name` varchar(255) NOT NULL,
   `description` varchar(1000) NOT NULL,
   `url` varchar(2083) NOT NULL,
-  `logoURL` varchar(2083) NOT NULL,
+  `logo_URL` varchar(2083) NOT NULL,
   `wikiURL` varchar(2083) NOT NULL,
   `wikiID` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -229,7 +229,7 @@ CREATE TABLE `operation` (
   PRIMARY KEY (`id`),
   KEY `process` (`process`),
   CONSTRAINT `operation_ibfk_1` FOREIGN KEY (`process`) REFERENCES `process` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=527 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=533 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +249,7 @@ CREATE TABLE `process` (
   `result` enum('danger','warning','success','normal') NOT NULL DEFAULT 'normal',
   `is_suspended` enum('true','false') NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,7 +275,7 @@ CREATE TABLE `process_harvest` (
   KEY `repository` (`repository`),
   CONSTRAINT `process_harvest_ibfk_1` FOREIGN KEY (`process`) REFERENCES `process` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `process_harvest_ibfk_2` FOREIGN KEY (`repository`) REFERENCES `repository` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,7 +396,7 @@ CREATE TABLE `repository_email` (
   KEY `id_2` (`id`),
   KEY `repository` (`repository`),
   CONSTRAINT `repository_email_ibfk_1` FOREIGN KEY (`repository`) REFERENCES `repository` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -417,7 +417,7 @@ CREATE TABLE `repository_format` (
   KEY `id` (`id`),
   KEY `repository` (`repository`),
   CONSTRAINT `repository_format_ibfk_1` FOREIGN KEY (`repository`) REFERENCES `repository` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=599 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=606 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,7 +437,7 @@ CREATE TABLE `repository_identification` (
   PRIMARY KEY (`id`),
   KEY `repository` (`repository`),
   CONSTRAINT `repository_identification_ibfk_1` FOREIGN KEY (`repository`) REFERENCES `repository` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -501,7 +501,7 @@ CREATE TABLE `task` (
   KEY `process` (`process`),
   CONSTRAINT `task_ibfk_1` FOREIGN KEY (`operation`) REFERENCES `operation` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `task_ibfk_2` FOREIGN KEY (`process`) REFERENCES `process` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8777 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8792 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -513,4 +513,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:15:00
+-- Dump completed on 2015-11-04 20:21:37

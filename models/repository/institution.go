@@ -94,10 +94,22 @@ func (institution Institution) GetEducationSubjects() []*education.Subject {
 	return list
 }
 
+// GetProgramsBySubjectID returns the programs of study for a particular subject
+func (institution Institution) GetProgramsBySubjectID(subjectID int) []Program {
+	list := []Program{}
+	allPrograms := institution.GetPrograms()
+	for _, program := range allPrograms {
+		if program.GetSubject().GetID() == subjectID {
+			list = append(list, program)
+		}
+	}
+	return list
+}
+
 // GetPrograms returns programs of study for the institution
 func (institution Institution) GetPrograms() []Program {
 	var list []Program
-	fieldList := "`id`, `institution`, `title`, `code`, `year`, `ucas_code`, `level`, `subject`"
+	fieldList := "`id`, `institution`, `title`, `content`, `code`, `year`, `ucas_code`, `level`, `subject`"
 	orderClause := "ORDER BY `year` DESC"
 	whereClause := "WHERE `institution` = ?"
 	sql := "SELECT " + fieldList + " FROM `institution_program` " + whereClause + " " + orderClause
@@ -107,7 +119,7 @@ func (institution Institution) GetPrograms() []Program {
 	}
 	for rows.Next() {
 		item := Program{}
-		rows.Scan(&item.id, &item.institution, &item.title, &item.code, &item.year, &item.ucasCode, &item.level, &item.subject)
+		rows.Scan(&item.id, &item.institution, &item.title, &item.content, &item.code, &item.year, &item.ucasCode, &item.level, &item.subject)
 		list = append(list, item)
 	}
 	return list

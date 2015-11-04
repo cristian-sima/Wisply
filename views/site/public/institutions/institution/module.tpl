@@ -51,7 +51,7 @@
           </div>
           <br />
           <br />
-          <h2>Is part of</h2>
+          <h5>Programs of study which include this module:</h5>
           {{ $programs := .module.GetPrograms }}
           {{ if eq ($programs | len) 0 }}
           <div class="text-muted">There are no programs of study which include this module.</div>

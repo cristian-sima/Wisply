@@ -93,7 +93,7 @@ describe('Administration pages', function() {
     });
     it('goes to page which adds a new program of study', function(done) {
         browser
-        .url('/admin/education/programs/add')
+        .url('/admin/education/subjects/add')
         .isExisting('#full-logo').then(function(isExisting){
           expect(isExisting).toBe(true);
         })

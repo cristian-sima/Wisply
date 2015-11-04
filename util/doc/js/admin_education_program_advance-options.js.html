@@ -19,11 +19,11 @@
 
     <h1 class="page-title">Source: admin/education/program/advance-options.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/* global $, wisply */
@@ -157,7 +157,7 @@ var AdminAdanceOptionsProgramModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					url: '/admin/education/programs/' + program.id + "/delete",
+					url: '/admin/education/subjects/' + program.id + "/delete",
 					success: successCallback,
 					error: errorCallback,
 					data: {

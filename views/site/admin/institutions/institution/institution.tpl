@@ -96,7 +96,7 @@
               <td>{{ $program.GetCode }}</td>
               <td><a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></td>
               <td>{{ $program.GetLevel }}</td>
-              <td><a href="/education/programs/{{ $subject.GetID }}">{{ $subject.GetName }}</a></td>
+              <td><a href="/education/subjects/{{ $subject.GetID }}">{{ $subject.GetName }}</a></td>
               <td>{{ $program.GetYear }}</td>
               <td>
                 <a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}/modify">

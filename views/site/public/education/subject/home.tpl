@@ -9,38 +9,57 @@
             <li class="active">{{ .subject.GetName }}</li>
           </ul>
         </div>
+        {{ $definitions := .subject.GetDefinitions }}
+        {{ $kas := .subject.GetKAs  }}
         <div class="panel-body">
           <h1>{{ .subject.GetName }}</h1>
           <br />
-          <span class="text-warning glyphicon glyphicon-warning-sign"></span> Wisply was not able to generate data about <strong>{{ .subject.GetName }}</strong>'s curriculum from the institutions.
-          <br />
-          <br />
-          {{ .subject.GetHTMLDescription }}
-          <br />
-          <div>
-            {{ if ne ( .subject.GetDefinitions | len ) 0 }}
-            <h2>Formal definitions of {{ .subject.GetName }}</h2>
-            <div>
-              {{ range $index, $definition := .subject.GetDefinitions }}
-              <blockquote>
-                <p>{{ $definition.GetContent }}</p>
-                <small>Source <cite title="Source Title">{{ $definition.GetSource }}</cite></small>
-              </blockquote>
-              {{ end }}
-            </div>
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#overview" data-toggle="tab">Overview</a>
+            </li>
+
+            {{ if ne ( $definitions | len ) 0 }}
+            <li>
+              <a href="#definitions" data-toggle="tab">Definitions</a>
+            </li>
             {{ end }}
-          </div>
-          <div>
-            {{ if ne ( .subject.GetKAs | len ) 0 }}
-            <h2>Knowledge areas for {{ .subject.GetName }}</h2>
-            <div>
-              {{ range $index, $ka := .subject.GetKAs }}
+
+            {{ if ne ( $kas | len ) 0 }}
+            <li>
+              <a href="#ka" data-toggle="tab">Knowledge areas</a>
+            </li>
+            {{ end }}
+
+            <li>
+              <a href="#courses" data-toggle="tab">Courses</a>
+            </li>
+          </ul>
+
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="overview">
+              {{ .subject.GetHTMLDescription }}
+            </div>
+
+            <div class="tab-pane fade in" id="definitions">
+              <div>
+                {{ range $index, $definition := $definitions }}
+                <blockquote>
+                  <p>{{ $definition.GetContent }}</p>
+                  <small>Source <cite title="Source Title">{{ $definition.GetSource }}</cite></small>
+                </blockquote>
+                {{ end }}
+              </div>
+            </div>
+
+            <div class="tab-pane fade in" id="ka">
+              {{ range $index, $ka := $kas }}
               <div class="panel panel-default">
                 <div class="panel-body">
                   <br />
                   <div class="row">
                     <div class="col-md-12">
-                      <img align="left" style="margin:10px" class="thumbnail" src="/static/img/education/cs/ka/{{ $ka.GetCode }}.png" class="img-responsive"/>
+                      <img  style="margin:10px; float:left" alt="{{ $ka.GetTitle }}" class="thumbnail" src="/static/img/education/cs/ka/{{ $ka.GetCode }}.png"/>
 
                       <span class="h5"><strong>&nbsp;{{ $ka.GetTitle }}</strong></span>
                       <br />
@@ -53,8 +72,29 @@
               </div>
               {{ end }}
             </div>
-            {{ end }}
+
+            <div class="tab-pane fade in" id="courses">
+              {{ $subject := .subject }}
+              {{ range $index, $institution := .institutions }}
+              <div>
+                <h4>{{ $institution.Name }}</h4>
+                {{ $programs := $institution.GetProgramsBySubjectID $subject.GetID }}
+                {{ range $index2, $program := $programs }}
+                <div>
+                  <div class="well">
+                      <h5><a href="/institutions/{{ $institution.ID}}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></h5>
+                      {{ $program.GetContent }}
+                    </div>
+                </div>
+                {{ end }}
+              </div>
+              <hr />
+              {{ end }}
+            </div>
           </div>
+
+          <!-- <span class="text-warning glyphicon glyphicon-warning-sign"></span> Wisply was not able to generate data about <strong>{{ .subject.GetName }}</strong>'s curriculum from the institutions. -->
+
         </div>
       </div>
     </div>

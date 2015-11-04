@@ -50,10 +50,11 @@
                 </a>
                 {{ end }}
               </div>
-              <h2>Areas</h2>
+              <hr />
+              <h2>Subjects</h2>
               <ul class="nav nav-pills">
                 {{range $index, $program := .institution.GetEducationSubjects }}
-                <li class="active"><a href="/education/programs/{{ $program.GetID }}">{{ $program.GetName }} </a></li>
+                <li class="active"><a href="/education/subjects/{{ $program.GetID }}">{{ $program.GetName }} </a></li>
                 {{ end  }}
               </ul>
             </div>
@@ -85,7 +86,7 @@
                     <td>{{ $program.GetCode }}</td>
                     <td><a href="/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></td>
                     <td>{{ $program.GetLevel }}</td>
-                    <td><a href="/education/programs/{{ $subject.GetID }}">{{ $subject.GetName }}</a></td>
+                    <td><a href="/education/subjects/{{ $subject.GetID }}">{{ $subject.GetName }}</a></td>
                     <td>{{ $program.GetYear }}</td>
                   </tr>
                   {{ end }}

@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=296 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +163,7 @@ CREATE TABLE `institution_module` (
   PRIMARY KEY (`id`),
   KEY `institution` (`institution`),
   CONSTRAINT `institution_module_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institution` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,13 +182,13 @@ CREATE TABLE `institution_program` (
   `ucas_code` varchar(20) NOT NULL,
   `level` enum('undergraduate','graduate') NOT NULL,
   `content` text NOT NULL,
-  `program` int(11) NOT NULL,
+  `subject` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `institution` (`institution`),
-  KEY `program` (`program`),
+  KEY `subject` (`subject`),
   CONSTRAINT `institution_program_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institution` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `institution_program_ibfk_2` FOREIGN KEY (`program`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+  CONSTRAINT `institution_program_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `institution_program_session` (
   KEY `program` (`program`),
   CONSTRAINT `institution_program_session_ibfk_1` FOREIGN KEY (`program`) REFERENCES `institution_program` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `institution_program_session_ibfk_2` FOREIGN KEY (`module`) REFERENCES `institution_module` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -437,7 +437,7 @@ CREATE TABLE `subject_area` (
   `name` varchar(300) NOT NULL,
   `description` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -449,13 +449,13 @@ DROP TABLE IF EXISTS `subject_area_definition`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subject_area_definition` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `program` int(11) NOT NULL,
+  `subject` int(11) NOT NULL,
   `content` varchar(1000) NOT NULL,
   `source` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `program` (`program`),
-  CONSTRAINT `subject_area_definition_ibfk_1` FOREIGN KEY (`program`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  KEY `subject` (`subject`),
+  CONSTRAINT `subject_area_definition_ibfk_1` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,16 +467,15 @@ DROP TABLE IF EXISTS `subject_area_ka`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subject_area_ka` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `program` int(11) NOT NULL,
+  `subject` int(11) NOT NULL,
   `code` varchar(10) NOT NULL,
   `content` text NOT NULL,
   `source` varchar(200) NOT NULL,
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `program` (`program`),
-  KEY `program_2` (`program`),
-  CONSTRAINT `subject_area_ka_ibfk_1` FOREIGN KEY (`program`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+  KEY `subject` (`subject`),
+  CONSTRAINT `subject_area_ka_ibfk_1` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -513,4 +512,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:59:37
+-- Dump completed on 2015-11-04 22:10:02

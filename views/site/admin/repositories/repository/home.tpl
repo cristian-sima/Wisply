@@ -71,7 +71,7 @@
         </div>
         <div class="col-md-4">
           <div>
-            <a href="/repository/{{ .repository.ID }}">Public page</a>
+            <a href="/repositories/{{ .repository.ID }}">Public page</a>
             <br />
             <br />
           </div>

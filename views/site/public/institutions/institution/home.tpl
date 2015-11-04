@@ -8,7 +8,7 @@
             <li><a href="/institutions">Institutions</a></li>
             <li class="active">{{ .institution.Name }}
               {{ if .currentAccount.IsAdministrator  }}
-              <a href="/admin/institutions/institution/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a>
+              <a href="/admin/institutions/{{ .institution.ID }}"><span class="label label-default">Admin this</span></a>
               {{ end }}
             </li>
           </ul>

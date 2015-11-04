@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=294 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,8 +137,8 @@ CREATE TABLE `institution` (
   `description` varchar(1000) NOT NULL,
   `url` varchar(2083) NOT NULL,
   `logo_URL` varchar(2083) NOT NULL,
-  `wikiURL` varchar(2083) NOT NULL,
-  `wikiID` varchar(500) DEFAULT NULL,
+  `wiki_URL` varchar(2083) NOT NULL,
+  `wiki_ID` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `id_2` (`id`)
@@ -513,4 +513,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-04 20:27:02
+-- Dump completed on 2015-11-04 20:33:22

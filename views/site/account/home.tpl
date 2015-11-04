@@ -5,7 +5,17 @@
     </ul>
   </div>
   <div class="panel-body">
-
-    We are working on it
+    <div class="row">
+      <div class="cube text-center col-xs-3 col-md-3">
+        <a href="/account/searches">
+          <span class="glyphicon glyphicon-user"></span> Search history
+        </a>
+      </div>
+      <div class="cube text-center col-xs-3 col-md-3">
+        <a href="/account/settings">
+          <span class="glyphicon glyphicon-equalizer"></span> Settings 
+        </a>
+      </div>
+    </div>
   </div>
 </div>

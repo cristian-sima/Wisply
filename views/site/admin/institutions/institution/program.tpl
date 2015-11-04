@@ -7,7 +7,7 @@
       <li class="active">{{ .program.GetTitle }}</li>
     </ul></div>
     <div class="panel-body">
-      <a href="/admin/institutions/{{ .institution.ID }}/program/{{ .program.GetID }}/module/add" class=" btn-sm btn btn-primary">
+      <a href="/admin/institutions/{{ .institution.ID }}/program/{{ .program.GetID }}/module/add" class=" btn-sm btn btn-success">
         <span class="glyphicon glyphicon-plus" ></span>
         Add module
       </a>
@@ -26,7 +26,8 @@
               <th>Code</th>
               <th>Title</th>
               <th>Content</th>
-              <th>credits</th>
+              <th>Credits (CATS)</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -38,8 +39,7 @@
               <td>{{ $module.GetTitle }}</td>
               <td>{{ $module.GetContent }}</td>
               <td>{{ $module.GetCredits "CATS" }}</td>
-              <td><a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}/module/{{ $module.GetID }}/modify">Edit</td>
-                <td><a href="#" data-id="{{ $module.GetID }}" class="deleteModuleButton btn btn-danger btn-xs" >Delete</a></td>
+              <td><a href="#" data-id="{{ $module.GetID }}" class="deleteModuleButton btn btn-danger btn-xs" >Delete</a></td>
               </tr>
               {{ end }}
             </tbody>

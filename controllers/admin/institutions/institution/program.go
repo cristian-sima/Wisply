@@ -47,6 +47,58 @@ func (controller *Program) ShowInsertForm() {
 	controller.showAddForm()
 }
 
+// ShowAddModuleForm shows the form for adding a module for the program
+// It shows the modules which are not included already
+func (controller *Program) ShowAddModuleForm() {
+	controller.SetCustomTitle(controller.GetProgram().GetCode() + " - Add Module")
+	list := []repository.Module{}
+	allModules := controller.GetInstitution().GetModules()
+	currentModules := controller.GetProgram().GetModules()
+	for _, institutionModule := range allModules {
+		exists := false
+		for _, programModule := range currentModules {
+			if programModule.GetID() == institutionModule.GetID() {
+				exists = true
+			}
+		}
+		if !exists {
+			list = append(list, institutionModule)
+		}
+	}
+	controller.Data["modulesToAdd"] = list
+	controller.GenerateXSRF()
+	controller.LoadTemplate("add-module-form")
+}
+
+// AddModule adds a module
+func (controller *Program) AddModule() {
+	institution := controller.GetInstitution()
+	program := controller.GetProgram()
+	moduleID := strings.TrimSpace(controller.GetString("module-id"))
+	err := program.AddModule(moduleID)
+	if err != nil {
+		controller.DisplaySimpleError(err.Error())
+	} else {
+		message := "The program has been added."
+		goTo := "/admin/institutions/" + strconv.Itoa(institution.ID) + "/program" + "/" + strconv.Itoa(program.GetID())
+		controller.DisplaySuccessMessage(message, goTo)
+	}
+}
+
+// DeleteModule removes a module from a program of study
+func (controller *Program) DeleteModule() {
+	moduleID := controller.Ctx.Input.Param(":module")
+	program := controller.GetProgram()
+	err := program.DeleteModule(moduleID)
+	if err != nil {
+		controller.Abort("show-database-error")
+	} else {
+		message := "The module has been deleted from the list of program " + program.GetTitle()
+		goTo := "/admin/institutions/" + strconv.Itoa(program.GetID()) + "#programs"
+		controller.DisplaySuccessMessage(message, goTo)
+	}
+}
+
 // CreateProgram inserts an program in the database
 func (controller *Program) CreateProgram() {
 	institution := controller.GetInstitution()

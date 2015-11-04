@@ -84,8 +84,8 @@
               <th>Level</th>
               <th>Category</th>
               <th>Year</th>
-              <th>Edit</th>
-              <th>Delete</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -98,8 +98,16 @@
               <td>{{ $program.GetLevel }}</td>
               <td><a href="/education/programs/{{ $mainProgram.GetID }}">{{ $mainProgram.GetName }}</a></td>
               <td>{{ $program.GetYear }}</td>
-              <td><a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}/modify">Edit</td>
-              <td><a href="#" data-id="{{ $program.GetID }}" class="deleteProgramButton btn btn-danger btn-xs" >Delete</a></td>
+              <td>
+                <a href="/admin/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}/modify">
+                  Edit
+                </a>
+              </td>
+              <td>
+                <a href="#" data-id="{{ $program.GetID }}" class="deleteProgramButton btn btn-danger btn-xs" >
+                  Delete
+                </a>
+              </td>
             </tr>
             {{ end }}
           </tbody>
@@ -123,6 +131,8 @@
               <th>Title</th>
               <th>Content</th>
               <th>Credits (CATS)</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -133,14 +143,22 @@
               <td>{{ $module.GetTitle }}</td>
               <td>{{ $module.GetContent }}</td>
               <td>{{ $module.GetCredits "CATS" }}</td>
-              <td><a href="/admin/institutions/{{ $institution.ID }}/module/{{ $module.GetID }}/modify">Edit</td>
-                <td><a href="#" data-id="{{ $module.GetID }}" class="deleteModuleButton btn btn-danger btn-xs" >Delete</a></td>
-              </tr>
-              {{ end }}
-            </tbody>
-          </table>
-        </div>
-        {{ end }}
+              <td>
+                <a href="/admin/institutions/{{ $institution.ID }}/module/{{ $module.GetID }}/modify">
+                  Edit
+                </a>
+              </td>
+              <td>
+                <a href="#" data-id="{{ $module.GetID }}" class="deleteModuleButton btn btn-danger btn-xs" >
+                  Delete
+                </a>
+              </td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+      {{ end }}
       <hr />
       <div>
         <a class="btn btn-primary" href="/admin/institutions/{{ .institution.ID }}/advance-options">Advance options</a>

@@ -83,6 +83,32 @@ func (program *Program) Delete() error {
 	return err
 }
 
+// AddModule adds a module to the program of study
+func (program Program) AddModule(moduleID string) error {
+
+	fieldList := "`program`, `module`"
+	questions := "?, ?"
+	sql := "INSERT INTO `institution_program_session` (" + fieldList + ") VALUES (" + questions + ")"
+	query, err := database.Connection.Prepare(sql)
+
+	if err != nil {
+		return err
+	}
+	_, err = query.Exec(program.GetID(), moduleID)
+	return err
+}
+
+// DeleteModule removes a module from a program of study
+func (program *Program) DeleteModule(moduleID string) error {
+	sql := "DELETE FROM `institution_program_session` WHERE `program`=? AND `module`=?"
+	query, err := database.Connection.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	_, err = query.Exec(program.GetID(), moduleID)
+	return err
+}
+
 // Modify changes the details of the program
 func (program Program) Modify(details map[string]interface{}) (adapter.WisplyError, error) {
 	problems := adapter.WisplyError{}

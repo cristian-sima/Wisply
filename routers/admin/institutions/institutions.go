@@ -36,12 +36,19 @@ func Get() func(*beego.Namespace) {
 						beego.NSRouter("", &institution.Program{}, "GET:ShowModifyForm"),
 						beego.NSRouter("", &institution.Program{}, "POST:Modify"),
 					),
-					beego.NSNamespace("/delete",
-						beego.NSRouter("", &institution.Program{}, "POST:Delete"),
+					beego.NSRouter("/delete", &institution.Program{}, "POST:Delete"),
+
+					// module within program of study
+					beego.NSNamespace("/module",
+						beego.NSNamespace("/add",
+							beego.NSRouter("", &institution.Program{}, "GET:ShowAddModuleForm"),
+							beego.NSRouter("", &institution.Program{}, "POST:AddModule"),
+						),
+						beego.NSRouter("/:module/delete", &institution.Program{}, "POST:DeleteModule"),
 					),
 				),
 			),
-			// module
+			// module within institution
 			beego.NSNamespace("/module",
 				beego.NSNamespace("/add",
 					beego.NSRouter("", &institution.Module{}, "GET:ShowInsertForm"),
@@ -52,9 +59,7 @@ func Get() func(*beego.Namespace) {
 						beego.NSRouter("", &institution.Module{}, "GET:ShowModifyForm"),
 						beego.NSRouter("", &institution.Module{}, "POST:Modify"),
 					),
-					beego.NSNamespace("/delete",
-						beego.NSRouter("", &institution.Module{}, "POST:Delete"),
-					),
+					beego.NSRouter("/delete", &institution.Module{}, "POST:Delete"),
 				),
 			),
 		),

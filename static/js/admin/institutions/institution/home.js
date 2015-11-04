@@ -38,20 +38,30 @@ var AdminInstitutionsInstitutionHomeModule = function() {
 						id;
 					object = $(this);
 					id = object.data("id");
-					instance.confirmDelete(id);
+					instance.confirmDelete(id, "program");
+				});
+				$(".deleteModuleButton").click(function(event) {
+					event.preventDefault();
+					var object,
+						id;
+					object = $(this);
+					id = object.data("id");
+					instance.confirmDelete(id, "module");
 				});
 			},
 			/**
 			 * It shows the confirmation dialog
 			 * @param  {number} id  The ID of the program
+			 * @param  {string} type  The type of the item ("program", "module")
 			 */
 			confirmDelete: function(id, type) {
-				var msg = this.getDialogMessage(id);
+				var msg = this.getDialogMessage(id, type);
 				wisply.message.dialog(msg);
 			},
 			/**
 			 * It returns the arguments for the confimation dialog
 			 * @param  {number} id The ID of the program
+			 * @param  {string} type  The type of the item ("program", "module")
 			 * @return {object}         The arguments of the confimation message
 			 */
 			getDialogMessage: function(id, type) {
@@ -73,7 +83,7 @@ var AdminInstitutionsInstitutionHomeModule = function() {
 						label: "Delete",
 						className: "btn-danger",
 						callback: function() {
-							instance.delete(id);
+							instance.delete(id, type);
 						}
 					};
 					return {
@@ -86,7 +96,7 @@ var AdminInstitutionsInstitutionHomeModule = function() {
 					buttons = getButtons();
 				msg = {
 					title: "We need your confirmation",
-					message: "The program will be removed.<br /><br /> Are you sure?",
+					message: "The <strong>" + type + "</strong> will be removed.<br /><br /> Are you sure?",
 					onEscape: true,
 					buttons: buttons
 				};
@@ -95,8 +105,9 @@ var AdminInstitutionsInstitutionHomeModule = function() {
 			/**
 			 * It delets a definition
 			 * @param  {number} id The ID of the program
+			 * @param  {string} type  The type of the item ("program", "module")
 			 */
-			delete: function(id) {
+			delete: function(id, type) {
 				var request,
 					successCallback,
 					errorCallback,
@@ -116,7 +127,7 @@ var AdminInstitutionsInstitutionHomeModule = function() {
 					wisply.message.showError("There was a problem with your request!");
 				};
 				request = {
-					"url": '/admin/institutions/' + instance.institution.id + "/program/" + id + "/delete",
+					"url": '/admin/institutions/' + instance.institution.id + "/" + type + "/" + id + "/delete",
 					"success": successCallback,
 					"error": errorCallback
 				};

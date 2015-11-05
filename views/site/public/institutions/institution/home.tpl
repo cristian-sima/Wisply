@@ -75,7 +75,7 @@
                     <th>Title</th>
                     <th>Level</th>
                     <th>Category</th>
-                    <th>Year</th>
+                    <th>Starting year</th>
                   </tr>
                 </thead>
                 <tbody>

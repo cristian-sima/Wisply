@@ -59,7 +59,7 @@
           <div class="list-group">
             {{ $institution := .institution }}
             {{ range $index, $program := $programs }}
-            <a href="/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}" class="list-group-item active">
+            <a href="/institutions/{{ $institution.ID }}/program/{{ $program.GetID }}" class="list-group-item">
               {{ $program.GetCode }} - {{ $program.GetTitle }}
             </a>
             {{ end }}

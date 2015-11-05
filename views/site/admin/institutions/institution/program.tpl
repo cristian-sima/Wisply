@@ -15,7 +15,7 @@
       <br />
       {{ if eq (not .modules) true }}
       <div class="text-muted">
-        :( there are no moduels for this program of study
+        :( there are no modules for this program of study
       </div>
       {{ else }}
       <h4>Modules ({{ .modules | len }})</h4>

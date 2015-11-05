@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="program-level" class="col-lg-2 control-label">Year</label>
+          <label for="program-level" class="col-lg-2 control-label">Starting year</label>
           <div class="col-lg-10">
             <select class="form-control" id="program-level" name="program-level">
               <option value="undergraduate" {{ if eq .program.GetLevel "undergraduate"}}selected {{ end }}>Undergraduate</option>

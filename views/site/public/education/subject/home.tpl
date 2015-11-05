@@ -77,8 +77,8 @@
               {{ $subject := .subject }}
               {{ range $index, $institution := .institutions }}
               <div>
-                <h4>{{ $institution.Name }}</h4>
                 {{ $programs := $institution.GetProgramsBySubjectID $subject.GetID }}
+                <h4>{{ $institution.Name }}</h4>
                 {{ range $index2, $program := $programs }}
                 <div>
                   <div class="well">
@@ -89,7 +89,6 @@
                 {{ end }}
               </div>
               <hr />
-              {{ end }}
             </div>
           </div>
 

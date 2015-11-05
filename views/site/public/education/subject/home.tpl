@@ -60,7 +60,6 @@
                   <div class="row">
                     <div class="col-md-12">
                       <img  style="margin:10px; float:left" alt="{{ $ka.GetTitle }}" class="thumbnail" src="/static/img/education/cs/ka/{{ $ka.GetCode }}.png"/>
-
                       <span class="h5"><strong>&nbsp;{{ $ka.GetTitle }}</strong></span>
                       <br />
                       {{ $ka.GetContent }}
@@ -72,22 +71,28 @@
               </div>
               {{ end }}
             </div>
-
             <div class="tab-pane fade in" id="courses">
               {{ $subject := .subject }}
               {{ range $index, $institution := .institutions }}
               <div>
+                <br />
                 {{ $programs := $institution.GetProgramsBySubjectID $subject.GetID }}
-                <h4>{{ $institution.Name }}</h4>
+                {{ if ne ($programs | len ) 0 }}
+                <h4><a href="/institutions/{{ $institution.ID }}">{{ $institution.Name }}</a></h4>
                 {{ range $index2, $program := $programs }}
                 <div>
                   <div class="well">
-                      <h5><a href="/institutions/{{ $institution.ID}}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></h5>
-                      {{ $program.GetContent }}
-                    </div>
+                    <h5><a href="/institutions/{{ $institution.ID}}/program/{{ $program.GetID }}">{{ $program.GetTitle }}</a></h5>
+                    <span class="text-muted">Program of study &bull; <span class="capitalize">{{ $program.GetLevel }}</span></span>
+                    <br />
+                    <br />
+                    {{ $program.GetContent }}
+                  </div>
                 </div>
                 {{ end }}
+                {{ end }}
               </div>
+              {{ end }}
               <hr />
             </div>
           </div>
@@ -98,4 +103,11 @@
       </div>
     </div>
   </div>
+</div>
+<div>
+<style scoped>
+.capitalize {
+  text-transform: capitalize;
+}
+</style>
 </div>

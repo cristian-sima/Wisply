@@ -74,7 +74,7 @@
                     <th>Code</th>
                     <th>Title</th>
                     <th>Level</th>
-                    <th>Category</th>
+                    <th>Subject area</th>
                     <th>Starting year</th>
                   </tr>
                 </thead>

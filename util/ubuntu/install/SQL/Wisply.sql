@@ -50,7 +50,7 @@ CREATE TABLE `account_search` (
   PRIMARY KEY (`id`),
   KEY `account` (`account`),
   CONSTRAINT `account_search_ibfk_1` FOREIGN KEY (`account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=338 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=349 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +163,7 @@ CREATE TABLE `institution_module` (
   PRIMARY KEY (`id`),
   KEY `institution` (`institution`),
   CONSTRAINT `institution_module_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institution` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +180,7 @@ CREATE TABLE `institution_program` (
   `code` varchar(10) NOT NULL,
   `year` varchar(4) NOT NULL,
   `ucas_code` varchar(20) NOT NULL,
-  `level` enum('undergraduate','graduate') NOT NULL,
+  `level` enum('undergraduate','postgraduate') NOT NULL,
   `content` text NOT NULL,
   `subject` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -188,7 +188,7 @@ CREATE TABLE `institution_program` (
   KEY `subject` (`subject`),
   CONSTRAINT `institution_program_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institution` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `institution_program_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `institution_program_session` (
   KEY `program` (`program`),
   CONSTRAINT `institution_program_session_ibfk_1` FOREIGN KEY (`program`) REFERENCES `institution_program` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `institution_program_session_ibfk_2` FOREIGN KEY (`module`) REFERENCES `institution_module` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -512,4 +512,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-05  0:45:01
+-- Dump completed on 2015-11-05  1:22:17

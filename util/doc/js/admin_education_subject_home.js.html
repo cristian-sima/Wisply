@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Captcha</title>
+    <title>JSDoc: Source: admin/education/subject/home.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,183 +17,163 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Captcha</h1>
+    <h1 class="page-title">Source: admin/education/subject/home.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-            <span class="ancestors"><a href="CaptchaModule.html">CaptchaModule</a>.</span>Captcha</h2>
-        
-            <div class="class-description">The Manager for Captcha images</div>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="Captcha"><span class="type-signature"></span>new Captcha<span class="signature">(o)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    The constructor does nothing
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>o</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The object which contains the options. It must have: ID and name</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="wisply_captcha.js.html">wisply/captcha.js</a>, <a href="wisply_captcha.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* global $, wisply */
+/**
+ * @file Encapsulates the functionality for process home page
+ * @author Cristian Sima
+ */
+/**
+ * @namespace AdminEducationSubjectHome
+ */
+var AdminEducationSubjectHome = function() {
+	'use strict';
+
+	/**
+	 * The constructor does nothing
+	 * @class Manager
+	 * @memberof AdminEducationSubjectHome
+	 * @classdesc It manages the operations for the subject
+	 * @param {object} subject The object which contains the information about
+	 * the current subject
+	 */
+	var Manager = function Manager(subject) {
+		this.subject = subject;
+	};
+	/**
+	 * @memberof Manager
+	 */
+	Manager.prototype =
+		/** @lends AdminEducationSubjectHome.Manager */
+		{
+			/**
+			 * It activates the listeners for all delete buttons
+			 * @fires AccountsManager#confirmDelete
+			 */
+			init: function() {
+				var instance = this;
+				$(".deleteDefinitionButton").click(function(event) {
+					event.preventDefault();
+					var object,
+						id;
+					object = $(this);
+					id = object.data("id");
+					instance.confirmDelete(id, "definition");
+				});
+				$(".deleteKAButton").click(function(event) {
+					event.preventDefault();
+					var object,
+						id;
+					object = $(this);
+					id = object.data("id");
+					instance.confirmDelete(id, "ka");
+				});
+			},
+			/**
+			 * It shows the confirmation dialog
+			 * @param  {number} id  The ID of the definition
+			 * @param  {string} type  The type of item
+			 */
+			confirmDelete: function(id, type) {
+				var msg = this.getDialogMessage(id, type);
+				wisply.message.dialog(msg);
+			},
+			/**
+			 * It returns the arguements for the confimation dialog
+			 * @param  {number} id The ID of the definition
+			 * @param  {string} type  The type of item
+			 * @return {object}         The arguements of the confimation message
+			 */
+			getDialogMessage: function(id, type) {
+				/**
+				 * It returns the buttons for the dialog
+				 * @return {object} The buttons for the dialog
+				 */
+				function getButtons() {
+					var cancelButton,
+						mainButton;
+					cancelButton = {
+						label: "Cancel",
+						className: "btn-success",
+						callback: function() {
+							this.modal('hide');
+						}
+					};
+					mainButton = {
+						label: "Delete",
+						className: "btn-danger",
+						callback: function() {
+							instance.delete(id, type);
+						}
+					};
+					return {
+						"cancel": cancelButton,
+						"main": mainButton
+					};
+				}
+				var msg,
+					instance = this,
+					buttons = getButtons();
+				msg = {
+					title: "We need your confirmation",
+					message: "The &lt;strong>" + ((type === "ka")?"knowledge area":type) + "&lt;/strong> will be removed.&lt;br />&lt;br /> Are you sure?",
+					onEscape: true,
+					buttons: buttons
+				};
+				return msg;
+			},
+			/**
+			 * It delets a definition
+			 * @param  {string} type  The type of item
+			 * @param  {number} id The ID of the definition
+			 */
+			delete: function(id, type) {
+				var request,
+					successCallback,
+					errorCallback,
+					instance = this;
+				/**
+				 * It is called when the deletion has been done.
+				 * @ignore
+				 */
+				successCallback = function() {
+					wisply.reloadPage();
+				};
+				/**
+				 * It is called when the request has failed
+				 * @ignore
+				 */
+				errorCallback = function() {
+					wisply.message.showError("There was a problem with your request!");
+				};
+				request = {
+					"url": '/admin/education/subjects/' + instance.subject.id + "/"+ type + "/" + id + "/delete",
+					"success": successCallback,
+					"error": errorCallback
+				};
+				wisply.executePostAjax(request);
+			}
+		};
+	return {
+		Manager: Manager
+	};
+};
+$(document).ready(function() {
+	"use strict";
+	var module = new AdminEducationSubjectHome();
+	wisply.loadModule("admin-education-subject-home", module);
+});
+</code></pre>
+        </article>
+    </section>
 
 
 
@@ -208,7 +188,7 @@ The server module keep the data from server</a></li><li><a href="TyperModule.htm
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Nov 05 2015 01:22:29 GMT-0000 (GMT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Nov 05 2015 01:22:26 GMT-0000 (GMT)
 </footer>
 
 <script> prettyPrint(); </script>

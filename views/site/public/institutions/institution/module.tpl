@@ -70,8 +70,8 @@
               <div class="panel-heading">{{ $parent.GetStartDate }}</div>
               <div class="panel-body">
                 <br />
-              <a href="#" id="showColors" class="btn btn-xs btn-primary">Remove colors</a>
-              <br />
+                <a href="#" id="showColors" class="btn btn-xs btn-primary">Remove colors</a>
+                <br />
                 <!-- Description -->
                 {{ $digester := $analyse.GetDescriptionDigest }}
                 <h4>Description</h4>
@@ -79,31 +79,111 @@
                   <ul class="nav nav-tabs">
                     <li class="active">
                       <a href="#description-overview-{{ $parent.GetID }}" data-toggle="tab">
-                        List
+                        Overview
                       </a>
                     </li>
                     <li>
                       <a href="#description-words-{{ $parent.GetID }}" data-toggle="tab">
-                        List of words
+                        Words
                       </a>
                     </li>
                     <li>
                       <a href="#description-json-{{ $parent.GetID }}" data-toggle="tab">
-                        Raw data(JSON)
+                        Data(JSON)
                       </a>
                     </li>
                   </ul>
                   <div id="tab-{{ $parent.GetID }}" class="tab-content">
                     <div class="tab-pane fade active in" id="description-overview-{{ $parent.GetID }}">
-                      <div class="container-canvas">
-                        <canvas data-id="{{ $parent.GetID }}" class="chart-description" id="chart-list-description-{{ $parent.GetID }}" width="400" height="400"></canvas>
+                      <div class="row text-center">
+                        <div class="col-md-6 text-center">
+                          <div class="container-canvas text-center">
+
+                            <div class="panel panel-default">
+                              <div class="panel-body">
+                                <h5>Words distribution</h5>
+                                <hr />
+                                <br />
+                                <!-- Description - All words -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-1-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-description-1-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                dataPool["chart-list-description-1-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetPlainJSON }});
+                                </script>
+                              </div>
+                              This chart contains all the words which appear in the description
+                              <hr />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <h5>Most proeminent words</h5>
+                              <hr />
+                              <br />
+                              <div class="container-canvas">
+                                <!-- Description - Most proeminent -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-2-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                {{ $proeminent := $digester.GetMostProeminent }}
+                                dataPool["chart-list-description-2-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostProeminent.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is proeminent if it appear at least for:<br />
+                              <math>(Total number of occurences)/(Distinct number of words)</math>
+                            </div>
+                          </div>
+                          <hr />
+                        </div>
                       </div>
-                      <script>
-                      {{ $top := $digester.GetTop 5}}
-                      dataPool[{{ $parent.GetID }}] = JSON.parse({{$top.GetPlainJSON }});
-                      </script>
+                      <hr />
+                      <div class="row text-center">
+                        <div class="col-md-6 text-center">
+                          <div class="container-canvas text-center">
+                            <div class="panel panel-default">
+                              <div class="panel-body">
+                                <h5>Most relevant</h5>
+                                <hr />
+                                <br />
+                                <!-- Description - Most relevant -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-3-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-description-3-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                dataPool["chart-list-description-3-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostRelevant.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is relevant if it appear at least for:<br />
+                              <math>(Maximum number of occurences)/(2)</math>
+                              <hr />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <h5>Top 10</h5>
+                              <hr />
+                              <br />
+                              <div class="container-canvas">
+                                <!-- Description - Top 10 -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-4-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-4-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                {{ $top := $digester.GetTop 10 }}
+                                dataPool["chart-list-description-4-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostProeminent.GetPlainJSON }});
+                                </script>
+                              </div>
+
+                            </div>
+                          </div>
+                          <hr />
+                        </div>
+                      </div>
+                      <hr />
                     </div>
-                    <div  class="tab-pane fade active in" id="description-words-{{ $parent.GetID }}">
+                    <div  class="tab-pane fade in" id="description-words-{{ $parent.GetID }}">
                       <h4>All words</h4>
                       <p>
                         {{range $index, $occurence := $digester.GetData }}
@@ -150,6 +230,13 @@
     </div>
   </div>
 </div>
+<div>
+<style scoped>
+.canvas {
+  margin: 0 auto;
+}
+</style>
+</div>
 <script src="/static/3rd_party/others/js/Chart.min.js"></script>
 <script>
 var showColors = true;
@@ -158,19 +245,19 @@ $(document).ready(function() {
   $("#showColors").click(function(event){
     event.preventDefault();
     var element = $(this);
-      if(!showColors) {
-        colorWords();
-        element.html("Remove colors");
-      } else {
-        $(".word-occurence").css({
-            "background-color" : "",
-            "color": "",
-        });
-        element.html("Show colors");
-      }
-      showColors = !showColors;
+    if(!showColors) {
+      colorWords();
+      element.html("Remove colors");
+    } else {
+      $(".word-occurence").css({
+        "background-color" : "",
+        "color": "",
+      });
+      element.html("Show colors");
+    }
+    showColors = !showColors;
   });
-  $(".chart-description").each(function(){
+  $(".chart-doughnut").each(function(){
     var element = $(this),
     id = element.data("id"),
     ctx = element[0].getContext("2d"),
@@ -179,8 +266,31 @@ $(document).ready(function() {
       //String - A legend template
       legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
     };
-
     new Chart(ctx).Doughnut(data, options);
+    colorWords();
+  });
+  $(".chart-radar").each(function(){
+    var element = $(this),
+    id = element.data("id"),
+    ctx = element[0].getContext("2d"),
+    data = getData(id),
+    options =  {
+      //String - A legend template
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    };
+    new Chart(ctx).PolarArea(data, options);
+    colorWords();
+  });
+  $(".chart-pie").each(function(){
+    var element = $(this),
+    id = element.data("id"),
+    ctx = element[0].getContext("2d"),
+    data = getData(id),
+    options =  {
+      //String - A legend template
+      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+    };
+    new Chart(ctx).Pie(data, options);
     colorWords();
   });
   function colorWords() {
@@ -201,6 +311,7 @@ $(document).ready(function() {
     var data = dataPool[id],
     i, occurence, newSet = [], newItem;
     // transform it
+    console.log(id)
     for(i=0; i<data.length;i++) {
       occurence = data[i];
       newItem = {

@@ -65,9 +65,8 @@
             {{ end }}
           </div>
         </div>
-      </div>      
+      </div>
       <div>
-        <a class="btn btn-warning" href="/admin/institutions/{{ .institution.ID }}/analyse">Analyse</a>
         <a class="btn btn-primary" href="/admin/institutions/{{ .institution.ID }}/advance-options">Advance options</a>
       </div>
       <hr />

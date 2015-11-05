@@ -29,23 +29,51 @@
             </a>
           </div>
           {{end }}
+
         </div>
       </div>
-      <div id="harvest-history-container" class="modal fade">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">History</h4>
-            </div>
-            <div class="modal-body" id="harvest-history-element">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
+      <a class="btn btn-warning" href="/admin/education/analyse">Analyse data</a>
+      <br />
+      <br />
+      {{ end }}
+      {{ if eq (.analyses | len) 0 }}
+      There are no analyses.
+      {{ else }}
+      <div class="table-responsive">
+        <table id="list-accounts" class="table table-striped table-hover ">
+          <thead>
+            <tr>
+              <th>Start</th>
+              <th>End</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ $subject := .subject }}
+            {{range $index, $analyser := .analyses }}
+            <tr>
+              <td>{{ $analyser.GetStartDate }}</td>
+              <td>{{ $analyser.GetEndDate }}</td>
+              <td>
+                {{ if $analyser.IsFinished }}
+                <a href="#" data-id="{{ $analyser.GetID }}" class="deleteAnalyserButton btn btn-danger btn-xs" >Delete</a>
+                {{ else }}
+                -
+                {{ end }}
+              </td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
       </div>
       {{ end }}
     </div>
   </div>
+  <script src="/static/js/admin/education/home.js"></script>
+  <script>
+  $(document).ready(function(){
+      var module = wisply.getModule("admin-education-home"),
+        list = new module.List();
+        list.init();
+  });
+  </script>

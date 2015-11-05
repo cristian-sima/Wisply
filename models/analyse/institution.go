@@ -3,7 +3,6 @@ package analyse
 import (
 	"fmt"
 
-	"github.com/cristian-sima/Wisply/models/analyse/word"
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
@@ -27,17 +26,17 @@ func (analyser *InstitutionAnalyser) Start() {
 	}
 }
 
-func (analyser *InstitutionAnalyser) insertModuleData(module repository.Module, digesters map[string]*word.Digester) {
+func (analyser *InstitutionAnalyser) insertModuleData(moduleAnalyser ModuleAnalyser) {
 
 	columns := "`analyse`, `module`, `keywords`, `formats`, `description`"
 	tableName := "digest_module"
 	analyser.moduleBuffer = database.NewSQLBuffer(tableName, columns)
 	analyser.moduleBuffer.ChangeLimit(30)
 
-	d1 := digesters["keywords"]
-	d2 := digesters["formats"]
-	d3 := digesters["description"]
-	analyser.moduleBuffer.AddRow(analyser.parent.id, module.GetID(), d1.GetJSON(), d2.GetJSON(), d3.GetJSON())
+	d1 := moduleAnalyser.GetKeywordsDigest()
+	d2 := moduleAnalyser.GetFormatsDigest()
+	d3 := moduleAnalyser.GetDescriptionDigest()
+	analyser.moduleBuffer.AddRow(analyser.parent.id, moduleAnalyser.GetModule().GetID(), d1.GetJSON(), d2.GetJSON(), d3.GetJSON())
 	err := analyser.moduleBuffer.Exec()
 	if err != nil {
 		fmt.Println(err)

@@ -1,6 +1,9 @@
 package institution
 
-import "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/analyse"
+	"github.com/cristian-sima/Wisply/models/repository"
+)
 
 // Module manages the operations with an module
 type Module struct {
@@ -30,5 +33,7 @@ func (controller *Module) loadModule() {
 
 // Display shows the public page for a module
 func (controller *Module) Display() {
+	module := controller.GetModule()
 	controller.LoadTemplate("module")
+	controller.Data["moduleAnalyses"] = analyse.GetModuleAnalysersByModule(module.GetID())
 }

@@ -51,19 +51,19 @@ func (analyser Analyser) IsFinished() bool {
 }
 
 // GetStartDate returns the start date of the action in a human readable form
-func (analyser *Analyser) GetStartDate() string {
+func (analyser Analyser) GetStartDate() string {
 	return analyser.getDate(analyser.start)
 }
 
 // GetEndDate returns the end date of the action in a human readable form
-func (analyser *Analyser) GetEndDate() string {
+func (analyser Analyser) GetEndDate() string {
 	if analyser.end == 0 {
 		return "Still working..."
 	}
 	return analyser.getDate(analyser.end)
 }
 
-func (analyser *Analyser) getDate(timestamp int64) string {
+func (analyser Analyser) getDate(timestamp int64) string {
 	return time.Unix(timestamp, 0).Format(dateFormat)
 }
 

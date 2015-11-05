@@ -16,11 +16,17 @@ type ModuleAnalyser struct {
 	keywords    *word.Digester
 	formats     *word.Digester
 	description *word.Digester
+	parentID    string
 }
 
 // GetKeywordsDigest returns the digest for the keywords
 func (analyser ModuleAnalyser) GetKeywordsDigest() *word.Digester {
 	return analyser.keywords
+}
+
+// GetParent returns the parent of the module
+func (analyser ModuleAnalyser) GetParent() Analyser {
+	return NewAnalyser(analyser.parentID)
 }
 
 // GetFormatsDigest returns the digest for the formats
@@ -104,32 +110,36 @@ func (analyser ModuleAnalyser) getIdentifiers() []string {
 	return identifiers
 }
 
-// GetModuleAnalysers gets all the module analysers for a module
-func GetModuleAnalysers(moduleID string) []ModuleAnalyser {
+// GetModuleAnalysersByModule gets all the module analysers for a module
+func GetModuleAnalysersByModule(moduleID int) []ModuleAnalyser {
 	var list []ModuleAnalyser
-	fieldList := "`id`, `module`, `description`, `formats`, `keywords`"
+	fieldList := "`id`, `description`, `formats`, `keywords`, `analyse`"
 	sql := "SELECT " + fieldList + " FROM `digest_module` WHERE module=? "
 	rows, _ := database.Connection.Query(sql, moduleID)
 	for rows.Next() {
+		var d1, d2, d3 string
 		analyser := ModuleAnalyser{}
-		rows.Scan(&analyser.id, &analyser.module, &analyser.description, &analyser.formats, &analyser.keywords)
+		rows.Scan(&analyser.id, &d1, &d2, &d3, &analyser.parentID)
+		analyser.description = word.NewDigesterFromJSON(d1)
+		fmt.Println(analyser.module)
 		list = append(list, analyser)
 	}
 	return list
 }
 
-// NewModuleAnalyser gets the ModuleAnalyser
-func NewModuleAnalyser(id string) ModuleAnalyser {
-	analyser := ModuleAnalyser{}
-	fieldList := "`id`, `module`, `description`, `formats`, `keywords`"
-	sql := "SELECT " + fieldList + " FROM `digest_module` WHERE id=? "
-	query, err := database.Connection.Prepare(sql)
-	if err != nil {
-		fmt.Println(err)
-	}
-	query.QueryRow(id).Scan(&analyser.id, &analyser.module, &analyser.description, &analyser.formats, &analyser.keywords)
-	return analyser
-}
+//
+// // NewModuleAnalyser gets the ModuleAnalyser
+// func NewModuleAnalyser(id string) ModuleAnalyser {
+// 	analyser := ModuleAnalyser{}
+// 	fieldList := "`id`, `module`, `description`, `formats`, `keywords`, `analyse`"
+// 	sql := "SELECT " + fieldList + " FROM `digest_module` WHERE id=? "
+// 	query, err := database.Connection.Prepare(sql)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	query.QueryRow(id).Scan(&analyser.id, &analyser.module, &analyser.description, &analyser.formats, &analyser.keywords, &analyser.parentID)
+// 	return analyser
+// }
 
 func (analyser ModuleAnalyser) digest(text string) *word.Digester {
 	digester := word.NewDigester(text)

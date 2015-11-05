@@ -53,5 +53,5 @@ var pronouns = []string{
 	"thuse",
 	"other",
 	"whose",
-	"well",
+	"those",
 }

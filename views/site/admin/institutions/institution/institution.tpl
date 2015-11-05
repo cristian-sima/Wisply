@@ -65,7 +65,12 @@
             {{ end }}
           </div>
         </div>
+      </div>      
+      <div>
+        <a class="btn btn-warning" href="/admin/institutions/{{ .institution.ID }}/analyse">Analyse</a>
+        <a class="btn btn-primary" href="/admin/institutions/{{ .institution.ID }}/advance-options">Advance options</a>
       </div>
+      <hr />
       <h4 id="programs">Programs of study ({{ .institutionPrograms | len }})</h4>
       <a href="/admin/institutions/{{ .institution.ID }}/program/add" class="btn btn-sm btn-success sm">
         <span class="glyphicon glyphicon-plus"></span> Add program
@@ -159,10 +164,6 @@
         </table>
       </div>
       {{ end }}
-      <hr />
-      <div>
-        <a class="btn btn-primary" href="/admin/institutions/{{ .institution.ID }}/advance-options">Advance options</a>
-      </div>
     </div>
   </div>
   <div>

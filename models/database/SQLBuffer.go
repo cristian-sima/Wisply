@@ -2,7 +2,9 @@ package database
 
 import "errors"
 
-var maxRowsPerExecution = 100
+const (
+	defaultBufferLimit = 100
+)
 
 // SQLBuffer is a faster way to insert data into database
 // It keeps a buffer of all the rows and executes the statement only once
@@ -18,12 +20,18 @@ var maxRowsPerExecution = 100
 // http://stackoverflow.com/questions/21108084/golang-mysql-insert-multiple-data-at-once
 //
 type SQLBuffer struct {
-	memory        []interface{}
-	questions     string
-	table         string
-	columns       string
-	internalError error
-	numberOfRows  int
+	memory              []interface{}
+	questions           string
+	table               string
+	columns             string
+	internalError       error
+	numberOfRows        int
+	maxRowsPerExecution int
+}
+
+// ChangeLimit changes the default limit
+func (buffer *SQLBuffer) ChangeLimit(limit int) {
+	buffer.maxRowsPerExecution = limit
 }
 
 // AddRow adds a new row to the buffer
@@ -45,7 +53,7 @@ func (buffer *SQLBuffer) AddRow(values ...interface{}) {
 
 		buffer.numberOfRows++
 
-		if buffer.numberOfRows > maxRowsPerExecution {
+		if buffer.numberOfRows > buffer.maxRowsPerExecution {
 			buffer.internalError = buffer.Exec()
 		}
 	}
@@ -105,7 +113,8 @@ func (buffer *SQLBuffer) clear() {
 // columns should be like this: column1, column2, column3
 func NewSQLBuffer(table, columns string) *SQLBuffer {
 	return &SQLBuffer{
-		table:   table,
-		columns: columns,
+		table:               table,
+		columns:             columns,
+		maxRowsPerExecution: defaultBufferLimit,
 	}
 }

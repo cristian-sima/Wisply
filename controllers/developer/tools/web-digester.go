@@ -1,12 +1,5 @@
 package tools
 
-import (
-	"strings"
-
-	"github.com/cristian-sima/Wisply/models/analyse"
-	"github.com/cristian-sima/Wisply/models/analyse/word"
-)
-
 // WebDigester manages the operations for webDigester
 type WebDigester struct {
 	Controller
@@ -29,15 +22,15 @@ func (controller *WebDigester) Work() {
 }
 
 func (controller *WebDigester) work() {
-	controller.GenerateXSRF()
-	text := strings.TrimSpace(controller.GetString("digester-text"))
-	if len(text) > maxLenText {
-		text = text[0:10000]
-	}
-	list := analyse.NewWebDigester(text)
-	list.SortByCounter("DESC")
-	result := word.NewGrammarFilter(&list.Digester).GetData()
-	controller.Data["originalText"] = text
-	controller.Data["processed"] = result
-	controller.LoadTemplate("web-digester")
+	// controller.GenerateXSRF()
+	// text := strings.TrimSpace(controller.GetString("digester-text"))
+	// if len(text) > maxLenText {
+	// 	text = text[0:10000]
+	// }
+	// list := analyse.NewWebDigester(text)
+	// list.SortByCounter("DESC")
+	// result := word.NewGrammarFilter(&list.Digester).GetData()
+	// controller.Data["originalText"] = text
+	// controller.Data["processed"] = result
+	// controller.LoadTemplate("web-digester")
 }

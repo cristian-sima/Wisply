@@ -1,9 +1,12 @@
 package word
 
 var redundantWords = []string{
+	"Keywords:UNSPECIFIED",
 	"curricula",
 	"curriculum",
 	"&",
+	"al",
+	"et",
 	"•",
 	"e.g.,",
 	"e.g.",

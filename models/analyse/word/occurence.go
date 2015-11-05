@@ -54,6 +54,39 @@ func (occurences *Digester) GetJSON() string {
 	return string(text)
 }
 
+// RemoveOccurence removes a word from the digester
+func (occurences *Digester) RemoveOccurence(word string) {
+	for index, occurence := range occurences.GetData() {
+		if occurence.GetWord() == strings.ToLower(word) {
+			occurences.data = append(occurences.data[:index], occurences.data[index+1:]...)
+		}
+	}
+}
+
+// Combine combines two digesters into one
+func (occurences *Digester) Combine(secondDigester *Digester) *Digester {
+	for _, occurenceSecond := range secondDigester.GetData() {
+		exists := false
+		var theOccurence *Occurence
+		for _, occurenceFirst := range occurences.GetData() {
+			if occurenceFirst.GetWord() == occurenceSecond.GetWord() {
+				exists = true
+				theOccurence = occurenceFirst
+			}
+		}
+		if exists {
+			theOccurence.Counter = theOccurence.Counter + occurenceSecond.GetCounter()
+		} else {
+			item := Occurence{
+				Word:    occurenceSecond.GetWord(),
+				Counter: occurenceSecond.GetCounter(),
+			}
+			occurences.data = append(occurences.data, &item)
+		}
+	}
+	return occurences
+}
+
 // Describe shows a short description of the list
 func (occurences Digester) Describe() {
 	fmt.Println("-----")
@@ -76,13 +109,27 @@ func (occurences *Digester) GetNumberOfWords() int {
 
 // AnalyseText adds a text
 func (occurences *Digester) AnalyseText(originalText string) {
+	originalText = strings.Replace(originalText, "\n", " ", -1)
+	originalText = strings.Replace(originalText, "\r", " ", -1)
 	words := strings.Split(originalText, " ")
 	occurences.AnalyseWords(words)
+}
+
+// GetString returns the data as a string/text, separated by space
+func (occurences *Digester) GetString() string {
+	buffer := ""
+	for _, occurence := range occurences.data {
+		buffer += occurence.GetWord() + " "
+	}
+	return buffer
 }
 
 // AnalyseWords inserts an array of words
 func (occurences *Digester) AnalyseWords(words []string) {
 	var processWord = func(toProcess string) string {
+
+		toProcess = strings.TrimSpace(strings.ToLower(toProcess))
+
 		// in case the last character is '.' we remove it
 		sz := len(toProcess)
 		if sz > 0 {
@@ -91,15 +138,21 @@ func (occurences *Digester) AnalyseWords(words []string) {
 			rejectedChars := []string{".", ",", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!", "\""}
 			for _, rejectedChar := range rejectedChars {
 				if lastChar == rejectedChar {
-					toProcess = toProcess[:sz-1]
+					toProcess = toProcess[0 : sz-1]
 				}
 				if firstChar == rejectedChar {
 					toProcess = toProcess[0:]
 				}
 			}
-
 		}
-		return strings.TrimSpace(strings.ToLower(toProcess))
+
+		// reject numbers
+		_, err := strconv.Atoi(toProcess)
+		if err == nil {
+			toProcess = ""
+		}
+
+		return toProcess
 	}
 
 	for _, word := range words {

@@ -3,6 +3,7 @@ package institution
 import (
 	"strings"
 
+	"github.com/cristian-sima/Wisply/models/analyse"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -24,6 +25,15 @@ func (controller *Institution) Display() {
 func (controller *Institution) ShowInsertForm() {
 	controller.SetCustomTitle("Add Institution")
 	controller.showAddForm()
+}
+
+// Analyse analyses the data from an institution
+func (controller *Institution) Analyse() {
+	analyse := analyse.CreateAnalyser()
+	controller.ShowBlankPage()
+	controller.RemoveLayout()
+	go analyse.Start()
+	controller.Redirect("/admin", 303)
 }
 
 // Insert inserts an institution in the database

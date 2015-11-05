@@ -19,4 +19,7 @@ var education = []string{
 	"discipline",
 	"material",
 	"materials",
+	"aim",
+	"develop",
+	"study",
 }

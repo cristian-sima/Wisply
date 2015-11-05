@@ -15,6 +15,7 @@ func Get() func(*beego.Namespace) {
 			beego.NSRouter("", &institution.Institution{}, "POST:Insert"),
 		),
 		beego.NSNamespace("/:institution",
+			beego.NSRouter("/analyse", &institution.Institution{}, "GET:Analyse"),
 			beego.NSRouter("", &institution.Institution{}, "GET:Display"),
 			beego.NSRouter("/advance-options", &institution.Institution{}, "GET:ShowAdvanceOptions"),
 			beego.NSNamespace("/modify",

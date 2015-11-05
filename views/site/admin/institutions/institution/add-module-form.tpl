@@ -16,7 +16,7 @@
       {{ .xsrf_input }}
       <fieldset>
         <div class="form-group">
-          <label for="program-year" class="col-lg-2 control-label">Module</label>
+          <label for="module-id" class="col-lg-2 control-label">Module</label>
           <div class="col-lg-10">
             <select class="form-control" id="module-id" name="module-id">
               {{ range $index, $module := .modulesToAdd }}
@@ -39,6 +39,6 @@
 </div>
 <script>
 $(document).ready(function() {
-  $("#module-title").focus();
+  $("#module-id").focus();
 });
 </script>

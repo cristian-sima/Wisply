@@ -6,6 +6,8 @@
   </div>
   <div class="panel-body">
     <div class="row">
+      <br />
+      <br />
       <div class="cube text-center col-xs-12 col-sm-6 col-md-3">
         <a href="/account/searches">
           Search history

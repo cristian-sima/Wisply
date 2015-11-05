@@ -52,12 +52,30 @@ func (analyser ModuleAnalyser) GetModule() repository.Module {
 // it starts the magic
 func (analyser ModuleAnalyser) start() {
 	identifiers := analyser.getIdentifiers()
+	analyser.saveIdentifiers(identifiers)
 	d1, d2 := analyser.getDigests(identifiers)
 	analyser.keywords = d1
 	analyser.formats = d2
 	analyser.description = analyser.getDescription()
 
 	analyser.parent.insertModuleData(analyser)
+}
+
+func (analyser ModuleAnalyser) saveIdentifiers(identifiers []string) {
+
+	columns := "`analyse`, `resource`, `module`"
+	table := "suggestion_resource"
+	buffer := database.NewSQLBuffer(table, columns)
+
+	for _, identifier := range identifiers {
+		buffer.AddRow(analyser.parent.parent.id, identifier, analyser.module.GetID())
+	}
+
+	err := buffer.Exec()
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (analyser ModuleAnalyser) getDescription() *word.Digester {

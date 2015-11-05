@@ -11,6 +11,45 @@ import (
 	"github.com/cristian-sima/Wisply/models/database"
 )
 
+// SuggestResourcesForModule returns the resources which are in the same module
+func SuggestResourcesForModule(moduleID int) []Record {
+	list := []Record{}
+	sql := "SELECT DISTINCT `resource` FROM `suggestion_resource` WHERE module=? ORDER BY rand()"
+	rows, err := database.Connection.Query(sql, moduleID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for rows.Next() {
+		identifier := ""
+		rows.Scan(&identifier)
+		fmt.Println(identifier)
+		item := GetRecordByIdentifier(identifier)
+		list = append(list, item)
+	}
+	return list
+}
+
+// DetectModule finds the module of the resource
+func DetectModule(identifierResource string) int {
+	moduleID := 0
+	sql := "SELECT DISTINCT `module` FROM `suggestion_resource` WHERE resource=? LIMIT 0,1"
+	query, err := database.Connection.Prepare(sql)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = query.QueryRow(identifierResource).Scan(&moduleID)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return moduleID
+}
+
 // GetRecords returns all the records
 func GetRecords(repositoryID int, options database.SQLOptions) []*Record {
 	start := time.Now()

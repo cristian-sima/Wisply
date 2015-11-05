@@ -3,6 +3,7 @@ package institution
 import (
 	"github.com/cristian-sima/Wisply/models/analyse"
 	"github.com/cristian-sima/Wisply/models/repository"
+	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
 // Module manages the operations with an module
@@ -35,5 +36,6 @@ func (controller *Module) loadModule() {
 func (controller *Module) Display() {
 	module := controller.GetModule()
 	controller.LoadTemplate("module")
+	controller.Data["resourcesSuggested"] = wisply.SuggestResourcesForModule(module.GetID())
 	controller.Data["moduleAnalyses"] = analyse.GetModuleAnalysersByModule(module.GetID())
 }

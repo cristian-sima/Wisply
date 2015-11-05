@@ -136,8 +136,8 @@ func NewModule(ID string) (Module, error) {
 	if err != nil {
 		return module, err
 	}
-	query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.credits, &module.year, &module.institution)
-	return module, nil
+	err = query.QueryRow(ID).Scan(&module.id, &module.title, &module.content, &module.code, &module.credits, &module.year, &module.institution)
+	return module, err
 }
 
 // CreateModule adds a new module into database

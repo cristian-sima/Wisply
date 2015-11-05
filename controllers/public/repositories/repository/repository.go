@@ -2,8 +2,10 @@ package repository
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"github.com/cristian-sima/Wisply/models/harvest"
+	"github.com/cristian-sima/Wisply/models/repository"
 	"github.com/cristian-sima/Wisply/models/wisply"
 )
 
@@ -42,6 +44,12 @@ func (controller *Repository) DisplayResource() {
 	if errResource != nil {
 		controller.Abort("show-database-error")
 	} else {
+		moduleID := wisply.DetectModule(resource.Identifier)
+		module, err := repository.NewModule(strconv.Itoa(moduleID))
+		if err == nil {
+			controller.Data["module"] = module
+			controller.Data["resourcesSuggested"] = wisply.SuggestResourcesForModule(module.GetID())
+		}
 		controller.Data["repository"] = repo
 		controller.Data["institution"] = repo.GetInstitution()
 		controller.Data["resource"] = resource

@@ -362,6 +362,24 @@
             {{ end }}
           </div>
           {{ end }}
+          <h5>Resources identified:</h5>
+          <!-- Similar resources -->
+          {{ if not .resourcesSuggested }}
+          <span class="text-muted">There are no resources identified for this module</span>
+          {{ else }}
+            {{ range $index, $resource := .resourcesSuggested }}
+              <a class="resource" href="{{ $resource.GetWisplyURL }}">
+                  <h6>
+                    {{ if not $resource.IsVisible }}
+                    <small><span data-toggle='tooltip' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'></span></small>
+                    {{ end }}
+                {{range $index, $title := $resource.Keys.Get "title" }}
+                {{ $title }}
+                {{ end }}
+              </h6>
+              </a>
+            {{ end }}
+            {{ end }}
         </div>
       </div>
     </div>

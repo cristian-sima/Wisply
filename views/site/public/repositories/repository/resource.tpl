@@ -82,19 +82,19 @@
                   {{ if not .module }}
                   <span class="text-muted">There are no suggestions for this resource</span>
                   {{ else }}
-                    {{ range $index, $resource := .resourcesSuggested }}
-                      <a class="resource" href="{{ $resource.GetWisplyURL }}">
-                          <h4>
-                            {{ if not $resource.IsVisible }}
-                            <small><span data-toggle='tooltip' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'></span></small>
-                            {{ end }}
-                        {{range $index, $title := $resource.Keys.Get "title" }}
-                        {{ $title }}
-                        {{ end }}
-                      </h4>
-                      </a>
-                    {{ end }}
-                    {{ end }}
+                  {{ range $index, $resource := .resourcesSuggested }}
+                  <a class="resource" href="{{ $resource.GetWisplyURL }}">
+                    <h4>
+                      {{ if not $resource.IsVisible }}
+                      <small><span data-toggle='tooltip' title='This content is not visible to Wisply.' class='glyphicon glyphicon-lock'></span></small>
+                      {{ end }}
+                      {{range $index, $title := $resource.Keys.Get "title" }}
+                      {{ $title }}
+                      {{ end }}
+                    </h4>
+                  </a>
+                  {{ end }}
+                  {{ end }}
                 </div>
               </div>
               <div class="panel panel-default">

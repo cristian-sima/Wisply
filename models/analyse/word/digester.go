@@ -132,10 +132,13 @@ func (digester *Digester) RemoveOccurence(word string) {
 
 // Combine combines two digesters into one
 func (digester *Digester) Combine(secondDigester *Digester) *Digester {
+	combination := &Digester{
+		data: digester.GetData(),
+	}
 	for _, occurenceSecond := range secondDigester.GetData() {
 		exists := false
 		var theOccurence *Occurence
-		for _, occurenceFirst := range digester.GetData() {
+		for _, occurenceFirst := range combination.GetData() {
 			if occurenceFirst.GetWord() == occurenceSecond.GetWord() {
 				exists = true
 				theOccurence = occurenceFirst
@@ -148,10 +151,10 @@ func (digester *Digester) Combine(secondDigester *Digester) *Digester {
 				Word:    occurenceSecond.GetWord(),
 				Counter: occurenceSecond.GetCounter(),
 			}
-			digester.data = append(digester.data, &item)
+			combination.data = append(combination.data, &item)
 		}
 	}
-	return digester
+	return combination
 }
 
 // Describe shows a short description of the list
@@ -197,7 +200,7 @@ func (digester *Digester) AnalyseWords(words []string) {
 		toProcess = strings.ToLower(toProcess)
 		sz := len(toProcess)
 		if sz > 0 {
-			rejectedChars := []string{"“", "”", ".", ",", "‘", "’", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!", "\""}
+			rejectedChars := []string{"“", "‘", "’", "”", ".", ",", "‘", "’", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!", "\""}
 			tryAgain := true
 			for tryAgain && (len(toProcess) > 0) {
 				tryAgain = false

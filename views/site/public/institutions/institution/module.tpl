@@ -12,8 +12,7 @@
         </div>
         <script>
         var
-        dataPool = {},
-        colors = {};
+        dataPool = {};
         </script>
         <div class="panel-body">
           <div style="margin:0px">
@@ -66,19 +65,21 @@
             {{ $analyses := $analyses }}
             {{ range $index, $analyse := $analyses }}
             {{ $parent := $analyse.GetParent }}
+            {{ $general := $analyse.GetGeneral }}
+            {{ $description := $analyse.GetDescriptionDigest }}
+            {{ $keywords := $analyse.GetKeywordsDigest }}
+            {{ $formats := $analyse.GetFormatsDigest }}
             <div class="panel panel-default">
               <div class="panel-heading">{{ $parent.GetStartDate }}</div>
               <div class="panel-body">
                 <br />
                 <a href="#" id="showColors" class="btn btn-xs btn-primary">Remove colors</a>
                 <br />
-                <!-- Description -->
-                {{ $digester := $analyse.GetDescriptionDigest }}
-                <h4>Description</h4>
+                <!-- Overview -->
                 <div class="well">
                   <ul class="nav nav-tabs">
                     <li class="active">
-                      <a href="#description-overview-{{ $parent.GetID }}" data-toggle="tab">
+                      <a href="#overall-overview-{{ $parent.GetID }}" data-toggle="tab">
                         Overview
                       </a>
                     </li>
@@ -94,24 +95,23 @@
                     </li>
                   </ul>
                   <div id="tab-{{ $parent.GetID }}" class="tab-content">
-                    <div class="tab-pane fade active in" id="description-overview-{{ $parent.GetID }}">
+                    <div class="tab-pane fade active in" id="overall-overview-{{ $parent.GetID }}">
                       <div class="row text-center">
                         <div class="col-md-6 text-center">
                           <div class="container-canvas text-center">
-
                             <div class="panel panel-default">
                               <div class="panel-body">
                                 <h5>Words distribution</h5>
                                 <hr />
                                 <br />
-                                <!-- Description - All words -->
-                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-1-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-description-1-{{ $parent.GetID }}" >
+                                <!-- overall - All words -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-1-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-overall-1-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                dataPool["chart-list-description-1-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetPlainJSON }});
+                                dataPool["chart-list-overall-1-{{ $parent.GetID }}"] = JSON.parse({{$general.GetPlainJSON }});
                                 </script>
                               </div>
-                              This chart contains all the words which appear in the description
+                              This chart contains all the words which appear
                               <hr />
                             </div>
                           </div>
@@ -123,15 +123,15 @@
                               <hr />
                               <br />
                               <div class="container-canvas">
-                                <!-- Description - Most proeminent -->
-                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-2-{{ $parent.GetID }}" >
+                                <!-- overall - Most proeminent -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-overall-2-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                {{ $proeminent := $digester.GetMostProeminent }}
-                                dataPool["chart-list-description-2-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostProeminent.GetPlainJSON }});
+                                {{ $proeminent := $general.GetMostProeminent }}
+                                dataPool["chart-list-overall-2-{{ $parent.GetID }}"] = JSON.parse({{$general.GetMostProeminent.GetPlainJSON }});
                                 </script>
                               </div>
-                              <br /> A word is proeminent if it appear at least for:<br />
+                              <br /> A word is proeminent if it appears at least for:<br />
                               <math>(Total number of occurences)/(Distinct number of words)</math>
                             </div>
                           </div>
@@ -147,14 +147,14 @@
                                 <h5>Most relevant</h5>
                                 <hr />
                                 <br />
-                                <!-- Description - Most relevant -->
-                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-3-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-description-3-{{ $parent.GetID }}" >
+                                <!-- overall - Most relevant -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-3-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-overall-3-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                dataPool["chart-list-description-3-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostRelevant.GetPlainJSON }});
+                                dataPool["chart-list-overall-3-{{ $parent.GetID }}"] = JSON.parse({{$general.GetMostRelevant.GetPlainJSON }});
                                 </script>
                               </div>
-                              <br /> A word is relevant if it appear at least for:<br />
+                              <br /> A word is relevant if it appears at least for:<br />
                               <math>(Maximum number of occurences)/(2)</math>
                               <hr />
                             </div>
@@ -167,26 +167,131 @@
                               <hr />
                               <br />
                               <div class="container-canvas">
-                                <!-- Description - Top 10 -->
-                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-4-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-4-{{ $parent.GetID }}" >
+                                <!-- Overall - Top 10 -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-4-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-overall-4-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                {{ $top := $digester.GetTop 10 }}
-                                dataPool["chart-list-description-4-{{ $parent.GetID }}"] = JSON.parse({{$digester.GetMostProeminent.GetPlainJSON }});
+                                {{ $top := $general.GetTop 10 }}
+                                dataPool["chart-list-overall-4-{{ $parent.GetID }}"] = JSON.parse({{$general.GetMostProeminent.GetPlainJSON }});
                                 </script>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <hr />
+                      <h4>How is it taught</h4>
+                      {{ $formats := $analyse.GetFormatsDigest }}
+                      {{ if eq ($formats.GetData | len) 0 }}
+                      No information available
+                      {{ else }}
+                      <div class="panel panel-default">
+                        <div class="panel-body">
+                          <div class="container-canvas">
+                            <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-{{ $parent.GetID }}" class="chart img-responsive chart chart-pie" id="chart-{{ $parent.GetID }}" >
+                            </canvas>
+                            <script>
+                            dataPool["chart-{{ $parent.GetID }}"] = JSON.parse({{$formats.GetPlainJSON }});
+                            </script>
+                          </div>
+                        </div>
+                      </div>
 
+                      <!--        Comparison     --->
+                      <h4>Specified curriculum vs what is actually taught</h4>
+                      <div class="row text-center">
+                        <div class="col-md-6 text-center">
+                          <div class="container-canvas text-center">
+                            <div class="panel panel-default">
+                              <div class="panel-body">
+                                <h5>Most relevant - Specified</h5>
+                                <hr />
+                                <br />
+                                <!-- Specified - Most relevant -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-1-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-description-1-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                dataPool["chart-list-description-1-{{ $parent.GetID }}"] = JSON.parse({{$description.GetMostRelevant.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is relevant if it appears at least for:<br />
+                              <math>(Maximum number of occurences)/(2)</math>
+                              <hr />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <h5>Most proeminent words - Specified</h5>
+                              <hr />
+                              <br />
+                              <div class="container-canvas">
+                                <!-- Specified - Most proeminent -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-2-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                {{ $proeminent := $general.GetMostProeminent }}
+                                dataPool["chart-list-description-2-{{ $parent.GetID }}"] = JSON.parse({{$description.GetMostProeminent.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is proeminent if it appears at least for:<br />
+                              <math>(Total number of occurences)/(Distinct number of words)</math>
                             </div>
                           </div>
                           <hr />
                         </div>
                       </div>
-                      <hr />
+                      <!-- keywords -->
+                      <div class="row text-center">
+                        <div class="col-md-6 text-center">
+                          <div class="container-canvas text-center">
+                            <div class="panel panel-default">
+                              <div class="panel-body">
+                                <h5>Most relevant - Taught</h5>
+                                <hr />
+                                <br />
+                                <!-- Taught - Most relevant -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-taught-1-{{ $parent.GetID }}" class="text-center chart img-responsive chart chart-doughnut text-center" id="chart-list-taught-1-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                dataPool["chart-list-taught-1-{{ $parent.GetID }}"] = JSON.parse({{$keywords.GetMostRelevant.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is relevant if it appears at least for:<br />
+                              <math>(Maximum number of occurences)/(2)</math>
+                              <hr />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="panel panel-default">
+                            <div class="panel-body">
+                              <h5>Most proeminent words - Taught</h5>
+                              <hr />
+                              <br />
+                              <div class="container-canvas">
+                                <!-- taught - Most proeminent -->
+                                <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-taught-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-taught-2-{{ $parent.GetID }}" >
+                                </canvas>
+                                <script>
+                                {{ $proeminent := $general.GetMostProeminent }}
+                                dataPool["chart-list-taught-2-{{ $parent.GetID }}"] = JSON.parse({{$keywords.GetMostProeminent.GetPlainJSON }});
+                                </script>
+                              </div>
+                              <br /> A word is proeminent if it appears at least for:<br />
+                              <math>(Total number of occurences)/(Distinct number of words)</math>
+                            </div>
+                          </div>
+                          <hr />
+                        </div>
+                      </div>
+                      {{ end }}
                     </div>
                     <div  class="tab-pane fade in" id="description-words-{{ $parent.GetID }}">
-                      <h4>All words</h4>
+                      <h4>Specified</h4>
                       <p>
-                        {{range $index, $occurence := $digester.GetData }}
+                        {{range $index, $occurence := $description.GetData }}
                         <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                           {{ $occurence.GetWord }}
                           &nbsp;
@@ -196,10 +301,42 @@
                         </span>&nbsp;
                         {{ end }}
                       </p>
+                      <h4>Formats</h4>
+                      {{ if eq ($formats.GetData | len) 0 }}
+                      No information available
+                      {{ else }}
+                      <p>
+                        {{range $index, $occurence := $formats.GetData }}
+                        <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                          {{ $occurence.GetWord }}
+                          &nbsp;
+                          <span class="badge">
+                            {{ $occurence.GetCounter }}
+                          </span>
+                        </span>&nbsp;
+                        {{ end }}
+                      </p>
+                      {{ end }}
+                      <h4>Keywords used</h4>
+                      {{ if eq ($keywords.GetData | len) 0 }}
+                      No information available
+                      {{ else }}
+                      <p>
+                        {{range $index, $occurence := $keywords.GetData }}
+                        <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                          {{ $occurence.GetWord }}
+                          &nbsp;
+                          <span class="badge">
+                            {{ $occurence.GetCounter }}
+                          </span>
+                        </span>&nbsp;
+                        {{ end }}
+                      </p>
+                      {{ end }}
                     </div>
                     <div class="tab-pane fade" id="description-json-{{ $parent.GetID }}">
                       <p>
-                        <textarea style="background:white;height:500px" class="big-textarea form-control" placeholder="Result">{{ $digester.GetJSON }}
+                        <textarea style="background:white;height:500px" class="big-textarea form-control" placeholder="Result">{{ $general.GetJSON }}
                         </textarea>
                       </p>
                     </div>
@@ -238,120 +375,11 @@
 </style>
 </div>
 <script src="/static/3rd_party/others/js/Chart.min.js"></script>
+
+<script src="/static/js/wisply/chart.js"></script>
 <script>
-var showColors = true;
-$(document).ready(function() {
-  "use strict";
-  $("#showColors").click(function(event){
-    event.preventDefault();
-    var element = $(this);
-    if(!showColors) {
-      colorWords();
-      element.html("Remove colors");
-    } else {
-      $(".word-occurence").css({
-        "background-color" : "",
-        "color": "",
-      });
-      element.html("Show colors");
-    }
-    showColors = !showColors;
-  });
-  $(".chart-doughnut").each(function(){
-    var element = $(this),
-    id = element.data("id"),
-    ctx = element[0].getContext("2d"),
-    data = getData(id),
-    options =  {
-      //String - A legend template
-      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    };
-    new Chart(ctx).Doughnut(data, options);
-    colorWords();
-  });
-  $(".chart-radar").each(function(){
-    var element = $(this),
-    id = element.data("id"),
-    ctx = element[0].getContext("2d"),
-    data = getData(id),
-    options =  {
-      //String - A legend template
-      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    };
-    new Chart(ctx).PolarArea(data, options);
-    colorWords();
-  });
-  $(".chart-pie").each(function(){
-    var element = $(this),
-    id = element.data("id"),
-    ctx = element[0].getContext("2d"),
-    data = getData(id),
-    options =  {
-      //String - A legend template
-      legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-    };
-    new Chart(ctx).Pie(data, options);
-    colorWords();
-  });
-  function colorWords() {
-    $(".word-occurence").each(function(){
-      var element = $(this),
-      word = element.data("word"),
-      color = getColorForWord(word);
-      element.css({"background-color": color.background,
-      "color": color.font });
-    });
-  }
-  /**
-  * It gets the data for the chart. Also, it processes it
-  * @param  {string} id The ID of the analyse
-  * @return {object} The data
-  */
-  function getData(id) {
-    var data = dataPool[id],
-    i, occurence, newSet = [], newItem;
-    // transform it
-    console.log(id)
-    for(i=0; i<data.length;i++) {
-      occurence = data[i];
-      newItem = {
-        "label": occurence.Word,
-        "value": occurence.Counter,
-        color : getColorForWord(occurence.Word).background,
-      };
-      newSet.push(newItem);
-    }
-    return newSet;
-  }
-  /**
-  * It checks to see if the color for the word is already stored. If not, it generates a new one
-  * @param  {string} word The word
-  * @return {object} The color in RGB format
-  */
-  function getColorForWord(word) {
-    if(!colors[word]) {
-      colors[word] = getRandomColor();
-    }
-    return colors[word];
-  }
-  /**
-  * It returns a random color
-  * @return {object} A random color for bg and font
-  */
-  function getRandomColor() {
-    function getContrastYIQ(hexcolor){
-      var r = parseInt(hexcolor.substr(0,2),16);
-      var g = parseInt(hexcolor.substr(2,2),16);
-      var b = parseInt(hexcolor.substr(4,2),16);
-      var yiq = ((r*299)+(g*587)+(b*114))/1000;
-      return (yiq >= 128) ? 'black' : 'white';
-    }
-    var obj = {},
-    background = Math.floor(Math.random()*16777215).toString(16);
-    // credits http://stackoverflow.com/questions/11070007/style-each-div-with-a-different-color-using-jquery-or-javascript
-    obj.background = '#' + background;
-    obj.font = getContrastYIQ(background);
-    return obj;
-  }
+$(document).ready(function(){
+  var module = wisply.getModule("chart");
+  module.init();
 });
 </script>

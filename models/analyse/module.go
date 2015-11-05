@@ -24,6 +24,11 @@ func (analyser ModuleAnalyser) GetKeywordsDigest() *word.Digester {
 	return analyser.keywords
 }
 
+// GetGeneral returns the combination of both the digesters
+func (analyser ModuleAnalyser) GetGeneral() *word.Digester {
+	return analyser.keywords.Combine(analyser.description)
+}
+
 // GetParent returns the parent of the module
 func (analyser ModuleAnalyser) GetParent() Analyser {
 	return NewAnalyser(analyser.parentID)
@@ -121,6 +126,8 @@ func GetModuleAnalysersByModule(moduleID int) []ModuleAnalyser {
 		analyser := ModuleAnalyser{}
 		rows.Scan(&analyser.id, &d1, &d2, &d3, &analyser.parentID)
 		analyser.description = word.NewDigesterFromJSON(d1)
+		analyser.formats = word.NewDigesterFromJSON(d2)
+		analyser.keywords = word.NewDigesterFromJSON(d3)
 		fmt.Println(analyser.module)
 		list = append(list, analyser)
 	}

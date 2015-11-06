@@ -39,10 +39,8 @@
               <div class="panel-heading">{{ $parent.GetStartDate }}</div>
               <div class="panel-body">
                 <br />
-                  <a href="/about#how" class="btn btn-xs btn-default">How is it working?</a>
-                  <a href="#" id="showColors" class="btn btn-xs btn-default">
-                    <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
-                  </a> &nbsp;
+                <a href="/about#how" class="btn btn-xs btn-default">How is it working?</a>
+
 
                 <br />
                 <!-- Overview -->
@@ -76,20 +74,20 @@
                                 <br />
                                 <div style="height:360px;weight:300px">
                                   <div class="row">
-                                  <div class="col-md-offset-4 col-md-4">
-                                  <span class="big-big label-as-a-badge">
-                                    {{ $general.GetData | len }} words
-                                  </span>
-                                  <hr />
-                                  <span class="big-big label-as-a-badge">
-                                    {{ $general.GetCounter }} occurences
-                                  </span>
-                                  <hr />
-                                  <span class="big-big label-as-a-badge">
-                                    {{ $modules | len }} modules
-                                  </span>
-                                  <hr />
-                                  </div>
+                                    <div class="col-md-offset-4 col-md-4">
+                                      <span class="big-big label-as-a-badge">
+                                        {{ $general.GetData | len }} words
+                                      </span>
+                                      <hr />
+                                      <span class="big-big label-as-a-badge">
+                                        {{ $general.GetCounter }} occurences
+                                      </span>
+                                      <hr />
+                                      <span class="big-big label-as-a-badge">
+                                        {{ $modules | len }} modules
+                                      </span>
+                                      <hr />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -288,6 +286,9 @@
                       {{ end }}
                     </div>
                     <div  class="tab-pane fade in" id="description-words-{{ $parent.GetID }}">
+                      <a href="#" id="showColors" class="btn btn-xs btn-default">
+                        <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
+                      </a> &nbsp;
                       <h4>Specified</h4>
                       <p>
                         {{range $index, $occurence := $description.GetData }}

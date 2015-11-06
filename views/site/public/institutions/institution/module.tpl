@@ -73,7 +73,7 @@
               <div class="panel-heading">{{ $parent.GetStartDate }}</div>
               <div class="panel-body">
                 <br />
-                <a href="#" id="showColors" class="btn btn-xs btn-primary">Remove colors</a>
+                <a href="/about#how" class="btn btn-xs btn-default">How is it working?</a>
                 <br />
                 <!-- Overview -->
                 <div class="well">
@@ -307,6 +307,11 @@
                       {{ end }}
                     </div>
                     <div  class="tab-pane fade in" id="description-words-{{ $parent.GetID }}">
+
+                      <a href="#" id="showColors" class="btn btn-xs btn-default">
+                        <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
+                      </a> &nbsp;
+                      
                       <h4>Specified</h4>
                       <p>
                         {{range $index, $occurence := $description.GetData }}

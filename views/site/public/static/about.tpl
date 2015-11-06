@@ -32,12 +32,28 @@
             <div id="how">
               <img src="/static/img/public/about/how.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
               <br />
-              <img src="/static/img/public/about/how2.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
+              <img src="/static/img/public/about/how-wisply.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
             </div>
           </article>
           <article>
             <h2>Great, why should I use it?</h2>
-            Well, firstly, it saves you time and money. An automated tool can use open data to offer a more up-to-date and realistic perspective at a lower cost. b) There can be built analytical tools using the aggregated data in order to generate further results about Web science. c) Mapping resources from a range of different sources may provide a better insight about what actually Web science is, which might be useful for academics. d) In the same way, casual learners have a clearer map of the materials and they can navigate to find the necessary resources (either for teaching or learning). e) The underlining principles of this project might be generalized for other curriculum areas.
+            Well, firstly, you can use it to save time and money. An automated tool can use open data to offer
+            <ol>
+              <li>
+                a more up-to-date and realistic perspective at a lower cost.
+              </li>
+              <li>
+                 There can be built analytical tools using the aggregated data in order to generate further results about Web science.
+               </li>
+               <li>
+                 Mapping resources from a range of different sources may provide a better insight about what actually Web science is, which might be useful for academics.
+               </li>
+               <li>
+                  In the same way, casual learners have a clearer map of the materials and they can navigate to find the necessary resources (either for teaching or learning).
+                </li>
+                <li> The underlining principles of this project might be generalized for other curriculum areas.
+                </li>
+              </ol>
           </article>
         </section>
       </div>

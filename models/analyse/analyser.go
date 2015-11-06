@@ -7,6 +7,7 @@ import (
 
 	"github.com/cristian-sima/Wisply/models/analyse/word"
 	"github.com/cristian-sima/Wisply/models/database"
+	"github.com/cristian-sima/Wisply/models/education"
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
@@ -28,15 +29,17 @@ func (analyser Analyser) Start() {
 
 func (analyser Analyser) processModules() {
 
-	// get all institutions
-
 	institutions := repository.GetAllInstitutions()
+	subjects := education.GetAllSubjects()
 
 	for _, institution := range institutions {
 		analyser.CreateInstitutionAnalyser(institution)
 	}
 
-	// for each subject
+	for _, subject := range subjects {
+		analyser.CreateSubjectAnalyser(subject)
+	}
+
 	analyser.Finish()
 }
 
@@ -94,6 +97,16 @@ func (analyser Analyser) CreateInstitutionAnalyser(institution repository.Instit
 	}
 	institutionAnalyser.Start()
 	return institutionAnalyser
+}
+
+// CreateSubjectAnalyser creates a new analyser for subject
+func (analyser Analyser) CreateSubjectAnalyser(subject education.Subject) SubjectAnalyser {
+	sub := SubjectAnalyser{
+		parent:  analyser,
+		subject: subject,
+	}
+	sub.start()
+	return sub
 }
 
 // NewAnalyser creates a new Analyser object for the institution

@@ -435,17 +435,16 @@
               font-size: 22px;
             }
             </style>
-            </div>
-            <script src="/static/3rd_party/others/js/Chart.min.js"></script>
+          </div>
+          <script src="/static/3rd_party/others/js/Chart.min.js"></script>
 
-            <script src="/static/js/wisply/chart.js"></script>
-            <script>
-            $(document).ready(function(){
+          <script src="/static/js/wisply/chart.js"></script>
+          <script>
+          $(document).ready(function(){
             var module = wisply.getModule("chart");
             module.init();
-            });
-            </script>
-          </div>
+          });
+          </script>
         </div>
       </div>
     </div>

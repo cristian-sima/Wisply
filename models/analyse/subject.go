@@ -93,10 +93,10 @@ func (analyser SubjectAnalyser) start() {
 }
 
 func (analyser SubjectAnalyser) getDigesters(institution repository.Institution) (*word.Digester, *word.Digester, *word.Digester) {
-
+	subject := analyser.subject
 	fieldList := "`keywords`, `formats`, `description`"
-	sql := "SELECT " + fieldList + " FROM `digest_institution` WHERE institution=? AND analyse=? LIMIT 0,1"
-	rows, err := database.Connection.Query(sql, institution.ID, analyser.parent.id)
+	sql := "SELECT " + fieldList + " FROM `digest_institution` WHERE institution=? AND analyse=? AND subject = ? LIMIT 0,1"
+	rows, err := database.Connection.Query(sql, institution.ID, analyser.parent.id, subject.GetID())
 
 	if err != nil {
 		panic(err)

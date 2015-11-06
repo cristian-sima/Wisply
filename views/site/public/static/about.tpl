@@ -29,6 +29,11 @@
                 The general idea behind this project is to create a tool which can make the process of analysing resources about Web science, in terms of open data, more automated for the long term, with very little interaction from people.
               </li>
             </ul>
+            <div id="how">
+              <img src="/static/img/public/about/how.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
+              <br />
+              <img src="/static/img/public/about/how2.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
+            </div>
           </article>
           <article>
             <h2>Great, why should I use it?</h2>

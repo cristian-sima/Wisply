@@ -39,7 +39,11 @@
               <div class="panel-heading">{{ $parent.GetStartDate }}</div>
               <div class="panel-body">
                 <br />
-                <a href="#" id="showColors" class="btn btn-xs btn-primary">Remove colors</a>
+                  <a href="/about#how" class="btn btn-xs btn-default">How is it working?</a>
+                  <a href="#" id="showColors" class="btn btn-xs btn-default">
+                    <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
+                  </a> &nbsp;
+
                 <br />
                 <!-- Overview -->
                 <div class="well">

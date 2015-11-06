@@ -35,13 +35,13 @@ var ChartModule = function () {
         var element = $(this);
         if(!instance.showColors) {
           instance.colorWords();
-          element.html("Remove colors");
+          element.html("<span class='glyphicon glyphicon-text-background text-primary'></span> Remove colors");
         } else {
           $(".word-occurence").css({
             "background-color" : "",
             "color": "",
           });
-          element.html("Show colors");
+          element.html("<span class='glyphicon glyphicon-text-background text-info'></span> Show colors");
         }
         instance.showColors = !instance.showColors;
       });

@@ -124,15 +124,21 @@
                               <br />
                               <div class="container-canvas">
                                 <!-- overall - Most proeminent -->
+                                {{ $proeminent := $general.GetMostProeminent 3 }}
+                                {{ if eq ($proeminent.GetData | len ) 0 }}
+                                <div class="text-muted" style="height:300px;weight:300px">
+                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                </div>
+                                {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-overall-2-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                {{ $proeminent := $general.GetMostProeminent }}
-                                dataPool["chart-list-overall-2-{{ $parent.GetID }}"] = JSON.parse({{$general.GetMostProeminent.GetPlainJSON }});
+                                dataPool["chart-list-overall-2-{{ $parent.GetID }}"] = JSON.parse({{$proeminent.GetPlainJSON }});
                                 </script>
+                                {{ end }}
                               </div>
                               <br /> A word is proeminent if it appears at least for:<br />
-                              <math>(Total number of occurences)/(Distinct number of words)</math>
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
                           <hr />
@@ -155,7 +161,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <math>(Maximum number of occurences)/(2)</math>
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
                               <hr />
                             </div>
                           </div>
@@ -172,7 +178,7 @@
                                 </canvas>
                                 <script>
                                 {{ $top := $general.GetTop 10 }}
-                                dataPool["chart-list-overall-4-{{ $parent.GetID }}"] = JSON.parse({{$general.GetMostProeminent.GetPlainJSON }});
+                                dataPool["chart-list-overall-4-{{ $parent.GetID }}"] = JSON.parse({{$top.GetPlainJSON }});
                                 </script>
                               </div>
                             </div>
@@ -215,7 +221,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <math>(Maximum number of occurences)/(2)</math>
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
                               <hr />
                             </div>
                           </div>
@@ -228,15 +234,21 @@
                               <br />
                               <div class="container-canvas">
                                 <!-- Specified - Most proeminent -->
+                                {{ $proeminentDescription := $description.GetMostProeminent 3 }}
+                                {{ if eq ($proeminentDescription.GetData | len ) 0 }}
+                                <div class="text-muted" style="height:300px;weight:300px">
+                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                </div>
+                                {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-2-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                {{ $proeminent := $general.GetMostProeminent }}
-                                dataPool["chart-list-description-2-{{ $parent.GetID }}"] = JSON.parse({{$description.GetMostProeminent.GetPlainJSON }});
+                                dataPool["chart-list-description-2-{{ $parent.GetID }}"] = JSON.parse({{$proeminentDescription.GetPlainJSON }});
                                 </script>
+                                {{ end }}
                               </div>
                               <br /> A word is proeminent if it appears at least for:<br />
-                              <math>(Total number of occurences)/(Distinct number of words)</math>
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
                           <hr />
@@ -259,7 +271,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <math>(Maximum number of occurences)/(2)</math>
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
                               <hr />
                             </div>
                           </div>
@@ -272,15 +284,21 @@
                               <br />
                               <div class="container-canvas">
                                 <!-- taught - Most proeminent -->
+                                {{ $proeminentKeywords := $keywords.GetMostProeminent 3 }}
+                                {{ if eq ($proeminentKeywords.GetData | len ) 0 }}
+                                <div class="text-muted" style="height:300px;weight:300px">
+                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                </div>
+                                {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-taught-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-taught-2-{{ $parent.GetID }}" >
                                 </canvas>
                                 <script>
-                                {{ $proeminent := $general.GetMostProeminent }}
-                                dataPool["chart-list-taught-2-{{ $parent.GetID }}"] = JSON.parse({{$keywords.GetMostProeminent.GetPlainJSON }});
+                                dataPool["chart-list-taught-2-{{ $parent.GetID }}"] = JSON.parse({{$proeminentKeywords.GetPlainJSON }});
                                 </script>
+                                {{ end }}
                               </div>
                               <br /> A word is proeminent if it appears at least for:<br />
-                              <math>(Total number of occurences)/(Distinct number of words)</math>
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
                           <hr />
@@ -317,7 +335,7 @@
                         {{ end }}
                       </p>
                       {{ end }}
-                      <h4>Keywords used</h4>
+                      <h4>Keywords used for teaching</h4>
                       {{ if eq ($keywords.GetData | len) 0 }}
                       No information available
                       {{ else }}

@@ -36,9 +36,12 @@ type Digester struct {
 
 // GetMostProeminent returns a digester with the most proeminent words
 // The most proeminent words are those with the counter >= (totalCount/distict_nr_of_words)
-func (digester Digester) GetMostProeminent() *Digester {
-	totalCount := digester.GetCounter()
+func (digester Digester) GetMostProeminent(factor int) *Digester {
+	totalCount := digester.GetCounter() * factor
 	totalWords := len(digester.data)
+	if totalWords == 0 {
+		return NewDigester("")
+	}
 	threshold := int(totalCount / totalWords)
 	return digester.filterDataByCounter(threshold)
 }
@@ -47,7 +50,7 @@ func (digester Digester) GetMostProeminent() *Digester {
 // The most relevant words are those with the counter >= (topCounter/2)
 func (digester Digester) GetMostRelevant() *Digester {
 	max := digester.GetTopOccurrence().GetCounter()
-	threshold := int(max / 2)
+	threshold := int(max / 4)
 	return digester.filterDataByCounter(threshold)
 }
 

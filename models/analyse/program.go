@@ -1,8 +1,6 @@
 package analyse
 
 import (
-	"fmt"
-
 	"github.com/cristian-sima/Wisply/models/analyse/word"
 	"github.com/cristian-sima/Wisply/models/database"
 	"github.com/cristian-sima/Wisply/models/repository"
@@ -74,6 +72,10 @@ func (analyser ProgramAnalyser) start() {
 	analyser.formats = formats
 	analyser.description = description
 
+	analyser.description.SortByCounter("DESC")
+	analyser.description.SortByCounter("DESC")
+	analyser.formats.SortByCounter("DESC")
+
 	analyser.parent.insertProgramData(analyser)
 }
 
@@ -119,7 +121,6 @@ func GetProgramAnalysersByProgram(programID int) []ProgramAnalyser {
 		analyser.description = word.NewDigesterFromJSON(d1)
 		analyser.formats = word.NewDigesterFromJSON(d2)
 		analyser.keywords = word.NewDigesterFromJSON(d3)
-		fmt.Println(analyser.program)
 		list = append(list, analyser)
 	}
 	return list
@@ -127,7 +128,6 @@ func GetProgramAnalysersByProgram(programID int) []ProgramAnalyser {
 
 func (analyser ProgramAnalyser) digest(text string) *word.Digester {
 	digester := word.NewDigester(text)
-	digester.SortByCounter("DESC")
 	result := word.NewGrammarFilter(digester).GetData()
 	result.RemoveOccurence(analyser.program.GetCode())
 	return result

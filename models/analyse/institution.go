@@ -47,7 +47,7 @@ func (analyser *InstitutionAnalyser) insertModuleData(moduleAnalyser ModuleAnaly
 	d1 := moduleAnalyser.GetKeywordsDigest()
 	d2 := moduleAnalyser.GetFormatsDigest()
 	d3 := moduleAnalyser.GetDescriptionDigest()
-	analyser.moduleBuffer.AddRow(analyser.parent.id, moduleAnalyser.GetModule().GetID(), d1.GetJSON(), d2.GetJSON(), d3.GetJSON())
+	analyser.moduleBuffer.AddRow(analyser.parent.id, moduleAnalyser.GetModule().GetID(), d1.GetPlainJSON(), d2.GetPlainJSON(), d3.GetPlainJSON())
 	err := analyser.moduleBuffer.Exec()
 	if err != nil {
 		fmt.Println(err)
@@ -64,7 +64,7 @@ func (analyser *InstitutionAnalyser) insertProgramData(programAnalyser ProgramAn
 	d1 := programAnalyser.GetKeywordsDigest()
 	d2 := programAnalyser.GetFormatsDigest()
 	d3 := programAnalyser.GetDescriptionDigest()
-	analyser.programBuffer.AddRow(analyser.parent.id, programAnalyser.GetProgram().GetID(), d1.GetJSON(), d2.GetJSON(), d3.GetJSON())
+	analyser.programBuffer.AddRow(analyser.parent.id, programAnalyser.GetProgram().GetID(), d1.GetPlainJSON(), d2.GetPlainJSON(), d3.GetPlainJSON())
 	err := analyser.programBuffer.Exec()
 	if err != nil {
 		fmt.Println(err)

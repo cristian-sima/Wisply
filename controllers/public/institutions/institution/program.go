@@ -1,6 +1,9 @@
 package institution
 
-import "github.com/cristian-sima/Wisply/models/repository"
+import (
+	"github.com/cristian-sima/Wisply/models/analyse"
+	"github.com/cristian-sima/Wisply/models/repository"
+)
 
 // Program manages the operations with an program
 type Program struct {
@@ -33,4 +36,5 @@ func (controller *Program) Display() {
 	program := controller.GetProgram()
 	controller.Data["modules"] = program.GetModules()
 	controller.LoadTemplate("program")
+	controller.Data["programAnalyses"] = analyse.GetProgramAnalysersByProgram(program.GetID())
 }

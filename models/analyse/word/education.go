@@ -22,4 +22,9 @@ var education = []string{
 	"aim",
 	"develop",
 	"study",
+	"module",
+	"modules",
+	"lecture",
+	"skills",
+	"aims",
 }

@@ -1,5 +1,7 @@
 package institution
 
+import "github.com/cristian-sima/Wisply/models/analyse"
+
 // Institution manages the operations for an institution
 type Institution struct {
 	Controller
@@ -11,5 +13,6 @@ func (controller *Institution) Display() {
 	controller.SetCustomTitle(institution.Name)
 	controller.Data["repositories"] = institution.GetRepositories()
 	controller.Data["institutionPrograms"] = institution.GetPrograms()
+	controller.Data["institutionAnalyses"] = analyse.GetInstitutionAnalysersByInstitution(institution.ID)
 	controller.LoadTemplate("home")
 }

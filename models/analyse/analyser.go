@@ -108,7 +108,7 @@ func NewAnalyser(id string) Analyser {
 	query.QueryRow(id).Scan(&analyser.id, &analyser.start, &analyser.end)
 
 	digester := word.NewDigester("")
-	analyser.moduleDigester = &digester
+	analyser.moduleDigester = digester
 
 	return analyser
 }

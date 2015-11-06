@@ -161,7 +161,6 @@ func (digester *Digester) Combine(secondDigester *Digester) *Digester {
 func (digester Digester) Describe() {
 	fmt.Println("-----")
 	fmt.Println("Words: ")
-
 	for _, occurence := range digester.data {
 		fmt.Print("[" + occurence.GetWord() + " " + strconv.Itoa(occurence.GetCounter()) + "] ")
 	}
@@ -169,7 +168,6 @@ func (digester Digester) Describe() {
 	fmt.Println("Number of words: " + strconv.Itoa(digester.GetNumberOfWords()))
 	fmt.Println("Total counter: " + strconv.Itoa(digester.GetCounter()))
 	fmt.Println("-----")
-
 }
 
 // GetNumberOfWords returns the number of words
@@ -212,7 +210,6 @@ func (digester *Digester) AnalyseWords(words []string) {
 					size := len(toProcess)
 					if lastChar == rejectedChar {
 						toProcess = toProcess[0 : size-1]
-						fmt.Print("[last" + rejectedChar + "]")
 						tryAgain = true
 					}
 					if firstChar == rejectedChar {
@@ -221,7 +218,6 @@ func (digester *Digester) AnalyseWords(words []string) {
 						} else {
 							toProcess = toProcess[1:]
 						}
-						fmt.Print("[front" + rejectedChar + "]")
 						tryAgain = true
 					}
 				}
@@ -233,7 +229,6 @@ func (digester *Digester) AnalyseWords(words []string) {
 		if err == nil {
 			toProcess = ""
 		}
-
 		return toProcess
 	}
 
@@ -268,11 +263,11 @@ func (digester *Digester) SortByCounter(order string) {
 }
 
 // NewDigester creates a new list of occurences for words
-func NewDigester(text string) Digester {
-	list := Digester{}
-	list.data = []*Occurence{}
-	list.AnalyseText(text)
-	return list
+func NewDigester(text string) *Digester {
+	digester := Digester{}
+	digester.data = []*Occurence{}
+	digester.AnalyseText(text)
+	return &digester
 }
 
 // NewDigesterFromJSON transforms a json string to a digester

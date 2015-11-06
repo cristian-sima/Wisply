@@ -21,7 +21,7 @@ func (controller *Analyse) AnalyseText() {
 	list.SortByCounter("DESC")
 	list.Describe()
 
-	final := word.NewGrammarFilter(&list).GetData()
+	final := word.NewGrammarFilter(list).GetData()
 	final.Describe()
 
 	controller.ShowBlankPage()

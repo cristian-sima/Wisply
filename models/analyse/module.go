@@ -49,7 +49,7 @@ func (analyser ModuleAnalyser) GetModule() repository.Module {
 	return analyser.module
 }
 
-// it starts the magic
+// let's start the magic
 func (analyser ModuleAnalyser) start() {
 	identifiers := analyser.getIdentifiers()
 	analyser.saveIdentifiers(identifiers)
@@ -146,7 +146,6 @@ func GetModuleAnalysersByModule(moduleID int) []ModuleAnalyser {
 		analyser.description = word.NewDigesterFromJSON(d1)
 		analyser.formats = word.NewDigesterFromJSON(d2)
 		analyser.keywords = word.NewDigesterFromJSON(d3)
-		fmt.Println(analyser.module)
 		list = append(list, analyser)
 	}
 	return list
@@ -169,7 +168,7 @@ func GetModuleAnalysersByModule(moduleID int) []ModuleAnalyser {
 func (analyser ModuleAnalyser) digest(text string) *word.Digester {
 	digester := word.NewDigester(text)
 	digester.SortByCounter("DESC")
-	result := word.NewGrammarFilter(&digester).GetData()
+	result := word.NewGrammarFilter(digester).GetData()
 	result.RemoveOccurence(analyser.module.GetCode())
 	return result
 }

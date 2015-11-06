@@ -9,19 +9,30 @@ import (
 
 // InstitutionAnalyser analyse the data for an institution
 type InstitutionAnalyser struct {
-	parent       Analyser
-	institution  repository.Institution
-	moduleBuffer *database.SQLBuffer
+	parent        Analyser
+	institution   repository.Institution
+	moduleBuffer  *database.SQLBuffer
+	programBuffer *database.SQLBuffer
 }
 
 // Start starts the process
 func (analyser *InstitutionAnalyser) Start() {
+	analyser.performModules()
+	analyser.performPrograms()
+}
 
-	// get all modules
+func (analyser *InstitutionAnalyser) performModules() {
 	modules := analyser.institution.GetModules()
-
 	for _, module := range modules {
 		child := analyser.CreateModuleAnalyser(module)
+		child.start()
+	}
+}
+
+func (analyser *InstitutionAnalyser) performPrograms() {
+	programs := analyser.institution.GetPrograms()
+	for _, program := range programs {
+		child := analyser.CreateProgramAnalyser(program)
 		child.start()
 	}
 }
@@ -40,8 +51,23 @@ func (analyser *InstitutionAnalyser) insertModuleData(moduleAnalyser ModuleAnaly
 	err := analyser.moduleBuffer.Exec()
 	if err != nil {
 		fmt.Println(err)
-	} else {
-		fmt.Println("Finished")
+	}
+}
+
+func (analyser *InstitutionAnalyser) insertProgramData(programAnalyser ProgramAnalyser) {
+
+	columns := "`analyse`, `program`, `keywords`, `formats`, `description`"
+	tableName := "digest_program"
+	analyser.programBuffer = database.NewSQLBuffer(tableName, columns)
+	analyser.programBuffer.ChangeLimit(15)
+
+	d1 := programAnalyser.GetKeywordsDigest()
+	d2 := programAnalyser.GetFormatsDigest()
+	d3 := programAnalyser.GetDescriptionDigest()
+	analyser.programBuffer.AddRow(analyser.parent.id, programAnalyser.GetProgram().GetID(), d1.GetJSON(), d2.GetJSON(), d3.GetJSON())
+	err := analyser.programBuffer.Exec()
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 
@@ -52,4 +78,13 @@ func (analyser InstitutionAnalyser) CreateModuleAnalyser(module repository.Modul
 		module: module,
 	}
 	return moduleAnalyser
+}
+
+// CreateProgramAnalyser creates a new module analyser
+func (analyser InstitutionAnalyser) CreateProgramAnalyser(program repository.Program) ProgramAnalyser {
+	programAnalyser := ProgramAnalyser{
+		parent:  analyser,
+		program: program,
+	}
+	return programAnalyser
 }

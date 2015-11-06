@@ -35,7 +35,7 @@ func (controller *Digester) work() {
 	}
 	list := word.NewDigester(text)
 	list.SortByCounter("DESC")
-	result := word.NewGrammarFilter(&list).GetData()
+	result := word.NewGrammarFilter(list).GetData()
 	controller.Data["originalText"] = text
 	controller.Data["processed"] = result
 	controller.LoadTemplate("digester")

@@ -5,7 +5,7 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// Subject manages the operations for curriculum
+// Subject manages the operations for curriculum.
 type Subject struct {
 	Controller
 }

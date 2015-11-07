@@ -7,7 +7,7 @@ import (
 
 var (
 	rules = map[string][]string{
-		"description": {"String", "between_inclusive:3,1000"},
+		"description": {"String", "between_inclusive:3,65535"},
 	}
 )
 

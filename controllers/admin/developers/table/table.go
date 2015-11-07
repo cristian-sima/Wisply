@@ -33,21 +33,18 @@ func (controller *Table) ShowModifyForm() {
 
 // ModifyTable changes the description
 func (controller *Table) ModifyTable() {
-	id := strings.TrimSpace(controller.GetString("table-id"))
+	table := controller.GetTable()
 	description := strings.TrimSpace(controller.GetString("table-description"))
-	table, err := developer.NewTable(id)
+
+	err := developer.ModifyDetails(table, description)
 	if err != nil {
-		controller.DisplaySimpleError("This table is not found")
+		controller.DisplaySimpleError(err.Error())
 	} else {
-		err := developer.ModifyDetails(table, description)
-		if err != nil {
-			controller.DisplaySimpleError(err.Error())
-		} else {
-			message := "The table is now available to be downloaded!"
-			goTo := "/admin/developers"
-			controller.DisplaySuccessMessage(message, goTo)
-		}
+		message := "The table is now available to be downloaded!"
+		goTo := "/admin/developers"
+		controller.DisplaySuccessMessage(message, goTo)
 	}
+
 }
 
 // InsertNewTable inserts the new table name into the list

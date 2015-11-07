@@ -9,6 +9,7 @@ var redundantWords = []string{
 	"et",
 	"•",
 	"e.g.,",
+	"can",
 	"unspecified",
 	"web6203",
 	"e.g.",

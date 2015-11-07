@@ -9,7 +9,7 @@
     <div>
       This panel can be used to allow or reject tables from being downloaded by the public. The public list is available <a target="_blank" href="http://localhost:8081/developer/table/list">here</a>.
       <br />
-      The tables which are not listed here are by default <strong>rejected</strong>.
+      The tables which are not listed on this page <strong>cannot be downloaded</strong>.
       <br />
       <br />
   </div>

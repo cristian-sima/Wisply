@@ -16,15 +16,22 @@
           {{ range $filterName, $filter := .filters }}
           <article>
             <h2>{{ $filterName }}</h2>
-            <ul>
+            <div class="well">
               {{ range $index, $word := $filter }}
-              <li> {{ $word }}</li>
+              {{ $word }}, 
               {{ end }}
-            </ul>
+            </div>
           </ul>
         </article>
         <br />
         {{ end }}
+        <article>
+          <h2>Other words</h2>
+          <ul>
+            <li>Empty strings</li>
+            <li>Numbers</li>
+          </ul>
+        </article>
       </section>
     </div>
   </div>

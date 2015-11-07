@@ -1,6 +1,7 @@
 package developer
 
 import (
+	"fmt"
 	"html/template"
 
 	"github.com/cristian-sima/Wisply/models/database"
@@ -19,7 +20,7 @@ func (table *Table) GetDescription() template.HTML {
 	return template.HTML([]byte(table.Description))
 }
 
-// RemoveAllowedTable removes the table from the list of allowed tables
+// Delete removes the table from the list of allowed tables
 func (table *Table) Delete() error {
 	sql := "DELETE FROM `download_table` WHERE `id`=? "
 	query, err := database.Connection.Prepare(sql)
@@ -42,6 +43,7 @@ func NewTable(ID string) (*Table, error) {
 
 // ModifyDetails changes the details of the table
 func ModifyDetails(table *Table, newDescription string) error {
+	fmt.Println(table.ID)
 	sql := "UPDATE `download_table` SET `description`=? WHERE `id`=? "
 	query, err1 := database.Connection.Prepare(sql)
 	if err1 != nil {

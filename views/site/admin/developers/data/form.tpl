@@ -54,6 +54,7 @@
 	<script src="/static/3rd_party/product/tinymce/js/tinymce/tinymce.min.js"></script>
 	<script>
 	tinymce.init({
+		height: "250px",
 		selector: "#table-description",
 		auto_focus: "table-description",
 	});

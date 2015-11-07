@@ -34,8 +34,8 @@ type Digester struct {
 	data []*Occurence
 }
 
-// GetMostProeminent returns a digester with the most proeminent words
-// The most proeminent words are those with the counter >= (totalCount/distict_nr_of_words)
+// GetMostProeminent returns a digester with the most prominent words
+// The most prominent words are those with the counter >= (totalCount/distict_nr_of_words)
 func (digester Digester) GetMostProeminent(factor int) *Digester {
 	totalCount := digester.GetCounter() * factor
 	totalWords := len(digester.data)

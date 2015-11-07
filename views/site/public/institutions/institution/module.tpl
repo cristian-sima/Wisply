@@ -119,7 +119,7 @@
                         <div class="col-md-6">
                           <div class="panel panel-default">
                             <div class="panel-body">
-                              <h5>Most proeminent words</h5>
+                              <h5>Most prominent words</h5>
                               <hr />
                               <br />
                               <div class="container-canvas">
@@ -127,7 +127,7 @@
                                 {{ $proeminent := $general.GetMostProeminent 3 }}
                                 {{ if eq ($proeminent.GetData | len ) 0 }}
                                 <div class="text-muted" style="height:300px;weight:300px">
-                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                  <br /><br /><br /> There are no prominent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
                                 </div>
                                 {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-overall-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-overall-2-{{ $parent.GetID }}" >
@@ -137,7 +137,7 @@
                                 </script>
                                 {{ end }}
                               </div>
-                              <br /> A word is proeminent if it appears at least for:<br />
+                              <br /> A word is prominent if it appears at least for:<br />
                               <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
@@ -204,7 +204,7 @@
                       </div>
 
                       <!--        Comparison     --->
-                      <h4>Specified curriculum vs what is actually taught</h4>
+                      <h4>Specified curriculum <span class="text-warning">vs</span> what it is actually taught by teachers</h4>
                       <div class="row text-center">
                         <div class="col-md-6 text-center">
                           <div class="container-canvas text-center">
@@ -229,7 +229,7 @@
                         <div class="col-md-6">
                           <div class="panel panel-default">
                             <div class="panel-body">
-                              <h5>Most proeminent words - Specified</h5>
+                              <h5>Most prominent words - Specified</h5>
                               <hr />
                               <br />
                               <div class="container-canvas">
@@ -237,7 +237,7 @@
                                 {{ $proeminentDescription := $description.GetMostProeminent 3 }}
                                 {{ if eq ($proeminentDescription.GetData | len ) 0 }}
                                 <div class="text-muted" style="height:300px;weight:300px">
-                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                  <br /><br /><br /> There are no prominent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
                                 </div>
                                 {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-description-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-description-2-{{ $parent.GetID }}" >
@@ -247,7 +247,7 @@
                                 </script>
                                 {{ end }}
                               </div>
-                              <br /> A word is proeminent if it appears at least for:<br />
+                              <br /> A word is prominent if it appears at least for:<br />
                               <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
@@ -279,7 +279,7 @@
                         <div class="col-md-6">
                           <div class="panel panel-default">
                             <div class="panel-body">
-                              <h5>Most proeminent words - Taught</h5>
+                              <h5>Most prominent words - Taught</h5>
                               <hr />
                               <br />
                               <div class="container-canvas">
@@ -287,7 +287,7 @@
                                 {{ $proeminentKeywords := $keywords.GetMostProeminent 3 }}
                                 {{ if eq ($proeminentKeywords.GetData | len ) 0 }}
                                 <div class="text-muted" style="height:300px;weight:300px">
-                                  <br /><br /><br /> There are no proeminent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
+                                  <br /><br /><br /> There are no prominent words <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="This happens because the words have a normal distribution"></span>
                                 </div>
                                 {{ else }}
                                 <canvas style="margin:0 auto" width="300px" height="300px" data-id="chart-list-taught-2-{{ $parent.GetID }}" class="chart img-responsive chart chart-radar" id="chart-list-taught-2-{{ $parent.GetID }}" >
@@ -297,7 +297,7 @@
                                 </script>
                                 {{ end }}
                               </div>
-                              <br /> A word is proeminent if it appears at least for:<br />
+                              <br /> A word is prominent if it appears at least for:<br />
                               <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
                             </div>
                           </div>
@@ -311,7 +311,7 @@
                       <a href="#" id="showColors" class="btn btn-xs btn-default">
                         <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
                       </a> &nbsp;
-                      
+
                       <h4>Specified</h4>
                       <p>
                         {{range $index, $occurence := $description.GetData }}

@@ -66,7 +66,7 @@ type ConjunctionsFilter struct {
 }
 
 func (filter *ConjunctionsFilter) process() {
-	filter.filter.process(conjunctions)
+	filter.filter.process(GetFilterList("conjunctions"))
 }
 
 // NewConjunctionsFilter creates a filter which removes all the conjuections
@@ -84,7 +84,7 @@ type PronounsFilter struct {
 }
 
 func (filter *PronounsFilter) process() {
-	filter.filter.process(pronouns)
+	filter.filter.process(GetFilterList("pronouns"))
 }
 
 // NewPronounsFilter creates a filter which removes all the pronouns
@@ -102,7 +102,7 @@ type ArticleFilter struct {
 }
 
 func (filter *ArticleFilter) process() {
-	filter.filter.process(articles)
+	filter.filter.process(GetFilterList("articles"))
 }
 
 // NewArticleFilter creates a new article filter.

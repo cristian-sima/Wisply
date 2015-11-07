@@ -43,6 +43,7 @@ func loadDefault() {
 	beego.Router("/sample", &public.Static{}, "*:ShowSample")
 	beego.Router("/accessibility", &public.Static{}, "*:ShowAccessibility")
 	beego.Router("/thank-you", &public.Static{}, "*:ShowThankYouPage")
+	beego.Router("/about/filters", &public.Static{}, "*:ShowFiltersPage")
 }
 
 func loadHelp() {

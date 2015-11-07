@@ -33,6 +33,9 @@
               <img src="/static/img/public/about/how.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
               <br />
               <img src="/static/img/public/about/how-wisply.png" class="img-responsive" alt="Diagram which explains how Wisply is working"/>
+              <br />
+              </br />
+              The list of the words which are rejected, is available <a href="/about/filters">here</a>.
             </div>
           </article>
           <article>

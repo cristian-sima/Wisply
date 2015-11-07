@@ -1,5 +1,7 @@
 package public
 
+import "github.com/cristian-sima/Wisply/models/analyse/word"
+
 // Static It contains the all the static pages
 type Static struct {
 	Controller
@@ -57,6 +59,25 @@ func (controller *Static) ShowHelp() {
 	controller.SetCustomTitle("Help")
 	// Please use http://www.timestampgenerator.com/
 	controller.IndicateLastModification(1446153828)
+}
+
+// ShowFiltersPage shows the help page
+func (controller *Static) ShowFiltersPage() {
+	controller.LoadTemplate("filters")
+	controller.SetCustomTitle("Filters")
+
+	filters := make(map[string][]string)
+	filters["Articles"] = word.GetFilterList("articles")
+	filters["Conjuctions"] = word.GetFilterList("conjunctions")
+	filters["Education area"] = word.GetFilterList("education")
+	filters["Prepositions"] = word.GetFilterList("prepositions")
+	filters["Pronouns"] = word.GetFilterList("pronouns")
+	filters["Words which are not important"] = word.GetFilterList("redundant")
+
+	controller.Data["filters"] = filters
+
+	// Please use http://www.timestampgenerator.com/
+	controller.IndicateLastModification(1446193828)
 }
 
 // ShowPrivacyPolicy shows the privacy policy of the website

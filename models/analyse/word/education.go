@@ -12,6 +12,8 @@ var education = []string{
 	"undergraduates",
 	"course",
 	"courses",
+	"slide",
+	"slides",
 	"assignment",
 	"assignments",
 	"resource",

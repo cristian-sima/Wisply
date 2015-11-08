@@ -138,7 +138,7 @@
                                 {{ end }}
                               </div>
                               <br /> A word is prominent if it appears at least for:<br />
-                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Prominent equation" style="margin:0 auto" class="img-responsive" />
                             </div>
                           </div>
                           <hr />
@@ -161,7 +161,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" style="margin:0 auto" class="img-responsive" />
                               <hr />
                             </div>
                           </div>
@@ -221,7 +221,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" style="margin:0 auto" class="img-responsive" />
                               <hr />
                             </div>
                           </div>
@@ -248,7 +248,7 @@
                                 {{ end }}
                               </div>
                               <br /> A word is prominent if it appears at least for:<br />
-                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Prominent equation" style="margin:0 auto" class="img-responsive" />
                             </div>
                           </div>
                           <hr />
@@ -271,7 +271,7 @@
                                 </script>
                               </div>
                               <br /> A word is relevant if it appears at least for:<br />
-                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" />
+                              <img src="/static/img/public/equation/relevant.png" alt="Relevant equation" style="margin:0 auto" class="img-responsive" />
                               <hr />
                             </div>
                           </div>
@@ -298,7 +298,7 @@
                                 {{ end }}
                               </div>
                               <br /> A word is prominent if it appears at least for:<br />
-                              <img src="/static/img/public/equation/proeminent-3.png" alt="Proeminent equation" />
+                              <img src="/static/img/public/equation/proeminent-3.png" alt="Prominent equation" style="margin:0 auto" class="img-responsive" />
                             </div>
                           </div>
                           <hr />

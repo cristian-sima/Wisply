@@ -1,2 +1,2 @@
-// Package searches manages the operations for the settings page
+// Package searches manages the operations for the searches page
 package searches

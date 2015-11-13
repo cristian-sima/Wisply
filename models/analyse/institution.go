@@ -89,7 +89,7 @@ func (analyser *InstitutionAnalyser) perform() {
 			}
 		}
 		if exists {
-			description.SortByCounter("DESC")
+			keywords.SortByCounter("DESC")
 			description.SortByCounter("DESC")
 			formats.SortByCounter("DESC")
 
@@ -111,7 +111,7 @@ func (analyser *InstitutionAnalyser) perform() {
 func (analyser *InstitutionAnalyser) performModules() {
 	modules := analyser.institution.GetModules()
 	for _, module := range modules {
-		child := analyser.CreateInstitutionAnalyser(module)
+		child := analyser.CreateModuleAnalyser(module)
 		child.start()
 	}
 }
@@ -180,8 +180,8 @@ func GetInstitutionAnalysersByInstitution(institutionID int) []InstitutionAnalys
 	return list
 }
 
-// CreateInstitutionAnalyser creates a new module analyser
-func (analyser InstitutionAnalyser) CreateInstitutionAnalyser(module repository.Module) ModuleAnalyser {
+// CreateModuleAnalyser creates a new module analyser
+func (analyser InstitutionAnalyser) CreateModuleAnalyser(module repository.Module) ModuleAnalyser {
 	moduleAnalyser := ModuleAnalyser{
 		parent: analyser,
 		module: module,

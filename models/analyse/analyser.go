@@ -11,7 +11,7 @@ import (
 	"github.com/cristian-sima/Wisply/models/repository"
 )
 
-// Analyser processes the data for an institution
+// Analyser processes the data
 type Analyser struct {
 	id             string
 	moduleDigester *word.Digester
@@ -24,7 +24,7 @@ func (analyser Analyser) Start() {
 	start := time.Now()
 	analyser.processModules()
 	elapsed := time.Since(start)
-	log.Printf("All searches have taken %s", elapsed)
+	log.Printf("Analyse has taken %s", elapsed)
 }
 
 func (analyser Analyser) processModules() {

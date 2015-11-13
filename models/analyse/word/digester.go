@@ -135,8 +135,18 @@ func (digester *Digester) RemoveOccurence(word string) {
 
 // Combine combines two digesters into one
 func (digester *Digester) Combine(secondDigester *Digester) *Digester {
+	getCopyOfData := func(digester *Digester) []*Occurence {
+		copyOfData := []*Occurence{}
+		for _, occurence := range digester.GetData() {
+			copyOfData = append(copyOfData, &Occurence{
+				Word:    occurence.GetWord(),
+				Counter: occurence.GetCounter(),
+			})
+		}
+		return copyOfData
+	}
 	combination := &Digester{
-		data: digester.GetData(),
+		data: getCopyOfData(digester),
 	}
 	for _, occurenceSecond := range secondDigester.GetData() {
 		exists := false
@@ -201,7 +211,6 @@ func (digester *Digester) AnalyseWords(words []string) {
 		toProcess = strings.ToLower(toProcess)
 		sz := len(toProcess)
 		if sz > 0 {
-			rejectedChars := []string{"“", "‘", "’", "”", ".", ",", "‘", "’", "'", ")", "(", ":", ";", "-", "^", "&", "*", "!", "\""}
 			tryAgain := true
 			for tryAgain && (len(toProcess) > 0) {
 				tryAgain = false
@@ -259,7 +268,7 @@ func (digester *Digester) SortByCounter(order string) {
 	data := digester.GetData()
 	slice.Sort(data, func(i, j int) bool {
 		if order == "ASC" {
-			return data[i].GetCounter() < data[j].GetCounter()
+			return data[i].GetCounter() <= data[j].GetCounter()
 		}
 		return data[i].GetCounter() > data[j].GetCounter()
 	})

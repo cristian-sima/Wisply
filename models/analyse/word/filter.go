@@ -2,13 +2,6 @@ package word
 
 import "strings"
 
-// Occurencer ... defines the basic sets for an occurence list
-type Occurencer interface {
-	GetData() []*Occurence
-	GetOriginalText() string
-	Describe()
-}
-
 type filter struct {
 	original *Digester
 	data     *Digester

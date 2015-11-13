@@ -84,7 +84,7 @@ CREATE TABLE `analyse` (
   `start` int(11) NOT NULL,
   `end` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +109,7 @@ CREATE TABLE `digest_institution` (
   CONSTRAINT `digest_institution_ibfk_1` FOREIGN KEY (`analyse`) REFERENCES `analyse` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `digest_institution_ibfk_2` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `digest_institution_ibfk_3` FOREIGN KEY (`institution`) REFERENCES `institution` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `digest_module` (
   KEY `module` (`module`),
   CONSTRAINT `digest_module_ibfk_1` FOREIGN KEY (`analyse`) REFERENCES `analyse` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `digest_module_ibfk_2` FOREIGN KEY (`module`) REFERENCES `institution_module` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=493 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=903 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `digest_program` (
   KEY `analyse` (`analyse`),
   CONSTRAINT `digest_program_ibfk_1` FOREIGN KEY (`analyse`) REFERENCES `analyse` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `digest_program_ibfk_2` FOREIGN KEY (`program`) REFERENCES `institution_program` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +175,7 @@ CREATE TABLE `digest_subject` (
   KEY `subject` (`subject`),
   CONSTRAINT `digest_subject_ibfk_1` FOREIGN KEY (`subject`) REFERENCES `subject_area` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `digest_subject_ibfk_2` FOREIGN KEY (`analyse`) REFERENCES `analyse` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -601,7 +601,7 @@ CREATE TABLE `suggestion_resource` (
   KEY `module` (`module`),
   CONSTRAINT `suggestion_resource_ibfk_1` FOREIGN KEY (`analyse`) REFERENCES `analyse` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `suggestion_resource_ibfk_3` FOREIGN KEY (`module`) REFERENCES `institution_module` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=651 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,4 +638,4 @@ CREATE TABLE `task` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-10 23:36:01
+-- Dump completed on 2015-11-13 17:04:02

@@ -73,7 +73,7 @@ func (analyser ProgramAnalyser) start() {
 	analyser.description = description
 
 	analyser.description.SortByCounter("DESC")
-	analyser.description.SortByCounter("DESC")
+	analyser.keywords.SortByCounter("DESC")
 	analyser.formats.SortByCounter("DESC")
 
 	analyser.parent.insertProgramData(analyser)

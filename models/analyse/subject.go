@@ -71,12 +71,13 @@ func (analyser SubjectAnalyser) start() {
 		formats = formats.Combine(d2)
 		description = description.Combine(d3)
 	}
-	if exists {
-		description.SortByCounter("DESC")
-		description.SortByCounter("DESC")
-		formats.SortByCounter("DESC")
+	if exists || len(ownDescription.GetData()) != 0 {
 
 		description = description.Combine(ownDescription)
+
+		description.SortByCounter("DESC")
+		formats.SortByCounter("DESC")
+		keywords.SortByCounter("DESC")
 
 		columns := "`subject`, `description`, `formats`, `keywords`, `analyse`"
 		table := "digest_subject"
@@ -179,6 +180,5 @@ func GetSubjectAnalysersBySubject(subjectID int) []SubjectAnalyser {
 
 func (analyser SubjectAnalyser) digest(text string) *word.Digester {
 	digester := word.NewDigester(text)
-	result := word.NewGrammarFilter(digester).GetData()
-	return result
+	return word.NewGrammarFilter(digester).GetData()
 }

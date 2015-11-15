@@ -10,13 +10,14 @@ import (
 
 // ModuleAnalyser processes the data about the module
 type ModuleAnalyser struct {
-	id          int
-	parent      InstitutionAnalyser
-	module      repository.Module
-	keywords    *word.Digester
-	formats     *word.Digester
-	description *word.Digester
-	parentID    string
+	id           int
+	parent       InstitutionAnalyser
+	module       repository.Module
+	keywords     *word.Digester
+	formats      *word.Digester
+	description  *word.Digester
+	parentID     string
+	repositories []string
 }
 
 // GetKeywordsDigest returns the digest for the keywords
@@ -80,7 +81,7 @@ func (analyser ModuleAnalyser) saveIdentifiers(identifiers []string) {
 
 func (analyser ModuleAnalyser) getDescription() *word.Digester {
 	module := analyser.module
-	return analyser.digest(module.GetContent() + " " + module.GetTitle())
+	return analyser.digestText(module.GetContent() + " " + module.GetTitle())
 }
 
 func (analyser ModuleAnalyser) getDigests(identifiers []string) (*word.Digester, *word.Digester) {
@@ -110,14 +111,14 @@ func (analyser ModuleAnalyser) getDigests(identifiers []string) (*word.Digester,
 			}
 		}
 	}
-	d1 := analyser.digest(keywordsBuffer)
-	d2 := analyser.digest(formatsBuffer)
+	d1 := analyser.digestKeywords(keywordsBuffer)
+	d2 := analyser.digestText(formatsBuffer)
 	return d1, d2
 }
 
-func (analyser ModuleAnalyser) getIdentifiers() []string {
+func (analyser *ModuleAnalyser) getIdentifiers() []string {
 	identifiers := []string{}
-	sql := "SELECT  DISTINCT `resource` FROM `resource_key` WHERE `value` LIKE ?"
+	sql := "SELECT  DISTINCT `resource`, `repository` FROM `resource_key` WHERE `value` LIKE ?"
 	rows, err := database.Connection.Query(sql, "%"+analyser.module.GetCode()+"%")
 
 	if err != nil {
@@ -127,7 +128,17 @@ func (analyser ModuleAnalyser) getIdentifiers() []string {
 
 	for rows.Next() {
 		identifier := ""
-		rows.Scan(&identifier)
+		repository := ""
+		rows.Scan(&identifier, &repository)
+		exists := false
+		for _, repositoryID := range analyser.repositories {
+			if repositoryID == repository {
+				exists = true
+			}
+		}
+		if !exists {
+			analyser.repositories = append(analyser.repositories, repository)
+		}
 		identifiers = append(identifiers, identifier)
 	}
 	return identifiers
@@ -151,24 +162,21 @@ func GetModuleAnalysersByModule(moduleID int) []ModuleAnalyser {
 	return list
 }
 
-//
-// // NewModuleAnalyser gets the ModuleAnalyser
-// func NewModuleAnalyser(id string) ModuleAnalyser {
-// 	analyser := ModuleAnalyser{}
-// 	fieldList := "`id`, `module`, `description`, `formats`, `keywords`, `analyse`"
-// 	sql := "SELECT " + fieldList + " FROM `digest_module` WHERE id=? "
-// 	query, err := database.Connection.Prepare(sql)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	query.QueryRow(id).Scan(&analyser.id, &analyser.module, &analyser.description, &analyser.formats, &analyser.keywords, &analyser.parentID)
-// 	return analyser
-// }
-
-func (analyser ModuleAnalyser) digest(text string) *word.Digester {
+func (analyser ModuleAnalyser) digestText(text string) *word.Digester {
 	digester := word.NewDigester(text)
-	digester.SortByCounter("DESC")
+	digester.RemoveOccurence(analyser.module.GetCode())
 	result := word.NewGrammarFilter(digester).GetData()
-	result.RemoveOccurence(analyser.module.GetCode())
+	digester.SortByCounter("DESC")
 	return result
+}
+
+func (analyser ModuleAnalyser) digestKeywords(text string) *word.Digester {
+	digester := word.NewDigester(text)
+	// apply filter for each reposioty
+	for _, repositoryID := range analyser.repositories {
+		repository, _ := repository.NewRepository(repositoryID)
+		digester = NewRepositoryAnalyseFilter(repository, digester).GetData()
+	}
+	newText := digester.ToText()
+	return analyser.digestText(newText)
 }

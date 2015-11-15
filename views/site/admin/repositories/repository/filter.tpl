@@ -71,7 +71,7 @@ function formSubmited(event) {
 */
 function loadEditor() {
   var container = document.getElementById('jsoneditor'),
-  raw = "{{ .repository.GetFilter }}";
+  raw = "{{ .repository.GetFilter.ToString }}";
   editor = new JSONEditor(container);
   if (raw !== "") {
     var json = JSON.parse(raw);

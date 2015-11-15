@@ -205,6 +205,17 @@ func (digester *Digester) GetString() string {
 	return buffer
 }
 
+// ToText converts data into string
+func (digester *Digester) ToText() string {
+	text := ""
+	for _, occurence := range digester.GetData() {
+		for i := 0; i < occurence.GetCounter(); i++ {
+			text += occurence.GetWord() + " "
+		}
+	}
+	return text
+}
+
 // AnalyseWords inserts an array of words
 func (digester *Digester) AnalyseWords(words []string) {
 	var processWord = func(toProcess string) string {

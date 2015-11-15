@@ -3,6 +3,7 @@ package oai
 import (
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -181,6 +182,8 @@ func (repository *Repository) GetRecords(content []byte) ([]wisply.Recorder, err
 			}
 			if repository.filter.isRecordAllowed(record) {
 				records = append(records, record)
+			} else {
+				fmt.Println("Record rejected by filter")
 			}
 		}
 	}

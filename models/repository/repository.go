@@ -66,13 +66,13 @@ func (repository *Repository) SetFilter(newFilter string) error {
 }
 
 // GetFilter gets the filter
-func (repository *Repository) GetFilter() string {
-	var filter string
+func (repository *Repository) GetFilter() Filter {
+	filterData := ""
 	sql := "SELECT `filter` FROM `repository` WHERE `id` = ?"
 	query, _ := database.Connection.Prepare(sql)
-	query.QueryRow(repository.ID).Scan(&filter)
+	query.QueryRow(repository.ID).Scan(&filterData)
 
-	return filter
+	return newFilter(filterData)
 }
 
 // GetInstitution returns a reference to the institution which holds the repository

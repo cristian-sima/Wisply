@@ -2,20 +2,25 @@ package word
 
 import "strings"
 
-type filter struct {
+// Filter returns the filter
+type Filter struct {
 	original *Digester
 	data     *Digester
 }
 
-func (filter *filter) GetOriginal() *Digester {
+// GetOriginal returns the original digester
+func (filter *Filter) GetOriginal() *Digester {
 	return filter.original
 }
 
-func (filter *filter) GetData() *Digester {
+// GetData returns the processed digester
+func (filter *Filter) GetData() *Digester {
 	return filter.data
 }
 
-func (filter *filter) process(list []string) {
+// Process takes a list of strings and removes the words from the original digester
+// it creates a new digester with the new set of words
+func (filter *Filter) Process(list []string) {
 	allowedOccurences := []*Occurence{}
 	for _, originalOccurence := range (*filter.original).GetData() {
 		reject := false
@@ -35,82 +40,82 @@ func (filter *filter) process(list []string) {
 	filter.data = &item
 }
 
-// PrepositionFilter is a filter which rejects all the prepositions
+// PrepositionFilter is a Filter which rejects all the prepositions
 type PrepositionFilter struct {
-	filter
+	Filter
 }
 
 func (filter *PrepositionFilter) process() {
-	filter.filter.process(prepositions)
+	filter.Filter.Process(prepositions)
 }
 
-// NewPrepositionsFilter creates a filter which removes all the prepositions
+// NewPrepositionsFilter creates a Filter which removes all the prepositions
 func NewPrepositionsFilter(list *Digester) *PrepositionFilter {
 	filter := PrepositionFilter{
-		filter: newFilter(list),
+		Filter: NewFilter(list),
 	}
 	filter.process()
 	return &filter
 }
 
-// ConjunctionsFilter is a filter which removes all the conjunctions
+// ConjunctionsFilter is a Filter which removes all the conjunctions
 type ConjunctionsFilter struct {
-	filter
+	Filter
 }
 
 func (filter *ConjunctionsFilter) process() {
-	filter.filter.process(GetFilterList("conjunctions"))
+	filter.Filter.Process(GetFilterList("conjunctions"))
 }
 
-// NewConjunctionsFilter creates a filter which removes all the conjuections
+// NewConjunctionsFilter creates a Filter which removes all the conjuections
 func NewConjunctionsFilter(list *Digester) *ConjunctionsFilter {
 	filter := ConjunctionsFilter{
-		filter: newFilter(list),
+		Filter: NewFilter(list),
 	}
 	filter.process()
 	return &filter
 }
 
-// PronounsFilter is a filter which removes all the pronouns
+// PronounsFilter is a Filter which removes all the pronouns
 type PronounsFilter struct {
-	filter
+	Filter
 }
 
 func (filter *PronounsFilter) process() {
-	filter.filter.process(GetFilterList("pronouns"))
+	filter.Filter.Process(GetFilterList("pronouns"))
 }
 
-// NewPronounsFilter creates a filter which removes all the pronouns
+// NewPronounsFilter creates a Filter which removes all the pronouns
 func NewPronounsFilter(list *Digester) *PronounsFilter {
-	filter := PronounsFilter{
-		filter: newFilter(list),
+	Filter := PronounsFilter{
+		Filter: NewFilter(list),
 	}
-	filter.process()
-	return &filter
+	Filter.process()
+	return &Filter
 }
 
 // ArticleFilter removes the occurences which contain articles
 type ArticleFilter struct {
-	filter
+	Filter
 }
 
 func (filter *ArticleFilter) process() {
-	filter.filter.process(GetFilterList("articles"))
+	filter.Filter.Process(GetFilterList("articles"))
 }
 
-// NewArticleFilter creates a new article filter.
-// This filter removes all the occures which are articles
+// NewArticleFilter creates a new article Filter.
+// This Filter removes all the occures which are articles
 func NewArticleFilter(list *Digester) *ArticleFilter {
-	filter := ArticleFilter{
-		filter: newFilter(list),
+	Filter := ArticleFilter{
+		Filter: NewFilter(list),
 	}
-	filter.process()
-	return &filter
+	Filter.process()
+	return &Filter
 }
 
 // GrammarFilter removes the occurences which contain articles
 type GrammarFilter struct {
-	filter
+	Filter
 }
 
 func (grammar *GrammarFilter) process() {
@@ -121,21 +126,22 @@ func (grammar *GrammarFilter) process() {
 	list = append(list, pronouns...)
 	list = append(list, prepositions...)
 	list = append(list, education...)
-	grammar.filter.process(list)
+	grammar.Filter.Process(list)
 }
 
-// NewGrammarFilter creates a filter which removes: articles, conjuctions, prepositions,
+// NewGrammarFilter creates a Filter which removes: articles, conjuctions, prepositions,
 // redundant words and pronouns
 func NewGrammarFilter(list *Digester) *GrammarFilter {
-	filter := GrammarFilter{
-		filter: newFilter(list),
+	Filter := GrammarFilter{
+		Filter: NewFilter(list),
 	}
-	filter.process()
-	return &filter
+	Filter.process()
+	return &Filter
 }
 
-func newFilter(list *Digester) filter {
-	return filter{
+// NewFilter creates a new Filter
+func NewFilter(list *Digester) Filter {
+	return Filter{
 		original: list,
 	}
 }

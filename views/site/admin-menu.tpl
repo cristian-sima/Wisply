@@ -40,18 +40,18 @@
       </a>
     </li>
     <li>
-      <a href="/admin/log" >
-        <span class="glyphicon glyphicon-list-alt"></span>
-        <span class="hidden-sm hidden-xs">
-          Logs
-        </span>
-      </a>
-    </li>
-    <li>
       <a href="/admin/repositories/">
         <span class="glyphicon glyphicon-equalizer"></span>
         <span class="hidden-sm hidden-xs">
           Repositories
+        </span>
+      </a>
+    </li>
+    <li>
+      <a href="/admin/log" >
+        <span class="glyphicon glyphicon-list-alt"></span>
+        <span class="hidden-sm hidden-xs">
+          Logs
         </span>
       </a>
     </li>

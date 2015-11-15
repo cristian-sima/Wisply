@@ -315,7 +315,49 @@
                           <a href="#" id="showColors" class="btn btn-xs btn-default">
                             <span class="glyphicon glyphicon-text-background text-primary"></span> Remove colors
                           </a> &nbsp;
-                          <h4>Specified</h4>
+
+                          <!-- List Words - Top 25 - Specified -->
+                          <h4>Specified curriculum (top 25)</h4>
+                          {{ if eq ($keywords.GetData | len) 0 }}
+                          No information available
+                          {{ else }}
+                          <p>
+                            {{ $topDes := $description.GetTop 25 }}
+                            {{range $index, $occurence := $topDes.GetData }}
+                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                              {{ $occurence.GetWord }}
+                              &nbsp;
+                              <span class="badge">
+                                {{ $occurence.GetCounter }}
+                              </span>
+                            </span>&nbsp;
+                            {{ end }}
+                          </p>
+                          <hr />
+                          {{ end }}
+
+                          <!-- List Words - Top 25 - Taught -->
+                          <h4>Keywords used for teaching (top 25)</h4>
+                          {{ if eq ($keywords.GetData | len) 0 }}
+                          No information available
+                          {{ else }}
+                          <p>
+                            {{ $topKey := $keywords.GetTop 25 }}
+                            {{range $index, $occurence := $topKey.GetData }}
+                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                              {{ $occurence.GetWord }}
+                              &nbsp;
+                              <span class="badge">
+                                {{ $occurence.GetCounter }}
+                              </span>
+                            </span>&nbsp;
+                            {{ end }}
+                          </p>
+                          <hr />
+                          {{ end }}
+
+                          <!-- List Words - All - Specified -->
+                          <h4>Specified (All)</h4>
                           <p>
                             {{range $index, $occurence := $description.GetData }}
                             <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
@@ -327,6 +369,9 @@
                             </span>&nbsp;
                             {{ end }}
                           </p>
+                          <hr />
+
+                          <!-- List Words - All - Formats -->
                           <h4>Formats</h4>
                           {{ if eq ($formats.GetData | len) 0 }}
                           No information available
@@ -341,9 +386,12 @@
                               </span>
                             </span>&nbsp;
                             {{ end }}
-                          </p>
+                            <hr />
+                            </p>
                           {{ end }}
-                          <h4>Keywords used for teaching</h4>
+
+                          <!-- List Words - All- Keywords for teaching -->
+                          <h4>Keywords used for teaching (All)</h4>
                           {{ if eq ($keywords.GetData | len) 0 }}
                           No information available
                           {{ else }}
@@ -359,6 +407,7 @@
                             {{ end }}
                           </p>
                           {{ end }}
+
                         </div>
                         <div class="tab-pane fade" id="description-json-{{ $parent.GetID }}">
                           <p>

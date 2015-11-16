@@ -324,7 +324,7 @@
                           <p>
                             {{ $topDes := $description.GetTop 25 }}
                             {{range $index, $occurence := $topDes.GetData }}
-                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                            <span data-group="keywords" data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                               {{ $occurence.GetWord }}
                               &nbsp;
                               <span class="badge">
@@ -344,7 +344,7 @@
                           <p>
                             {{ $topKey := $keywords.GetTop 25 }}
                             {{range $index, $occurence := $topKey.GetData }}
-                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                            <span data-group="specified" data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                               {{ $occurence.GetWord }}
                               &nbsp;
                               <span class="badge">
@@ -360,7 +360,7 @@
                           <h4>Specified (All)</h4>
                           <p>
                             {{range $index, $occurence := $description.GetData }}
-                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                            <span data-group="specified" data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                               {{ $occurence.GetWord }}
                               &nbsp;
                               <span class="badge">
@@ -378,7 +378,7 @@
                           {{ else }}
                           <p>
                             {{range $index, $occurence := $formats.GetData }}
-                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                            <span data-group="formats" data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                               {{ $occurence.GetWord }}
                               &nbsp;
                               <span class="badge">
@@ -387,7 +387,7 @@
                             </span>&nbsp;
                             {{ end }}
                             <hr />
-                            </p>
+                          </p>
                           {{ end }}
 
                           <!-- List Words - All- Keywords for teaching -->
@@ -397,7 +397,7 @@
                           {{ else }}
                           <p>
                             {{range $index, $occurence := $keywords.GetData }}
-                            <span data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
+                            <span data-group="keywords" data-word="{{ $occurence.GetWord }}" data-count="{{ $occurence.GetCounter }}" class="word-occurence label label-info">
                               {{ $occurence.GetWord }}
                               &nbsp;
                               <span class="badge">
@@ -430,16 +430,16 @@
                 font-size: 22px;
               }
               </style>
-              </div>
-              <script src="/static/3rd_party/others/js/Chart.min.js"></script>
+            </div>
+            <script src="/static/3rd_party/others/js/Chart.min.js"></script>
 
-              <script src="/static/js/wisply/chart.js"></script>
-              <script>
-              $(document).ready(function(){
+            <script src="/static/js/wisply/chart.js"></script>
+            <script>
+            $(document).ready(function(){
               var module = wisply.getModule("chart");
               module.init();
-              });
-              </script>
+            });
+            </script>
 
 
 

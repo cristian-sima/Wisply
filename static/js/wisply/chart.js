@@ -20,6 +20,7 @@ var ChartModule = function () {
   */
   var Manager = function Manager(id, callback) {
     this.showColors = true;
+    this.transparent = false;
     this.colors = {};
   };
   Manager.prototype =
@@ -45,6 +46,7 @@ var ChartModule = function () {
         }
         instance.showColors = !instance.showColors;
       });
+      
       $(".chart-doughnut").each(function(){
         var element = $(this),
         id = element.data("id"),

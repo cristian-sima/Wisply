@@ -274,6 +274,18 @@ func (digester *Digester) AnalyseWords(words []string) {
 	}
 }
 
+// GetSmallest returns the occcurence which has the smallest counter
+func (digester *Digester) GetSmallest() *Occurence {
+	digester.SortByCounter("ASC")
+	return digester.data[0]
+}
+
+// GetLargest returns the occurence which has the most number of occurences
+func (digester *Digester) GetLargest() *Occurence {
+	digester.SortByCounter("DESC")
+	return digester.data[0]
+}
+
 // SortByCounter sorts the list by the counter of the word
 func (digester *Digester) SortByCounter(order string) {
 	data := digester.GetData()
